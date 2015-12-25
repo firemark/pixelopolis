@@ -1,0 +1,8 @@
+[package]
+name = "pixelopolis"
+version = "0.1.0"
+authors = ["Firemark <marpiechula@gmail.com>"]
+
+[dependencies]
+image = "*"
+
