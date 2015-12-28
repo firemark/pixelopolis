@@ -11,6 +11,31 @@ pub struct RoyalImage {
     height: usize
 }
 
+#[derive(Copy, Clone)]
+pub enum Direction {
+    Left, Right, Up
+}
+
+#[derive(Copy, Clone)]
+pub struct PixelAttrs {
+    pub x:u32,
+    pub y:u32,
+    pub z:u32,
+    pub dir: Direction
+}
+
+pub type fnType = Fn(PixelAttrs) -> RoyalPixel;
+
+const DEFAULT_PIXEL_ATTR: PixelAttrs = PixelAttrs {
+    x: 0, y: 0, z: 0, dir: Direction::Left
+};
+
+impl PixelAttrs {
+    pub fn with_direction(dir: Direction) -> PixelAttrs {
+        PixelAttrs {dir: dir, ..DEFAULT_PIXEL_ATTR}
+    }
+}
+
 impl RoyalImage {
     pub fn new(width: usize, height: usize) -> RoyalImage {
         RoyalImage {
@@ -30,8 +55,14 @@ impl RoyalImage {
         self.pixels[x + self.width * y] = pixel;
     }
 
+    pub fn set_with_fn(&mut self, cor: (usize, usize), attr: PixelAttrs, cb: &fnType) {
+        self.set(cor, cb(attr))
+    }
+
     pub fn to_image_buffer(&self) -> RgbImage {
-        let func = |x:u32, y:u32| { self.get((x as usize, y as usize)).to_pixel() };
+        let func = |x: u32, y: u32| {
+            self.get((x as usize, y as usize)).to_pixel()
+        };
         RgbImage::from_fn(self.width as u32, self.height as u32, func)
     }
 }
