@@ -3,6 +3,7 @@ extern crate image;
 use image::Rgb;
 use royal_pixel::{RoyalPixel, BLACK};
 use image::RgbImage;
+use utils::usize2;
 use std::vec;
 
 pub struct RoyalImage {
@@ -45,17 +46,17 @@ impl RoyalImage {
         }
     }
 
-    pub fn get(&self, cor: (usize, usize)) -> &RoyalPixel {
+    pub fn get(&self, cor: usize2) -> &RoyalPixel {
         let (x, y) = cor;
         &self.pixels[x + self.width * y]
     }
 
-    pub fn set(&mut self, cor: (usize, usize), pixel: RoyalPixel) {
+    pub fn set(&mut self, cor: usize2, pixel: RoyalPixel) {
         let (x, y) = cor;
         self.pixels[x + self.width * y] = pixel;
     }
 
-    pub fn set_with_fn(&mut self, cor: (usize, usize), attr: PixelAttrs, cb: &fnType) {
+    pub fn set_with_fn(&mut self, cor: usize2, attr: PixelAttrs, cb: Box<fnType>) {
         self.set(cor, cb(attr))
     }
 
