@@ -17,11 +17,9 @@ const (
 )
 
 type PixelAttrs struct {
-    x, y, z int
-    direction Direction
+    X, Y, Z int
+    Dir Direction
 }
-
-type fnType func(PixelAttrs) RoyalPixel
 
 func NewRoyalImage(width int, height int) RoyalImage {
     return RoyalImage {
@@ -44,7 +42,7 @@ func (rimage RoyalImage) ToImage() *image.RGBA {
     for y := 0; y < rimage.Height; y++ {
         for x := 0; x < rimage.Width; x++ { 
             rpixel := rimage.Get(x, y)
-            img.Set(x, y, rpixel.ToRGBA())
+            img.Set(x % rimage.Width, y % rimage.Height, rpixel.ToRGBA())
         }
     }
     return img
