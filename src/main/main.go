@@ -22,7 +22,8 @@ func brick(a pixelopolis.PixelAttrs) pixelopolis.RoyalPixel {
 func main() {
     rimage := pixelopolis.NewRoyalImage(512, 512)
     drw := pixelopolis.Drawer{Img: &rimage, Fn: brick}
-    drw.CreateCuboid([2]int{256, 256}, [3]int{64, 64, 48})
+    drw.CreateCylinder([2]int{256, 256}, [2]int{64, 48})
+    drw.CreateCone([2]int{256, 256 - 48}, 64)
     file, err := os.Create("test.png")
     if err != nil {
         log.Fatal(err)
