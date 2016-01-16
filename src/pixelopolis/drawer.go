@@ -66,12 +66,16 @@ func (drw Drawer) CreateCircleBar(cor [2]int, length int, attrs PixelAttrs) {
     x := cor[0]
     y := cor[1]
     half_length := float64(length) / 2.0
-    for n := 0; n < length / 2; n++ {
+    f_half_length := int(math.Floor(half_length))
+    c_half_length := int(math.Ceil(half_length))
+    for n := -c_half_length; n < f_half_length; n++ {
         //nx := x - n
         float_n := float64(n)
-        ny := y + int(math.Sqrt(half_length*half_length - float_n * float_n) / 2.0)
+        fy := float64(y) + math.Sqrt(half_length*half_length - float_n * float_n) / 2.0
+        fny := int(math.Floor(fy))
+        cny := int(math.Ceil(fy))
         attrs.X = n
-        drw.Img.Set(x - n, ny, drw.Fn(attrs))
-        drw.Img.Set(x + n, ny, drw.Fn(attrs))
+        drw.Img.Set(x + n, fny, drw.Fn(attrs))
+        drw.Img.Set(x + n, cny, drw.Fn(attrs))
     }
 }
