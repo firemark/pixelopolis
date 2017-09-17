@@ -1,16 +1,15 @@
 package pixelopolis
 
 import "math"
-import "fmt"
 
 const ALPHA float64 = 45.0
 const RATIO float64 = 2.0 / 3.0
 
-type fnAttrsType func(PixelAttrs) RoyalPixel
+type FnAttrsType func(PixelAttrs) RoyalPixel
 
 type Drawer struct {
     Img *RoyalImage
-    Fn fnAttrsType
+    Fn FnAttrsType
 }
 
 func (drw *Drawer) setPixel(x float64, y float64, attrs PixelAttrs) {
@@ -106,8 +105,8 @@ func (drw Drawer) CreateCircleBar(cor [2]int, length int, attrs PixelAttrs) {
     half_length := float64(length) / 2.0
     for n := -half_length + 0.25; n < half_length; n += 0.25 {
         z := math.Sqrt(half_length * half_length - n * n)
-        fmt.Println("!!", n, z)
-        tx, ty := cabinetProjection(z)
+        //tx, ty := cabinetProjection(z)
+        tx, ty := 0.0, z / 2.0
         attrs.X = int(n + half_length)
         drw.setPixel(float64(x) + tx + n, float64(y) - ty, attrs)
         attrs.X = int(n)
