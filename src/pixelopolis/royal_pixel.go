@@ -33,3 +33,21 @@ func (rpixel RoyalPixel) ToRGBA() color.RGBA {
         A: byte(255),
     }
 }
+
+func (rpixel RoyalPixel) CopyWithoutColor() RoyalPixel {
+    new_pixel := NewRoyalPixel()
+    new_pixel.Normal = rpixel.Normal
+    new_pixel.Zbuffer = rpixel.Zbuffer
+    return new_pixel
+}
+
+func (rpixel RoyalPixel) Mix(another_rpixel RoyalPixel, c float64) RoyalPixel {
+    new_pixel := rpixel.CopyWithoutColor()
+    for i := 0; i < 3; i++ {
+        color := float64(another_rpixel.Color[i]) * (1.0 - c)
+        color += float64(rpixel.Color[i]) * c
+        new_pixel.Color[i] = byte(color)
+    }
+
+    return new_pixel
+}

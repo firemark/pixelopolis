@@ -10,14 +10,15 @@ type RoyalImage struct {
 
 type Direction int
 const (
-    Left Direction = 0
-    Right Direction = 1
+    South Direction = 0
+    East Direction = 1
     Up Direction = 2
     //Never One Direction plz
 )
 
 type PixelAttrs struct {
     X, Y, Z int
+    Normal []float32
     Dir Direction
 }
 
@@ -37,12 +38,13 @@ func (rimage *RoyalImage) Set(x int, y int, rpixel RoyalPixel) {
     rimage.Pixels[x + y*rimage.Width] = rpixel
 }
 
+
 func (rimage RoyalImage) ToImage() *image.RGBA {
     img := image.NewRGBA(image.Rect(0, 0, rimage.Width, rimage.Height))
     for y := 0; y < rimage.Height; y++ {
-        for x := 0; x < rimage.Width; x++ { 
+        for x := 0; x < rimage.Width; x++ {
             rpixel := rimage.Get(x, y)
-            img.Set(x % rimage.Width, y % rimage.Height, rpixel.ToRGBA())
+            img.Set(x, y, rpixel.ToRGBA())
         }
     }
     return img
