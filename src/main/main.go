@@ -46,26 +46,40 @@ func image_texture(path string, scale int) (pixelopolis.FnAttrsType, error) {
     height := bounds.Max.Y
     lambda := func(a pixelopolis.PixelAttrs) pixelopolis.RoyalPixel {
         x := (a.X * scale) % width
-        y := (a.Y * scale) % height
+        y := (-a.Y * scale) % height
         if x < 0 { x += width }
         if y < 0 { y += height }
-        pixel := image.At(x, y).(color.RGBA)
-        color := [3]byte{pixel.R, pixel.G, pixel.B}
-        return pixelopolis.FromRGB(color)
+        rawColor := image.At(x, y)
+        var pixelColor [3]byte
+        switch pixel := rawColor.(type) {
+        case color.RGBA:
+            pixelColor = [3]byte{pixel.R, pixel.G, pixel.B}
+        case color.NRGBA:
+            pixelColor = [3]byte{pixel.R, pixel.G, pixel.B}
+        default:
+            panic("Image has no RGBA format")
+        }
+        return pixelopolis.FromRGB(pixelColor)
     }
     return lambda, nil
 }
 
 func main() {
     rimage := pixelopolis.NewRoyalImage(512, 512)
-    texture, err := image_texture("tex.png", 8)
+    texture, err := image_texture("tex.png", 1)
+    if err != nil {
+        log.Fatal(err)
+    }
+    textureBrick, err := image_texture("brick.png", 1)
     if err != nil {
         log.Fatal(err)
     }
     drw := pixelopolis.Drawer{Img: &rimage, Fn: texture}
-    drw.CreateCylinder([2]int{256, 256}, [2]int{64, 48})
-    drw.CreateCone([2]int{256, 256 - 48}, 64)
-    drw.CreateCuboid([2]int{128, 220}, [3]int{32,32,64})
+    drw.CreateCuboid([2]int{128, 220}, [3]int{48, 32, 48})
+
+    drwBrick := pixelopolis.Drawer{Img: &rimage, Fn: textureBrick}
+    drwBrick.CreateCylinder([2]int{256, 256}, [2]int{64, 48})
+    drwBrick.CreateCone([2]int{256, 256 - 48}, 64)
 
     another_drw := pixelopolis.Drawer{Img: &rimage, Fn: blue}
     another_drw.CreateCuboid([2]int{128, 300}, [3]int{32,32,64})
