@@ -15,11 +15,13 @@ void _png_fill_rows(png_structp png_ptr, int width, int height, struct rgb* buff
     png_bytep row = malloc(3 * width * sizeof(png_byte));
 
     for (y=0; y < height; y++) {
+        png_bytep ptr = row;
         for(x=0; x < width; x++) {
             struct rgb* pixel = &buffer[y * width + x];
-            row[x*3 + 0] = pixel->r;
-            row[x*3 + 1] = pixel->g;
-            row[x*3 + 2] = pixel->b;
+            ptr[0] = pixel->r;
+            ptr[1] = pixel->g;
+            ptr[2] = pixel->b;
+            ptr += 3;
         }
         png_write_row(png_ptr, row);
     }
@@ -110,7 +112,7 @@ int main(int argc, char **argv) {
     int x, y;
     for (x=0; x < w; x++)
         for (y=0; y < h; y++) {
-            struct rgb temp = {.r=x & 0xff, .g=y & 0xff, .b=0};
+            struct rgb temp = {.r=x & 0xff, .g=y & 0xff, .b=(x / 0xff * 64) & 0xff};
             buffer[y * w + x] = temp;
         }
     write_png_file("marek.png", w, h, buffer);
