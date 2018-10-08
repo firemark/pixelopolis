@@ -6,14 +6,14 @@
 #include <img.h>
 
 
-void _png_fill_rows(png_structp png_ptr, int width, int height, struct rgb* buffer) {
+void _png_fill_rows(png_structp png_ptr, struct image* img) {
     int x, y;
-    png_bytep row = malloc(3 * width * sizeof(png_byte));
+    png_bytep row = malloc(3 * img->width * sizeof(png_byte));
 
-    for (y=0; y < height; y++) {
+    for (y=0; y < img->height; y++) {
         png_bytep ptr = row;
-        for(x=0; x < width; x++) {
-            struct rgb* pixel = &buffer[y * width + x];
+        for(x=0; x < img->width; x++) {
+            struct rgb* pixel = &img->buffer[y * img->width + x];
             ptr[0] = pixel->r;
             ptr[1] = pixel->g;
             ptr[2] = pixel->b;
@@ -25,7 +25,7 @@ void _png_fill_rows(png_structp png_ptr, int width, int height, struct rgb* buff
     free(row);
 }
 
-int write_png_file(char* file_name, int width, int height, struct rgb* buffer) {
+int write_png_file(char* file_name, struct image* img) {
     int code = 0;
     FILE *fp = NULL;
     png_structp png_ptr = NULL;
@@ -69,7 +69,7 @@ int write_png_file(char* file_name, int width, int height, struct rgb* buffer) {
         goto finalize;
     }
 
-    png_set_IHDR(png_ptr, info_ptr, width, height,
+    png_set_IHDR(png_ptr, info_ptr, img->width, img->height,
                  8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
@@ -82,7 +82,7 @@ int write_png_file(char* file_name, int width, int height, struct rgb* buffer) {
         goto finalize;
     }
 
-    _png_fill_rows(png_ptr, width, height, buffer);
+    _png_fill_rows(png_ptr, img);
 
     /* end write */
     if (setjmp(png_jmpbuf(png_ptr))) {

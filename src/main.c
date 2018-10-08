@@ -5,15 +5,16 @@
 
 
 int main(int argc, char **argv) {
-    int w = 800;
-    int h = 600;
-    struct rgb* buffer = malloc(w * h * sizeof(struct rgb));
+    struct image img = {
+        .width=800,
+        .height=800,
+        .buffer=malloc(800 * 800 * sizeof(struct rgb))};
     int x, y;
-    for (x=0; x < w; x++)
-        for (y=0; y < h; y++) {
+    for (x=0; x < img.width; x++)
+        for (y=0; y < img.height; y++) {
             struct rgb temp = {.r=x & 0xff, .g=y & 0xff, .b=(x / 0xff * 64) & 0xff};
-            buffer[y * w + x] = temp;
+            img.buffer[y * img.width + x] = temp;
         }
-    write_png_file("out.png", w, h, buffer);
+    write_png_file("out.png", &img);
     return 0;
 }
