@@ -25,6 +25,14 @@ void _png_fill_rows(png_structp png_ptr, struct image* img) {
     free(row);
 }
 
+struct image* create_black_image(int width, int height) {
+    struct image *img = malloc(sizeof(struct image));
+    img->width = width;
+    img->height = height;
+    img->buffer = malloc(width * height * sizeof(struct rgb));
+    return img;
+}
+
 int write_png_file(char* file_name, struct image* img) {
     int code = 0;
     FILE *fp = NULL;
