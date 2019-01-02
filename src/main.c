@@ -2,20 +2,23 @@
 #include <stdlib.h>
 
 #include <img.h>
+#include <draw.h>
 
 void do_sth(struct image *img) {
-    int x, y;
-    for (x=0; x < img->width; x++)
-    for (y=0; y < img->height; y++) {
-        struct rgb temp = {
-            .r=x & 0xff,
-            .g=y & 0xff,
-            .b=(x / 0xff * 64) & 0xff
+    float x, y;
+    float w = img->width;
+    float h = img->height;
+    for (x=0; x < w; x += 12.35)
+    for (y=0; y < h; y += 12.35) {
+        struct rgb color = {
+            .r=(int)x & 0xff,
+            .g=(int)y & 0xff,
+            .b=((int)x / 0xff * 64) & 0xff
         };
-        img->buffer[y * img->width + x] = temp;
+        float cor[2] = {x, y};
+        set_aa_pixel(img, cor, color);
     }
 }
-
 
 int main(int argc, char **argv) {
     struct image *img = create_black_image(800, 800);
