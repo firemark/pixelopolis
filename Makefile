@@ -1,5 +1,5 @@
 CC = gcc
-OBJS = main.o img.o draw.o
+OBJS = main.o img.o draw.o draw_shape.o
 LIBS = -lm -lpng
 FLAGS = -g
 INCLUDES = -Iinclude

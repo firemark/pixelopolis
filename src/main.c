@@ -3,6 +3,13 @@
 
 #include <img.h>
 #include <draw.h>
+#include <draw_shape.h>
+
+void do_sth2(struct image *img) {
+    struct image *img_template = read_png_file("tex.png");
+    int cor[2] = {32, 32};
+    draw_plane(img, img_template, cor, 128, 64);
+}
 
 void do_sth(struct image *img) {
     float x, y;
@@ -18,6 +25,9 @@ void do_sth(struct image *img) {
         float cor[2] = {x, y};
         set_aa_pixel(img, cor, color);
     }
+
+    do_sth2(img);
+
 }
 
 int main(int argc, char **argv) {
