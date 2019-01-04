@@ -34,16 +34,14 @@ void set_aa_pixel(struct image* img, float cor[2], struct rgb color) {
     // ru - right up; rd - right down
     float x = cor[0];
     float y = cor[1];
-    float floor_x = floor(x);
-    float floor_y = floor(y);
 
     int l = (int)x;
     int r = l + 1;
     int u = (int)y;
     int d = u + 1;
 
-    float dx = x - floor_x;
-    float dy = y - floor_y;
+    float dx = x - floor(x);
+    float dy = y - floor(y);
     float inv_dx = 1.0 - dx;
     float inv_dy = 1.0 - dy;
 
