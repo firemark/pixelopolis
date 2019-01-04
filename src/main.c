@@ -1,5 +1,6 @@
 #include <basic.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include <img.h>
 #include <draw.h>
@@ -7,8 +8,12 @@
 
 void do_sth2(struct image *img) {
     struct image *img_template = read_png_file("tex.png");
-    int cor[2] = {32, 32};
-    draw_plane(img, img_template, cor, 128, 64);
+    int vox_south[3] = {64, 64, 0};
+    draw_plane(img, img_template, vox_south, 64, 64, DIRECTION_SOUTH);
+    int vox_up[3] = {64, 64, 64};
+    draw_plane(img, img_template, vox_up, 64, 64, DIRECTION_UP);
+    int vox_east[3] = {128, 64, 0};
+    draw_plane(img, img_template, vox_east, 64, 64, DIRECTION_EAST);
 }
 
 void do_sth(struct image *img) {

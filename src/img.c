@@ -133,7 +133,7 @@ struct image* read_png_file(char* file_name) {
     finalize:
     if (fp) fclose(fp);
     if (info_ptr) png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-    if (png_ptr) png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+    //if (png_ptr) png_destroy_read_struct(png_ptr, (png_infopp)NULL, (png_infopp)NULL);
     
     return img;
 }
