@@ -10,12 +10,10 @@
 float* _projection(int vox[3]) {
     // https://en.wikipedia.org/wiki/Oblique_projection
     int s = vox[1] * SCALE_PROJECTION;
-    float x = vox[0] + s * COS_PROJECTION;
-    float y = vox[2] + s * SIN_PROJECTION;
     float *cor = malloc(2 * sizeof(float));
 
-    cor[0] = x;
-    cor[1] = y;
+    cor[0] = vox[0] + s * COS_PROJECTION;
+    cor[1] = vox[2] + s * SIN_PROJECTION;
 
     return cor;
 }

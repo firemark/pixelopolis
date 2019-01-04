@@ -4,7 +4,9 @@
 
 
 int _get_index(struct image* img, int cor[2]) {
-    return cor[1] * img->width + cor[0];
+    int x = cor[0];
+    int y = img->height - 1 - cor[1];
+    return y * img->width + x;
 }
 
 struct rgb get_pixel(struct image* img, int cor[2]) {
