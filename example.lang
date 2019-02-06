@@ -1,0 +1,24 @@
+define wall.ancient:
+    texture: tex.clay,
+    roof: roof.ancient,
+    bottom.0: floor.only_door,
+    middle.*: floor.without_doors,
+    top.0: floor.wood,
+end.
+
+define floor.only_door:
+    height: 24,
+    left.0: tex.empty,
+    left.1: tex.door,
+end.
+
+define floor.without_doors:
+    height: 24,
+    left.0: tex.empty,
+    right.1: tex.empty,
+end.
+
+define tex.empty:
+    width: 24,
+end.
+
