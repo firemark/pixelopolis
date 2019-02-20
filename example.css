@@ -8,8 +8,7 @@ wall.ancient {
 
 floor.only_door {
     height: 24;
-    left: tex.empty;
-    left: tex.door;
+    left: tex.empty | tex.door;
 }
 
 floor.without_doors {
@@ -18,7 +17,20 @@ floor.without_doors {
     right: tex.empty;
 }
 
+floor.wood {
+    height
+    middle: tex.wood;
+}
+
 tex.empty {
+    width: 24;
+}
+
+tex.door {
+    width: 24;
+}
+
+tex.wood {
     width: 24;
 }
 
