@@ -17,10 +17,32 @@ void css_debug_rule(FILE* fp, struct Rule* rule) {
     fprintf(fp, "%s {\n", rule->name);
     while(prop = rule->props[i++]) {
         css_debug_prop(fp, prop);
+        fprintf(fp, ";\n");
     }
     fprintf(fp, "}\n");
 }
 
 void css_debug_prop(FILE* fp, struct Prop* prop) {
-    fprintf(fp, "    %s: <OBJ>;\n", prop->name);
+    int i = 0;
+    fprintf(fp, "    %s: ", prop->name);
+    struct Obj* obj = prop->objs[i];
+    if (!obj) {
+        fprintf(fp, "<NULL>");
+        return;
+    } 
+
+    for(;;) {
+        css_debug_obj(fp, obj);
+        obj = prop->objs[++i];
+        if (!obj) break;
+        fprintf(fp, " | ");
+    }
+}
+
+void css_debug_obj(FILE* fp, struct Obj* obj) {
+    switch(obj->type) {
+        case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
+        case OBJ_STRING: fprintf(fp, "%s", obj->value); break;
+        default: fprintf(fp, "???"); break;
+    }
 }
