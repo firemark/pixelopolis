@@ -1,7 +1,6 @@
 *.o
 out.png
 pixelopolis
-lex.yy.c
-y.tab.h
-y.tab.c
-
+src/css.l.c
+src/css.y.c
+include/css.y.h

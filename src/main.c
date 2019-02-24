@@ -6,6 +6,8 @@
 #include <draw.h>
 #include <draw_shape.h>
 
+#include <css.h>
+
 void do_sth2(struct image *img) {
     struct image *img_template = read_png_file("tex.png");
     int vox_up[3] = {64, 64, 64 + 48};
@@ -37,6 +39,7 @@ void do_sth(struct image *img) {
 
 int main(int argc, char **argv) {
     struct image *img = create_black_image(800, 800);
+    struct Program *program = css_parse_file("example.css");
     do_sth(img);
     write_png_file("out.png", img);
     return 0;

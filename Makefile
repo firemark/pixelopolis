@@ -1,10 +1,16 @@
 CC = gcc
-OBJS = main.o img.o draw.o draw_shape.o
+YACC = yacc
+LEX = lex
+OBJS = main.o img.o draw.o draw_shape.o css.y.o css.l.o
 LIBS = -lm -lpng
 FLAGS = -g
 INCLUDES = -Iinclude
 
-all: pixelopolis 
+all: yacc pixelopolis
+
+yacc:
+	$(YACC) src/css.y --defines=include/css.y.h --output=src/css.y.c
+	$(LEX) -t src/css.l > src/css.l.c
 
 pixelopolis: $(OBJS)
 	$(CC) $(OBJS) $(FLAGS) -o $@ $(LIBS)

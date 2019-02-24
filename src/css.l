@@ -1,19 +1,33 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "y.tab.h"
+
+#include "css.y.h"
+
+#define push_string \
+    out = malloc(sizeof(char*) * (yyleng + 1)); \
+    strncpy(out, yytext, yyleng); \
+    yylval.string = out
+
+#define push_number yylval.number = atoi(yytext)
+
+char* out;
+int lines = 1;
+int chars = 1;
+
 %}
 
 %%
-[a-zA-Z_][a-zA-Z0-9_]*      return WORD;
-\"[^"]+\"                   return STRING;
-\.[a-zA-Z_][a-zA-Z0-9_]*    return CLASS;
-[0-9]+                      yylval=atoi(yytext); return NUMBER;
-{                           return START_BODY;
-}                           return END_BODY;   
+.                           chars++; REJECT;
+[a-zA-Z_][a-zA-Z0-9_]*      push_string; return WORD;
+\"[^"]+\"                   push_string; return STRING;
+\.[a-zA-Z_][a-zA-Z0-9_]*    push_string; return CLASS;
+[0-9]+                      push_number; return NUMBER;
+\{                          return START_BODY;
+\}                          return END_BODY;
 :                           return COLON;
 ;                           return SEMICOLON;
 \|                          return PIPE;
-\n                          /* ignore */
-[\s\t]+                     /* ignore */
+\n                          chars = 1; lines++;
+[ \r\t]+                    /* ignore */
 %%
