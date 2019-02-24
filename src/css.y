@@ -121,6 +121,7 @@ rule_name:
             char* out = malloc(sizeof(char) * (size + 1));
             strcpy(out, $1);
             strcat(out, $2);
+            out[size] = 0;
             free($1);
             free($2);
             $$ = out;

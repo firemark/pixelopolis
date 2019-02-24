@@ -7,6 +7,7 @@
 #define push_string \
     out = malloc(sizeof(char*) * (yyleng + 1)); \
     strncpy(out, yytext, yyleng); \
+    out[yyleng] = 0; \
     yylval.string = out
 
 #define push_number yylval.number = atoi(yytext)
