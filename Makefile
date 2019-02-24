@@ -1,7 +1,7 @@
 CC = gcc
 YACC = yacc
 LEX = lex
-OBJS = main.o img.o draw.o draw_shape.o css.y.o css.l.o
+OBJS = main.o img.o draw.o draw_shape.o css.y.o css.l.o css_func.o
 LIBS = -lm -lpng
 FLAGS = -g
 INCLUDES = -Iinclude

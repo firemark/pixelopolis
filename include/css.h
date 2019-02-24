@@ -20,14 +20,17 @@ struct Prop {
     struct Obj **objs;
 };
 
-struct Regule {
+struct Rule {
     char* name;
     struct Prop **props;
 };
 
 struct Program {
     char* name;
-    struct Regule **regules;
+    struct Rule **rules;
 };
 
 struct Program* css_parse_file(char *filename);
+void css_debug_program(FILE* fp, struct Program* program);
+void css_debug_rule(FILE* fp, struct Rule* rule);
+void css_debug_prop(FILE* fp, struct Prop* prop);

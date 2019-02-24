@@ -34,12 +34,12 @@ void do_sth(struct image *img) {
     }
 
     do_sth2(img);
-
 }
 
 int main(int argc, char **argv) {
     struct image *img = create_black_image(800, 800);
     struct Program *program = css_parse_file("example.css");
+    css_debug_program(stderr, program);
     do_sth(img);
     write_png_file("out.png", img);
     return 0;

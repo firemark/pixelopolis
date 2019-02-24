@@ -19,18 +19,18 @@ int yywrap (void) {
     return 1;
 }
 
-struct Program* make_program(struct Regule **regules) {
+struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
     program->name = "top";
-    program->regules = regules;
+    program->rules = rules;
     return program;
 }
 
-struct Regule* make_regule(char *name, struct Prop **props) {
-    struct Regule *regule = malloc(sizeof(struct Regule));
-    regule->name = name;
-    regule->props = props;
-    return regule;
+struct Rule* make_rule(char *name, struct Prop **props) {
+    struct Rule *rule = malloc(sizeof(struct Rule));
+    rule->name = name;
+    rule->props = props;
+    return rule;
 }
 
 struct Prop* make_prop(char *name, struct Obj **objs) {
@@ -65,7 +65,7 @@ struct Obj* make_obj_as_string(char* string) {
 #define append_to_array(arr, size, obj) \
     size_t i; \
     for(i=0; i < size; i++) { \
-        if (!arr[i]) continue; \
+        if (arr[i]) continue; \
         arr[i] = obj; \
         break; \
     } \
@@ -78,10 +78,10 @@ struct Obj* make_obj_as_string(char* string) {
 	int number;
     char* string;
     struct Program* programPtr;
-    struct Regule* regulePtr;
+    struct Rule* rulePtr;
     struct Prop* propPtr;
     struct Obj* objPtr;
-    struct Regule** regulePtrMany;
+    struct Rule** rulePtrMany;
     struct Prop** propPtrMany;
     struct Obj** objPtrMany;
 };
@@ -91,30 +91,30 @@ struct Obj* make_obj_as_string(char* string) {
     COLON SEMICOLON PIPE
 %token <string> WORD STRING CLASS
 %token <number> NUMBER
-%type <string> regule_name
+%type <string> rule_name
 %type <programPtr> program
-%type <regulePtr> regule
+%type <rulePtr> rule
 %type <propPtr> prop
 %type <objPtr> obj
-%type <regulePtrMany> regules;
+%type <rulePtrMany> rules;
 %type <propPtrMany> props;
 %type <objPtrMany> objs;
 
 %%
 program: 
-        regules { global_program = make_program($1); }
+        rules { global_program = make_program($1); }
         ;
 
-regules:
-        regule { make_array(struct Regule, REGULES_SIZE, $1); $$ = arr; }
-        | regules regule { append_to_array($1, REGULES_SIZE, $2); $$ = $1; }
+rules:
+        rule { make_array(struct Rule, REGULES_SIZE, $1); $$ = arr; }
+        | rules rule { append_to_array($1, REGULES_SIZE, $2); $$ = $1; }
         ;
 
-regule:
-        regule_name START_BODY props END_BODY { $$ = make_regule($1, $3); }
+rule:
+        rule_name START_BODY props END_BODY { $$ = make_rule($1, $3); }
         ;
 
-regule_name:
+rule_name:
         WORD
         | WORD CLASS {
             size_t size = strlen($1) + strlen($2);
@@ -144,7 +144,7 @@ objs:
 obj:
         NUMBER { $$ = make_obj_as_number($1); }
         | STRING { $$ = make_obj_as_string($1); }
-        | regule_name { $$ = make_obj_as_string($1); }
+        | rule_name { $$ = make_obj_as_string($1); }
         ;
 
 %%
