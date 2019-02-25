@@ -10,6 +10,12 @@
     out[yyleng] = 0; \
     yylval.string = out
 
+#define crop_and_push_string(l, r) \
+    out = malloc(sizeof(char*) * (yyleng + 1 - r)); \
+    strncpy(out, yytext + l, yyleng - r); \
+    out[yyleng - r] = 0; \
+    yylval.string = out
+
 #define push_number yylval.number = atoi(yytext)
 
 char* out;
@@ -20,9 +26,10 @@ int chars = 1;
 
 %%
 .                           chars++; REJECT;
-[a-zA-Z_][a-zA-Z0-9_]*      push_string; return WORD;
-\"[^"]+\"                   push_string; return STRING;
-\.[a-zA-Z_][a-zA-Z0-9_]*    push_string; return CLASS;
+[a-zA-Z_][a-zA-Z0-9_-]*     push_string; return WORD;
+\"[^"]+\"                   crop_and_push_string(1, 2); return STRING;
+\.[a-zA-Z_][a-zA-Z0-9_-]*   crop_and_push_string(1, 0); return CLASS;
+:[a-zA-Z_][a-zA-Z0-9_-]*    crop_and_push_string(1, 0); return PSEUDO_CLASS;
 [0-9]+                      push_number; return NUMBER;
 \{                          return START_BODY;
 \}                          return END_BODY;

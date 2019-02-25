@@ -7,7 +7,7 @@
 enum ObjType {
     OBJ_NUMBER,
     OBJ_STRING,
-    OBJ_REGULE_NAME,
+    OBJ_RULE,
 };
 
 struct Obj {
@@ -20,8 +20,15 @@ struct Prop {
     struct Obj **objs;
 };
 
+struct RuleSelector {
+    char* element;
+    char* klass;
+    char* pseudo_klass;
+    // todo - support attributes el[x="foobar"]
+};
+
 struct Rule {
-    char* name;
+    struct RuleSelector* selector;
     struct Prop **props;
 };
 
@@ -35,3 +42,4 @@ void css_debug_program(FILE* fp, struct Program* program);
 void css_debug_rule(FILE* fp, struct Rule* rule);
 void css_debug_prop(FILE* fp, struct Prop* prop);
 void css_debug_obj(FILE* fp, struct Obj* obj);
+void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector);

@@ -14,7 +14,8 @@ void css_debug_program(FILE* fp, struct Program* program) {
 void css_debug_rule(FILE* fp, struct Rule* rule) {
     int i = 0;
     struct Prop* prop;
-    fprintf(fp, "%s {\n", rule->name);
+    css_debug_rule_selector(fp, rule->selector);
+    fprintf(fp, " {\n");
     while(prop = rule->props[i++]) {
         css_debug_prop(fp, prop);
         fprintf(fp, ";\n");
@@ -42,7 +43,20 @@ void css_debug_prop(FILE* fp, struct Prop* prop) {
 void css_debug_obj(FILE* fp, struct Obj* obj) {
     switch(obj->type) {
         case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
-        case OBJ_STRING: fprintf(fp, "%s", obj->value); break;
+        case OBJ_STRING: fprintf(fp, "\"%s\"", obj->value); break;
+        case OBJ_RULE: css_debug_rule_selector(fp, obj->value); break;
         default: fprintf(fp, "???"); break;
+    }
+}
+
+void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
+    if (selector->element) {
+        fprintf(fp, "%s", selector->element);
+    }
+    if (selector->klass) {
+        fprintf(fp, ".%s", selector->klass);
+    }
+    if (selector->pseudo_klass) {
+        fprintf(fp, ":%s", selector->pseudo_klass);
     }
 }

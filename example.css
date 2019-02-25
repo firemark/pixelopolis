@@ -1,9 +1,10 @@
 wall.ancient {
     texture: tex.clay;
-    roof: roof.ancient;
     bottom: floor.only_door;
     middle: floor.without_doors;
     top: floor.wood;
+    floors: 4;
+    width: 50;
 }
 
 floor.only_door {
@@ -12,7 +13,7 @@ floor.only_door {
 }
 
 floor.without_doors {
-    height: 24;
+    height: 12;
     left: tex.empty;
     right: tex.empty;
 }
@@ -23,14 +24,18 @@ floor.wood {
 }
 
 tex.empty {
+    height: 24;
     width: 24;
 }
 
 tex.door {
-    width: 24;
+    texture: "door.png";
 }
 
 tex.wood {
-    width: 24;
+    texture: "wood.png";
 }
 
+tex.clay {
+    texture: "clay.png";
+}
