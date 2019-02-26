@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <img.h>
-#include <draw.h>
-#include <draw_shape.h>
+#include "img.h"
+#include "draw.h"
+#include "draw_shape.h"
 
-#include <css.h>
+#include "css_debug.h"
 
 void do_sth2(struct image *img) {
     struct image *img_template = read_png_file("tex.png");

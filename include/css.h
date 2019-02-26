@@ -4,6 +4,10 @@
 #define PROPS_SIZE 16
 #define OBJS_SIZE 8
 
+#define css_iter(obj, container) \
+    int css_iter_i##__FILE__##__LINE__ = 0; \
+    while(obj = container[css_iter_i##__FILE__##__LINE__++])
+
 enum ObjType {
     OBJ_NUMBER,
     OBJ_STRING,
@@ -38,8 +42,3 @@ struct Program {
 };
 
 struct Program* css_parse_file(char *filename);
-void css_debug_program(FILE* fp, struct Program* program);
-void css_debug_rule(FILE* fp, struct Rule* rule);
-void css_debug_prop(FILE* fp, struct Prop* prop);
-void css_debug_obj(FILE* fp, struct Obj* obj);
-void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector);

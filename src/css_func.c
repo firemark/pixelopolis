@@ -1,62 +1,35 @@
 #include <stdio.h>
+#include <string.h>
 
-#include "css.h"
+#include "css_func.h"
 
-void css_debug_program(FILE* fp, struct Program* program) {
-    fprintf(fp, "PROGRAM %s\n", program->name);
-    int i = 0;
+struct Rule* css_find_rule_by_query(
+        struct Program* program, 
+        struct RuleSelector query) {
     struct Rule* rule;
-    while(rule = program->rules[i++]) {
-        css_debug_rule(fp, rule);
+    css_iter(rule, program->rules) {
+        struct RuleSelector* selector = rule->selector;
+        if (
+            (!query.element || strcmp(selector->element, query.element))
+            && (!query.klass || strcmp(selector->klass, query.klass))
+            && (!query.pseudo_klass || strcmp(selector->pseudo_klass, query.pseudo_klass))
+           ) {
+            return rule;
+        }
     }
+    return NULL;
 }
 
-void css_debug_rule(FILE* fp, struct Rule* rule) {
-    int i = 0;
+struct Prop* css_find_prop(struct Rule* rule, char* name) {
     struct Prop* prop;
-    css_debug_rule_selector(fp, rule->selector);
-    fprintf(fp, " {\n");
-    while(prop = rule->props[i++]) {
-        css_debug_prop(fp, prop);
-        fprintf(fp, ";\n");
+    css_iter(prop, rule->props) {
+        if (strcmp(prop->name, name)) {
+            return prop;
+        }
     }
-    fprintf(fp, "}\n");
+    return NULL;
 }
 
-void css_debug_prop(FILE* fp, struct Prop* prop) {
-    int i = 0;
-    fprintf(fp, "    %s: ", prop->name);
-    struct Obj* obj = prop->objs[i];
-    if (!obj) {
-        fprintf(fp, "<NULL>");
-        return;
-    } 
-
-    for(;;) {
-        css_debug_obj(fp, obj);
-        obj = prop->objs[++i];
-        if (!obj) break;
-        fprintf(fp, " | ");
-    }
-}
-
-void css_debug_obj(FILE* fp, struct Obj* obj) {
-    switch(obj->type) {
-        case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
-        case OBJ_STRING: fprintf(fp, "\"%s\"", obj->value); break;
-        case OBJ_RULE: css_debug_rule_selector(fp, obj->value); break;
-        default: fprintf(fp, "???"); break;
-    }
-}
-
-void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
-    if (selector->element) {
-        fprintf(fp, "%s", selector->element);
-    }
-    if (selector->klass) {
-        fprintf(fp, ".%s", selector->klass);
-    }
-    if (selector->pseudo_klass) {
-        fprintf(fp, ":%s", selector->pseudo_klass);
-    }
+struct Obj* css_get_first_obj_from_prop(struct Prop* prop) {
+    return prop->objs[0];
 }

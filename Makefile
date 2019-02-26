@@ -1,22 +1,26 @@
 CC = gcc
 YACC = yacc
 LEX = lex
-OBJS = main.o img.o draw.o draw_shape.o css.y.o css.l.o css_func.o
+OBJS = main img draw draw_shape css.y css.l css_func css_debug
+OBJS_PATH = $(foreach obj,$(OBJS),out/$(obj).o)
 LIBS = -lm -lpng
 FLAGS = -g
 INCLUDES = -Iinclude
 
-all: yacc pixelopolis
+all: make_dirs yacc pixelopolis
 
-yacc:
+make_dirs: out/
+	mkdir out -p
+
+yacc: src/css.y src/css.l
 	$(YACC) src/css.y --defines=include/css.y.h --output=src/css.y.c
 	$(LEX) -t src/css.l > src/css.l.c
 
-pixelopolis: $(OBJS)
-	$(CC) $(OBJS) $(FLAGS) -o $@ $(LIBS)
+pixelopolis: $(OBJS_PATH)
+	$(CC) $(OBJS_PATH) $(FLAGS) -o $@ $(LIBS)
 
-%.o: src/%.c
+out/%.o: src/%.c
 	$(CC) $< $(FLAGS) -c -o $@ $(INCLUDES)
 
-clean:
+clear:
 	rm -f *.o pixelopolis
