@@ -1,7 +1,7 @@
 CC = gcc
 YACC = yacc
 LEX = lex
-OBJS = main img draw draw_shape css.y css.l css_func css_debug
+OBJS = main img draw draw_shape css.y css.l css_func css_debug css_draw
 OBJS_PATH = $(foreach obj,$(OBJS),out/$(obj).o)
 LIBS = -lm -lpng
 FLAGS = -g
@@ -23,4 +23,4 @@ out/%.o: src/%.c
 	$(CC) $< $(FLAGS) -c -o $@ $(INCLUDES)
 
 clear:
-	rm -f *.o pixelopolis
+	rm -f out/*.o pixelopolis

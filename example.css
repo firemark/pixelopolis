@@ -1,3 +1,20 @@
+wall.test {
+    texture: tex.clay;
+    bottom: floor.test;
+    middle: floor.test;
+    top: floor.test_top;
+    floors: 4;
+    width: 50;
+}
+
+floor.test {
+    height: 5;
+}
+
+floor.test_top {
+    height: 24;
+}
+
 wall.ancient {
     texture: tex.clay;
     bottom: floor.only_door;
@@ -37,5 +54,5 @@ tex.wood {
 }
 
 tex.clay {
-    texture: "clay.png";
+    texture: "brick.png";
 }

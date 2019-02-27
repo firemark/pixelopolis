@@ -1,3 +1,4 @@
+#pragma once
 #include "css.h"
 
 void css_debug_program(FILE* fp, struct Program* program);

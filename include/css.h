@@ -30,11 +30,13 @@ struct RuleSelector {
     char* pseudo_klass;
     // todo - support attributes el[x="foobar"]
 };
+extern struct RuleSelector default_selector;
 
 struct Rule {
     struct RuleSelector* selector;
     struct Prop **props;
 };
+
 
 struct Program {
     char* name;

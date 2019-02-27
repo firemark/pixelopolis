@@ -27,13 +27,13 @@ void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
 
 void _fill_rows_from_png_to_image(png_structp png_ptr, struct image* img, int pixel_size) {
     int x, y;
-    png_bytep row = malloc(3 * img->width * sizeof(png_byte));
+    struct rgb pixel;
+    png_bytep row = malloc(pixel_size * img->width * sizeof(png_byte));
 
     for (y=0; y < img->height; y++) {
         png_bytep ptr = row;
         png_read_row(png_ptr, ptr, NULL);
         for(x=0; x < img->width; x++) {
-            struct rgb pixel;
             pixel.r = ptr[0];
             pixel.g = ptr[1];
             pixel.b = ptr[2];
