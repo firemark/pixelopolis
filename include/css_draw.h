@@ -8,3 +8,9 @@ void css_draw_wall(
         struct RuleSelector *query,
         int vox[3],
         enum direction dir);
+
+void css_draw_cube(
+        struct image *img, 
+        struct Program *program,
+        struct RuleSelector *query,
+        int vox[3]);

@@ -1,0 +1,40 @@
+cube.test {
+    wall: wall.wall;
+    roof: wall.roof;
+}
+
+wall.wall {
+    texture: tex.brick;
+    bottom: floor.test;
+    middle: floor.test;
+    top: floor.bar;
+    floors: 4;
+    width: 50;
+}
+
+wall.roof {
+    texture: tex.clay;
+    width: 50;
+    height: 50;
+}
+
+floor.test {
+    height: 24;
+}
+
+floor.bar {
+    texture: tex.bar;
+    height: 5;
+}
+
+tex.bar {
+    texture: "textures/bar.png";
+}
+
+tex.brick {
+    texture: "textures/brick.png";
+}
+
+tex.clay {
+    texture: "textures/clay.png";
+}
