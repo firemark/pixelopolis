@@ -4,3 +4,4 @@ pixelopolis
 src/css.l.c
 src/css.y.c
 include/css.y.h
+__pycache__

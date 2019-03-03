@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Pixelopolis</title>
+    </head>
+    <body>
+        <h1>Pixelopolis</h1>
+        {% if is_ok == false %} <strong>!!! error !!!</strong> {% endif %}
+        <form method="POST" action="/">
+            <textarea name="data">{{ data }}</textarea>
+            <input type="submit" name="doit.png" />
+        </form>
+        <img src="/static/out.png" />
+    </body>
+</html>
