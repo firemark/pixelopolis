@@ -9,7 +9,7 @@ INCLUDES = -Iinclude
 
 all: make_dirs yacc pixelopolis
 
-make_dirs: out/
+make_dirs:
 	mkdir out -p
 
 yacc: src/css.y src/css.l

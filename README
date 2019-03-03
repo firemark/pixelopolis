@@ -1,2 +1,2 @@
-go build pixelopolis
-bin/main ...
+make all
+./pixelopolis
