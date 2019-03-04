@@ -4,7 +4,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def get():
-    return render_template('index.html', is_ok=None) 
+    with open('test.css') as fp:
+        data = fp.read()
+    return render_template('index.html', is_ok=None, data=data)
 
 @app.route('/', methods=['POST'])
 def post():

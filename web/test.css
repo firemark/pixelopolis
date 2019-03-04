@@ -1,0 +1,76 @@
+series {
+    buildings: cube.small | cube.small | cube.big | cube.small | cube.small ;
+    padding: 8;
+}
+
+cube.road {
+    roof: wall.road;
+    width: 250;
+    depth: 200;
+    height: 1;
+}
+
+cube.big {
+    wall: wall.wall;
+    roof: wall.roof;
+    width: 50;
+    depth: 50;
+    height: 100;
+}
+
+cube.small {
+    wall: wall.wall;
+    roof: wall.roof;
+    width: 50;
+    depth: 50;
+    height: 40;
+}
+
+wall.wall {
+    texture: tex.brick;
+    bottom: floor.bottom;
+    middle: floor.middle;
+    top: floor.top;
+}
+
+wall.roof {
+    texture: tex.clay;
+}
+
+wall.road {
+    texture: tex.road;
+}
+
+floor.bottom {
+    texture: tex.bottom;
+    height: 24;
+}
+
+floor.middle {
+    height: 12;
+}
+
+floor.top {
+    texture: tex.bar;
+    height: 5;
+}
+
+tex.bar {
+    texture: "textures/bar.png";
+}
+
+tex.brick {
+    texture: "textures/brick.png";
+}
+
+tex.clay {
+    texture: "textures/clay.png";
+}
+
+tex.bottom {
+    texture: "textures/bottom.png";
+}
+
+tex.road {
+    texture: "textures/road.png";
+}
