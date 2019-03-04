@@ -1,14 +1,30 @@
 <html>
     <head>
         <title>Pixelopolis</title>
+        <link rel=stylesheet href="https://codemirror.net/lib/codemirror.css" />
+        <script src="https://codemirror.net/lib/codemirror.js"></script>
+        <script src="https://codemirror.net/mode/css/css.js"></script>
+        <style>
+            body { background-color: grey; }
+            form { float: left; width: 50%; }
+            img { float: left; }
+            .CodeMirror { font-size: 12pt; }
+        </style>
     </head>
     <body>
         <h1>Pixelopolis</h1>
         {% if is_ok == false %} <strong>!!! error !!!</strong> {% endif %}
         <form method="POST" action="/">
-            <textarea name="data">{{ data }}</textarea>
+            <textarea id="data" name="data">{{ data }}</textarea>
             <input type="submit" name="doit.png" />
         </form>
         <img src="/static/out.png" />
+        <script>
+            var textarea = document.querySelector('#data');
+            var editor = CodeMirror.fromTextArea(textarea, {
+                lineNumbers: true,
+                mode: "css",
+            });
+        </script>
     </body>
 </html>
