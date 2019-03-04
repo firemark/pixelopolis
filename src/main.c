@@ -11,8 +11,8 @@
 
 #include "css_debug.h"
 
-void do_sth(struct image *img) {
-    struct Program *program = css_parse_file("test.css");
+void do_sth(struct image *img, char *filename) {
+    struct Program *program = css_parse_file(filename);
     int avox[3] = {16, 32, 64};
 
     struct RuleSelector query = default_selector;
@@ -59,7 +59,7 @@ void do_sth(struct image *img) {
 
 int main(int argc, char **argv) {
     struct image *img = create_black_image(400, 400);
-    do_sth(img);
-    write_png_file("out.png", img);
+    do_sth(img, argc >= 2 ? argv[1] : NULL);
+    write_png_file(argc >= 3 ? argv[2] : "out.png" , img);
     return 0;
 }
