@@ -58,8 +58,24 @@ void do_sth(struct image *img, char *filename) {
 }
 
 int main(int argc, char **argv) {
+    char *in_filename = argc >= 1 ? argv[1] : "-";
+    char *out_filename = argc >= 2 ? argv[2] : "out.png";
     struct image *img = create_black_image(400, 400);
-    do_sth(img, argc >= 2 ? argv[1] : NULL);
-    write_png_file(argc >= 3 ? argv[2] : "out.png" , img);
+
+    if (!strcmp(in_filename, "-")) {
+        in_filename = NULL;
+    }
+    do_sth(img, in_filename);
+    if (!strcmp(out_filename, "-")) {
+        write_png_file(stdout, img);
+    } else {
+        FILE *fp = fopen(out_filename, "wb");
+        if (!fp) {
+            fprintf(stderr, "Problem with creating file %s\n", file_name);
+            return -1;
+        }
+        write_png_file(fp, img);
+        fclose(fp);
+    }
     return 0;
 }

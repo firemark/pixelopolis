@@ -139,19 +139,10 @@ struct image* read_png_file(char* file_name) {
 }
 
 
-int write_png_file(char* file_name, struct image* img) {
+int write_png_file(FILE *fp, struct image* img) {
     int code = 0;
-    FILE *fp = NULL;
     png_structp png_ptr = NULL;
     png_infop info_ptr = NULL;
-
-    /* create file */
-    fp = fopen(file_name, "wb");
-    if (!fp) {
-        fprintf(stderr, "Problem with creating file %s\n", file_name);
-        code = 1;
-        goto finalize;
-    }
 
     /* initialize stuff */
     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -207,7 +198,6 @@ int write_png_file(char* file_name, struct image* img) {
     png_write_end(png_ptr, NULL);
 
     finalize:
-    if (fp) fclose(fp);
     if (info_ptr) png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
     if (png_ptr) png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
     return code;

@@ -14,6 +14,7 @@ struct DrawInnerInfo {
 };
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
+enum Series { VERTICAL_SERIES, HORIZONTAL_SERIES };
 
 char _get_index_height(enum direction dir) {
     switch(dir) {
@@ -230,32 +231,59 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
     }
 }
 
-void css_draw_wall(
-        struct DrawInfo *draw_info,
-        enum direction dir) {
-    struct Rule* wall_rule = css_find_rule_by_query(draw_info->program, draw_info->query);
-    if (!wall_rule) return;
+void _css_draw_series(struct DrawInnerInfo &inner_info, enum Series) {
+    struct Program *program = inner_info->program;
+    struct Rule* series = inner_info->self;
+    if (!series) return;
+    struct Prop* buildings_prop = css_find_prop(series, "buildings");
+    if (!buildings_prop) return;
 
-    struct DrawInnerInfo inner_info = {
-        .program=draw_info->program,
-        .img=draw_info->img,
-        .self=wall_rule,
-        .parent=NULL,
-        .vox=draw_info->vox,
-    };
-    _css_draw_wall_with_rule(&inner_info, dir);
+    int *padding_ptr = css_find_number_prop(series, "padding");
+    int padding = padding_ptr ? *padding_ptr : 8;
+
+    struct Obj* obj = NULL;
+
+    css_iter(obj, series_prop->objs) {
+        if (obj->type != OBJ_RULE) continue;
+        struct RuleSelector *building_query = obj->value;
+        struct DrawInfo draw_info = {
+            .img=img,
+            .program=program,
+            .query=building_query,
+            .vox=vox,
+        };
+        draw_component(&draw_info);
+        // todo: add output attributes after draw
+    }
 }
 
-void css_draw_cube(struct DrawInfo *draw_info) {
-    struct Rule* cube_rule = css_find_rule_by_query(draw_info->program, draw_info->query);
-    if (!cube_rule) return;
+int _check_element_name(struct RuleSelector *selector, char* name) {
+    return strcmp(selector->element, name) == 0;
+}
+
+void draw_component(struct DrawInfo *info) {
+    struct RuleSelector *query = info->query;
+    struct Rule* rule = css_find_rule_by_query(info->program, query);
+    if (!rule) return;
 
     struct DrawInnerInfo inner_info = {
-        .program=draw_info->program,
-        .img=draw_info->img,
-        .self=cube_rule,
+        .program=info->program,
+        .img=info->img,
+        .self=rule,
         .parent=NULL,
-        .vox=draw_info->vox,
+        .vox=info->vox,
     };
-    _css_draw_cube(&inner_info);
+
+    if (_check_element_name(query, "cube")) {
+        _css_draw_cube(&inner_info);
+    } else if (_check_element_name(query, "pyramid")) {
+        // _css_draw_pyramid(&inner_info);
+    } else if (_check_element_name(query, "v-series")) {
+        _css_draw_series(&inner_info, VERTICAL_SERIES);
+    } else if (_check_element_name(query, "h-series")) {
+        _css_draw_series(&inner_info, HORIZONTAL_SERIES);
+    } else if (_check_element_name(query, "stack")) {
+        // _css_draw_stack(&inner_info);
+    }
+
 }

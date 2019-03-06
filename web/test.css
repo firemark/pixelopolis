@@ -1,5 +1,16 @@
-series {
-    buildings: cube.small | cube.small | cube.big | cube.small | cube.small ;
+world {
+    width: 800;
+    height: 800;
+    body: v-series.A;
+}
+
+v-series.A {
+    body: cube.small | cube.small | h-series.A | cube.small | cube.small ;
+    padding: 8;
+}
+
+h-series.A {
+    body: cube.big | cube.small | cube.small;
     padding: 8;
 }
 
