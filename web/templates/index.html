@@ -7,18 +7,24 @@
         <style>
             body { background-color: grey; }
             form { float: left; width: 50%; }
-            img { float: left; }
-            .CodeMirror { font-size: 12pt; }
+            .CodeMirror { font-size: 12pt; height: 800px; }
+            .box { float: left; width: 50%; height: 800px; overflow: auto; }
         </style>
     </head>
     <body>
         <h1>Pixelopolis</h1>
-        {% if is_ok == false %} <strong>!!! error !!!</strong> {% endif %}
+        {% for err in errors %} 
+            <strong>{{ err }}</strong>
+        {% endfor %}
         <form method="POST" action="/">
             <textarea id="data" name="data">{{ data }}</textarea>
             <input type="submit" name="doit.png" />
         </form>
-        <img src="/static/out.png" />
+        <div class="box">
+        {% if img %}
+            <img src="data:image/png;base64,{{ img }}" alt="result" />
+        {% endif %}
+        </div>
         <script>
             var textarea = document.querySelector('#data');
             var editor = CodeMirror.fromTextArea(textarea, {
