@@ -5,24 +5,36 @@ world {
 }
 
 h-series.city-and-road {
-    body: cube.road | v-series.city;
+    body: cube.road | d-series.city;
+}
+
+d-series.city {
+    body: cube.sidewalk | v-series.city;
 }
 
 v-series.city {
-    body: h-series.wall | cube.small | cube.big | cube.small | h-series.wall;
-    padding: 8;
+    body: h-series.wall | cube.small | h-series.wall | cube.small | h-series.wall;
+    padding: 16;
 }
 
 h-series.wall {
-    body: cube.big | cube.small | cube.small;
-    padding: 128;
+    body: cube.big | cube.small | cube.small | cube.big;
+    padding: 24;
 }
 
 cube.road {
     roof: wall.road;
-    width: 400;
+    width: 320;
     depth: 100;
-    height: 1;
+    height: 0;
+}
+
+cube.sidewalk {
+    roof: wall.grey-brick;
+    wall: wall.top;
+    width: 320;
+    depth: 300;
+    height: 5;
 }
 
 cube.big {
@@ -41,11 +53,19 @@ cube.small {
     height: 40;
 }
 
+wall.grey-brick {
+    texture: tex.grey-brick;
+}
+
 wall.wall {
     texture: tex.brick;
     bottom: floor.bottom;
     middle: floor.middle;
     top: floor.top;
+}
+
+wall.top {
+  	texture: tex.bar;
 }
 
 wall.roof {
@@ -88,4 +108,8 @@ tex.bottom {
 
 tex.road {
     texture: "textures/road.png";
+}
+
+tex.grey-brick {
+ 	texture:  "textures/grey-brick.png";
 }
