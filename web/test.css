@@ -1,23 +1,27 @@
 world {
     width: 800;
     height: 800;
-    body: v-series.A;
+    body: h-series.city-and-road;
 }
 
-v-series.A {
-    body: cube.small | cube.small | h-series.A | cube.small | cube.small ;
+h-series.city-and-road {
+    body: cube.road | v-series.city;
+}
+
+v-series.city {
+    body: h-series.wall | cube.small | cube.big | cube.small | h-series.wall;
     padding: 8;
 }
 
-h-series.A {
+h-series.wall {
     body: cube.big | cube.small | cube.small;
-    padding: 8;
+    padding: 128;
 }
 
 cube.road {
     roof: wall.road;
-    width: 250;
-    depth: 200;
+    width: 400;
+    depth: 100;
     height: 1;
 }
 

@@ -9,4 +9,4 @@ struct DrawInfo {
     int *vox;
 };
 
-void draw_component(struct DrawInfo *info);
+void draw_component(struct DrawInfo *info, int *out_vox);
