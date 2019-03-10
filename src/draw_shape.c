@@ -47,6 +47,8 @@ void draw_plane(
         }
         int tmp_cor[2] = {w % img_to_draw->width, h % img_to_draw->height};
         struct rgb color = get_pixel(img_to_draw, tmp_cor);
+        color.zindex = new_vox[1];
+
         float* img_cor = _projection(new_vox);
         set_aa_pixel(img, img_cor, color);
         free(img_cor);

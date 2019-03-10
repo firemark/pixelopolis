@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
+#include <limits.h>
 
 #include <img.h>
 
@@ -27,16 +28,18 @@ void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
 
 void _fill_rows_from_png_to_image(png_structp png_ptr, struct image* img, int pixel_size) {
     int x, y;
-    struct rgb pixel;
     png_bytep row = malloc(pixel_size * img->width * sizeof(png_byte));
 
     for (y=0; y < img->height; y++) {
         png_bytep ptr = row;
         png_read_row(png_ptr, ptr, NULL);
         for(x=0; x < img->width; x++) {
-            pixel.r = ptr[0];
-            pixel.g = ptr[1];
-            pixel.b = ptr[2];
+            struct rgb pixel = {
+                .r=ptr[0],
+                .g=ptr[1],
+                .b=ptr[2],
+                .zindex=INT_MAX,
+            };
             ptr += pixel_size;
             img->buffer[y * img->width + x] = pixel;
         }
@@ -50,6 +53,18 @@ struct image* create_black_image(int width, int height) {
     img->width = width;
     img->height = height;
     img->buffer = malloc(width * height * sizeof(struct rgb));
+    int x, y;
+    for (y=0; y < img->height; y++) {
+        for(x=0; x < img->width; x++) {
+            struct rgb pixel = {
+                .r=0,
+                .g=0,
+                .b=0,
+                .zindex=INT_MAX,
+            };
+            img->buffer[y * img->width + x] = pixel;
+        }
+    }
     return img;
 }
 

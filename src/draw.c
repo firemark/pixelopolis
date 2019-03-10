@@ -14,9 +14,17 @@ struct rgb get_pixel(struct image* img, int cor[2]) {
     return img->buffer[index];
 }
 
-void set_pixel(struct image* img, int cor[2], struct rgb color) {
+void _set_pixel(struct image* img, int cor[2], struct rgb color) {
     int index = _get_index(img, cor);
     img->buffer[index] = color;
+}
+
+void set_pixel(struct image* img, int cor[2], struct rgb color) {
+    int index = _get_index(img, cor);
+    struct rgb old_color = img->buffer[index];
+    if (old_color.zindex >= color.zindex) {
+        img->buffer[index] = color;
+    }
 }
 
 struct rgb _mix_color(struct rgb a, struct rgb b, float ratio) {
@@ -26,6 +34,7 @@ struct rgb _mix_color(struct rgb a, struct rgb b, float ratio) {
     c.r = a.r * ratio + b.r * inv_ratio;
     c.g = a.g * ratio + b.g * inv_ratio;
     c.b = a.b * ratio + b.b * inv_ratio;
+
     return c;
 }
 
@@ -55,8 +64,27 @@ void set_aa_pixel(struct image* img, float cor[2], struct rgb color) {
     struct rgb pixel_ru = get_pixel(img, ru);
     struct rgb pixel_rd = get_pixel(img, rd);
 
-    set_pixel(img, lu, _mix_color(pixel_lu, color, dx * dy));
-    set_pixel(img, ld, _mix_color(pixel_ld, color, dx * inv_dy));
-    set_pixel(img, ru, _mix_color(pixel_ru, color, inv_dx * dy));
-    set_pixel(img, rd, _mix_color(pixel_rd, color, inv_dx * inv_dy));
+    if (pixel_lu.zindex >= color.zindex) {
+        struct rgb mix_pixel_lu = _mix_color(pixel_lu, color, dx * dy);
+        mix_pixel_lu.zindex = color.zindex;
+        _set_pixel(img, lu, mix_pixel_lu);
+    }
+
+    if (pixel_ld.zindex >= color.zindex) {
+        struct rgb mix_pixel_ld = _mix_color(pixel_ld, color, dx * inv_dy);
+        mix_pixel_ld.zindex = color.zindex;
+        _set_pixel(img, ld, mix_pixel_ld);
+    }
+
+    if (pixel_ru.zindex >= color.zindex) {
+        struct rgb mix_pixel_ru = _mix_color(pixel_ru, color, inv_dx * dy);
+        mix_pixel_ru.zindex = color.zindex;
+        _set_pixel(img, ru, mix_pixel_ru);
+    }
+
+    if (pixel_rd.zindex >= color.zindex) {
+        struct rgb mix_pixel_rd = _mix_color(pixel_rd, color, inv_dx * inv_dy);
+        mix_pixel_rd.zindex = color.zindex;
+        _set_pixel(img, rd, mix_pixel_rd);
+    }
 }
