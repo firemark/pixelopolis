@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, url_for
-from subprocess import run, CalledProcessError, TimeoutExpired, PIPE
+from subprocess import run, TimeoutExpired, PIPE
 from base64 import b64encode
 app = Flask(__name__)
 
@@ -20,7 +20,8 @@ def run_pixelopolis(data):
         proc = run(
             args=['../pixelopolis', '-', '-'],
             input=data.encode('utf-8'),
-            capture_output=True,
+            stdout=PIPE,
+            stderr=PIPE,
             timeout=10,
         )
     except TimeoutExpired:
