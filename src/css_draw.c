@@ -17,7 +17,16 @@ struct DrawInnerInfo {
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
 enum Series { VERTICAL_SERIES=0, HORIZONTAL_SERIES=1, DEPTH_SERIES=2 };
+enum Shape { SHAPE_PLANE, SHAPE_TRIANGLE, SHAPE_PLANE_WITH_HEIGHT };
 
+struct ShapeFunc {
+    enum Shape shape;
+    void *args;
+};
+
+struct ShapePlaneWithHeightArgs {
+    int height;
+};
 
 char _get_index_height(enum direction dir) {
     switch(dir) {
@@ -26,14 +35,24 @@ char _get_index_height(enum direction dir) {
     }
 }
 
+void _css_draw(struct DrawArgs *args, struct ShapeFunc *shape_func) {
+    switch(shape_func->shape) {
+        case SHAPE_PLANE: draw_plane(args); break;
+        case SHAPE_TRIANGLE: draw_triangle(args); break;
+        case SHAPE_PLANE_WITH_HEIGHT: {
+            struct ShapePlaneWithHeightArgs *shape_args = shape_func->args;
+            draw_plane_with_height(args, shape_args->height);
+        } break;
+    }
+}
+
 void _css_draw_texture(
         struct DrawInnerInfo* inner_info,
         int width,
         int height,
-        enum direction dir) {
+        enum direction dir,
+        struct ShapeFunc *shape_func) {
     struct Program *program = inner_info->program;
-    struct image *img = inner_info->img;
-    int *vox = inner_info->vox;
 
     char* texture_url = css_find_string_prop(inner_info->self, "texture");
     if (!texture_url) return;
@@ -42,22 +61,29 @@ void _css_draw_texture(
     width = width ? width : texture->width;
     height = height ? height : texture->height;
 
-    draw_plane(img, texture, vox, width, height, dir);
-    destroy_image(texture);
+    struct DrawArgs args = {
+        .img=inner_info->img,
+        .img_to_draw=texture,
+        .vox=inner_info->vox,
+        .width=width,
+        .height=height,
+        .start_height=0,
+        .max_height=height,
+        .dir=dir,
+    };
 
-    int *out_vox = inner_info->out_vox;
-    if (out_vox) {
-        out_vox[0] += width;
-        out_vox[_get_index_height(dir)] += height;
-    }
+    _css_draw(&args, shape_func);
+    destroy_image(texture);
 }
 
-void _css_draw_floor(
+int _css_draw_floor(
         struct DrawInnerInfo* inner_info,
         int width,
+        int start_height,
         int limit_height,
         enum direction dir,
-        enum Valign valign) {
+        enum Valign valign,
+        struct ShapeFunc *shape_func) {
     struct Program *program = inner_info->program;
     struct image *img = inner_info->img;
     struct Rule *floor_rule = inner_info->self;
@@ -84,29 +110,35 @@ void _css_draw_floor(
 
     if (valign == VALIGN_TOP) {
         new_vox[index_height] -= height;
+        start_height -= height;
     }
 
-    if (limit_height > 0 && limit_height < vox[index_height] + height)  {
+    if (limit_height < start_height + height)  {
         destroy_image(texture);
-        return;
+        return 0;
     }
 
-    draw_plane(img, texture, new_vox, width, height, dir);
+    struct DrawArgs args = {
+        .img=inner_info->img,
+        .img_to_draw=texture,
+        .vox=inner_info->vox,
+        .width=width,
+        .height=height,
+        .start_height=start_height,
+        .max_height=limit_height,
+        .dir=dir,
+    };
+
+    _css_draw(&args, shape_func);
     destroy_image(texture);
+    return height;
 
     without_texture:
-    if (valign == VALIGN_TOP) {
-        inner_info->out_vox[index_height] -= height;
-    }
-    if (limit_height > 0 && limit_height < vox[index_height] + height)  {
-        return;
+    if (limit_height < start_height + height) {
+        return 0;
     }
 
-    int *out_vox = inner_info->out_vox;
-    if (out_vox) {
-        out_vox[0] += width;
-        out_vox[index_height] += height;
-    }
+    return height;
 }
 
 char* _get_width_name_for_wall(enum direction dir) {
@@ -125,7 +157,8 @@ char* _get_height_name_for_wall(enum direction dir) {
 
 void _css_draw_wall_with_rule(
         struct DrawInnerInfo* inner_info,
-        enum direction dir) {
+        enum direction dir,
+        struct ShapeFunc* shape_func) {
     struct Program *program = inner_info->program;
     struct image *img = inner_info->img;
     struct Rule *wall_rule = inner_info->self;
@@ -150,11 +183,11 @@ void _css_draw_wall_with_rule(
             .vox=vox,
             .out_vox=NULL,
         };
-        _css_draw_texture(&texture_inner_info, width, height, dir);
+        _css_draw_texture(&texture_inner_info, width, height, dir, shape_func);
     }
 
-    int max_height = height + vox[index_height];
-    int loop_vox[3] = COPY_VOX(vox);
+    int max_height = height;
+    int start_height = 0;
     
     struct Rule* bottom_rule = css_find_rule_prop(program, wall_rule, "bottom");
     if (bottom_rule) {
@@ -165,10 +198,11 @@ void _css_draw_wall_with_rule(
             .self=bottom_rule,
             .parent=wall_rule,
             .vox=vox,
-            .out_vox=out_vox,
+            .out_vox=NULL,
         };
-        _css_draw_floor(&texture_inner_info, width, 0, dir, VALIGN_BOTTOM);
-        loop_vox[index_height] += out_vox[index_height];
+        int tex_height = _css_draw_floor(
+            &texture_inner_info, width, start_height, max_height, dir, VALIGN_BOTTOM, shape_func);
+        start_height += tex_height;
     }
 
     struct Rule* top_rule = css_find_rule_prop(program, wall_rule, "top");
@@ -182,10 +216,11 @@ void _css_draw_wall_with_rule(
             .self=top_rule,
             .parent=wall_rule,
             .vox=top_vox,
-            .out_vox=out_vox,
+            .out_vox=NULL,
         };
-        _css_draw_floor(&texture_inner_info, width, 0, dir, VALIGN_TOP);
-        max_height -= out_vox[index_height];
+        int tex_height =_css_draw_floor(
+                &texture_inner_info, width, max_height, max_height, dir, VALIGN_TOP, shape_func);
+        max_height -= tex_height;
     }
 
     struct Rule* middle_rule = css_find_rule_prop(program, wall_rule, "middle");
@@ -195,16 +230,15 @@ void _css_draw_wall_with_rule(
             .img=img,
             .self=middle_rule,
             .parent=wall_rule,
-            .vox=loop_vox,
+            .vox=vox,
             .out_vox=NULL,
         };
 
         for(;;) {
-            int out_vox[3] = ZERO_VOX;
-            texture_inner_info.out_vox = out_vox;
-            _css_draw_floor(&texture_inner_info, width, max_height, dir, VALIGN_BOTTOM);
-            if (out_vox[index_height] == 0) break;
-            loop_vox[index_height] += out_vox[index_height];
+            int tex_height = _css_draw_floor(
+                    &texture_inner_info, width, start_height, max_height, dir, VALIGN_BOTTOM, shape_func);
+            if (tex_height == 0) break;
+            start_height += tex_height;
         }
     }
 
@@ -228,6 +262,10 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
     int depth = depth_ptr ? *depth_ptr : 50;
 
     struct Rule* wall_rule = css_find_rule_prop(program, cube_rule, "wall");
+    struct ShapeFunc shape_func = {
+        .shape=SHAPE_PLANE,
+        .args=NULL,
+    };
     if (wall_rule) {
         struct DrawInnerInfo wall_inner_info = {
             .program=program,
@@ -240,9 +278,9 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
         int east_vox[3] = {vox[0] + width, vox[1], vox[2]};
         int south_vox[3] = {vox[0], vox[1], vox[2]};
         wall_inner_info.vox = east_vox;
-        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_EAST);
+        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_EAST, &shape_func);
         wall_inner_info.vox = south_vox;
-        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_SOUTH);
+        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_SOUTH, &shape_func);
     }
 
     struct Rule* roof_rule = css_find_rule_prop(program, cube_rule, "roof");
@@ -256,7 +294,64 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
             .vox=up_vox,
             .out_vox=NULL,
         };
-        _css_draw_wall_with_rule(&roof_inner_info, DIRECTION_UP);
+        _css_draw_wall_with_rule(&roof_inner_info, DIRECTION_UP, &shape_func);
+    }
+
+    int *out_vox = inner_info->out_vox;
+    if (out_vox) {
+        out_vox[0] += width;
+        out_vox[1] += depth;
+        out_vox[2] += height;
+    }
+}
+
+void _css_draw_triangle(struct DrawInnerInfo *inner_info) {
+    struct Program* program = inner_info->program;
+    struct Rule* rule = inner_info->self;
+    int *vox = inner_info->vox;
+
+    int *width_ptr = css_find_number_prop(rule, "width"); 
+    int *height_ptr = css_find_number_prop(rule, "height"); 
+    int *depth_ptr = css_find_number_prop(rule, "depth"); 
+    int width = width_ptr ? *width_ptr : 50;
+    int height = height_ptr ? *height_ptr : 50;
+    int depth = depth_ptr ? *depth_ptr : 50;
+
+    struct Rule* wall_rule = css_find_rule_prop(program, rule, "wall");
+    if (wall_rule) {
+        struct DrawInnerInfo wall_inner_info = {
+            .program=program,
+            .img=inner_info->img,
+            .self=wall_rule,
+            .parent=rule,
+            .vox=vox,
+            .out_vox=NULL,
+        };
+        struct ShapeFunc shape_func = {
+            .shape=SHAPE_TRIANGLE,
+            .args=NULL,
+        };
+        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_SOUTH, &shape_func);
+    }
+
+    struct Rule* roof_rule = css_find_rule_prop(program, rule, "roof");
+    if (roof_rule) {
+        struct DrawInnerInfo roof_inner_info = {
+            .program=program,
+            .img=inner_info->img,
+            .self=roof_rule,
+            .parent=rule,
+            .vox=vox,
+            .out_vox=NULL,
+        };
+        struct ShapePlaneWithHeightArgs args = {
+            .height=height,
+        };
+        struct ShapeFunc shape_func = {
+            .shape=SHAPE_PLANE_WITH_HEIGHT,
+            .args=&args,
+        };
+        _css_draw_wall_with_rule(&roof_inner_info, DIRECTION_EAST, &shape_func);
     }
 
     int *out_vox = inner_info->out_vox;
@@ -324,6 +419,8 @@ void draw_component(struct DrawInfo *info, int *out_vox) {
 
     if (_check_element_name(query, "cube")) {
         _css_draw_cube(&inner_info);
+    } else if (_check_element_name(query, "triangle")) {
+        _css_draw_triangle(&inner_info);
     } else if (_check_element_name(query, "pyramid")) {
         // _css_draw_pyramid(&inner_info);
     } else if (_check_element_name(query, "v-series")) {

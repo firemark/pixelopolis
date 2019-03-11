@@ -18,7 +18,7 @@ v-series.city {
 }
 
 h-series.wall {
-    body: cube.big | cube.small | cube.small | cube.big;
+    body: triangle.big | cube.small | cube.small | triangle.big;
     padding: 24;
 }
 
@@ -37,7 +37,7 @@ cube.sidewalk {
     height: 5;
 }
 
-cube.big {
+triangle.big {
     wall: wall.wall;
     roof: wall.roof;
     width: 50;
