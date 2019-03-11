@@ -13,18 +13,18 @@ d-series.city {
 }
 
 v-series.city {
-    body: h-series.wall | cube.small | h-series.wall | cube.small | h-series.wall;
-    padding: 16;
+    body: h-series.wall | cube.small | cube.small | d-series.big | cube.small | cube.small | h-series.wall;
+    padding: 0;
 }
 
 h-series.wall {
-    body: triangle.big | cube.small | cube.small | triangle.big;
-    padding: 24;
+    body: d-series.big | cube.small | cube.small | cube.small | d-series.big;
+    padding: 0;
 }
 
 cube.road {
     roof: wall.road;
-    width: 320;
+    width: 350;
     depth: 100;
     height: 0;
 }
@@ -32,14 +32,25 @@ cube.road {
 cube.sidewalk {
     roof: wall.grey-brick;
     wall: wall.top;
-    width: 320;
+    width: 350;
     depth: 300;
     height: 5;
 }
 
+d-series.big {
+  	body: cube.big | triangle.big;
+}
+
 triangle.big {
+    wall: wall.brick;
+    roof: wall.wood-roof;
+    width: 50;
+    depth: 50;
+    height: 50;  
+}
+
+cube.big {
     wall: wall.wall;
-    roof: wall.roof;
     width: 50;
     depth: 50;
     height: 100;
@@ -70,6 +81,14 @@ wall.top {
 
 wall.roof {
     texture: tex.clay;
+}
+
+wall.brick {
+    texture: tex.brick;
+}
+
+wall.wood-roof {
+  	texture: tex.wood;
 }
 
 wall.road {
@@ -112,4 +131,8 @@ tex.road {
 
 tex.grey-brick {
  	texture:  "textures/grey-brick.png";
+}
+
+tex.wood {
+  	texture:  "textures/wood.png";
 }
