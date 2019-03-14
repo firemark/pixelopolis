@@ -86,8 +86,9 @@ void draw_triangle(struct DrawArgs *args) {
     int new_vox[3];
     int width = args->width;
     int height = _get_height(args);
+    float vv = (float)width / (float)args->max_height / 2.0;
     for(h = args->start_height; h < height; h++) {
-        int min_span = width * h / args->max_height / 2;
+        int min_span = h * vv;
         int max_span = width - min_span;
         for(w = min_span; w < max_span; w++) {
             _default_vox_transform(args->dir, w, h, args->vox, new_vox);
@@ -97,17 +98,19 @@ void draw_triangle(struct DrawArgs *args) {
 }
 
 void draw_plane_with_height(struct DrawArgs *args, int zheight) {
-    int w, d;
+    float w;
+    int d;
     int new_vox[3];
     int width = args->width;
     int height = _get_height(args);
-    for(w = 0; w < width; w++) {
+    float vv = 2.0 * (float)zheight / (float)width;
+    float inv_vv = 0.25 / vv;
+    for(w = 0; w < width; w += inv_vv) {
         char isreverse = w >= width / 2;
-        for(d = 0; d < height; d++) {
-            int h = isreverse ? width - w - 1 : w;
-            h *= 2 * zheight / width;
+        int h = (isreverse ? width - w - 1 : w) * vv;
+        for(d = args->start_height; d < height; d++) {
             _with_height_vox_transform(args->dir, w, d, h, args->vox, new_vox);
-            _draw(args->img, args->img_to_draw, new_vox, w, d);
+            _draw(args->img, args->img_to_draw, new_vox, w * vv, d);
         }
     }
 }
