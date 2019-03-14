@@ -141,22 +141,11 @@ int _css_draw_floor(
     return height;
 }
 
-char* _get_width_name_for_wall(enum direction dir) {
-    switch(dir) {
-        case DIRECTION_EAST: return "depth"; 
-        default: return "width";
-    }
-}
-
-char* _get_height_name_for_wall(enum direction dir) {
-    switch(dir) {
-        case DIRECTION_UP: return "depth"; 
-        default: return "height";
-    }
-}
 
 void _css_draw_wall_with_rule(
         struct DrawInnerInfo* inner_info,
+        int width,
+        int height,
         enum direction dir,
         struct ShapeFunc* shape_func) {
     struct Program *program = inner_info->program;
@@ -164,13 +153,6 @@ void _css_draw_wall_with_rule(
     struct Rule *wall_rule = inner_info->self;
     struct Rule *parent_rule = inner_info->parent;
     int *vox = inner_info->vox;
-
-    char* width_name =_get_width_name_for_wall(dir);
-    char* height_name = _get_height_name_for_wall(dir);
-    int *width_ptr = css_find_number_prop(parent_rule, width_name); 
-    int *height_ptr = css_find_number_prop(parent_rule, height_name); 
-    int width = width_ptr ? *width_ptr : 50;
-    int height = height_ptr ? *height_ptr : 50;
     char index_height = _get_index_height(dir);
 
     struct Rule* texture_rule = css_find_rule_prop(program, wall_rule, "texture");
@@ -278,9 +260,9 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
         int east_vox[3] = {vox[0] + width, vox[1], vox[2]};
         int south_vox[3] = {vox[0], vox[1], vox[2]};
         wall_inner_info.vox = east_vox;
-        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_EAST, &shape_func);
+        _css_draw_wall_with_rule(&wall_inner_info, depth, height, DIRECTION_EAST, &shape_func);
         wall_inner_info.vox = south_vox;
-        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_SOUTH, &shape_func);
+        _css_draw_wall_with_rule(&wall_inner_info, width, height, DIRECTION_SOUTH, &shape_func);
     }
 
     struct Rule* roof_rule = css_find_rule_prop(program, cube_rule, "roof");
@@ -294,7 +276,7 @@ void _css_draw_cube(struct DrawInnerInfo *inner_info) {
             .vox=up_vox,
             .out_vox=NULL,
         };
-        _css_draw_wall_with_rule(&roof_inner_info, DIRECTION_UP, &shape_func);
+        _css_draw_wall_with_rule(&roof_inner_info, width, depth, DIRECTION_UP, &shape_func);
     }
 
     int *out_vox = inner_info->out_vox;
@@ -331,7 +313,7 @@ void _css_draw_triangle(struct DrawInnerInfo *inner_info) {
             .shape=SHAPE_TRIANGLE,
             .args=NULL,
         };
-        _css_draw_wall_with_rule(&wall_inner_info, DIRECTION_SOUTH, &shape_func);
+        _css_draw_wall_with_rule(&wall_inner_info, width, height, DIRECTION_SOUTH, &shape_func);
     }
 
     struct Rule* roof_rule = css_find_rule_prop(program, rule, "roof");
@@ -351,7 +333,7 @@ void _css_draw_triangle(struct DrawInnerInfo *inner_info) {
             .shape=SHAPE_PLANE_WITH_HEIGHT,
             .args=&args,
         };
-        _css_draw_wall_with_rule(&roof_inner_info, DIRECTION_EAST, &shape_func);
+        _css_draw_wall_with_rule(&roof_inner_info, width, depth, DIRECTION_EAST, &shape_func);
     }
 
     int *out_vox = inner_info->out_vox;
