@@ -65,18 +65,21 @@ struct Obj* make_obj_as_number(int value) {
     *ptr = value;
     obj->type = OBJ_NUMBER;
     obj->value = (void*)ptr;
+    return obj;
 }
 
 struct Obj* make_obj_as_string(char* string) {
     struct Obj* obj = malloc(sizeof(struct Obj));
     obj->type = OBJ_STRING;
     obj->value = (void*)string;
+    return obj;
 }
 
 struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
     struct Obj* obj = malloc(sizeof(struct Obj));
     obj->type = OBJ_RULE;
     obj->value = (void*)rule_selector;
+    return obj;
 }
 
 #define make_array(type, size, first_obj) \
@@ -85,7 +88,7 @@ struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
     arr[0] = first_obj; \
     for(i=1; i < size; i++) { \
         arr[i] = NULL; \
-    } \
+    }
 
 #define append_to_array(arr, size, obj) \
     size_t i; \
@@ -93,7 +96,7 @@ struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
         if (arr[i]) continue; \
         arr[i] = obj; \
         break; \
-    } \
+    }
 
 %}
 

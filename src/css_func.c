@@ -14,7 +14,9 @@ struct Rule* css_find_rule_by_query(
         struct Program* program, 
         struct RuleSelector* query) {
     struct Rule* rule;
-    css_iter(rule, program->rules) { struct RuleSelector* selector = rule->selector;
+    struct RuleSelector* selector;
+    css_iter(rule, program->rules) {
+        selector = rule->selector;
         if (
             (!query->element || !strcmp(selector->element, query->element))
             && (!query->klass || !strcmp(selector->klass, query->klass))
