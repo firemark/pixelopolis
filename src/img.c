@@ -134,7 +134,7 @@ struct image* read_png_file(char* file_name) {
     png_read_update_info(png_ptr, info_ptr);
 
     if (setjmp(png_jmpbuf(png_ptr))) {
-        fprintf(stderr, "Problem with loading PNG\n", file_name);
+        fprintf(stderr, "Problem with loading %s\n", file_name);
         goto finalize;
     }
 
@@ -145,10 +145,14 @@ struct image* read_png_file(char* file_name) {
 
     _fill_rows_from_png_to_image(png_ptr, img, pixel_size);
 
+    png_read_end(png_ptr, info_ptr);
+
     finalize:
     if (fp) fclose(fp);
-    if (info_ptr) png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-    // if (png_ptr) png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+    if (png_ptr) {
+        if (info_ptr) png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
+        else png_destroy_read_struct(&png_ptr, (png_infopp)NULL, (png_infopp)NULL);
+    }
     
     return img;
 }
@@ -214,7 +218,7 @@ int write_png_file(FILE *fp, struct image* img) {
 
     finalize:
     if (info_ptr) png_free_data(png_ptr, info_ptr, PNG_FREE_ALL, -1);
-    if (png_ptr) png_destroy_write_struct(&png_ptr, (png_infopp)NULL);
+    if (png_ptr) png_destroy_write_struct(&png_ptr, &info_ptr);
     return code;
 }
 

@@ -10,3 +10,5 @@ struct DrawInfo {
 };
 
 void draw_component(struct DrawInfo *info, int *out_vox);
+void css_init(void);
+void css_stop(void);

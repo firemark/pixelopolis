@@ -7,15 +7,12 @@
 #define COS_PROJECTION 0.7071067811865476
 #define SCALE_PROJECTION 0.6666666666666666
 
-float* _projection(int vox[3]) {
+void _projection(int vox[3], float *cor) {
     // https://en.wikipedia.org/wiki/Oblique_projection
     int s = vox[1] * SCALE_PROJECTION;
-    float *cor = malloc(2 * sizeof(float));
 
     cor[0] = vox[0] + s * COS_PROJECTION;
     cor[1] = vox[2] + s * SIN_PROJECTION;
-
-    return cor;
 }
 
 void _default_vox_transform(enum direction dir, int w, int h, int *vox, int *new_vox) {
@@ -57,12 +54,12 @@ void _draw(
         struct image *img, struct image *img_to_draw,
         int vox[3], int w, int h) {
     int tmp_cor[2] = {w % img_to_draw->width, h % img_to_draw->height};
+    float img_cor[2];
     struct rgb color = get_pixel(img_to_draw, tmp_cor);
     color.zindex = vox[1];
 
-    float* img_cor = _projection(vox);
+    _projection(vox, img_cor);
     set_aa_pixel(img, img_cor, color);
-    free(img_cor);
 }
 
 int _get_height(struct DrawArgs *args) {

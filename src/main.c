@@ -47,6 +47,7 @@ int main(int argc, char **argv) {
         in_filename = NULL;
     }
 
+    css_init();
     struct Program *program = css_parse_file(in_filename);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
@@ -67,6 +68,8 @@ int main(int argc, char **argv) {
     }
     write_png_file(fp, img);
     fclose(fp);
+    css_stop();
+    destroy_image(img);
 
     return 0;
 }

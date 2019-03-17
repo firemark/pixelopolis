@@ -4,6 +4,7 @@
 #include "css_draw.h"
 #include "css_func.h"
 #include "draw_shape.h"
+#include "hash.h"
 #include "img.h"
 
 struct DrawInnerInfo {
@@ -35,6 +36,37 @@ char _get_index_height(enum direction dir) {
     }
 }
 
+struct HashMap* textures;
+
+void css_init(void) {
+    textures = hash_make();
+}
+
+void css_stop(void) {
+    struct image* texture;
+    hash_iter_values(texture, textures) {
+        destroy_image(texture);
+    }
+    hash_destroy(textures);
+}
+
+struct image* _get_texture(char *filename) {
+    struct image* texture;
+
+    texture = hash_get(textures, filename);
+    if (texture) {
+        return texture;
+    }
+
+    texture = read_png_file(filename);
+    if (!texture) {
+        return NULL;
+    }
+
+    hash_set(textures, filename, texture, NULL);
+    return texture;
+}
+
 void _css_draw(struct DrawArgs *args, struct ShapeFunc *shape_func) {
     switch(shape_func->shape) {
         case SHAPE_PLANE: draw_plane(args); break;
@@ -57,7 +89,8 @@ void _css_draw_texture(
     char* texture_url = css_find_string_prop(inner_info->self, "texture");
     if (!texture_url) return;
 
-    struct image* texture = read_png_file(texture_url);
+    struct image* texture = _get_texture(texture_url);
+    if (!texture) return;
     width = width ? width : texture->width;
     height = height ? height : texture->height;
 
@@ -73,7 +106,6 @@ void _css_draw_texture(
     };
 
     _css_draw(&args, shape_func);
-    destroy_image(texture);
 }
 
 int _css_draw_floor(
@@ -103,7 +135,8 @@ int _css_draw_floor(
     if (!texture_rule) goto without_texture; 
     char* texture_url = css_find_string_prop(texture_rule, "texture");
     if (!texture_url) goto without_texture;
-    struct image* texture = read_png_file(texture_url);
+    struct image* texture = _get_texture(texture_url);
+    if (!texture) goto without_texture;
 
     width = width ? width : texture->width;
     height = height ? height : texture->height;
@@ -114,7 +147,6 @@ int _css_draw_floor(
     }
 
     if (limit_height < start_height + height)  {
-        destroy_image(texture);
         return 0;
     }
 
@@ -130,7 +162,6 @@ int _css_draw_floor(
     };
 
     _css_draw(&args, shape_func);
-    destroy_image(texture);
     return height;
 
     without_texture:
