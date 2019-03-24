@@ -6,6 +6,7 @@
 #include "draw_shape.h"
 #include "hash.h"
 #include "img.h"
+#include "draw_builder.h"
 
 struct DrawInnerInfo {
     struct image *img; 
@@ -17,7 +18,6 @@ struct DrawInnerInfo {
 };
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
-enum Series { VERTICAL_SERIES=0, HORIZONTAL_SERIES=1, DEPTH_SERIES=2 };
 enum Shape { SHAPE_PLANE, SHAPE_TRIANGLE, SHAPE_PLANE_WITH_HEIGHT };
 
 struct ShapeFunc {

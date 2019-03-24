@@ -1,5 +1,7 @@
 #pragma once
-#include <basic.h>
+#include <stdio.h>
+
+#include "basic.h"
 
 struct image* create_black_image(int width, int height);
 struct image* read_png_file(char* filename);

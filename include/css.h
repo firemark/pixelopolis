@@ -4,9 +4,11 @@
 #define PROPS_SIZE 16
 #define OBJS_SIZE 8
 
+#define CSS_CONCAT(a, b) _CSS_CONCAT(a, b)
+#define _CSS_CONCAT(a, b) a ## b
 #define css_iter(obj, container) \
-    int css_iter_i##__FILE__##__LINE__ = 0; \
-    while(obj = container[css_iter_i##__FILE__##__LINE__++])
+    int CSS_CONCAT( css_iter_i, __LINE__ ) = 0; \
+    while(obj = container[CSS_CONCAT(css_iter_i, __LINE__)++])
 
 enum ObjType {
     OBJ_NUMBER,

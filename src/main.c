@@ -8,6 +8,7 @@
 #include "draw_shape.h"
 #include "css_func.h"
 #include "css_draw.h"
+#include "draw_builder.h"
 
 #include "css_debug.h"
 
@@ -48,11 +49,13 @@ int main(int argc, char **argv) {
     }
 
     css_init();
+    builder_init();
     struct Program *program = css_parse_file(in_filename);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
         fprintf(stderr, "world rule not found! :(\n");
     }
+    struct DrawObj *draw_obj = builder_make(program, world_rule);
     struct image *img = make_img(world_rule);
     draw(program, world_rule, img);
 
@@ -69,6 +72,7 @@ int main(int argc, char **argv) {
     write_png_file(fp, img);
     fclose(fp);
     css_stop();
+    builder_stop();
     destroy_image(img);
 
     return 0;

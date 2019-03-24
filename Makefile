@@ -2,7 +2,7 @@ VERSION?=DEBUG
 CC = gcc
 YACC = yacc
 LEX = lex
-OBJS = main img draw draw_shape css.y css.l css_func css_debug css_draw hash
+OBJS = main img draw draw_shape css.y css.l css_func css_debug css_draw hash draw_builder
 TESTS = hash
 OBJS_PATH = $(foreach obj,$(OBJS),out/$(obj).o)
 TESTS_PATH = $(foreach test,$(TESTS),tests_out/test_$(test))
@@ -13,7 +13,7 @@ INCLUDES = -Iinclude
 ifeq ($(VERSION),PROD)
 FLAGS = -O3 -g
 else
-FLAGS = -g -fsanitize=address,undefined -fno-omit-frame-pointer
+FLAGS = -g #-fsanitize=address,undefined
 endif
 
 all: make_dirs yacc pixelopolis
