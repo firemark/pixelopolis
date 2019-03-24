@@ -13,7 +13,7 @@ INCLUDES = -Iinclude
 ifeq ($(VERSION),PROD)
 FLAGS = -O3 -g
 else
-FLAGS = -g #-fsanitize=address,undefined
+FLAGS = -g -fsanitize=address,undefined
 endif
 
 all: make_dirs yacc pixelopolis

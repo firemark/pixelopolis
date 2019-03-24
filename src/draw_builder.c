@@ -148,6 +148,7 @@ struct TexObj* _build_texture(struct Helper* helper) {
     struct Rule* rule = helper->rule;
     if (!rule) return NULL;
     char* filename = css_find_string_prop(rule, "texture"); 
+    if (!filename) return NULL;
 
     struct TexObj* obj = malloc(sizeof(struct TexObj));
     obj->texture = filename ? _builder_get_texture(filename) : NULL;
@@ -164,7 +165,7 @@ struct FloorObj* _build_floor(struct Helper* helper) {
 
     struct Helper tex_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "tex"),
+        .rule=css_find_rule_prop(helper->program, rule, "texture"),
         .parent=helper->parent,
     };
     obj->tex = _build_texture(&tex_helper);
@@ -187,7 +188,7 @@ struct WallObj* _build_wall(struct Helper* helper) {
 
     struct Helper tex_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "tex"),
+        .rule=css_find_rule_prop(helper->program, rule, "texture"),
         .parent=helper->parent,
     };
     obj->tex = _build_texture(&tex_helper);

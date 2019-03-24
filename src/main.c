@@ -27,17 +27,13 @@ struct image* make_img(struct Rule *world) {
     return create_black_image(width, height);
 }
 
-void draw(struct Program *program, struct Rule *world, struct image *img) {
+void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
     int vox[3] = {32, 32, 64};
-    struct RuleSelector* body_selector = css_find_selector_prop(world, "body");
-
     struct DrawInfo draw_info = {
         .img=img,
-        .program=program,
-        .query=body_selector,
         .vox=vox,
     };
-    draw_component(&draw_info, NULL);
+    draw_component(draw_obj, &draw_info, NULL);
 }
 
 int main(int argc, char **argv) {
@@ -48,7 +44,6 @@ int main(int argc, char **argv) {
         in_filename = NULL;
     }
 
-    css_init();
     builder_init();
     struct Program *program = css_parse_file(in_filename);
     struct Rule *world_rule = find_world(program);
@@ -57,7 +52,7 @@ int main(int argc, char **argv) {
     }
     struct DrawObj *draw_obj = builder_make(program, world_rule);
     struct image *img = make_img(world_rule);
-    draw(program, world_rule, img);
+    draw(draw_obj, world_rule, img);
 
     if (!strcmp(out_filename, "-")) {
         write_png_file(stdout, img);
@@ -71,7 +66,6 @@ int main(int argc, char **argv) {
     }
     write_png_file(fp, img);
     fclose(fp);
-    css_stop();
     builder_stop();
     destroy_image(img);
 
