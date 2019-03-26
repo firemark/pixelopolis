@@ -34,6 +34,9 @@ struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
     program->name = "top";
     program->rules = rules;
+    program->stack_size = 0;
+    program->stack = malloc(sizeof(struct Obj*) * STACK_SIZE);
+
     return program;
 }
 
@@ -75,11 +78,61 @@ struct Obj* make_obj_as_string(char* string) {
     return obj;
 }
 
+struct Obj* make_obj_as_variable(char* variable) {
+    struct Obj* obj = malloc(sizeof(struct Obj));
+    obj->type = OBJ_VARIABLE;
+    obj->value = (void*)variable;
+    return obj;
+}
+
 struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
     struct Obj* obj = malloc(sizeof(struct Obj));
     obj->type = OBJ_RULE;
     obj->value = (void*)rule_selector;
     return obj;
+}
+
+struct Obj* _make_obj_as_op(enum ObjType type, struct Obj* left, struct Obj* right) {
+    struct PairObj* pair = malloc(sizeof(struct PairObj));
+    pair->left = left;
+    pair->right = right;
+
+    struct Obj* obj = malloc(sizeof(struct Obj));
+    obj->type = type;
+    obj->value = (void*)pair;
+
+    return obj;
+}
+
+#define APPEND_OP(name, op) \
+    struct Obj* make_obj_as_ ## name(struct Obj* left, struct Obj* right) {\
+        _make_obj_as_op(op, left, right);\
+    }
+
+APPEND_OP(add, OBJ_ADD)
+APPEND_OP(sub, OBJ_SUB)
+APPEND_OP(mul, OBJ_MUL)
+APPEND_OP(div, OBJ_DIV)
+
+struct Obj* make_obj_as_func(char* name, struct Obj** args) {
+    size_t size = 0;
+    while(args[size++]); // counter
+
+    struct FuncObj* func = malloc(sizeof(struct FuncObj));
+    func->name = name;
+    func->args = args;
+    func->args_size = size;
+
+    struct Obj* obj = malloc(sizeof(struct Obj));
+    obj->type = OBJ_FUNC;
+    obj->value = (void*)func;
+    return obj;
+}
+
+struct Obj* make_obj_as_noargs_func(char* name) {
+    struct Obj** args = malloc(sizeof(struct Obj**));
+    args[0] = NULL;
+    return make_obj_as_func(name, args);
 }
 
 #define make_array(type, size, first_obj) \
@@ -115,22 +168,27 @@ struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
     struct Obj** objPtrMany;
 };
 
-%token 
-    START_BODY END_BODY
-    COLON SEMICOLON PIPE
-%token <string> WORD STRING CLASS PSEUDO_CLASS
+%token
+    START_BODY END_BODY START_FUNC END_FUNC
+    COLON SEMICOLON PIPE COMMA
+    ADD_OP SUB_OP MUL_OP DIV_OP
+%token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
+%left ADD_OP SUB_OP
+%left MUL_OP DIV_OP
+%right START_FUNC END_FUNC
+%right START_BODY END_BODY
 %type <programPtr> program
 %type <rulePtr> rule
 %type <propPtr> prop
 %type <objPtr> obj
 %type <rulePtrMany> rules;
 %type <propPtrMany> props;
-%type <objPtrMany> objs;
+%type <objPtrMany> objs args;
 %type <ruleSelectorPtr> rule_selector rule_addons;
 
 %%
-program: 
+program:
         rules { global_program = make_program($1); }
         ;
 
@@ -170,9 +228,21 @@ objs:
 obj:
         NUMBER { $$ = make_obj_as_number($1); }
         | STRING { $$ = make_obj_as_string($1); }
+        | VARIABLE { $$ = make_obj_as_variable($1); }
         | rule_selector { $$ = make_obj_as_rule($1); }
+        | obj ADD_OP obj { $$ = make_obj_as_add($1, $3); }
+        | obj SUB_OP obj { $$ = make_obj_as_sub($1, $3); }
+        | obj MUL_OP obj { $$ = make_obj_as_mul($1, $3); }
+        | obj DIV_OP obj { $$ = make_obj_as_div($1, $3); }
+        | START_FUNC obj END_FUNC { $$ = $2; }
+        | WORD START_FUNC END_FUNC { $$ = make_obj_as_noargs_func($1); }
+        | WORD START_FUNC args END_FUNC { $$ = make_obj_as_func($1, $3); }
         ;
 
+args:
+        obj { make_array(struct Obj, OBJS_SIZE, $1); $$ = arr; }
+        | args COMMA obj { append_to_array($1, OBJS_SIZE, $3); $$ = $1; }
+        ;
 %%
 
 struct Program* css_parse_file(char* filename) {

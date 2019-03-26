@@ -1,5 +1,6 @@
 #pragma once
 
+#define STACK_SIZE 511
 #define REGULES_SIZE 255
 #define PROPS_SIZE 16
 #define OBJS_SIZE 8
@@ -13,12 +14,28 @@
 enum ObjType {
     OBJ_NUMBER,
     OBJ_STRING,
+    OBJ_VARIABLE,
     OBJ_RULE,
+    OBJ_ADD,
+    OBJ_SUB,
+    OBJ_MUL,
+    OBJ_DIV,
+    OBJ_FUNC,
 };
 
 struct Obj {
     enum ObjType type;
     void *value;
+};
+
+struct PairObj {
+    struct Obj *left, *right;
+};
+
+struct FuncObj {
+    char* name;
+    struct Obj** args;
+    size_t args_size;
 };
 
 struct Prop {
@@ -39,10 +56,11 @@ struct Rule {
     struct Prop **props;
 };
 
-
 struct Program {
     char* name;
     struct Rule **rules;
+    struct Obj **stack;
+    size_t stack_size;
 };
 
 struct Program* css_parse_file(char *filename);

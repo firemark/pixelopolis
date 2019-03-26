@@ -2,6 +2,7 @@ world {
     width: 800;
     height: 800;
     body: h-series.city-and-road;
+    test: (2 + 2) * 2 + 1 / random(1, 2+2);
 }
 
 h-series.city-and-road {
