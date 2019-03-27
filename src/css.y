@@ -34,8 +34,6 @@ struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
     program->name = "top";
     program->rules = rules;
-    program->stack_size = 0;
-    program->stack = malloc(sizeof(struct Obj*) * STACK_SIZE);
 
     return program;
 }
