@@ -1,3 +1,8 @@
+#include <stdlib.h>
+#include <time.h>
+
+#include "css_eval.h"
+
 #define STACK_MAX_SIZE 512
 
 struct Stack {
@@ -22,20 +27,25 @@ struct Obj* _make_obj_in_stack() {
 }
 
 void css_eval_start() {
-    // now nothing lol
+    int grain = time(NULL);
+    srand(grain);
 }
 
 void css_eval_stop() {
     _free_stack();
 }
 
+int _is_number(struct Obj* obj) {
+    return obj && obj->type == OBJ_NUMBER;
+}
+
 struct Obj* _eval_binary_op(struct Obj* obj) {
     struct PairObj* pair = (struct PairObj*)obj->value;
-    struct evaled_left = _eval(pair->left);
-    struct evaled_right = _eval(pair->right);
+    struct Obj* evaled_left = _eval(pair->left);
+    struct Obj* evaled_right = _eval(pair->right);
 
-    if (!evaled_left || evaled_left->type != OBJ_NUMBER) return NULL;
-    if (!evaled_right || evaled_right->type != OBJ_NUMBER) return NULL;
+    if (!_is_number(evaled_left)) return NULL;
+    if (!_is_number(evaled_right)) return NULL;
 
     int left = ((int*)evaled_left->value)*;
     int right = ((int*)evaled_right->value)*;
@@ -56,10 +66,38 @@ struct Obj* _eval_binary_op(struct Obj* obj) {
     return result_obj;
 }
 
+struct Obj* _do_random(struct Obj** args) {
+    struct Obj* evaled_start = _eval(args[0]);
+    struct Obj* evaled_end = _eval(args[1]);
+
+    if (!_is_number(evaled_start)) return NULL;
+    if (!_is_number(evaled_end)) return NULL;
+
+    int start = ((int*)evaled_start->value)*;
+    int end = ((int*)evaled_end->value)*;
+    if (start > end) {
+        int t = start;
+        start = end;
+        end = t;
+    }
+    int* result = malloc(sizeof(int));
+    if (start == end) {
+        result* = start;
+    } else {
+        result* = end + (rand() % (end - start))
+    }
+
+    struct Obj* result_obj = _make_obj_in_stack();
+    result_obj->type = OBJ_NUMBER;
+    result_obj->value = result;
+
+    return result_obj;
+}
+
 struct Obj* _eval_func(struct Obj* obj) {
     struct FuncObj* func = (struct FuncObj*)obj->value;
     if (!strcmp(func->name, "random") && func->args_size == 2) {
-        return do_random();
+        return _do_random(func->args);
     }
     return NULL;
 }
