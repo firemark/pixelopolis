@@ -11,6 +11,7 @@
 #include "draw_builder.h"
 
 #include "css_debug.h"
+#include "css_eval.h"
 
 struct Rule* find_world(struct Program *program) {
     struct RuleSelector query = default_selector;
@@ -45,6 +46,7 @@ int main(int argc, char **argv) {
     }
 
     builder_init();
+    css_eval_start();
     struct Program *program = css_parse_file(in_filename);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
@@ -67,6 +69,8 @@ int main(int argc, char **argv) {
     write_png_file(fp, img);
     fclose(fp);
     builder_stop();
+    css_eval_stop();
+    css_free_program(program);
     destroy_image(img);
 
     return 0;
