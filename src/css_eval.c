@@ -66,9 +66,10 @@ struct Obj* _eval_binary_op(struct Obj* obj) {
     return result_obj;
 }
 
-struct Obj* _do_random(struct Obj** args) {
-    struct Obj* evaled_start = _eval(args[0]);
-    struct Obj* evaled_end = _eval(args[1]);
+struct Obj* _do_random(struct FuncObj* func) {
+    if (func->args_size != 2) return NULL;
+    struct Obj* evaled_start = _eval(func->args[0]);
+    struct Obj* evaled_end = _eval(func->args[1]);
 
     if (!_is_number(evaled_start)) return NULL;
     if (!_is_number(evaled_end)) return NULL;
@@ -94,10 +95,20 @@ struct Obj* _do_random(struct Obj** args) {
     return result_obj;
 }
 
+struct Obj* _do_choice(struct FuncObj* args) {
+    if (func->args_size == 0) return NULL;
+    int index = rand() % func->args_size;
+    struct Obj* arg = func->args[index];
+    return _eval(arg);
+}
+
 struct Obj* _eval_func(struct Obj* obj) {
     struct FuncObj* func = (struct FuncObj*)obj->value;
-    if (!strcmp(func->name, "random") && func->args_size == 2) {
-        return _do_random(func->args);
+    if (!strcmp(func->name, "random")) {
+        return _do_random(func);
+    }
+    if (!strcmp(func->name, "choice")) {
+        return _do_choice(func);
     }
     return NULL;
 }
