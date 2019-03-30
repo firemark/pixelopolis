@@ -6,3 +6,4 @@ src/css.y.c
 include/css.y.h
 __pycache__
 venv
+tests_out/

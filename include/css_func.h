@@ -11,10 +11,10 @@ char* css_find_string_prop(struct Rule* rule, char* name);
 struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name);
 struct Rule* css_find_rule_prop(struct Program* program, struct Rule* rule, char* name);
 
-int css_free_obj(struct Obj* obj);
-int css_free_func_obj(struct FuncObj* func);
-int css_free_pair_obj(struct PairObj* pair);
-int css_free_prop(struct Prop* prop);
-int css_free_rule(struct Rule* rule);
-int css_free_rule_selector(struct RuleSelector* selector);
-int css_free_program(struct Program* program);
+void css_free_obj(struct Obj* obj);
+void css_free_func_obj(struct FuncObj* func);
+void css_free_pair_obj(struct PairObj* pair);
+void css_free_prop(struct Prop* prop);
+void css_free_rule(struct Rule* rule);
+void css_free_rule_selector(struct RuleSelector* selector);
+void css_free_program(struct Program* program);

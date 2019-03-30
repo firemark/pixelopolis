@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 
 #define REGULES_SIZE 255
 #define PROPS_SIZE 16
@@ -63,3 +64,4 @@ struct Program {
 };
 
 struct Program* css_parse_file(char *filename);
+struct Program* css_parse_file_as_stream(FILE *stream);

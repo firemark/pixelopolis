@@ -32,7 +32,10 @@ char* concat_and_free(char* a, char* b) {
 
 struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
-    program->name = "top";
+    char top[] = "top";
+    char* name = malloc(sizeof(top));
+    strcpy(name, top);
+    program->name = name;
     program->rules = rules;
 
     return program;
@@ -114,7 +117,7 @@ APPEND_OP(div, OBJ_DIV)
 
 struct Obj* make_obj_as_func(char* name, struct Obj** args) {
     size_t size = 0;
-    while(args[size++]); // counter
+    while(args[++size]); // counter
 
     struct FuncObj* func = malloc(sizeof(struct FuncObj));
     func->name = name;
@@ -244,8 +247,14 @@ args:
 %%
 
 struct Program* css_parse_file(char* filename) {
-    yyin = fopen(filename, "r");
+    FILE *stream = fopen(filename, "r");
+    struct Program* program = css_parse_file_as_stream(stream);
+    fclose(stream);
+    return program;
+}
+
+struct Program* css_parse_file_as_stream(FILE* stream) {
+    yyin = stream;
     yyparse();
-    fclose(yyin);
     return global_program;
 }
