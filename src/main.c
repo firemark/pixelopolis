@@ -41,10 +41,6 @@ int main(int argc, char **argv) {
     char *in_filename = argc > 1 ? argv[1] : "-";
     char *out_filename = argc > 2 ? argv[2] : "out.png";
 
-    if (!strcmp(in_filename, "-")) {
-        in_filename = NULL;
-    }
-
     builder_init();
     css_eval_start();
     struct Program *program;
