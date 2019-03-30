@@ -54,7 +54,7 @@ cube.big {
     wall: wall.wall;
     width: 50;
     depth: 50;
-    height: 100;
+    height: random(40, 200);
 }
 
 cube.small {

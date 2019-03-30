@@ -47,7 +47,12 @@ int main(int argc, char **argv) {
 
     builder_init();
     css_eval_start();
-    struct Program *program = css_parse_file(in_filename);
+    struct Program *program;
+    if(!strcmp(in_filename, "-")) {
+        program = css_parse_file_as_stream(stdin);
+    } else {
+        program = css_parse_file(in_filename);
+    }
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
         fprintf(stderr, "world rule not found! :(\n");

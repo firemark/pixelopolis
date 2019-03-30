@@ -34,5 +34,5 @@ def run_pixelopolis(data):
 
     errors = proc.stderr.decode('utf-8').strip().splitlines()
     if not errors and proc.returncode != 0:
-        errors = ['sth is wrong']
+        errors = [f'sth is wrong (errocode {proc.returncode})']
     return errors, img
