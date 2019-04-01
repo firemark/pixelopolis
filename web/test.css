@@ -14,12 +14,22 @@ d-series.city {
 }
 
 v-series.city {
-    body: h-series.wall | cube.small | cube.small | d-series.big | cube.small | cube.small | h-series.wall;
+    body: 
+      h-series.wall 
+      | cube.small 
+      | choice(cube.small, cube.null)
+      | choice(cube.small, d-series.big) 
+      | cube.small 
+      | choice(cube.small, cube.null)
+      | h-series.wall;
     padding: 0;
 }
 
 h-series.wall {
-    body: d-series.big | cube.small | cube.small | cube.small | d-series.big;
+    body: 
+      d-series.big 
+      | cube.small 
+      | choice(cube.small, d-series.big, h-series.wall);
     padding: 0;
 }
 
@@ -47,7 +57,7 @@ triangle.big {
     roof: wall.wood-roof;
     width: 50;
     depth: 50;
-    height: 50;  
+    height: random(30, 80);  
 }
 
 cube.big {
@@ -61,6 +71,12 @@ cube.small {
     wall: wall.wall;
     roof: wall.roof;
     width: 50;
+    depth: 50;
+    height: 40;
+}
+
+cube.null {
+    width: random(50, 80);
     depth: 50;
     height: 40;
 }

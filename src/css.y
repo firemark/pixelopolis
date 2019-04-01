@@ -117,7 +117,7 @@ APPEND_OP(div, OBJ_DIV)
 
 struct Obj* make_obj_as_func(char* name, struct Obj** args) {
     size_t size = 0;
-    while(args[++size]); // counter
+    while(args[size]) size++; // counter
 
     struct FuncObj* func = malloc(sizeof(struct FuncObj));
     func->name = name;

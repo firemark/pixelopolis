@@ -44,6 +44,14 @@ int _is_number(struct Obj* obj) {
     return obj && obj->type == OBJ_NUMBER;
 }
 
+int _is_string(struct Obj* obj) {
+    return obj && obj->type == OBJ_STRING;
+}
+
+int _is_rule(struct Obj* obj) {
+    return obj && obj->type == OBJ_RULE;
+}
+
 struct Obj* _eval_binary_op(struct Obj* obj) {
     struct PairObj* pair = (struct PairObj*)obj->value;
     struct Obj* evaled_left = _eval(pair->left);
@@ -99,7 +107,7 @@ struct Obj* _do_random(struct FuncObj* func) {
 
 struct Obj* _do_choice(struct FuncObj* func) {
     if (func->args_size == 0) return NULL;
-    int index = rand() % func->args_size;
+    size_t index = rand() % func->args_size;
     struct Obj* arg = func->args[index];
     return _eval(arg);
 }
@@ -121,10 +129,26 @@ struct Obj* _eval(struct Obj* obj) {
     return obj;
 }
 
-int* css_eval_number(struct Obj* obj) {
+struct Obj* css_eval(struct Obj* obj) {
+    if (!obj) return NULL;
     _free_stack();
-    struct Obj* result = _eval(obj);
+    return _eval(obj);
+}
+
+int* css_eval_number(struct Obj* obj) {
+    struct Obj* result = css_eval(obj);
     if (!_is_number(result)) return NULL;
     return (int*)result->value;
 }
 
+char* css_eval_string(struct Obj* obj) {
+    struct Obj* result = css_eval(obj);
+    if (!_is_string(result)) return NULL;
+    return (char*)result->value;
+}
+
+struct RuleSelector* css_eval_rule(struct Obj* obj) {
+    struct Obj* result = css_eval(obj);
+    if (!_is_rule(result)) return NULL;
+    return (struct RuleSelector*)result->value;
+}

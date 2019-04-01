@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "css_func.h"
+#include "css_eval.h"
 #include "draw_builder.h"
 #include "hash.h"
 #include "img.h"
@@ -97,17 +98,13 @@ struct DrawObj** _build_many_objs(struct Helper* helper) {
     struct Prop* body_prop = css_find_prop(rule, "body");
     struct Obj* obj = NULL;
     int size = 0;
-    css_iter(obj, body_prop->objs) {
-        if (obj->type != OBJ_RULE) continue;
-        size++;
-    }
+    css_iter(obj, body_prop->objs) size++; // counter
 
     struct DrawObj **objs = malloc(sizeof(struct DrawObj*) * (size + 1));
-    objs[size] = NULL;
     int i = 0;
     css_iter(obj, body_prop->objs) {
-        if (obj->type != OBJ_RULE) continue;
-        struct RuleSelector* selector = obj->value;
+        struct RuleSelector* selector = css_eval_rule(obj);
+        if (!selector) continue;
         struct Rule* inner_rule = css_find_rule_by_query(helper->program, selector);
         struct Helper inner_helper = {
             .program=helper->program,
@@ -116,6 +113,9 @@ struct DrawObj** _build_many_objs(struct Helper* helper) {
         };
         objs[i++] = _build_draw_obj(&inner_helper);
     }
+
+    objs = realloc(objs, sizeof(struct DrawObj*) * i);
+    objs[i] = NULL;
 
     return objs;
 }
