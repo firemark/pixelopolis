@@ -44,7 +44,7 @@ void css_debug_prop(FILE* fp, struct Prop* prop) {
 void css_debug_pair(FILE* fp, struct Obj* obj, char op) {
     struct PairObj* pair = (struct PairObj*)obj->value;
 
-    fprintf(fp, "(", op);
+    fprintf(fp, "(");
     css_debug_obj(fp, pair->left);
     fprintf(fp, " %c ", op);
     css_debug_obj(fp, pair->right);
@@ -70,8 +70,8 @@ void css_debug_func(FILE* fp, struct Obj* obj) {
 void css_debug_obj(FILE* fp, struct Obj* obj) {
     switch(obj->type) {
         case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
-        case OBJ_STRING: fprintf(fp, "\"%s\"", obj->value); break;
-        case OBJ_VARIABLE: fprintf(fp, "$%s", obj->value); break;
+        case OBJ_STRING: fprintf(fp, "\"%s\"", (char*)obj->value); break;
+        case OBJ_VARIABLE: fprintf(fp, "$%s", (char*)obj->value); break;
         case OBJ_ADD: css_debug_pair(fp, obj, '+'); break;
         case OBJ_SUB: css_debug_pair(fp, obj, '-'); break;
         case OBJ_MUL: css_debug_pair(fp, obj, '*'); break;
