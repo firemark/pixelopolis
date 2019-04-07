@@ -13,6 +13,7 @@ int yylex(void);
 
 int yyerror (char* err) {
     fprintf(stderr, "%d:%d %s\n", lines, chars, err);
+    return 1;
 }
 
 int yywrap (void) {

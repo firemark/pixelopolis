@@ -172,6 +172,7 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
     int x = 0;
     int size = 0;
     int is_right = 0;
+    int padding = floor->padding;
 
     struct TexObj** objs = malloc(sizeof(struct TexObj*) * MAX_ELEMENTS);
 
@@ -181,8 +182,8 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
         .parent=helper->parent,
     };
     struct TexObj* left = _build_texture(left_helper);
-    if (left && left->width + floor->padding  < wall_width) {
-        x += left->width + floor->padding;
+    if (left && left->width + padding  < wall_width) {
+        x += left->width + padding;
         objs[size++] = left;
     }
 
@@ -195,7 +196,6 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
     if (right && x + right->width < wall_width) {
         is_right = 1;
         wall_width -= right->width;
-        size++;
     }
 
     for(;;) {
@@ -205,11 +205,15 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
             .parent=helper->parent,
         };
         struct TexObj* middle = _build_texture(middle_helper);
-        if (!middle || middle->width + floor->padding
+        if (!middle) break;
+        if (x + middle->width + padding >= wall_width) break;
+
+        x += middle->width + padding;
+        objs[size++] = middle;
     }
 
     if (is_right) {
-
+        objs[size++] = right;
     }
 
 
