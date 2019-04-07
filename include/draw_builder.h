@@ -25,13 +25,14 @@ struct TexObj {
 
 struct FloorObj {
     struct TexObj *tex;
+    struct TexObj **objs;
     int height;
     int padding;
 };
 
 struct WallObj {
     struct TexObj *tex;
-    struct FloorObj *bottom, *middle, *top;
+    struct FloorObj **floors,
 };
 
 struct BasicObj {
