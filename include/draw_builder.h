@@ -26,13 +26,20 @@ struct TexObj {
 struct FloorObj {
     struct TexObj *tex;
     struct TexObj **objs;
+    struct TexObj *left;
+    struct TexObj *right;
+    int objs_size;
     int height;
     int padding;
 };
 
 struct WallObj {
     struct TexObj *tex;
-    struct FloorObj **floors,
+    struct FloorObj **floors;
+    struct FloorObj *bottom;
+    struct FloorObj *top;
+    int floors_size;
+    int padding;
 };
 
 struct BasicObj {
@@ -42,7 +49,7 @@ struct BasicObj {
 
 struct CubeObj {
     struct BasicObj basic;
-    struct WallObj *wall, *roof;
+    struct WallObj *south_wall, *east_wall, *roof;
 };
 
 struct TriangleObj {

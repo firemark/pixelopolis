@@ -168,12 +168,10 @@ int _get_floor_height(int *height_ptr, struct FloorObj* obj) {
     return 0;
 }
 
-struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
+void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int wall_width) {
     int x = 0;
     int size = 0;
-    int is_right = 0;
     int padding = floor->padding;
-
     struct TexObj** objs = malloc(sizeof(struct TexObj*) * MAX_ELEMENTS);
 
     struct Helper left_helper = {
@@ -181,10 +179,12 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
         .rule=css_find_rule_prop(helper->program, rule, "left"),
         .parent=helper->parent,
     };
-    struct TexObj* left = _build_texture(left_helper);
-    if (left && left->width + padding  < wall_width) {
+    struct TexObj* left = _build_texture(&left_helper);
+    if (left && left->width < wall_width) {
         x += left->width + padding;
-        objs[size++] = left;
+    } else {
+        left = NULL;
+        goto final;
     }
 
     struct Helper right_helper = {
@@ -192,10 +192,12 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
         .rule=css_find_rule_prop(helper->program, rule, "right"),
         .parent=helper->parent,
     };
-    struct TexObj* right = _build_texture(right_helper);
+    struct TexObj* right = _build_texture(&right_helper);
     if (right && x + right->width < wall_width) {
-        is_right = 1;
         wall_width -= right->width;
+    } else {
+        right = NULL;
+        goto final;
     }
 
     for(;;) {
@@ -204,21 +206,20 @@ struct TexObj** _append_objs_to_floor(struct FloorObj* floor, int wall_width) {
             .rule=css_find_rule_prop(helper->program, rule, "middle"),
             .parent=helper->parent,
         };
-        struct TexObj* middle = _build_texture(middle_helper);
+        struct TexObj* middle = _build_texture(&middle_helper);
         if (!middle) break;
-        if (x + middle->width + padding >= wall_width) break;
+        if (x + middle->width >= wall_width) break;
 
         x += middle->width + padding;
         objs[size++] = middle;
     }
 
-    if (is_right) {
-        objs[size++] = right;
-    }
-
-
+final:
     objs[size] = NULL;
-    return objs;
+    floor->objs = objs;
+    floor->objs_size = size;
+    floor->right = right;
+    floor->left = left;
 }
 
 struct FloorObj* _build_floor(struct Helper* helper, int wall_width) {
@@ -237,43 +238,80 @@ struct FloorObj* _build_floor(struct Helper* helper, int wall_width) {
         .parent=helper->parent,
     };
     obj->tex = _build_texture(&tex_helper);
-
-    obj->objs = _append_objs_to_floor();
+    _append_objs_to_floor(helper, floor, wall_width);
 
     return obj;
+}
+
+void _append_floors_to_wall(struct Helper* helper, struct WallObj* wall, int wall_width, int wall_height) {
+    int y = 0;
+    int size = 0;
+    int padding = wall->padding;
+    struct FloorObj** floors = malloc(sizeof(struct TexObj*) * MAX_ELEMENTS);
+
+    struct Helper bottom_helper = {
+        .program=helper->program,
+        .rule=css_find_rule_prop(helper->program, rule, "bottom"),
+        .parent=helper->parent,
+    };
+    struct FloorObj* bottom = _build_floor(&bottom_helper, wall_width);
+    if (bottom && bottom->height < wall_width) {
+        x += left->width + padding;
+    } else {
+        bottom = NULL;
+        goto final;
+    }
+
+    struct Helper top_helper = {
+        .program=helper->program,
+        .rule=css_find_rule_prop(helper->program, rule, "top"),
+        .parent=helper->parent,
+    };
+    struct FloorObj* top = _build_floor(&top_helper, wall_width);
+    if (right && x + bottom->height < wall_height) {
+        wall_width -= right->height;
+    } else {
+        top = NULL;
+        goto final;
+    }
+
+    for(;;) {
+        struct Helper middle_helper = {
+            .program=helper->program,
+            .rule=css_find_rule_prop(helper->program, rule, "middle"),
+            .parent=helper->parent,
+        };
+        struct FloorObj* middle = _build_floor(&middle_helper, wall_width);
+        if (!middle) break;
+        if (y + middle->height >= wall_height) break;
+
+        x += middle->height + padding;
+        floors[size++] = middle;
+    }
+
+final:
+    floors[size] = NULL;
+    wall->floors = floors;
+    wall->floors_size = size;
+    wall->bottom = bottom;
+    wall->top = top;
 }
 
 struct WallObj* _build_wall(struct Helper* helper, int wall_width, int height_width) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
-
-    struct WallObj *obj = malloc(sizeof(struct WallObj));
+    struct WallObj *wall = malloc(sizeof(struct WallObj));
+    int* padding_ptr = css_find_number_prop(rule, "padding");
+    int padding = padding_ptr? *padding_ptr: 0;
 
     struct Helper tex_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "texture"),
         .parent=helper->parent,
     };
-    obj->tex = _build_texture(&tex_helper);
-    struct Helper bottom_helper = {
-        .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "bottom"),
-        .parent=helper->parent,
-    };
-    obj->bottom = _build_floor(&bottom_helper, wall_width);
-    struct Helper middle_helper = {
-        .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "middle"),
-        .parent=helper->parent,
-    };
-    obj->middle = _build_floor(&middle_helper, wall_width);
-    struct Helper top_helper = {
-        .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "top"),
-        .parent=helper->parent,
-    };
-    obj->top = _build_floor(&top_helper, wall_width);
-    return obj;
+    wall->tex = _build_texture(&tex_helper);
+    _append_floors_to_wall(helper, wall);
+    return wall;
 }
 
 struct DrawObj* _build_cube(struct Helper* helper) {
@@ -281,19 +319,21 @@ struct DrawObj* _build_cube(struct Helper* helper) {
     if (!rule) return NULL;
     struct CubeObj* obj = malloc(sizeof(struct CubeObj));
     obj->basic = _build_basic(rule);
+    struct BasicObj* basic = &obj->basic;
 
     struct Helper wall_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "wall"),
         .parent=helper->parent,
     };
-    obj->wall = _build_wall(&wall_helper, obj->basic->width);
+    obj->south_wall = _build_wall(&wall_helper, basic->width, basic->height);
+    obj->east_wall = _build_wall(&wall_helper, basic->depth, basic->height);
     struct Helper roof_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "roof"),
         .parent=helper->parent,
     };
-    obj->roof = _build_wall(&roof_helper, obj->basic->width);
+    obj->roof = _build_wall(&roof_helper, basic->width, basic->depth);
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
     draw_obj->type = DRAW_OBJ_CUBE;
@@ -308,19 +348,20 @@ struct DrawObj* _build_triangle(struct Helper* helper) {
     if (!rule) return NULL;
     struct TriangleObj* obj = malloc(sizeof(struct TriangleObj));
     obj->basic = _build_basic(rule);
+    struct BasicObj* basic = &obj->basic;
 
     struct Helper wall_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "wall"),
         .parent=helper->parent,
     };
-    obj->wall = _build_wall(&wall_helper);
+    obj->wall = _build_wall(&wall_helper, basic->width, basic->height);
     struct Helper roof_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "roof"),
         .parent=helper->parent,
     };
-    obj->roof = _build_wall(&roof_helper);
+    obj->roof = _build_wall(&roof_helper, basic->width, basic->depth);
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
     draw_obj->type = DRAW_OBJ_TRIANGLE;
