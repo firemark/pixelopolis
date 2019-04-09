@@ -18,9 +18,7 @@ v-series.city {
       | choice(cube.null, h-series.row) 
       | h-series.row
       | choice(cube.null, h-series.row) 
-      | h-series.row
-      | choice(cube.null, h-series.row) 
-      | h-series.row
+      | h-series.row;
     padding: 10;
 }
 
@@ -63,11 +61,11 @@ cube.white_house {
     wall: wall.clay_with_windows;
     width: 50;
     depth: 50;
-    height: random(40, 200);
+    height: random(40, 80);
 }
 
 cube.null {
-    width: random(50, 80);
+    width: random(80, 120);
     depth: 50;
     height: 40;
 }
@@ -81,10 +79,11 @@ wall.clay {
 }
 
 wall.clay_with_windows {
-    texture: tex.clay;
+    texture: tex.brick;
     bottom: floor.door_and_windows;
     middle: floor.windows;
     top: floor.top;
+  	padding: 4;
 }
 
 wall.top {
@@ -112,7 +111,8 @@ floor.windows {
 }
 
 floor.top {
-    texture: tex.bar;
+    texture: tex.wood;
+  	height: 8;
 }
 
 tex.bar {

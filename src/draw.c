@@ -11,11 +11,15 @@ int _get_index(struct image* img, int cor[2]) {
 
 struct rgb get_pixel(struct image* img, int cor[2]) {
     int index = _get_index(img, cor);
+    if (index >= img->width * img->height) {
+        index = 0;
+    }
     return img->buffer[index];
 }
 
 void _set_pixel(struct image* img, int cor[2], struct rgb color) {
     int index = _get_index(img, cor);
+    if (index >= img->width * img->height) return;
     img->buffer[index] = color;
 }
 

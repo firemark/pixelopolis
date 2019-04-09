@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
-#include <draw_shape.h>
-#include <draw.h>
+#include "draw_shape.h"
+#include "draw.h"
 
 #define SIN_PROJECTION 0.7071067811865476
 #define COS_PROJECTION 0.7071067811865476
@@ -63,7 +63,8 @@ void _draw(
 }
 
 int _get_height(struct DrawArgs *args) {
-    return args->height < args->max_height ? args->height : args->max_height;
+    int height = args->start_height + args->height;
+    return height < args->max_height ? height : args->max_height;
 }
 
 void draw_plane(struct DrawArgs *args) {
