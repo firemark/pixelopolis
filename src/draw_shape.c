@@ -55,7 +55,7 @@ void _draw(
         int vox[3], int w, int h) {
     int tmp_cor[2] = {w % img_to_draw->width, h % img_to_draw->height};
     float img_cor[2];
-    struct rgb color = get_pixel(img_to_draw, tmp_cor);
+    struct RoyalPixel color = get_pixel(img_to_draw, tmp_cor);
     color.zindex = vox[1];
 
     _projection(vox, img_cor);

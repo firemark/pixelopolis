@@ -3,6 +3,6 @@
 
 void draw_poly(
         struct image *img, 
-        struct image *img_to_draw, 
+        struct FlatImage *img_to_draw, 
         int voxes[9], 
         int uv[6]);

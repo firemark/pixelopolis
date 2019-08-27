@@ -20,7 +20,7 @@ struct DrawObj {
 };
 
 struct TexObj {
-    struct image *texture;
+    struct FlatImage *texture;
 };
 
 struct FloorObj {

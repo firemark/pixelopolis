@@ -1,8 +1,11 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #include "css_draw.h"
 #include "css_func.h"
+#include "draw_poly.h"
 #include "draw_shape.h"
 #include "hash.h"
 #include "img.h"
@@ -15,193 +18,59 @@ struct DrawInnerInfo {
 };
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
-enum Shape { SHAPE_PLANE, SHAPE_TRIANGLE, SHAPE_PLANE_WITH_HEIGHT };
 
-struct ShapeFunc {
-    enum Shape shape;
-    void *args;
-};
-
-struct ShapePlaneWithHeightArgs {
-    int height;
-};
-
-char _get_index_height(enum direction dir) {
-    switch(dir) {
-        case DIRECTION_UP: return 1;
-        default: return 2;
-    }
-}
-
-char _get_index_width(enum direction dir) {
-    switch(dir) {
-        case DIRECTION_EAST: return 1;
-        default: return 0;
-    }
-}
-
-void _css_draw(struct DrawArgs *args, struct ShapeFunc *shape_func) {
-    switch(shape_func->shape) {
-        case SHAPE_PLANE: draw_plane(args); break;
-        case SHAPE_TRIANGLE: draw_triangle(args); break;
-        case SHAPE_PLANE_WITH_HEIGHT: {
-            struct ShapePlaneWithHeightArgs *shape_args = shape_func->args;
-            draw_plane_with_height(args, shape_args->height);
-        } break;
-    }
-}
-
-void _css_draw_texture(
-        struct TexObj* obj,
-        struct DrawInnerInfo* inner_info,
-        int width,
-        int height,
-        enum direction dir,
-        struct ShapeFunc *shape_func) {
-    struct image* texture = obj->texture;
-    if (!texture) return;
-    width = width ? width : texture->width;
-    height = height ? height : texture->height;
-
-    struct DrawArgs args = {
-        .img=inner_info->img,
-        .img_to_draw=texture,
-        .vox=inner_info->vox,
-        .width=width,
-        .height=height,
-        .start_height=0,
-        .max_height=height,
-        .dir=dir,
-    };
-
-    _css_draw(&args, shape_func);
-}
-
-int _css_draw_floor(
-        struct FloorObj* obj,
-        struct DrawInnerInfo* inner_info,
-        int width,
-        int start_height,
-        int limit_height,
-        enum direction dir,
-        enum Valign valign,
-        struct ShapeFunc *shape_func) {
-    struct image *img = inner_info->img;
-
-    int *vox = inner_info->vox;
-    int new_vox[3] = COPY_VOX(vox);
+int _get_height_of_floor(struct FloorObj* obj) {
     int height = obj->height;
-    char index_height = _get_index_height(dir);
+
+    struct TexObj* tex_obj = obj->tex;
+    if (!tex_obj) return height;
+    struct FlatImage* texture = tex_obj->texture;
+    if (!texture) return height;
+
+    return height ? height : texture->height;
+}
+
+void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int height, enum Valign valign) {
+    if (valign == VALIGN_BOTTOM) {
+        height += _get_height_of_floor(obj);
+    }
 
     struct TexObj* tex_obj = obj->tex;
     if (!tex_obj) goto without_texture; 
-    struct image* texture = tex_obj->texture;
+    struct FlatImage* texture = tex_obj->texture;
     if (!texture) goto without_texture;
+    flat_image_fill_column(img, texture, height);
 
-    width = width ? width : texture->width;
-    height = height ? height : texture->height;
-
-    if (valign == VALIGN_TOP) {
-        start_height -= height;
-    }
-
-    struct DrawArgs args = {
-        .img=inner_info->img,
-        .img_to_draw=texture,
-        .vox=new_vox,
-        .width=width,
-        .height=height,
-        .start_height=start_height,
-        .max_height=limit_height,
-        .dir=dir,
-    };
-
-    _css_draw(&args, shape_func);
-
-without_texture: ;
-    char index_width = _get_index_width(dir);
+without_texture:;
     int start_width = 0;
-
     struct TexObj *left = obj->left;
     if (left && left->texture) {
-        struct DrawArgs inner_args = {
-            .img=inner_info->img,
-            .img_to_draw=left->texture,
-            .vox=new_vox,
-            .width=left->texture->width,
-            .height=left->texture->height,
-            .start_height=start_height,
-            .max_height=limit_height,
-            .dir=dir,
-        };
-        _css_draw(&inner_args, shape_func);
+        flat_image_copy(img, left->texture, height, start_width);
         start_width += left->texture->width + obj->padding;
     }
 
     struct TexObj *right = obj->right;
     if (right && right->texture) {
-        int right_vox[3] = COPY_VOX(new_vox);
-        right_vox[index_width] += width - right->texture->width;
-        struct DrawArgs inner_args = {
-            .img=inner_info->img,
-            .img_to_draw=right->texture,
-            .vox=right_vox,
-            .width=right->texture->width,
-            .height=right->texture->height,
-            .start_height=start_height,
-            .max_height=limit_height,
-            .dir=dir,
-        };
-        _css_draw(&inner_args, shape_func);
-        draw_plane(&inner_args);
+        flat_image_copy(img, right->texture, img->width - right->texture->width, height);
     }
 
     size_t obj_index;
-    for(obj_index = 0; obj_index < obj->objs_size;  obj_index++) {
+    for(obj_index = 0; obj_index < obj->objs_size; obj_index++) {
         struct TexObj *middle = obj->objs[obj_index];
         if (!middle || !middle->texture) {
             start_width += 12 + obj->padding;
             continue;
         }
-        int middle_vox[3] = COPY_VOX(new_vox);
-        middle_vox[index_width] += start_width;
-        struct DrawArgs inner_args = {
-            .img=inner_info->img,
-            .img_to_draw=middle->texture,
-            .vox=middle_vox,
-            .width=middle->texture->width,
-            .height=middle->texture->height,
-            .start_height=start_height,
-            .max_height=limit_height,
-            .dir=dir,
-        };
-        _css_draw(&inner_args, shape_func);
+        flat_image_copy(img, middle->texture, start_width, height);
         start_width += middle->texture->width + obj->padding;
     }
-
-    return height;
 }
 
-
-void _css_draw_wall_with_rule(
-        struct WallObj *obj,
-        struct DrawInnerInfo* inner_info,
-        int width,
-        int height,
-        enum direction dir,
-        struct ShapeFunc* shape_func) {
-    int *vox = inner_info->vox;
-    struct image* img = inner_info->img;
-    char index_height = _get_index_height(dir);
-
+struct FlatImage* _make_texture_from_wall(struct WallObj *obj, int width, int height) {
+    struct FlatImage *img = flat_image_create(width, height);
     struct TexObj *tex_obj = obj->tex;
     if (tex_obj) {
-        struct DrawInnerInfo texture_inner_info = {
-            .img=img,
-            .vox=vox,
-            .out_vox=NULL,
-        };
-        _css_draw_texture(tex_obj, &texture_inner_info, width, height, dir, shape_func);
+        flat_image_fill(img, obj->tex->texture);
     }
 
     int max_height = height;
@@ -209,25 +78,13 @@ void _css_draw_wall_with_rule(
     
     struct FloorObj *bottom = obj->bottom;
     if (bottom) {
-        struct DrawInnerInfo texture_inner_info = {
-            .img=img,
-            .vox=vox,
-            .out_vox=NULL,
-        };
-        int tex_height = _css_draw_floor(
-            bottom, &texture_inner_info, width, start_height, max_height, dir, VALIGN_BOTTOM, shape_func);
-        start_height += tex_height + obj->padding;
+        _draw_floor_on_texture(img, bottom, start_height, VALIGN_BOTTOM);
+        start_height += _get_height_of_floor(bottom) + obj->padding;
     }
 
     struct FloorObj *top = obj->top;
     if (top) {
-        struct DrawInnerInfo texture_inner_info = {
-            .img=img,
-            .vox=vox,
-            .out_vox=NULL,
-        };
-        int tex_height =_css_draw_floor(
-                top, &texture_inner_info, width, max_height, max_height, dir, VALIGN_TOP, shape_func);
+        _draw_floor_on_texture(img, top, start_height, VALIGN_TOP);
     }
 
     int floor_index;
@@ -235,24 +92,48 @@ void _css_draw_wall_with_rule(
         struct FloorObj *middle = obj->floors[floor_index];
         int tex_height = 0;
         if (middle) {
-            struct DrawInnerInfo texture_inner_info = {
-                .img=img,
-                .vox=vox,
-                .out_vox=NULL,
-            };
-            tex_height = _css_draw_floor(
-                    middle, &texture_inner_info, width, start_height, max_height, dir, VALIGN_BOTTOM, shape_func);
+            _draw_floor_on_texture(img, middle, start_height, VALIGN_BOTTOM);
+            tex_height = _get_height_of_floor(bottom);
         } else {
             tex_height = 12;
         }
         start_height += tex_height + obj->padding;
     }
 
-    int *out_vox = inner_info->out_vox;
-    if (out_vox) {
-        out_vox[0] += width;
-        out_vox[index_height] += height;
-    }
+    return img;
+}
+
+void _css_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes[12]) {
+    /* 3---4
+     * |B /|
+     * | / |
+     * |/ A|
+     * 1---2 
+     */
+    int voxes_a[9] = {
+        voxes[0], voxes[1], voxes[2], // 1
+        voxes[3], voxes[4], voxes[5], // 2
+        voxes[9], voxes[10], voxes[11] // 4
+    };
+    int uv_a[6] = {
+        0, 0,
+        img_to_draw->width, 0,
+        0, img_to_draw->height
+    };
+
+    int voxes_b[9] = {
+        voxes[0], voxes[1], voxes[2], // 1
+        voxes[6], voxes[7], voxes[8], // 3
+        voxes[9], voxes[10], voxes[11] // 4
+    };
+    int uv_b[6] = {
+        0, 0,
+        0, img_to_draw->height,
+        img_to_draw->width, img_to_draw->height
+    };
+
+    draw_poly(img, img_to_draw, voxes_a, uv_a);
+    draw_poly(img, img_to_draw, voxes_b, uv_b);
 }
 
 void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
@@ -262,39 +143,43 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     int height = obj->basic.height;
     int depth = obj->basic.depth;
 
-    struct ShapeFunc shape_func = {
-        .shape=SHAPE_PLANE,
-        .args=NULL,
-    };
-
     struct WallObj *east_wall_obj = obj->east_wall;
-    if (east_wall_obj) {
-        int east_vox[3] = {vox[0] + width, vox[1], vox[2]};
-        struct DrawInnerInfo wall_info = {
-            .img=inner_info->img,
-            .vox=east_vox,
+    if (east_wall_obj && depth > 0 && height > 0) {
+        int voxes[12] = {
+            vox[0] + width, vox[1], vox[2],
+            vox[0] + width, vox[1] + depth, vox[2],
+            vox[0] + width, vox[1], vox[2] + height,
+            vox[0] + width, vox[1] + depth, vox[2] + height,
         };
-        _css_draw_wall_with_rule(east_wall_obj, &wall_info, depth, height, DIRECTION_EAST, &shape_func);
+        struct FlatImage* img_to_draw = _make_texture_from_wall(east_wall_obj, depth, height);
+        _css_draw_plane(inner_info->img, img_to_draw, voxes);
+        free(img_to_draw);
     }
 
     struct WallObj *south_wall_obj = obj->south_wall;
-    if (south_wall_obj) {
-        int south_vox[3] = {vox[0], vox[1], vox[2]};
-        struct DrawInnerInfo wall_info = {
-            .img=inner_info->img,
-            .vox=south_vox,
+    if (south_wall_obj && width > 0 && height > 0) {
+        int voxes[12] = {
+            vox[0], vox[1], vox[2],
+            vox[0] + width, vox[1], vox[2],
+            vox[0], vox[1], vox[2] + height,
+            vox[0] + width, vox[1], vox[2] + height
         };
-        _css_draw_wall_with_rule(south_wall_obj, &wall_info, width, height, DIRECTION_SOUTH, &shape_func);
+        struct FlatImage* img_to_draw = _make_texture_from_wall(south_wall_obj, width, height);
+        _css_draw_plane(inner_info->img, img_to_draw, voxes);
+        free(img_to_draw);
     }
 
     struct WallObj *roof_obj = obj->roof;
-    if (roof_obj) {
-        int up_vox[3] = {vox[0], vox[1], vox[2] + height};
-        struct DrawInnerInfo roof_info = {
-            .img=inner_info->img,
-            .vox=up_vox,
+    if (roof_obj && width > 0 && depth > 0) {
+        int voxes[12] = {
+            vox[0], vox[1], vox[2] + height,
+            vox[0] + width, vox[1], vox[2] + height,
+            vox[0], vox[1], vox[2] + height,
+            vox[0] + width, vox[1], vox[2] + height
         };
-        _css_draw_wall_with_rule(roof_obj, &roof_info, width, depth, DIRECTION_UP, &shape_func);
+        struct FlatImage* img_to_draw = _make_texture_from_wall(roof_obj, width, depth);
+        _css_draw_plane(inner_info->img, img_to_draw, voxes);
+        free(img_to_draw);
     }
 
     int *out_vox = inner_info->out_vox;
@@ -305,6 +190,21 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     }
 }
 
+void _css_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, int voxes[9]) {
+    /*     3
+     *    / \
+     *   /   \
+     *  /     \
+     * 1-------2 
+     */
+    int uv[6] = {
+        0, 0,
+        img_to_draw->width, 0,
+        img_to_draw->width / 2, img_to_draw->height
+    }; 
+    draw_poly(img, img_to_draw, voxes, uv);
+}
+
 void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_info) {
     if (!obj) return;
     int *vox = inner_info->vox;
@@ -312,31 +212,26 @@ void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_inf
     int height = obj->basic.height;
     int depth = obj->basic.depth;
 
-    struct DrawInnerInfo wall_info = {
-        .img=inner_info->img,
-        .vox=vox,
-    };
-
     struct WallObj *wall_obj = obj->wall;
-    if (wall_obj) {
-        struct ShapeFunc shape_func = {
-            .shape=SHAPE_TRIANGLE,
-            .args=NULL,
+    if (wall_obj && width > 0 && height > 0) {
+        int voxes[9] = {
+            vox[0], vox[1], vox[2],
+            vox[0] + width, vox[1], vox[2],
+            vox[0] + width / 2, vox[1], vox[2] + height,
         };
-        _css_draw_wall_with_rule(wall_obj, &wall_info, width, height, DIRECTION_SOUTH, &shape_func);
+        struct FlatImage* img_to_draw = _make_texture_from_wall(wall_obj, width, height);
+        _css_draw_wide_triangle(inner_info->img, img_to_draw, voxes);
+        free(img_to_draw);
     }
 
-    struct WallObj *roof_obj = obj->roof;
-    if (roof_obj) {
-        struct ShapePlaneWithHeightArgs args = {
-            .height=height,
-        };
-        struct ShapeFunc shape_func = {
-            .shape=SHAPE_PLANE_WITH_HEIGHT,
-            .args=&args,
-        };
-        _css_draw_wall_with_rule(roof_obj, &wall_info, width, depth, DIRECTION_EAST, &shape_func);
-    }
+//    struct WallObj *roof_obj = obj->roof;
+//    if (roof_obj) {
+//        int voxes[12] = {
+//        };
+//        struct FlatImage* img_to_draw = _make_texture_from_wall(roof_obj, width, height);
+//        _css_draw_plane(inner_info->img, img_to_draw, voxes);
+//        free(img_to_draw);
+//    }
 
     int *out_vox = inner_info->out_vox;
     if (out_vox) {

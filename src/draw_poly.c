@@ -28,7 +28,7 @@ struct h_poly_diffx {
 
 struct h_fill_space {
     struct image *img; 
-    struct image *img_to_draw;
+    struct FlatImage *img_to_draw;
     struct h_poly *left, *right;
 };
 
@@ -100,13 +100,17 @@ void _diff_h_poly_with_x(
 
 void _putpixel(
         struct image *img, 
-        struct image *img_to_draw,
+        struct FlatImage *img_to_draw,
         struct h_poly *point) {
     int tmp_cor[2] = { (int)point->u, (int)point->v };
     int img_cor[2] = { (int)point->x, (int)point->y };
-    struct rgb color = get_pixel(img_to_draw, tmp_cor);
-    color.zindex = (int)point->zindex;
-    set_pixel(img, img_cor, color);
+    struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
+    struct RoyalPixel royal_color = {
+        .r=color.r, .g=color.g, .b=color.b,
+        .zindex=(int)point->zindex
+    };
+
+    set_pixel(img, img_cor, royal_color);
 }
 
 void _fill_space(
@@ -148,7 +152,7 @@ void _projection_poly(int *vox, int *uv, struct h_poly *vec) {
 }
 
 void draw_poly(
-        struct image *img, struct image *img_to_draw,
+        struct image *img, struct FlatImage *img_to_draw,
         int voxes[9], int uv[6]) {
     struct h_poly at, bt, ct;
     struct h_poly *a, *b, *c;

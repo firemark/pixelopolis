@@ -33,15 +33,15 @@ void builder_stop(void) {
     hash_destroy(cache_textures);
 }
 
-struct image* _builder_get_texture(char *filename) {
-    struct image* texture;
+struct FlatImage* _builder_get_texture(char *filename) {
+    struct FlatImage* texture;
 
     texture = hash_get(cache_textures, filename);
     if (texture) {
         return texture;
     }
 
-    texture = read_png_file(filename);
+    texture = flat_image_read_png_file(filename);
     if (!texture) {
         return NULL;
     }
@@ -116,7 +116,7 @@ struct DrawObj** _build_many_objs(struct Helper* helper) {
         objs[i++] = _build_draw_obj(&inner_helper);
     }
 
-    objs = realloc(objs, sizeof(struct DrawObj*) * i);
+    objs = realloc(objs, sizeof(struct DrawObj*) * (i + 1));
     objs[i] = NULL;
 
     return objs;

@@ -1,58 +1,86 @@
-wall.test {
-    texture: tex.clay;
-    bottom: floor.test;
-    middle: floor.test;
-    top: floor.test_top;
-    floors: 4;
+world {
+    width: 800;
+    height: 800;
+    body: cube.white_house;
+}
+
+cube.white_house {
+    wall: wall.clay_with_windows;
     width: 50;
+    depth: 50;
+    height: random(40, 80);
 }
 
-floor.test {
-    height: 5;
+wall.clay_with_windows {
+    texture: tex.brick;
+    bottom: floor.door_and_windows;
+    middle: floor.windows;
+    top: floor.top;
+  	padding: 4;
 }
 
-floor.test_top {
+wall.top {
+  	texture: tex.bar;
+}
+
+wall.wood-roof {
+  	texture: tex.wood;
+}
+
+wall.road {
+    texture: tex.road;
+}
+
+floor.door_and_windows {
+    middle: choice(null, null, tex.door, tex.window);
     height: 24;
+    padding: 12;
 }
 
-wall.ancient {
-    texture: tex.clay;
-    bottom: floor.only_door;
-    middle: floor.without_doors;
-    top: floor.wood;
-    floors: 4;
-    width: 50;
-}
-
-floor.only_door {
-    height: 24;
-    left: tex.empty | tex.door;
-}
-
-floor.without_doors {
+floor.windows {
+    middle: choice(null, null, null, tex.window);
     height: 12;
-    left: tex.empty;
-    right: tex.empty;
+    padding: 12;
 }
 
-floor.wood {
-    height: 24;
-    middle: tex.wood;
+floor.top {
+    texture: tex.wood;
+  	height: 8;
 }
 
-tex.empty {
-    height: 24;
-    width: 24;
+tex.bar {
+    texture: "textures/bar.png";
 }
 
-tex.door {
-    texture: "door.png";
-}
-
-tex.wood {
-    texture: "wood.png";
+tex.brick {
+    texture: "textures/brick.png";
 }
 
 tex.clay {
-    texture: "brick.png";
+    texture: "textures/clay.png";
 }
+
+tex.door {
+    texture: "textures/door.png";
+}
+
+tex.window {
+    texture: "textures/window.png";
+}
+
+tex.bottom {
+    texture: "textures/bottom.png";
+}
+
+tex.road {
+    texture: "textures/road.png";
+}
+
+tex.grey-brick {
+ 	texture:  "textures/grey-brick.png";
+}
+
+tex.wood {
+  	texture:  "textures/wood.png";
+}
+

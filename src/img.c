@@ -14,7 +14,7 @@ void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
     for (y=0; y < img->height; y++) {
         png_bytep ptr = row;
         for(x=0; x < img->width; x++) {
-            struct rgb* pixel = &img->buffer[y * img->width + x];
+            struct RoyalPixel* pixel = &img->buffer[y * img->width + x];
             ptr[0] = pixel->r;
             ptr[1] = pixel->g;
             ptr[2] = pixel->b;
@@ -26,7 +26,7 @@ void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
     free(row);
 }
 
-void _fill_rows_from_png_to_image(png_structp png_ptr, struct image* img, int pixel_size) {
+void _fill_rows_from_png_to_image(png_structp png_ptr, struct FlatImage* img, int pixel_size) {
     int x, y;
     png_bytep row = malloc(pixel_size * img->width * sizeof(png_byte));
 
@@ -38,7 +38,6 @@ void _fill_rows_from_png_to_image(png_structp png_ptr, struct image* img, int pi
                 .r=ptr[0],
                 .g=ptr[1],
                 .b=ptr[2],
-                .zindex=INT_MAX,
             };
             ptr += pixel_size;
             img->buffer[y * img->width + x] = pixel;
@@ -52,11 +51,11 @@ struct image* create_black_image(int width, int height) {
     struct image *img = malloc(sizeof(struct image));
     img->width = width;
     img->height = height;
-    img->buffer = malloc(width * height * sizeof(struct rgb));
+    img->buffer = malloc(width * height * sizeof(struct RoyalPixel));
     int x, y;
     for (y=0; y < img->height; y++) {
         for(x=0; x < img->width; x++) {
-            struct rgb pixel = {
+            struct RoyalPixel pixel = {
                 .r=0,
                 .g=0,
                 .b=0,
@@ -68,13 +67,79 @@ struct image* create_black_image(int width, int height) {
     return img;
 }
 
+struct FlatImage* flat_image_create(int width, int height) {
+    struct FlatImage *img = malloc(sizeof(struct FlatImage));
+    img->width = width;
+    img->height = height;
+    img->buffer = malloc(width * height * sizeof(struct rgb));
+    return img;
+}
 
-struct image* read_png_file(char* file_name) {
+size_t __get_index(struct FlatImage* img, int x, int y) {
+    y = img->height - 1 - y;
+    return y * img->width + x;
+}
+
+void flat_image_fill(struct FlatImage* img, struct FlatImage* filler) {
+    int width = img->width;
+    int height = img->height;
+    int filler_width = filler->width;
+    int filler_height = filler->height;
+    int x, y;
+    for (y=0; y < height; y++) {
+        for(x=0; x < width; x++) {
+            size_t filler_index = __get_index(filler, x % filler_width, y % filler_height);
+            size_t img_index = __get_index(img, x, y);
+            img->buffer[img_index] = filler->buffer[filler_index];
+        }
+    }
+}
+
+void flat_image_fill_column(struct FlatImage* img, struct FlatImage* filler, int img_y) {
+    int width = img->width;
+    int height = img->height;
+    int filler_width = filler->width;
+    int filler_height = filler->height;
+
+    int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
+    int x, y;
+    for (y=0; y < limit_height; y++) {
+        for(x=0; x < width; x++) {
+            size_t filler_index = __get_index(filler, x % filler_width, y);
+            size_t img_index = __get_index(img, x, img_y);
+            img->buffer[img_index] = filler->buffer[filler_index];
+        }
+        img_y++;
+    }
+}
+
+void flat_image_copy(struct FlatImage* img, struct FlatImage* filler, int img_x, int img_y) {
+    int width = img->width;
+    int height = img->height;
+    int filler_width = filler->width;
+    int filler_height = filler->height;
+
+    int limit_width = img_x + filler_width < width ? filler_width : width - img_x; 
+    int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
+    int x, y, tmp_img_x;
+    for (y=0; y < limit_height; y++) {
+        tmp_img_x = img_x;
+        for(x=0; x < limit_width; x++) {
+            size_t filler_index = __get_index(filler, x, y);
+            size_t img_index = __get_index(img, tmp_img_x, img_y);
+            img->buffer[img_index] = filler->buffer[filler_index];
+            tmp_img_x++;
+        }
+        img_y++;
+    }
+}
+
+struct FlatImage* flat_image_read_png_file(char* file_name) {
     char header[8];
     FILE *fp = NULL;
     png_structp png_ptr = NULL;
     png_infop info_ptr = NULL;
-    struct image *img = NULL;
+    struct FlatImage *img = NULL;
 
     /* create file */
     fp = fopen(file_name, "rb");
@@ -138,10 +203,10 @@ struct image* read_png_file(char* file_name) {
         goto finalize;
     }
 
-    img = malloc(sizeof(struct image));
+    img = malloc(sizeof(struct FlatImage));
     img->width = width;
     img->height = height;
-    img->buffer = malloc(width * height * sizeof(struct rgb));
+    img->buffer = malloc(width * height * sizeof(struct FlatImage));
 
     _fill_rows_from_png_to_image(png_ptr, img, pixel_size);
 
@@ -223,6 +288,11 @@ int write_png_file(FILE *fp, struct image* img) {
 }
 
 void destroy_image(struct image *img) {
+    free(img->buffer);
+    free(img);
+}
+
+void destroy_flat_image(struct FlatImage *img) {
     free(img->buffer);
     free(img);
 }
