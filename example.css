@@ -5,82 +5,25 @@ world {
 }
 
 cube.white_house {
-    wall: wall.clay_with_windows;
+	wall: wall.grey-brick;
+    roof: wall.top;
     width: 50;
-    depth: 50;
-    height: random(40, 80);
+    depth: 350;
+    height: 150;
 }
 
-wall.clay_with_windows {
-    texture: tex.brick;
-    bottom: floor.door_and_windows;
-    middle: floor.windows;
-    top: floor.top;
-  	padding: 4;
+wall.grey-brick {
+    texture: tex.grey-brick;
 }
 
 wall.top {
-  	texture: tex.bar;
-}
-
-wall.wood-roof {
   	texture: tex.wood;
 }
 
-wall.road {
-    texture: tex.road;
-}
-
-floor.door_and_windows {
-    middle: choice(null, null, tex.door, tex.window);
-    height: 24;
-    padding: 12;
-}
-
-floor.windows {
-    middle: choice(null, null, null, tex.window);
-    height: 12;
-    padding: 12;
-}
-
-floor.top {
-    texture: tex.wood;
-  	height: 8;
-}
-
-tex.bar {
-    texture: "textures/bar.png";
-}
-
-tex.brick {
-    texture: "textures/brick.png";
-}
-
-tex.clay {
-    texture: "textures/clay.png";
-}
-
-tex.door {
-    texture: "textures/door.png";
-}
-
-tex.window {
-    texture: "textures/window.png";
-}
-
-tex.bottom {
-    texture: "textures/bottom.png";
-}
-
-tex.road {
-    texture: "textures/road.png";
+tex.wood {
+    texture: "textures/wood.png";
 }
 
 tex.grey-brick {
  	texture:  "textures/grey-brick.png";
 }
-
-tex.wood {
-  	texture:  "textures/wood.png";
-}
-

@@ -5,7 +5,7 @@
 #define COS_PROJECTION 0.7071067811865476
 #define SCALE_PROJECTION 0.6666666666666666
 
-#define SWAP(x, y) { temp = x; x = y; y = temp; }
+#define SWAP(a, b) { temp = a; a = b; b = temp; }
 #define SUB(a, b, val) ((a) -> val - (b) -> val)
 
 
@@ -57,6 +57,7 @@ void _cpy_h_poly(struct h_poly *a, struct h_poly *b) {
 }
 
 void _add_h_poly_diffy(struct h_poly *a, struct h_poly_diffy *b) {
+    a->y += 1.0;
     a->x += b->x;
     a->u += b->u;
     a->v += b->v;
@@ -64,6 +65,7 @@ void _add_h_poly_diffy(struct h_poly *a, struct h_poly_diffy *b) {
 }
 
 void _add_h_poly_diffx(struct h_poly *a, struct h_poly_diffx *b) {
+    a->x += 1.0;
     a->u += b->u;
     a->v += b->v;
     a->zindex += b->zindex;
@@ -80,7 +82,7 @@ void _diff_h_poly_with_y(
     }
     diff->x = SUB(a, b, x) / diff_y;
     diff->u = SUB(a, b, u) / diff_y;
-    diff->v = SUB(a, b, u) / diff_y;
+    diff->v = SUB(a, b, v) / diff_y;
     diff->zindex = SUB(a, b, zindex) / diff_y;
 }
 
@@ -94,7 +96,7 @@ void _diff_h_poly_with_x(
         return;
     }
     diff->u = SUB(a, b, u) / diff_x;
-    diff->v = SUB(a, b, u) / diff_x;
+    diff->v = SUB(a, b, v) / diff_x;
     diff->zindex = SUB(a, b, zindex) / diff_x;
 }
 
@@ -126,7 +128,7 @@ void _fill_space(
 
     for(y_start = left->y; y_start <= y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
-        _diff_h_poly_with_x(&pointer_diff, left, right);
+        _diff_h_poly_with_x(&pointer_diff, right, left);
 
         x_start = pointer.x;
         x_end = right->x;
@@ -168,9 +170,11 @@ void draw_poly(
 
     // sorting
     struct h_poly *temp;
-    if (a->y < b->y) SWAP(a, b);
-    if (a->y < c->y) SWAP(a, c);
-    if (c->y < b->y) SWAP(c, b);
+    if (a->y > b->y) SWAP(a, b);
+    if (a->y > c->y) SWAP(a, c);
+    if (b->y > c->y) SWAP(b, c);
+
+    // printf("%f %f %f\n", a->y, b->y, c->y);
 
     // compute diffs to linear interpolation
     struct h_poly_diffy diff_ba, diff_ca, diff_cb;
@@ -179,7 +183,7 @@ void draw_poly(
     _diff_h_poly_with_y(&diff_cb, c, b);
 
     // set left and right pointer to fill lines
-    struct h_poly left, right, pointer, pointer_diff;
+    struct h_poly left, right;
     _cpy_h_poly(&left, a);
     _cpy_h_poly(&right, a);
 

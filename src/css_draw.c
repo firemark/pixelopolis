@@ -174,8 +174,8 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
         int voxes[12] = {
             vox[0], vox[1], vox[2] + height,
             vox[0] + width, vox[1], vox[2] + height,
-            vox[0], vox[1], vox[2] + height,
-            vox[0] + width, vox[1], vox[2] + height
+            vox[0], vox[1] + depth, vox[2] + height,
+            vox[0] + width, vox[1] + depth, vox[2] + height
         };
         struct FlatImage* img_to_draw = _make_texture_from_wall(roof_obj, width, depth);
         _css_draw_plane(inner_info->img, img_to_draw, voxes);
