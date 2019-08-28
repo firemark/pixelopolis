@@ -92,14 +92,14 @@ void _diff_h_poly_with_x(
         struct h_poly_diffx *diff,
         struct h_poly *a,
         struct h_poly *b) {
-    double diff_x = SUB(a, b, x);
+    double diff_x = round(a->x) - round(b->x);
     if (diff_x <= 0.0) {
         diff->u = diff->v = diff->zindex = 0;
         return;
     }
-    diff->u = SUB(a, b, u) / diff_x;
-    diff->v = SUB(a, b, v) / diff_x;
-    diff->zindex = SUB(a, b, zindex) / diff_x;
+    diff->u = round(SUB(a, b, u) / diff_x);
+    diff->v = round(SUB(a, b, v) / diff_x);
+    diff->zindex = round(SUB(a, b, zindex) / diff_x);
 }
 
 void _putpixel(
@@ -139,6 +139,7 @@ void _fill_space(
         diff_left = diff_right;
         diff_right = diff_temp;
     }
+    fprintf(stderr, "lx=%6.2f rx=%6.2f\n", left->x, right->x);
 
     for(y_start = left->y; y_start <= y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
