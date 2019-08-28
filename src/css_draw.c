@@ -11,6 +11,8 @@
 #include "img.h"
 #include "draw_builder.h"
 
+#define VEC(n) voxes[(n) * 3 + 0], voxes[(n) * 3 + 1], voxes[(n) * 3 + 2]
+
 struct DrawInnerInfo {
     struct image *img; 
     int *vox;
@@ -104,32 +106,25 @@ struct FlatImage* _make_texture_from_wall(struct WallObj *obj, int width, int he
 }
 
 void _css_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes[12]) {
-    /* 3---4
+    /* 2---3
      * |B /|
      * | / |
      * |/ A|
-     * 1---2 
+     * 0---1 
      */
-    int voxes_a[9] = {
-        voxes[0], voxes[1], voxes[2], // 1
-        voxes[3], voxes[4], voxes[5], // 2
-        voxes[9], voxes[10], voxes[11] // 4
-    };
+    int w = img_to_draw->width;
+    int h = img_to_draw->height;
+    int voxes_a[9] = { VEC(0), VEC(1), VEC(3) };
+    int voxes_b[9] = { VEC(0), VEC(2), VEC(3) };
     int uv_a[6] = {
-        0, 0,
-        img_to_draw->width, 0,
-        0, img_to_draw->height
-    };
-
-    int voxes_b[9] = {
-        voxes[0], voxes[1], voxes[2], // 1
-        voxes[6], voxes[7], voxes[8], // 3
-        voxes[9], voxes[10], voxes[11] // 4
+        0, 0, // 0
+        w, 0, // 1
+        w, h, // 3
     };
     int uv_b[6] = {
-        0, 0,
-        0, img_to_draw->height,
-        img_to_draw->width, img_to_draw->height
+        0, 0, // 0
+        0, h, // 2
+        w, h, // 3
     };
 
     draw_poly(img, img_to_draw, voxes_a, uv_a);
@@ -142,14 +137,17 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     int width = obj->basic.width;
     int height = obj->basic.height;
     int depth = obj->basic.depth;
+    int w = width;
+    int h = height;
+    int d = depth;
 
     struct WallObj *east_wall_obj = obj->east_wall;
     if (east_wall_obj && depth > 0 && height > 0) {
         int voxes[12] = {
-            vox[0] + width, vox[1], vox[2],
-            vox[0] + width, vox[1] + depth, vox[2],
-            vox[0] + width, vox[1], vox[2] + height,
-            vox[0] + width, vox[1] + depth, vox[2] + height,
+            vox[0] + w, vox[1] + 0, vox[2] + 0,
+            vox[0] + w, vox[1] + d, vox[2] + 0,
+            vox[0] + w, vox[1] + 0, vox[2] + h,
+            vox[0] + w, vox[1] + d, vox[2] + h,
         };
         struct FlatImage* img_to_draw = _make_texture_from_wall(east_wall_obj, depth, height);
         _css_draw_plane(inner_info->img, img_to_draw, voxes);
@@ -159,10 +157,10 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
         int voxes[12] = {
-            vox[0], vox[1], vox[2],
-            vox[0] + width, vox[1], vox[2],
-            vox[0], vox[1], vox[2] + height,
-            vox[0] + width, vox[1], vox[2] + height
+            vox[0] + 0, vox[1], vox[2] + 0,
+            vox[0] + w, vox[1], vox[2] + 0,
+            vox[0] + 0, vox[1], vox[2] + h,
+            vox[0] + w, vox[1], vox[2] + h,
         };
         struct FlatImage* img_to_draw = _make_texture_from_wall(south_wall_obj, width, height);
         _css_draw_plane(inner_info->img, img_to_draw, voxes);
@@ -172,10 +170,10 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     struct WallObj *roof_obj = obj->roof;
     if (roof_obj && width > 0 && depth > 0) {
         int voxes[12] = {
-            vox[0], vox[1], vox[2] + height,
-            vox[0] + width, vox[1], vox[2] + height,
-            vox[0], vox[1] + depth, vox[2] + height,
-            vox[0] + width, vox[1] + depth, vox[2] + height
+            vox[0] + 0, vox[1] + 0, vox[2] + h,
+            vox[0] + w, vox[1] + 0, vox[2] + h,
+            vox[0] + 0, vox[1] + d, vox[2] + h,
+            vox[0] + w, vox[1] + d, vox[2] + h,
         };
         struct FlatImage* img_to_draw = _make_texture_from_wall(roof_obj, width, depth);
         _css_draw_plane(inner_info->img, img_to_draw, voxes);
@@ -191,16 +189,19 @@ void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
 }
 
 void _css_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, int voxes[9]) {
-    /*     3
+    /*     2
      *    / \
      *   /   \
      *  /     \
-     * 1-------2 
+     * 0-------1
      */
+    int h = img_to_draw->height;
+    int w = img_to_draw->width;
+    int wh = w / 2;
     int uv[6] = {
-        0, 0,
-        img_to_draw->width, 0,
-        img_to_draw->width / 2, img_to_draw->height
+        0, 0, // 0
+        w, 0, // 1
+        wh, h // 2
     }; 
     draw_poly(img, img_to_draw, voxes, uv);
 }

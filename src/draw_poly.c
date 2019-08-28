@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <math.h>
+
 #include "draw_poly.h"
 #include "draw.h"
 
@@ -5,7 +8,6 @@
 #define COS_PROJECTION 0.7071067811865476
 #define SCALE_PROJECTION 0.6666666666666666
 
-#define SWAP(a, b) { temp = a; a = b; b = temp; }
 #define SUB(a, b, val) ((a) -> val - (b) -> val)
 
 
@@ -104,8 +106,8 @@ void _putpixel(
         struct image *img, 
         struct FlatImage *img_to_draw,
         struct h_poly *point) {
-    int tmp_cor[2] = { (int)point->u, (int)point->v };
-    int img_cor[2] = { (int)point->x, (int)point->y };
+    int tmp_cor[2] = { round(point->u), round(point->v) };
+    int img_cor[2] = { round(point->x), round(point->y) };
     struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
     struct RoyalPixel royal_color = {
         .r=color.r, .g=color.g, .b=color.b,
@@ -126,14 +128,27 @@ void _fill_space(
     struct h_poly *left = helper->left;
     struct h_poly *right = helper->right;
 
+    if (left->x > right->x) { // swap right with left if need
+        struct h_poly *temp;
+        struct h_poly_diffy *diff_temp;
+        temp = left;
+        left = right;
+        right = temp;
+
+        diff_temp = diff_left;
+        diff_left = diff_right;
+        diff_right = diff_temp;
+    }
+
     for(y_start = left->y; y_start <= y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
         _diff_h_poly_with_x(&pointer_diff, right, left);
 
-        x_start = pointer.x;
+        x_start = left->x;
         x_end = right->x;
         for(; x_start <= x_end; x_start += 1.0) {
             _putpixel(helper->img, helper->img_to_draw, &pointer);
+            //break;
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
 
@@ -144,10 +159,10 @@ void _fill_space(
 
 void _projection_poly(int *vox, int *uv, struct h_poly *vec) {
     // https://en.wikipedia.org/wiki/Oblique_projection
-    int s = vox[1] * SCALE_PROJECTION;
+    double s = vox[1] * SCALE_PROJECTION;
 
-    vec->x = vox[0] + s * COS_PROJECTION;
-    vec->y = vox[2] + s * SIN_PROJECTION;
+    vec->x = round(vox[0] + s * COS_PROJECTION);
+    vec->y = round(vox[2] + s * SIN_PROJECTION);
     vec->zindex = vox[1];
     vec->u = uv[0];
     vec->v = uv[1];
@@ -169,12 +184,12 @@ void draw_poly(
     _projection_poly(&voxes[6], &uv[4], c);
 
     // sorting
+#define SWAP(a, b) { temp = a; a = b; b = temp; }
     struct h_poly *temp;
     if (a->y > b->y) SWAP(a, b);
     if (a->y > c->y) SWAP(a, c);
     if (b->y > c->y) SWAP(b, c);
-
-    // printf("%f %f %f\n", a->y, b->y, c->y);
+#undef SWAP   
 
     // compute diffs to linear interpolation
     struct h_poly_diffy diff_ba, diff_ca, diff_cb;

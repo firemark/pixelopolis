@@ -9,15 +9,11 @@
             form { float: left; width: 50%; }
             .CodeMirror { font-size: 12pt; height: 800px; }
             .box { float: left; width: 50%; height: 800px; overflow: auto; }
+            .errs { float: left; width: 100%; max-height: 100px; overflow-y: auto; }
         </style>
     </head>
     <body>
         <h1>Pixelopolis</h1>
-        <pre>
-        {% for err in errors %} 
-            <strong>{{ err }}</strong>
-        {% endfor %}
-        </pre>
         <form method="POST" action="/">
             <textarea id="data" name="data">{{ data }}</textarea>
             <input type="submit" name="doit.png" />
@@ -27,6 +23,11 @@
             <img src="data:image/png;base64,{{ img }}" alt="result" />
         {% endif %}
         </div>
+        <pre class="errs">
+        {% for err in errors -%} 
+            <strong>{{ err }}</strong>
+        {% endfor %}
+        </pre>
         <script>
             var textarea = document.querySelector('#data');
             var editor = CodeMirror.fromTextArea(textarea, {
