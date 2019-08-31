@@ -92,7 +92,7 @@ void _diff_h_poly_with_x(
         struct h_poly_diffx *diff,
         struct h_poly *a,
         struct h_poly *b) {
-    double diff_x = round(a->x) - round(b->x);
+    double diff_x = SUB(a, b, x);
     if (diff_x <= 0.0) {
         diff->u = diff->v = diff->zindex = 0;
         return;

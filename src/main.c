@@ -5,7 +5,6 @@
 #include "basic.h"
 #include "img.h"
 #include "draw.h"
-#include "draw_shape.h"
 #include "css_func.h"
 #include "css_draw.h"
 #include "draw_builder.h"

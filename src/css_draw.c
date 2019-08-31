@@ -6,7 +6,6 @@
 #include "css_draw.h"
 #include "css_func.h"
 #include "draw_poly.h"
-#include "draw_shape.h"
 #include "hash.h"
 #include "img.h"
 #include "draw_builder.h"
