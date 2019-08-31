@@ -139,7 +139,6 @@ void _fill_space(
         diff_left = diff_right;
         diff_right = diff_temp;
     }
-    fprintf(stderr, "lx=%6.2f rx=%6.2f\n", left->x, right->x);
 
     for(y_start = left->y; y_start <= y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
@@ -149,7 +148,6 @@ void _fill_space(
         x_end = right->x;
         for(; x_start <= x_end; x_start += 1.0) {
             _putpixel(helper->img, helper->img_to_draw, &pointer);
-            //break;
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
 
@@ -162,8 +160,8 @@ void _projection_poly(int *vox, int *uv, struct h_poly *vec) {
     // https://en.wikipedia.org/wiki/Oblique_projection
     double s = vox[1] * SCALE_PROJECTION;
 
-    vec->x = round(vox[0] + s * COS_PROJECTION);
-    vec->y = round(vox[2] + s * SIN_PROJECTION);
+    vec->x = vox[0] + s * COS_PROJECTION;
+    vec->y = vox[2] + s * SIN_PROJECTION;
     vec->zindex = vox[1];
     vec->u = uv[0];
     vec->v = uv[1];

@@ -212,27 +212,47 @@ void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_inf
     int width = obj->basic.width;
     int height = obj->basic.height;
     int depth = obj->basic.depth;
+    int w = width;
+    int wh = width / 2;
+    int h = height;
+    int d = depth;
 
     struct WallObj *wall_obj = obj->wall;
     if (wall_obj && width > 0 && height > 0) {
         int voxes[9] = {
-            vox[0], vox[1], vox[2],
-            vox[0] + width, vox[1], vox[2],
-            vox[0] + width / 2, vox[1], vox[2] + height,
+            vox[0] + 0 , vox[1], vox[2] + 0,
+            vox[0] + w , vox[1], vox[2] + 0,
+            vox[0] + wh, vox[1], vox[2] + h,
         };
         struct FlatImage* img_to_draw = _make_texture_from_wall(wall_obj, width, height);
         _css_draw_wide_triangle(inner_info->img, img_to_draw, voxes);
         free(img_to_draw);
     }
 
-//    struct WallObj *roof_obj = obj->roof;
-//    if (roof_obj) {
-//        int voxes[12] = {
-//        };
-//        struct FlatImage* img_to_draw = _make_texture_from_wall(roof_obj, width, height);
-//        _css_draw_plane(inner_info->img, img_to_draw, voxes);
-//        free(img_to_draw);
-//    }
+    struct WallObj *roof_obj = obj->roof;
+    if (roof_obj) {
+        struct FlatImage* img_to_draw_first = _make_texture_from_wall(roof_obj, width, height);
+        struct FlatImage* img_to_draw_second = _make_texture_from_wall(roof_obj, width, height);
+
+        int voxes_first[12] = {
+            vox[0] + 0 , vox[1] + 0, vox[2] + 0,
+            vox[0] + 0 , vox[1] + d, vox[2] + 0,
+            vox[0] + wh, vox[1] + 0, vox[2] + h,
+            vox[0] + wh, vox[1] + d, vox[2] + h,
+        };
+        _css_draw_plane(inner_info->img, img_to_draw_first, voxes_first);
+
+        int voxes_second[12] = {
+            vox[0] + w , vox[1] + 0, vox[2] + 0,
+            vox[0] + w , vox[1] + d, vox[2] + 0,
+            vox[0] + wh, vox[1] + 0, vox[2] + h,
+            vox[0] + wh, vox[1] + d, vox[2] + h,
+        };
+        _css_draw_plane(inner_info->img, img_to_draw_second, voxes_second);
+
+        free(img_to_draw_first);
+        free(img_to_draw_second);
+    }
 
     int *out_vox = inner_info->out_vox;
     if (out_vox) {
