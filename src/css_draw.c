@@ -32,8 +32,8 @@ int _get_height_of_floor(struct FloorObj* obj) {
 }
 
 void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int height, enum Valign valign) {
-    if (valign == VALIGN_BOTTOM) {
-        height += _get_height_of_floor(obj);
+    if (valign == VALIGN_TOP) {
+        height -= _get_height_of_floor(obj);
     }
 
     struct TexObj* tex_obj = obj->tex;
@@ -85,7 +85,7 @@ struct FlatImage* _make_texture_from_wall(struct WallObj *obj, int width, int he
 
     struct FloorObj *top = obj->top;
     if (top) {
-        _draw_floor_on_texture(img, top, start_height, VALIGN_TOP);
+        _draw_floor_on_texture(img, top, max_height, VALIGN_TOP);
     }
 
     int floor_index;
