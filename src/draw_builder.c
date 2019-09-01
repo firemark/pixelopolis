@@ -15,6 +15,7 @@ struct Helper {
     struct DrawObj *parent;
 };
 
+struct DrawObj* _build_pyramid(struct Helper* helper);
 struct DrawObj* _build_triangle(struct Helper* helper);
 struct DrawObj* _build_cube(struct Helper* helper);
 struct DrawObj* _build_series(struct Helper* helper, enum Series series);
@@ -83,7 +84,7 @@ struct DrawObj* _build_draw_obj(struct Helper* helper) {
     } else if (_check_el_name(query, "triangle")) {
         return _build_triangle(&inner_helper);
     } else if (_check_el_name(query, "pyramid")) {
-        return NULL;
+        return _build_pyramid(&inner_helper);
     } else if (_check_el_name(query, "v-series")) {
         return _build_series(&inner_helper, VERTICAL_SERIES);
     } else if (_check_el_name(query, "h-series")) {
@@ -385,6 +386,29 @@ struct DrawObj* _build_triangle(struct Helper* helper) {
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
     draw_obj->type = DRAW_OBJ_TRIANGLE;
+    draw_obj->obj = obj;
+    draw_obj->parent = helper->parent;
+
+    return draw_obj;
+}
+
+struct DrawObj* _build_pyramid(struct Helper* helper) {
+    struct Rule *rule = helper->rule;
+    if (!rule) return NULL;
+    struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
+    obj->basic = _build_basic(rule);
+    struct BasicObj* basic = &obj->basic;
+
+    struct Helper wall_helper = {
+        .program=helper->program,
+        .rule=css_find_rule_prop(helper->program, rule, "wall"),
+        .parent=helper->parent,
+    };
+    obj->south_wall = _build_wall(&wall_helper, basic->width, basic->height);
+    obj->east_wall = _build_wall(&wall_helper, basic->depth, basic->height);
+
+    struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->type = DRAW_OBJ_PYRAMID;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
 

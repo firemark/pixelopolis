@@ -46,12 +46,19 @@ cube.sidewalk {
 }
 
 d-series.white_house {
-  	body: cube.white_house | triangle.white_house;
+  	body: cube.white_house | choice(triangle.white_house, pyramid.white_house);
 }
 
 triangle.white_house {
     wall: wall.clay;
     roof: wall.wood-roof;
+    width: 50;
+    depth: 50;
+    height: random(30, 80);  
+}
+
+pyramid.white_house {
+    wall: wall.wood-roof;
     width: 50;
     depth: 50;
     height: random(30, 80);  

@@ -261,6 +261,72 @@ void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_inf
     }
 }
 
+void _css_draw_pyramid(struct PyramidObj *obj, struct DrawInnerInfo *inner_info) {
+    if (!obj) return;
+    int *vox = inner_info->vox;
+    int width = obj->basic.width;
+    int height = obj->basic.height;
+    int depth = obj->basic.depth;
+    int w = width;
+    int wh = width / 2;
+    int dh = depth / 2;
+    int h = height;
+    int d = depth;
+
+    struct WallObj *south_wall_obj = obj->south_wall;
+    if (south_wall_obj && width > 0 && height > 0) {
+        struct FlatImage* img_to_draw_first = _make_texture_from_wall(south_wall_obj, width, height);
+        struct FlatImage* img_to_draw_second = _make_texture_from_wall(south_wall_obj, width, height);
+
+        int voxes_first[9] = {
+            vox[0] + 0 , vox[1] + 0 , vox[2] + 0,
+            vox[0] + w , vox[1] + 0 , vox[2] + 0,
+            vox[0] + wh, vox[1] + dh, vox[2] + h,
+        };
+        _css_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
+
+        int voxes_second[9] = {
+            vox[0] + 0 , vox[1] + d , vox[2] + 0,
+            vox[0] + w , vox[1] + d , vox[2] + 0,
+            vox[0] + wh, vox[1] + dh, vox[2] + h,
+        };
+        _css_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
+
+        free(img_to_draw_first);
+        free(img_to_draw_second);
+    }
+
+    struct WallObj *east_wall_obj = obj->east_wall;
+    if (east_wall_obj && width > 0 && height > 0) {
+        struct FlatImage* img_to_draw_first = _make_texture_from_wall(east_wall_obj, width, height);
+        struct FlatImage* img_to_draw_second = _make_texture_from_wall(east_wall_obj, width, height);
+
+        int voxes_first[9] = {
+            vox[0] + 0 , vox[1] + 0 , vox[2] + 0,
+            vox[0] + 0 , vox[1] + d , vox[2] + 0,
+            vox[0] + wh, vox[1] + dh, vox[2] + h,
+        };
+        _css_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
+
+        int voxes_second[9] = {
+            vox[0] + w , vox[1] + 0 , vox[2] + 0,
+            vox[0] + w , vox[1] + d , vox[2] + 0,
+            vox[0] + wh, vox[1] + dh, vox[2] + h,
+        };
+        _css_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
+
+        free(img_to_draw_first);
+        free(img_to_draw_second);
+    }
+
+    int *out_vox = inner_info->out_vox;
+    if (out_vox) {
+        out_vox[0] += width;
+        out_vox[1] += depth;
+        out_vox[2] += height;
+    }
+}
+
 void _css_draw_series(struct SeriesObj *obj, struct DrawInnerInfo *inner_info) {
     if (!obj) return;
     struct DrawObj **draw_objs = obj->objs;
@@ -305,6 +371,7 @@ void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vo
     switch(draw_obj->type) {
         case DRAW_OBJ_CUBE: _css_draw_cube(draw_obj->obj, &inner_info); break;
         case DRAW_OBJ_TRIANGLE: _css_draw_triangle(draw_obj->obj, &inner_info); break;
+        case DRAW_OBJ_PYRAMID: _css_draw_pyramid(draw_obj->obj, &inner_info); break;
         case DRAW_OBJ_SERIES: _css_draw_series(draw_obj->obj, &inner_info); break;
     }
 }

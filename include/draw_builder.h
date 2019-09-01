@@ -5,6 +5,7 @@
 enum DrawObjType {
     DRAW_OBJ_CUBE,
     DRAW_OBJ_TRIANGLE,
+    DRAW_OBJ_PYRAMID,
     DRAW_OBJ_SERIES,
     //DRAW_OBJ_FLOOR,
     //DRAW_OBJ_WALL,
@@ -55,6 +56,12 @@ struct CubeObj {
 struct TriangleObj {
     struct BasicObj basic;
     struct WallObj *wall, *roof;
+};
+
+struct PyramidObj {
+    struct BasicObj basic;
+    struct WallObj *east_wall;
+    struct WallObj *south_wall;
 };
 
 struct SeriesObj {
