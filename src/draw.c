@@ -31,6 +31,47 @@ struct rgb flat_image_get_pixel(struct FlatImage* img, int cor[2]) {
     return img->buffer[index];
 }
 
+struct rgb flat_image_get_aa_pixel(struct FlatImage* img, float cor[2]) {
+    // lu - left up; ld - left down
+    // ru - right up; rd - right down
+    float x = cor[0];
+    float y = cor[1];
+
+    int l = (int)x;
+    int r = l + 1;
+    int u = (int)y;
+    int d = u + 1;
+
+    float dx = x - floor(x);
+    float dy = y - floor(y);
+    float inv_dx = 1.0 - dx;
+    float inv_dy = 1.0 - dy;
+
+    int lu[2] = {l, u};
+    int ld[2] = {l, d};
+    int ru[2] = {r, u};
+    int rd[2] = {r, d};
+
+    struct rgb plu = flat_image_get_pixel(img, lu);
+    struct rgb pld = flat_image_get_pixel(img, ld);
+    struct rgb pru = flat_image_get_pixel(img, ru);
+    struct rgb prd = flat_image_get_pixel(img, rd);
+
+#define M(c, x, y) c * x * y
+#define MIX(x) M(plu. x, dx, dy) + M(pld. x, dx, inv_dy) + M(pru. x, inv_dx, dy) + M(prd. x, inv_dx, inv_dy)
+
+    struct rgb p = {
+        .r=MIX(r),
+        .g=MIX(g),
+        .b=MIX(b),
+    };
+
+#undef MIX
+#undef M
+
+    return p;
+}
+
 void _set_pixel(struct image* img, int cor[2], struct RoyalPixel color) {
     int index = _get_index(img, cor);
     if (index >= img->width * img->height) return;
