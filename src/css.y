@@ -73,6 +73,15 @@ struct Obj* make_obj_as_number(int value) {
     return obj;
 }
 
+struct Obj* make_obj_as_percent(int value) {
+    struct Obj* obj = malloc(sizeof(struct Obj));
+    int *ptr = malloc(sizeof(int));
+    *ptr = value;
+    obj->type = OBJ_PERCENT;
+    obj->value = (void*)ptr;
+    return obj;
+}
+
 struct Obj* make_obj_as_string(char* string) {
     struct Obj* obj = malloc(sizeof(struct Obj));
     obj->type = OBJ_STRING;
@@ -172,7 +181,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 
 %token
     START_BODY END_BODY START_FUNC END_FUNC
-    COLON SEMICOLON PIPE COMMA
+    COLON SEMICOLON PIPE COMMA PERCENT
     ADD_OP SUB_OP MUL_OP DIV_OP
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
@@ -229,6 +238,7 @@ objs:
 
 obj:
         NUMBER { $$ = make_obj_as_number($1); }
+        | NUMBER PERCENT { $$ = make_obj_as_percent($1); }
         | STRING { $$ = make_obj_as_string($1); }
         | VARIABLE { $$ = make_obj_as_variable($1); }
         | rule_selector { $$ = make_obj_as_rule($1); }

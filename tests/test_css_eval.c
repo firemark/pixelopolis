@@ -134,6 +134,20 @@ START_TEST (test_css_eval_rule_choice) {
 }
 END_TEST
 
+START_TEST (test_css_eval_percent) {
+    css_eval_start();
+    struct Program *program = _make_program("rule { prop: 100% }");
+    struct Rule *rule = _find_first_rule(program);
+    int *result = css_find_percent_prop(rule, "prop");
+
+    ck_assert_ptr_ne(result, NULL);
+    ck_assert_int_eq(*result, 100);
+
+    css_free_program(program);
+    css_eval_stop();
+}
+END_TEST
+
 Suite* hash_suite(void) {
     Suite *suite = suite_create("css_eval");
     TCase *tcase = tcase_create("css_eval");
@@ -145,6 +159,7 @@ Suite* hash_suite(void) {
     tcase_add_test(tcase, test_css_eval_number_choice);
     tcase_add_test(tcase, test_css_eval_number_random);
     tcase_add_test(tcase, test_css_eval_string);
+    tcase_add_test(tcase, test_css_eval_percent);
     tcase_add_test(tcase, test_css_eval_rule_choice);
     suite_add_tcase(suite, tcase);
     return suite;

@@ -44,6 +44,10 @@ int _is_number(struct Obj* obj) {
     return obj && obj->type == OBJ_NUMBER;
 }
 
+int _is_percent(struct Obj* obj) {
+    return obj && obj->type == OBJ_PERCENT;
+}
+
 int _is_string(struct Obj* obj) {
     return obj && obj->type == OBJ_STRING;
 }
@@ -112,15 +116,25 @@ struct Obj* _do_choice(struct FuncObj* func) {
     return _eval(arg);
 }
 
+struct Obj* _do_to_percent(struct FuncObj* func) {
+    if (func->args_size == 0) return NULL;
+    struct Obj* arg = func->args[0];
+    struct Obj* result_obj = _eval(arg);
+    if (_is_percent(result_obj)) return result_obj; 
+    if (!_is_number(result_obj)) return NULL;
+
+    result_obj->type = OBJ_PERCENT;
+    return result_obj;
+}
+
 struct Obj* _eval_func(struct Obj* obj) {
     struct FuncObj* func = (struct FuncObj*)obj->value;
-    if (!strcmp(func->name, "random")) {
-        return _do_random(func);
-    }
-    if (!strcmp(func->name, "choice")) {
-        return _do_choice(func);
-    }
+#define CMP(value) !strcmp(func->name, value)
+    if (CMP("random")) return _do_random(func);
+    if (CMP("choice")) return _do_choice(func);
+    if (CMP("to-percent")) return _do_to_percent(func);
     return NULL;
+#undef CMP
 }
 
 struct Obj* _eval(struct Obj* obj) {
@@ -138,6 +152,12 @@ struct Obj* css_eval(struct Obj* obj) {
 int* css_eval_number(struct Obj* obj) {
     struct Obj* result = css_eval(obj);
     if (!_is_number(result)) return NULL;
+    return (int*)result->value;
+}
+
+int* css_eval_percent(struct Obj* obj) {
+    struct Obj* result = css_eval(obj);
+    if (!_is_percent(result)) return NULL;
     return (int*)result->value;
 }
 

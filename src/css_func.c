@@ -52,6 +52,14 @@ int* css_find_number_prop(struct Rule* rule, char* name) {
     return (int*)obj->value;
 }
 
+int* css_find_percent_prop(struct Rule* rule, char* name) {
+    struct Obj* obj = css_find_1st_obj(rule, name);
+    if (!obj) return NULL;
+    if (obj->type & OBJ_DYNAMIC) return css_eval_percent(obj);
+    if (obj->type != OBJ_PERCENT) return NULL;
+    return (int*)obj->value;
+}
+
 char* css_find_string_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;

@@ -39,6 +39,7 @@ int chars = 1;
 :                           return COLON;
 ;                           return SEMICOLON;
 ,                           return COMMA;
+%                           return PERCENT;
 \|                          return PIPE;
 \*                          return MUL_OP;
 \/                          return DIV_OP;
