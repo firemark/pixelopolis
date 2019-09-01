@@ -97,9 +97,9 @@ void _diff_h_poly_with_x(
         diff->u = diff->v = diff->zindex = 0;
         return;
     }
-    diff->u = round(SUB(a, b, u) / diff_x);
-    diff->v = round(SUB(a, b, v) / diff_x);
-    diff->zindex = round(SUB(a, b, zindex) / diff_x);
+    diff->u = SUB(a, b, u) / diff_x;
+    diff->v = SUB(a, b, v) / diff_x;
+    diff->zindex = SUB(a, b, zindex) / diff_x;
 }
 
 void _putpixel(
@@ -140,16 +140,17 @@ void _fill_space(
         diff_right = diff_temp;
     }
 
-    for(y_start = left->y; y_start <= y_end; y_start += 1.0) {
+    for(y_start = left->y; y_start < y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
         _diff_h_poly_with_x(&pointer_diff, right, left);
 
         x_start = left->x;
         x_end = right->x;
-        for(; x_start <= x_end; x_start += 1.0) {
+        for(; x_start < x_end; x_start += 1.0) {
             _putpixel(helper->img, helper->img_to_draw, &pointer);
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
+        _putpixel(helper->img, helper->img_to_draw, &pointer);
 
         _add_h_poly_diffy(left, diff_left);
         _add_h_poly_diffy(right, diff_right);

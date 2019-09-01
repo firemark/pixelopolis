@@ -7,7 +7,7 @@ world {
 cube.white_house {
 	wall: wall.grey-brick;
     roof: wall.top;
-    width: 50;
+    width: 350;
     depth: 350;
     height: 150;
 }

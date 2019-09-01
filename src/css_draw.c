@@ -10,8 +10,6 @@
 #include "img.h"
 #include "draw_builder.h"
 
-#define VEC(n) voxes[(n) * 3 + 0], voxes[(n) * 3 + 1], voxes[(n) * 3 + 2]
-
 struct DrawInnerInfo {
     struct image *img; 
     int *vox;
@@ -113,17 +111,19 @@ void _css_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes
      */
     int w = img_to_draw->width;
     int h = img_to_draw->height;
+#define VEC(n) voxes[(n) * 3 + 0], voxes[(n) * 3 + 1], voxes[(n) * 3 + 2]
     int voxes_a[9] = { VEC(0), VEC(1), VEC(3) };
-    int voxes_b[9] = { VEC(0), VEC(2), VEC(3) };
+    int voxes_b[9] = { VEC(3), VEC(2), VEC(0) };
+#undef VEC
     int uv_a[6] = {
         0, 0, // 0
         w, 0, // 1
         w, h, // 3
     };
     int uv_b[6] = {
-        0, 0, // 0
-        0, h, // 2
         w, h, // 3
+        0, h, // 2
+        0, 0, // 0
     };
 
     draw_poly(img, img_to_draw, voxes_a, uv_a);
