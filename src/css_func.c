@@ -41,13 +41,15 @@ struct Prop* css_find_prop(struct Rule* rule, char* name) {
 
 struct Obj* css_find_1st_obj(struct Rule* rule, char* name) {
     struct Prop* prop = css_find_prop(rule, name);
-    return prop ? prop->objs[0] : NULL;
+    struct Obj* obj = prop ? prop->objs[0] : NULL;
+    if (!obj) return NULL;
+    if (obj->type & OBJ_DYNAMIC) return css_eval(obj);
+    return obj;
 }
 
 int* css_find_number_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;
-    if (obj->type & OBJ_DYNAMIC) return css_eval_number(obj);
     if (obj->type != OBJ_NUMBER) return NULL;
     return (int*)obj->value;
 }
@@ -55,7 +57,6 @@ int* css_find_number_prop(struct Rule* rule, char* name) {
 int* css_find_percent_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;
-    if (obj->type & OBJ_DYNAMIC) return css_eval_percent(obj);
     if (obj->type != OBJ_PERCENT) return NULL;
     return (int*)obj->value;
 }
@@ -63,7 +64,6 @@ int* css_find_percent_prop(struct Rule* rule, char* name) {
 char* css_find_string_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;
-    if (obj->type & OBJ_DYNAMIC) return css_eval_string(obj);
     if (obj->type != OBJ_STRING) return NULL;
     return (char*)obj->value;
 }
@@ -71,7 +71,6 @@ char* css_find_string_prop(struct Rule* rule, char* name) {
 struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;
-    if (obj->type & OBJ_DYNAMIC) return css_eval_rule(obj);
     if (obj->type != OBJ_RULE) return NULL;
 
     return (struct RuleSelector*)obj->value;

@@ -51,16 +51,40 @@ struct FlatImage* _builder_get_texture(char *filename) {
     return texture;
 }
 
-struct BasicObj _build_basic(struct Rule* rule) {
-    int *width_ptr = css_find_number_prop(rule, "width");
-    int *height_ptr = css_find_number_prop(rule, "height");
-    int *depth_ptr = css_find_number_prop(rule, "depth");
-    int *rotation_ptr = css_find_number_prop(rule, "rotation");
+#define MAKE_GET_METRIC(NAME, ATTR, PARENT_TYPE) \
+int NAME ## _ ## ATTR(struct Rule* rule, int default_value, PARENT_TYPE* parent) { \
+    struct Obj* obj = css_find_1st_obj(rule, #ATTR); \
+    if (!obj) return default_value; \
+    if (obj->type == OBJ_NUMBER) return *(int*)obj->value; \
+    if (obj->type != OBJ_PERCENT) return default_value; \
+    if (!parent) return default_value; \
+    int percent = *(int*)obj->value; \
+    int parent_value = parent->ATTR; \
+    return (percent * parent_value) / 100; \
+}
+MAKE_GET_METRIC(_get_basic_metric, width, struct BasicObj)
+MAKE_GET_METRIC(_get_basic_metric, height, struct BasicObj)
+MAKE_GET_METRIC(_get_basic_metric, depth, struct BasicObj)
+struct BasicObj* _get_basic_pointer(struct DrawObj* draw_obj) {
+    void* obj = draw_obj->obj;
+    switch (draw_obj->type) {
+        case DRAW_OBJ_CUBE: return &((struct CubeObj*)obj)->basic;
+        case DRAW_OBJ_TRIANGLE: return &((struct TriangleObj*)obj)->basic;
+        case DRAW_OBJ_PYRAMID: return &((struct PyramidObj*)obj)->basic;
+        case DRAW_OBJ_SERIES: return &((struct SeriesObj*)obj)->basic;
+        default: return NULL;
+    }
+}
+
+
+struct BasicObj _build_basic(struct Rule* rule, struct DrawObj* parent) {
+    int* rotation_ptr = css_find_number_prop(rule, "rotation");
+    struct BasicObj* parent_basic = parent ? _get_basic_pointer(parent) : NULL;
 
     struct BasicObj basic = {
-        .width=width_ptr ? *width_ptr : 50,
-        .height=height_ptr ? *height_ptr : 50,
-        .depth=depth_ptr ? *depth_ptr : 50,
+        .width=_get_basic_metric_width(rule, 50, parent_basic),
+        .height=_get_basic_metric_height(rule, 50, parent_basic),
+        .depth=_get_basic_metric_depth(rule, 50, parent_basic),
         .rotation=rotation_ptr ? *rotation_ptr : 0,
     };
 
@@ -128,7 +152,7 @@ struct DrawObj* _build_series(struct Helper* helper, enum Series series) {
     int *padding_ptr = css_find_number_prop(rule, "padding");
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
-    obj->basic = _build_basic(rule);
+    obj->basic = _build_basic(rule, helper->parent);
     obj->padding = padding_ptr? *padding_ptr : 0;
     obj->series = series;
 
@@ -339,7 +363,7 @@ struct DrawObj* _build_cube(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct CubeObj* obj = malloc(sizeof(struct CubeObj));
-    obj->basic = _build_basic(rule);
+    obj->basic = _build_basic(rule, helper->parent);
     struct BasicObj* basic = &obj->basic;
 
     struct Helper wall_helper = {
@@ -368,7 +392,7 @@ struct DrawObj* _build_triangle(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct TriangleObj* obj = malloc(sizeof(struct TriangleObj));
-    obj->basic = _build_basic(rule);
+    obj->basic = _build_basic(rule, helper->parent);
     struct BasicObj* basic = &obj->basic;
 
     struct Helper wall_helper = {
@@ -396,7 +420,7 @@ struct DrawObj* _build_pyramid(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
-    obj->basic = _build_basic(rule);
+    obj->basic = _build_basic(rule, helper->parent);
     struct BasicObj* basic = &obj->basic;
 
     struct Helper wall_helper = {

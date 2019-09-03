@@ -149,6 +149,7 @@ struct Obj* css_eval(struct Obj* obj) {
     return _eval(obj);
 }
 
+// TODO - remove css_eval_XXX functions - are useless
 int* css_eval_number(struct Obj* obj) {
     struct Obj* result = css_eval(obj);
     if (!_is_number(result)) return NULL;

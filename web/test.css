@@ -1,15 +1,19 @@
 world {
-    width: 800;
+    width: 1800;
     height: 800;
     body: h-series.city-and-road;
 }
 
 h-series.city-and-road {
     body: cube.road | d-series.city;
+  	width: 600;
+  	depth: 400;
 }
 
 d-series.city {
     body: cube.sidewalk | v-series.city;
+    width: 100%;
+    depth: 80%;
 }
 
 v-series.city {
@@ -32,42 +36,44 @@ h-series.row {
 
 cube.road {
     roof: wall.road;
-    width: 350;
-    depth: 100;
+    width: 100%;
+    depth: 20%;
     height: 0;
 }
 
 cube.sidewalk {
     roof: wall.grey-brick;
     wall: wall.top;
-    width: 350;
+    width: 100%;
     depth: 300;
     height: 5;
 }
 
 d-series.white_house {
   	body: cube.white_house | choice(triangle.white_house, pyramid.white_house);
+  	width: random(50, 120);
+  	height: random(50, 120);
 }
 
 triangle.white_house {
     wall: wall.clay;
     roof: wall.wood-roof;
-    width: 50;
-    depth: 50;
+    width: 100%;
+    depth: 100%;
     height: random(30, 80);  
 }
 
 pyramid.white_house {
     wall: wall.wood-roof;
-    width: 50;
-    depth: 50;
+    width: 100%;
+    depth: 100%;
     height: random(30, 80);  
 }
 
 cube.white_house {
     wall: wall.clay_with_windows;
-    width: 50;
-    depth: 50;
+    width: 100%;
+    depth: 100%;
     height: random(40, 80);
 }
 
