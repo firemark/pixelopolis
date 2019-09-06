@@ -6,13 +6,13 @@ world {
 
 d-series.city-and-road {
     body: cube.road | h-series.city;
-    width: 600;
+    width: random(300, 600);
 }
 
 h-series.city {
     body: cube.sidewalk | v-filler.city;
     width: 100%;
-    depth: 400;
+    depth: random(300, 600);
 }
 
 cube.road {
