@@ -80,6 +80,59 @@ struct BasicObj _build_basic(struct Rule* rule, struct DrawObj* parent) {
     return basic;
 }
 
+struct BasicObj _build_empty_basic() {
+    struct BasicObj basic = {
+        .width=0,
+        .height=0,
+        .depth=0,
+    };
+
+    return basic;
+}
+
+int _get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction) {
+    switch(fill_direction) {
+        case VERTICAL_FILL: return basic->width;
+        case HORIZONTAL_FILL: return basic->height;
+        case DEPTH_FILL: return basic->depth;
+        default: return 0;
+    }
+}
+
+int _add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x) {
+    switch(fill_direction) {
+        case VERTICAL_FILL: basic->width += x; break;
+        case HORIZONTAL_FILL: basic->height += x; break;
+        case DEPTH_FILL: basic->depth += x; break;
+    }
+}
+
+int _add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction) {
+    switch(fill_direction) {
+        case VERTICAL_FILL: 
+            a->width += b->width;
+            a->height = a->height >= b->height ? a->height : b->height;
+            a->depth = a->depth >= b->depth ? a->depth : b->depth;
+            break;
+        case HORIZONTAL_FILL: 
+            a->height += b->height;
+            a->width = a->width >= b->width ? a->width : b->width;
+            a->depth = a->depth >= b->depth ? a->depth : b->depth;
+            break;
+        case DEPTH_FILL: 
+            a->depth += a->depth;
+            a->width = a->width >= b->width ? a->width : b->width;
+            a->height = a->height >= b->height ? a->height : b->height;
+            break;
+    }
+}
+
+void _max_basic(struct BasicObj *a, struct BasicObj *b) {
+    a->width = a->width >= b->width ? a->width : b->width;
+    a->height = a->height >= b->height ? a->height : b->height;
+    a->depth = a->depth >= b->depth ? a->depth : b->depth;
+}
+
 int _check_el_name(struct RuleSelector *selector, char *name) {
     return strcmp(selector->element, name) == 0;
 }
@@ -119,13 +172,14 @@ struct DrawObj* _build_draw_obj(struct Helper* helper) {
     }
 }
 
-struct DrawObj** _build_many_objs(struct Helper* helper) {
+struct DrawObj** _build_many_objs(struct SeriesObj* series, struct Helper* helper) {
     struct Rule *rule = helper->rule;
     struct Prop* body_prop = css_find_prop(rule, "body");
     struct Obj* obj = NULL;
     int size = 0;
     css_iter(obj, body_prop->objs) size++; // counter
 
+    struct BasicObj basic_temp = _build_empty_basic();
     struct DrawObj **objs = malloc(sizeof(struct DrawObj*) * (size + 1));
     int i = 0;
     css_iter(obj, body_prop->objs) {
@@ -137,12 +191,15 @@ struct DrawObj** _build_many_objs(struct Helper* helper) {
             .rule=inner_rule,
             .parent=helper->parent,
         };
-        objs[i++] = _build_draw_obj(&inner_helper);
+        struct DrawObj *child = _build_draw_obj(&inner_helper);
+        objs[i++] = child;
+        _add_max_basic_by_fill_direction(&basic_temp, &child->basic, series->fill_direction);
     }
 
     objs = realloc(objs, sizeof(struct DrawObj*) * (i + 1));
     objs[i] = NULL;
 
+    _max_basic(&helper->parent->basic, &basic_temp); // resize parent
     return objs;
 }
 
@@ -167,18 +224,9 @@ struct DrawObj* _build_series(struct Helper* helper, enum FillDirection fill_dir
         .rule=helper->rule,
         .parent=draw_obj,
     };
-    obj->objs = _build_many_objs(&inner_helper);
+    obj->objs = _build_many_objs(obj, &inner_helper);
 
     return draw_obj;
-}
-
-int _get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction) {
-    switch(fill_direction) {
-        case VERTICAL_FILL: return basic->width;
-        case HORIZONTAL_FILL: return basic->height;
-        case DEPTH_FILL: return basic->depth;
-        default: return 0;
-    }
 }
 
 void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int width) {
@@ -193,6 +241,8 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     struct DrawObj* left = NULL; 
     struct DrawObj* right = NULL;
 
+    struct BasicObj basic_temp = _build_empty_basic();
+
     struct Helper left_helper = {
         .program=program,
         .rule=css_find_rule_prop(program, rule, "left"),
@@ -203,6 +253,8 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         int left_width = _get_basic_metric_by_fill_direction(&left->basic, fill_direction);
         if (left_width < width) {
             x += left_width + padding;
+            _add_max_basic_by_fill_direction(&basic_temp, &left->basic, fill_direction);
+            _add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
         } else {
             left = NULL;
             right = NULL;
@@ -220,6 +272,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         int right_width = _get_basic_metric_by_fill_direction(&right->basic, fill_direction);
         if (x + right_width < width) {
             width -= right_width;
+            _add_max_basic_by_fill_direction(&basic_temp, &right->basic, fill_direction);
         } else {
             right = NULL;
             goto final;
@@ -233,13 +286,22 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
             .parent=helper->parent,
         };
         struct DrawObj* middle = _build_draw_obj(&middle_helper);
-        int middle_width = middle ? _get_basic_metric_by_fill_direction(&middle->basic, fill_direction) : 12;
+        int middle_width;
+        if (middle) {
+            middle_width = _get_basic_metric_by_fill_direction(&middle->basic, fill_direction);
+        } else {
+            middle_width = 12; 
+        }
         if (x + middle_width >= width) break;
+
+        _add_max_basic_by_fill_direction(&basic_temp, &middle->basic, fill_direction);
+        _add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
         x += middle_width + padding;
         objs[size++] = middle;
     }
 
 final:
+    _max_basic(&helper->parent->basic, &basic_temp); // resize parent
     objs = realloc(objs, sizeof(struct DrawObj*) * (size + 1));
     objs[size] = NULL;
     filler->objs = objs;

@@ -7,40 +7,39 @@ world {
 d-series.city-and-road {
     body: cube.road | h-series.city;
     width: 600;
-    depth: 400;
 }
 
 h-series.city {
     body: cube.sidewalk | v-filler.city;
     width: 100%;
-    depth: 80%;
+    depth: 400;
+}
+
+cube.road {
+    roof: wall.road;
+    width: 100%;
+    depth: 100;
+    height: 0;
 }
 
 v-filler.city {
     body: d-filler.row;
     width: 100%;
     depth: 100%;
-    padding: 20;
+    padding: 50;
 }
 
 d-filler.row {
-    body: choice(h-series.white_house, void.null);
+    body: choice(h-series.white_house, h-series.white_house, void.null);
     depth: 100%;
-    padding: 20;
-}
-
-cube.road {
-    roof: wall.road;
-    width: 100%;
-    depth: 20%;
-    height: 0;
+    padding: 100;
 }
 
 cube.sidewalk {
     roof: wall.grey-brick;
     wall: wall.top;
     width: 100%;
-    depth: 300;
+    depth: 100%;
     height: 5;
 }
 
