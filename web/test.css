@@ -93,7 +93,7 @@ v-filler.roman_fillars {
 }
 
 cube.roman_fillar {
-    wall: wall.grey-brick;
+    wall: wall.brick;
     width: 10;
     depth: 10%;
     height: 100%;
