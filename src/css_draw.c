@@ -130,35 +130,36 @@ void _css_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes
     draw_poly(img, img_to_draw, voxes_b, uv_b);
 }
 
-void _css_draw_void(struct VoidObj *obj, struct DrawInnerInfo *inner_info) {
+void _css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    struct VoidObj *obj = draw_obj->obj;
     if (!obj) return;
-    struct DrawObj *draw_obj = obj->child;
-    if (!draw_obj) return;
-    int *vox = inner_info->vox;
+    struct DrawObj *child = obj->child;
+    if (!child) return;
     int *out_vox = inner_info->out_vox;
 
     struct DrawInfo draw_info = {
         .img=inner_info->img,
-        .vox=vox,
+        .vox=inner_info->vox,
     };
-    draw_component(draw_obj, &draw_info, out_vox);
+    draw_component(child, &draw_info, out_vox);
 
     if (out_vox) {
-        int width = obj->basic.width;
-        int height = obj->basic.height;
-        int depth = obj->basic.depth;
+        int width = draw_obj->basic.width;
+        int height = draw_obj->basic.height;
+        int depth = draw_obj->basic.depth;
         out_vox[0] += width;
         out_vox[1] += depth;
         out_vox[2] += height;
     }
 }
 
-void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
+void _css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    struct CubeObj *obj = draw_obj->obj;
     if (!obj) return;
     int *vox = inner_info->vox;
-    int width = obj->basic.width;
-    int height = obj->basic.height;
-    int depth = obj->basic.depth;
+    int width = draw_obj->basic.width;
+    int height = draw_obj->basic.height;
+    int depth = draw_obj->basic.depth;
     int w = width;
     int h = height;
     int d = depth;
@@ -228,12 +229,13 @@ void _css_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, i
     draw_poly(img, img_to_draw, voxes, uv);
 }
 
-void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_info) {
+void _css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    struct TriangleObj *obj = draw_obj->obj;
     if (!obj) return;
     int *vox = inner_info->vox;
-    int width = obj->basic.width;
-    int height = obj->basic.height;
-    int depth = obj->basic.depth;
+    int width = draw_obj->basic.width;
+    int height = draw_obj->basic.height;
+    int depth = draw_obj->basic.depth;
     int w = width;
     int wh = width / 2;
     int h = height;
@@ -284,12 +286,13 @@ void _css_draw_triangle(struct TriangleObj *obj, struct DrawInnerInfo *inner_inf
     }
 }
 
-void _css_draw_pyramid(struct PyramidObj *obj, struct DrawInnerInfo *inner_info) {
+void _css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    struct PyramidObj *obj = draw_obj->obj;
     if (!obj) return;
     int *vox = inner_info->vox;
-    int width = obj->basic.width;
-    int height = obj->basic.height;
-    int depth = obj->basic.depth;
+    int width = draw_obj->basic.width;
+    int height = draw_obj->basic.height;
+    int depth = draw_obj->basic.depth;
     int w = width;
     int wh = width / 2;
     int dh = depth / 2;
@@ -370,7 +373,8 @@ void _draw_component_in_series(
     }
 }
 
-void _css_draw_series(struct SeriesObj *obj, struct DrawInnerInfo *inner_info) {
+void _css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    struct SeriesObj *obj = draw_obj->obj;
     if (!obj) return;
     struct DrawObj **draw_objs = obj->objs;
     if (!draw_objs) return;
@@ -392,10 +396,10 @@ void _css_draw_series(struct SeriesObj *obj, struct DrawInnerInfo *inner_info) {
         _draw_component_in_series(obj, right, &draw_info, out_vox, 0);
     }
 
-    struct DrawObj* draw_obj = NULL;
+    struct DrawObj* middle = NULL;
     int index = 0;
-    while(draw_obj = draw_objs[index++]) {
-        _draw_component_in_series(obj, draw_obj, &draw_info, out_vox, 1);
+    while(middle = draw_objs[index++]) {
+        _draw_component_in_series(obj, middle, &draw_info, out_vox, 1);
     }
 
     if (out_vox) {
@@ -412,10 +416,10 @@ void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vo
     };
 
     switch(draw_obj->type) {
-        case DRAW_OBJ_VOID: _css_draw_void(draw_obj->obj, &inner_info); break;
-        case DRAW_OBJ_CUBE: _css_draw_cube(draw_obj->obj, &inner_info); break;
-        case DRAW_OBJ_TRIANGLE: _css_draw_triangle(draw_obj->obj, &inner_info); break;
-        case DRAW_OBJ_PYRAMID: _css_draw_pyramid(draw_obj->obj, &inner_info); break;
-        case DRAW_OBJ_SERIES: _css_draw_series(draw_obj->obj, &inner_info); break;
+        case DRAW_OBJ_VOID: _css_draw_void(draw_obj, &inner_info); break;
+        case DRAW_OBJ_CUBE: _css_draw_cube(draw_obj, &inner_info); break;
+        case DRAW_OBJ_TRIANGLE: _css_draw_triangle(draw_obj, &inner_info); break;
+        case DRAW_OBJ_PYRAMID: _css_draw_pyramid(draw_obj, &inner_info); break;
+        case DRAW_OBJ_SERIES: _css_draw_series(draw_obj, &inner_info); break;
     }
 }

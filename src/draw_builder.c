@@ -68,27 +68,13 @@ MAKE_GET_METRIC(_get_basic_metric, width, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, height, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, depth, struct BasicObj)
 
-struct BasicObj* _get_basic_pointer(struct DrawObj* draw_obj) {
-    void* obj = draw_obj->obj;
-    switch (draw_obj->type) {
-        case DRAW_OBJ_VOID: return &((struct VoidObj*)obj)->basic;
-        case DRAW_OBJ_CUBE: return &((struct CubeObj*)obj)->basic;
-        case DRAW_OBJ_TRIANGLE: return &((struct TriangleObj*)obj)->basic;
-        case DRAW_OBJ_PYRAMID: return &((struct PyramidObj*)obj)->basic;
-        case DRAW_OBJ_SERIES: return &((struct SeriesObj*)obj)->basic;
-        default: return NULL;
-    }
-}
-
 struct BasicObj _build_basic(struct Rule* rule, struct DrawObj* parent) {
-    int* rotation_ptr = css_find_number_prop(rule, "rotation");
-    struct BasicObj* parent_basic = parent ? _get_basic_pointer(parent) : NULL;
+    struct BasicObj* parent_basic = parent ? &parent->basic : NULL;
 
     struct BasicObj basic = {
         .width=_get_basic_metric_width(rule, 50, parent_basic),
         .height=_get_basic_metric_height(rule, 50, parent_basic),
         .depth=_get_basic_metric_depth(rule, 50, parent_basic),
-        .rotation=rotation_ptr ? *rotation_ptr : 0,
     };
 
     return basic;
@@ -165,13 +151,13 @@ struct DrawObj* _build_series(struct Helper* helper, enum FillDirection fill_dir
     int *padding_ptr = css_find_number_prop(rule, "padding");
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
-    obj->basic = _build_basic(rule, helper->parent);
     obj->padding = padding_ptr? *padding_ptr : 0;
     obj->fill_direction = fill_direction;
     obj->left = NULL;
     obj->right = NULL;
 
     struct DrawObj *draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = _build_basic(rule, helper->parent);
     draw_obj->type = DRAW_OBJ_SERIES;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
@@ -186,8 +172,7 @@ struct DrawObj* _build_series(struct Helper* helper, enum FillDirection fill_dir
     return draw_obj;
 }
 
-int _get_basic_metric_by_fill_direction(struct DrawObj* obj, enum FillDirection fill_direction) {
-    struct BasicObj *basic = _get_basic_pointer(obj);
+int _get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction) {
     switch(fill_direction) {
         case VERTICAL_FILL: return basic->width;
         case HORIZONTAL_FILL: return basic->height;
@@ -215,7 +200,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     };
     left = _build_draw_obj(&left_helper);
     if (left) {
-        int left_width = _get_basic_metric_by_fill_direction(left, fill_direction);
+        int left_width = _get_basic_metric_by_fill_direction(&left->basic, fill_direction);
         if (left_width < width) {
             x += left_width + padding;
         } else {
@@ -232,7 +217,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     };
     right = _build_draw_obj(&right_helper);
     if (right) {
-        int right_width = _get_basic_metric_by_fill_direction(right, fill_direction);
+        int right_width = _get_basic_metric_by_fill_direction(&right->basic, fill_direction);
         if (x + right_width < width) {
             width -= right_width;
         } else {
@@ -248,13 +233,14 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
             .parent=helper->parent,
         };
         struct DrawObj* middle = _build_draw_obj(&middle_helper);
-        int middle_width = middle ? _get_basic_metric_by_fill_direction(middle, fill_direction) : 12;
+        int middle_width = middle ? _get_basic_metric_by_fill_direction(&middle->basic, fill_direction) : 12;
         if (x + middle_width >= width) break;
         x += middle_width + padding;
         objs[size++] = middle;
     }
 
 final:
+    objs = realloc(objs, sizeof(struct DrawObj*) * (size + 1));
     objs[size] = NULL;
     filler->objs = objs;
     filler->right = right;
@@ -266,11 +252,11 @@ struct DrawObj* _build_filler(struct Helper* helper, enum FillDirection fill_dir
     int *padding_ptr = css_find_number_prop(rule, "padding");
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
-    obj->basic = _build_basic(rule, helper->parent);
     obj->padding = padding_ptr? *padding_ptr : 0;
     obj->fill_direction = fill_direction;
 
     struct DrawObj *draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = _build_basic(rule, helper->parent);
     draw_obj->type = DRAW_OBJ_SERIES;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
@@ -281,7 +267,7 @@ struct DrawObj* _build_filler(struct Helper* helper, enum FillDirection fill_dir
         .parent=draw_obj,
     };
 
-    int width = _get_basic_metric_by_fill_direction(draw_obj, fill_direction);
+    int width = _get_basic_metric_by_fill_direction(&draw_obj->basic, fill_direction);
     _append_objs_to_filler(&inner_helper, obj, width);
 
     return draw_obj;
@@ -479,10 +465,9 @@ struct DrawObj* _build_void(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct VoidObj* obj = malloc(sizeof(struct VoidObj));
-    obj->basic = _build_basic(rule, helper->parent);
-    struct BasicObj* basic = &obj->basic;
 
     struct DrawObj *draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = _build_basic(rule, helper->parent);
     draw_obj->type = DRAW_OBJ_VOID;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
@@ -501,24 +486,24 @@ struct DrawObj* _build_cube(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct CubeObj* obj = malloc(sizeof(struct CubeObj));
-    obj->basic = _build_basic(rule, helper->parent);
-    struct BasicObj* basic = &obj->basic;
+    struct BasicObj basic = _build_basic(rule, helper->parent);
 
     struct Helper wall_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "wall"),
         .parent=helper->parent,
     };
-    obj->south_wall = _build_wall(&wall_helper, basic->width, basic->height);
-    obj->east_wall = _build_wall(&wall_helper, basic->depth, basic->height);
+    obj->south_wall = _build_wall(&wall_helper, basic.width, basic.height);
+    obj->east_wall = _build_wall(&wall_helper, basic.depth, basic.height);
     struct Helper roof_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "roof"),
         .parent=helper->parent,
     };
-    obj->roof = _build_wall(&roof_helper, basic->width, basic->depth);
+    obj->roof = _build_wall(&roof_helper, basic.width, basic.depth);
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = basic;
     draw_obj->type = DRAW_OBJ_CUBE;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
@@ -530,23 +515,23 @@ struct DrawObj* _build_triangle(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct TriangleObj* obj = malloc(sizeof(struct TriangleObj));
-    obj->basic = _build_basic(rule, helper->parent);
-    struct BasicObj* basic = &obj->basic;
+    struct BasicObj basic = _build_basic(rule, helper->parent);
 
     struct Helper wall_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "wall"),
         .parent=helper->parent,
     };
-    obj->wall = _build_wall(&wall_helper, basic->width, basic->height);
+    obj->wall = _build_wall(&wall_helper, basic.width, basic.height);
     struct Helper roof_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "roof"),
         .parent=helper->parent,
     };
-    obj->roof = _build_wall(&roof_helper, basic->width, basic->depth);
+    obj->roof = _build_wall(&roof_helper, basic.width, basic.depth);
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = basic;
     draw_obj->type = DRAW_OBJ_TRIANGLE;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
@@ -558,18 +543,18 @@ struct DrawObj* _build_pyramid(struct Helper* helper) {
     struct Rule *rule = helper->rule;
     if (!rule) return NULL;
     struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
-    obj->basic = _build_basic(rule, helper->parent);
-    struct BasicObj* basic = &obj->basic;
+    struct BasicObj basic = _build_basic(rule, helper->parent);
 
     struct Helper wall_helper = {
         .program=helper->program,
         .rule=css_find_rule_prop(helper->program, rule, "wall"),
         .parent=helper->parent,
     };
-    obj->south_wall = _build_wall(&wall_helper, basic->width, basic->height);
-    obj->east_wall = _build_wall(&wall_helper, basic->depth, basic->height);
+    obj->south_wall = _build_wall(&wall_helper, basic.width, basic.height);
+    obj->east_wall = _build_wall(&wall_helper, basic.depth, basic.height);
 
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = basic;
     draw_obj->type = DRAW_OBJ_PYRAMID;
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
