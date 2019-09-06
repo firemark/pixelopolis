@@ -1,5 +1,6 @@
 *.o
 *.swp
+*.swo
 out.png
 pixelopolis
 src/css.l.c

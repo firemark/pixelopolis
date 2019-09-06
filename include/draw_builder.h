@@ -3,6 +3,7 @@
 #include "css.h"
 
 enum DrawObjType {
+    DRAW_OBJ_VOID,
     DRAW_OBJ_CUBE,
     DRAW_OBJ_TRIANGLE,
     DRAW_OBJ_PYRAMID,
@@ -12,7 +13,7 @@ enum DrawObjType {
     //DRAW_OBJ_TEXTURE,
 };
 
-enum Series { VERTICAL_SERIES=0, HORIZONTAL_SERIES=1, DEPTH_SERIES=2 };
+enum FillDirection { VERTICAL_FILL = 0, HORIZONTAL_FILL = 2, DEPTH_FILL = 1 };
 
 struct DrawObj {
     enum DrawObjType type;
@@ -48,6 +49,11 @@ struct BasicObj {
     int rotation;
 };
 
+struct VoidObj {
+    struct BasicObj basic;
+    struct DrawObj *child;
+};
+
 struct CubeObj {
     struct BasicObj basic;
     struct WallObj *south_wall, *east_wall, *roof;
@@ -66,8 +72,10 @@ struct PyramidObj {
 
 struct SeriesObj {
     struct BasicObj basic;
+    struct DrawObj *left;
     struct DrawObj **objs;
-    enum Series series;
+    struct DrawObj *right;
+    enum FillDirection fill_direction;
     int padding;
 };
 

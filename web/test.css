@@ -1,37 +1,32 @@
 world {
     width: 1800;
     height: 800;
-    body: h-series.city-and-road;
+    body: d-series.city-and-road;
 }
 
-h-series.city-and-road {
-    body: cube.road | d-series.city;
-  	width: 600;
-  	depth: 400;
+d-series.city-and-road {
+    body: cube.road | h-series.city;
+    width: 600;
+    depth: 400;
 }
 
-d-series.city {
-    body: cube.sidewalk | v-series.city;
+h-series.city {
+    body: cube.sidewalk | v-filler.city;
     width: 100%;
     depth: 80%;
 }
 
-v-series.city {
-    body: 
-      h-series.row 
-      | choice(cube.null, h-series.row) 
-      | h-series.row
-      | choice(cube.null, h-series.row) 
-      | h-series.row;
-    padding: 10;
+v-filler.city {
+    body: d-filler.row;
+    width: 100%;
+    depth: 100%;
+    padding: 20;
 }
 
-h-series.row {
-    body: 
-      d-series.white_house 
-      | cube.null
-      | choice(d-series.white_house, cube.null, h-series.row);
-    padding: 0;
+d-filler.row {
+    body: choice(h-series.white_house, void.null);
+    depth: 100%;
+    padding: 20;
 }
 
 cube.road {
@@ -49,10 +44,10 @@ cube.sidewalk {
     height: 5;
 }
 
-d-series.white_house {
-  	body: cube.white_house | choice(triangle.white_house, pyramid.white_house);
-  	width: random(50, 120);
-  	height: random(50, 120);
+h-series.white_house {
+    body: cube.white_house | choice(triangle.white_house, pyramid.white_house);
+    width: random(50, 120);
+    height: random(50, 120);
 }
 
 triangle.white_house {
@@ -77,7 +72,7 @@ cube.white_house {
     height: random(40, 80);
 }
 
-cube.null {
+void.null {
     width: random(80, 120);
     depth: 50;
     height: 40;
@@ -96,15 +91,15 @@ wall.clay_with_windows {
     bottom: floor.door_and_windows;
     middle: floor.windows;
     top: floor.top;
-  	padding: 4;
+    padding: 4;
 }
 
 wall.top {
-  	texture: tex.bar;
+    texture: tex.bar;
 }
 
 wall.wood-roof {
-  	texture: tex.wood;
+    texture: tex.wood;
 }
 
 wall.road {
@@ -125,7 +120,7 @@ floor.windows {
 
 floor.top {
     texture: tex.wood;
-  	height: 8;
+    height: 8;
 }
 
 tex.bar {
@@ -157,9 +152,9 @@ tex.road {
 }
 
 tex.grey-brick {
- 	texture:  "textures/grey-brick.png";
+    texture:  "textures/grey-brick.png";
 }
 
 tex.wood {
-  	texture:  "textures/wood.png";
+    texture:  "textures/wood.png";
 }

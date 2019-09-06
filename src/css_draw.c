@@ -130,6 +130,29 @@ void _css_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes
     draw_poly(img, img_to_draw, voxes_b, uv_b);
 }
 
+void _css_draw_void(struct VoidObj *obj, struct DrawInnerInfo *inner_info) {
+    if (!obj) return;
+    struct DrawObj *draw_obj = obj->child;
+    if (!draw_obj) return;
+    int *vox = inner_info->vox;
+    int *out_vox = inner_info->out_vox;
+
+    struct DrawInfo draw_info = {
+        .img=inner_info->img,
+        .vox=vox,
+    };
+    draw_component(draw_obj, &draw_info, out_vox);
+
+    if (out_vox) {
+        int width = obj->basic.width;
+        int height = obj->basic.height;
+        int depth = obj->basic.depth;
+        out_vox[0] += width;
+        out_vox[1] += depth;
+        out_vox[2] += height;
+    }
+}
+
 void _css_draw_cube(struct CubeObj *obj, struct DrawInnerInfo *inner_info) {
     if (!obj) return;
     int *vox = inner_info->vox;
@@ -327,37 +350,57 @@ void _css_draw_pyramid(struct PyramidObj *obj, struct DrawInnerInfo *inner_info)
     }
 }
 
+void _draw_component_in_series(
+        struct SeriesObj *obj, struct DrawObj* draw_obj, 
+        struct DrawInfo *draw_info, int *out_vox, char shift) {
+    int inner_out_vox[3] = ZERO_VOX;
+    int padding = obj->padding;
+    enum FillDirection fill_direction = obj->fill_direction;
+
+    draw_component(draw_obj, draw_info, inner_out_vox);
+
+    if (shift) {
+        draw_info->vox[fill_direction] += inner_out_vox[fill_direction] + padding;
+    }
+
+    if (out_vox) {
+        if(inner_out_vox[0] > out_vox[0]) out_vox[0] = inner_out_vox[0];
+        if(inner_out_vox[1] > out_vox[1]) out_vox[1] = inner_out_vox[1];
+        if(inner_out_vox[2] > out_vox[2]) out_vox[2] = inner_out_vox[2];
+    }
+}
+
 void _css_draw_series(struct SeriesObj *obj, struct DrawInnerInfo *inner_info) {
     if (!obj) return;
     struct DrawObj **draw_objs = obj->objs;
     if (!draw_objs) return;
 
-    int padding = obj->padding;
-    int series_index = obj->series;
-
     int vox[3] = COPY_VOX(inner_info->vox);
     int *out_vox = inner_info->out_vox;
+    struct DrawInfo draw_info = {
+        .img=inner_info->img,
+        .vox=vox,
+    };
+
+    struct DrawObj *left = obj->left;
+    if (left) {
+        _draw_component_in_series(obj, left, &draw_info, out_vox, 1);
+    }
+
+    struct DrawObj *right = obj->right;
+    if (right) {
+        _draw_component_in_series(obj, right, &draw_info, out_vox, 0);
+    }
 
     struct DrawObj* draw_obj = NULL;
     int index = 0;
     while(draw_obj = draw_objs[index++]) {
-        int inner_out_vox[3] = ZERO_VOX;
-        struct RuleSelector *building_query = draw_obj->obj;
-        struct DrawInfo draw_info = {
-            .img=inner_info->img,
-            .vox=vox,
-        };
-        draw_component(draw_obj, &draw_info, inner_out_vox);
-        vox[series_index] += inner_out_vox[series_index] + padding;
-        if (out_vox) {
-            if(inner_out_vox[0] > out_vox[0]) out_vox[0] = inner_out_vox[0];
-            if(inner_out_vox[1] > out_vox[1]) out_vox[1] = inner_out_vox[1];
-            if(inner_out_vox[2] > out_vox[2]) out_vox[2] = inner_out_vox[2];
-        }
+        _draw_component_in_series(obj, draw_obj, &draw_info, out_vox, 1);
     }
 
     if (out_vox) {
-        out_vox[series_index] = inner_info->vox[series_index] - vox[series_index];
+        enum FillDirection fill_direction = obj->fill_direction;
+        out_vox[fill_direction] = inner_info->vox[fill_direction] - vox[fill_direction];
     }
 }
 
@@ -369,6 +412,7 @@ void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vo
     };
 
     switch(draw_obj->type) {
+        case DRAW_OBJ_VOID: _css_draw_void(draw_obj->obj, &inner_info); break;
         case DRAW_OBJ_CUBE: _css_draw_cube(draw_obj->obj, &inner_info); break;
         case DRAW_OBJ_TRIANGLE: _css_draw_triangle(draw_obj->obj, &inner_info); break;
         case DRAW_OBJ_PYRAMID: _css_draw_pyramid(draw_obj->obj, &inner_info); break;
