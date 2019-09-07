@@ -36,7 +36,6 @@ struct h_fill_space {
 };
 
 void _compute_normal(float normal[3], int voxes[9]) {
-    // todo
     int vox_a[3] = {
         voxes[3 + 0] - voxes[0 + 0],
         voxes[3 + 1] - voxes[0 + 1],
@@ -177,16 +176,28 @@ void _fill_space(
     }
 }
 
-void _projection_poly(int *vox, int *uv, struct h_poly *vec) {
-    // https://en.wikipedia.org/wiki/Oblique_projection
-    double s = vox[1] * SCALE_PROJECTION;
+void _projection_poly_isometric(int *vox, int *uv, struct h_poly *vec) {
+    vec->x = vox[0] - vox[1] + 600.0;
+    vec->y = vox[2] + vox[0] * 0.5 + vox[1] * 0.5;
 
-    vec->x = vox[0] + s * COS_PROJECTION;
-    vec->y = vox[2] + s * SIN_PROJECTION;
     vec->zindex = vox[1];
     vec->u = uv[0];
     vec->v = uv[1];
 }
+
+void _projection_poly_oblique(int *vox, int *uv, struct h_poly *vec) {
+    // https://en.wikipedia.org/wiki/Oblique_projection
+    double s = vox[1] * SCALE_PROJECTION;
+
+    vec->x = floor(vox[0] + s * COS_PROJECTION);
+    vec->y = floor(vox[2] + s * SIN_PROJECTION);
+
+    vec->zindex = vox[1];
+    vec->u = uv[0];
+    vec->v = uv[1];
+}
+
+void (*_projection_poly)(int*, int*, struct h_poly*) = _projection_poly_oblique;
 
 void draw_poly(
         struct image *img, struct FlatImage *img_to_draw,
