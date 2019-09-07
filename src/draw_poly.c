@@ -61,7 +61,6 @@ void _compute_normal(float normal[3], int voxes[9]) {
         normal[1] /= max;
         normal[2] /= max;
     }
-    fprintf(stderr, "n{%6.2f, %6.2f, %6.2f}\n", normal[0], normal[1], normal[2]);
 }
 
 void _cpy_h_poly(struct h_poly *a, struct h_poly *b) {
@@ -124,9 +123,12 @@ void _putpixel(
     int tmp_cor[2] = { round(point->u), round(point->v) };
     int img_cor[2] = { round(point->x), round(point->y) };
     struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
+
+    // primitive shading
     color.r *= (1.0 - normal[0] * 0.35);
     color.g *= (1.0 - normal[0] * 0.35);
     color.b *= (1.0 - normal[0] * 0.35);
+
     struct RoyalPixel royal_color = {
         .r=color.r, .g=color.g, .b=color.b,
         .zindex=(int)point->zindex,
