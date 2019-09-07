@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include "hash.h"
 
 #define REGULES_SIZE 255
 #define PROPS_SIZE 16
@@ -56,7 +57,7 @@ extern struct RuleSelector default_selector;
 
 struct Rule {
     struct RuleSelector* selector;
-    struct Prop **props;
+    struct HashMap *props;
 };
 
 struct Program {

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "hash.h"
 #include "css_func.h"
 
 void css_free_obj(struct Obj* obj) {
@@ -34,21 +35,26 @@ void css_free_rule_selector(struct RuleSelector* selector) {
     free(selector);
 }
 
-void css_free_prop(struct Prop* prop) {
+void css_free_objs(struct Obj** objs) {
     struct Obj* obj;
-    css_iter(obj, prop->objs) {
+    css_iter(obj, objs) {
         css_free_obj(obj);
     }
-    free(prop->name);
-    free(prop);
+    free(objs);
 }
 
 void css_free_rule(struct Rule* rule) {
-    struct Prop* prop;
-    css_iter(prop, rule->props) {
-        css_free_prop(prop);
+    struct Obj** objs;
+    hash_iter_values(objs, rule->props) {
+        css_free_objs(objs);
     }
+    hash_destroy(rule->props);
     css_free_rule_selector(rule->selector);
+    free(rule);
+}
+
+void css_free_rule_half(struct Rule* rule) {
+    hash_destroy(rule->props);
     free(rule);
 }
 

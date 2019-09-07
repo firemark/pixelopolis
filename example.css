@@ -4,7 +4,7 @@ world {
     body: cube.white_house;
 }
 
-cube.white_house {
+.white_house {
 	wall: wall.grey-brick;
     roof: wall.top;
     width: 350;

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hash.h"
 #include "css_debug.h" 
 #include "css_func.h"
 #include "css_eval.h"
@@ -19,7 +20,7 @@ struct Rule* css_find_rule_by_query(
     css_iter(rule, program->rules) {
         selector = rule->selector;
         if (
-            (!query->element || !strcmp(selector->element, query->element))
+            (!query->element || !selector->element || !strcmp(selector->element, query->element))
             && (!query->klass || !strcmp(selector->klass, query->klass))
             && (!query->pseudo_klass || !strcmp(selector->pseudo_klass, query->pseudo_klass))
            ) {
@@ -29,19 +30,13 @@ struct Rule* css_find_rule_by_query(
     return NULL;
 }
 
-struct Prop* css_find_prop(struct Rule* rule, char* name) {
-    struct Prop* prop;
-    css_iter(prop, rule->props) {
-        if (!strcmp(prop->name, name)) {
-            return prop;
-        }
-    }
-    return NULL;
+struct Obj** css_find_objs(struct Rule* rule, char* name) {
+    return hash_get(rule->props, name);
 }
 
 struct Obj* css_find_1st_obj(struct Rule* rule, char* name) {
-    struct Prop* prop = css_find_prop(rule, name);
-    struct Obj* obj = prop ? prop->objs[0] : NULL;
+    struct Obj** objs = css_find_objs(rule, name);
+    struct Obj* obj = objs ? objs[0] : NULL;
     if (!obj) return NULL;
     if (obj->type & OBJ_DYNAMIC) return css_eval(obj);
     return obj;

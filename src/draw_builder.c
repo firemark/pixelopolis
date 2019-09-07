@@ -12,7 +12,13 @@
 struct Helper {
     struct Program* program;
     struct Rule* rule;
-    struct DrawObj *parent;
+    struct DrawObj* parent;
+};
+
+struct BuildDrawObjHelper {
+    struct Program* program;
+    struct RuleSelector* selector;
+    struct DrawObj* parent;
 };
 
 struct DrawObj* _build_void(struct Helper* helper);
@@ -51,6 +57,11 @@ struct FlatImage* _builder_get_texture(char *filename) {
 
     hash_set(cache_textures, filename, texture, NULL);
     return texture;
+}
+
+struct Rule* _css_make_rule_from_helper(struct BuildDrawObjHelper *helper) {
+    if (!helper->selector) return NULL;
+    return css_make_rule_from_selector(helper->program, helper->selector);
 }
 
 #define MAKE_GET_METRIC(NAME, ATTR, PARENT_TYPE) \
@@ -137,58 +148,64 @@ int _check_el_name(struct RuleSelector *selector, char *name) {
     return strcmp(selector->element, name) == 0;
 }
 
-struct DrawObj* _build_draw_obj(struct Helper* helper) {
-    struct Helper inner_helper = {
-        .program=helper->program,
-        .rule=helper->rule,
-        .parent=helper->parent,
-    };
-    struct Rule* rule = helper->rule;
+struct DrawObj* _build_draw_obj(struct BuildDrawObjHelper* helper) {
+    struct RuleSelector *query = helper->selector;
+    if (!query) return NULL;
+    struct Rule *rule = _css_make_rule_from_helper(helper);
     if (!rule) return NULL;
 
-    struct RuleSelector* query = rule->selector;
+    struct Helper inner_helper = {
+        .program=helper->program,
+        .rule=rule,
+        .parent=helper->parent,
+    };
+
+    struct DrawObj *obj;
     if (_check_el_name(query, "void")) {
-        return _build_void(&inner_helper);
+        obj = _build_void(&inner_helper);
     } else if (_check_el_name(query, "cube")) {
-        return _build_cube(&inner_helper);
+        obj = _build_cube(&inner_helper);
     } else if (_check_el_name(query, "triangle")) {
-        return _build_triangle(&inner_helper);
+        obj = _build_triangle(&inner_helper);
     } else if (_check_el_name(query, "pyramid")) {
-        return _build_pyramid(&inner_helper);
+        obj = _build_pyramid(&inner_helper);
     } else if (_check_el_name(query, "v-series")) {
-        return _build_series(&inner_helper, VERTICAL_FILL);
+        obj = _build_series(&inner_helper, VERTICAL_FILL);
     } else if (_check_el_name(query, "h-series")) {
-        return _build_series(&inner_helper, HORIZONTAL_FILL);
+        obj = _build_series(&inner_helper, HORIZONTAL_FILL);
     } else if (_check_el_name(query, "d-series")) {
-        return _build_series(&inner_helper, DEPTH_FILL);
+        obj = _build_series(&inner_helper, DEPTH_FILL);
     } else if (_check_el_name(query, "v-filler")) {
-        return _build_filler(&inner_helper, VERTICAL_FILL);
+        obj = _build_filler(&inner_helper, VERTICAL_FILL);
     } else if (_check_el_name(query, "h-filler")) {
-        return _build_filler(&inner_helper, HORIZONTAL_FILL);
+        obj = _build_filler(&inner_helper, HORIZONTAL_FILL);
     } else if (_check_el_name(query, "d-filler")) {
-        return _build_filler(&inner_helper, DEPTH_FILL);
+        obj = _build_filler(&inner_helper, DEPTH_FILL);
     } else {
-        return NULL;
+        obj = NULL;
     }
+
+    css_free_rule_half(rule);
+    return obj;
 }
 
 struct DrawObj** _build_many_objs(struct SeriesObj* series, struct Helper* helper) {
     struct Rule *rule = helper->rule;
-    struct Prop* body_prop = css_find_prop(rule, "body");
+    struct Obj **prop_objs = css_find_objs(rule, "body");
     struct Obj* obj = NULL;
     int size = 0;
-    css_iter(obj, body_prop->objs) size++; // counter
+    css_iter(obj, prop_objs) size++; // counter
 
     struct BasicObj basic_temp = _build_empty_basic();
     struct DrawObj **objs = malloc(sizeof(struct DrawObj*) * (size + 1));
     int i = 0;
-    css_iter(obj, body_prop->objs) {
+    css_iter(obj, prop_objs) {
         struct RuleSelector* selector = css_eval_rule(obj);
         if (!selector) continue;
-        struct Rule* inner_rule = css_find_rule_by_query(helper->program, selector);
-        struct Helper inner_helper = {
+
+        struct BuildDrawObjHelper inner_helper = {
             .program=helper->program,
-            .rule=inner_rule,
+            .selector=selector,
             .parent=helper->parent,
         };
         struct DrawObj *child = _build_draw_obj(&inner_helper);
@@ -243,9 +260,10 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
 
     struct BasicObj basic_temp = _build_empty_basic();
 
-    struct Helper left_helper = {
-        .program=program,
-        .rule=css_find_rule_prop(program, rule, "left"),
+    struct RuleSelector* left_selector = css_find_selector_prop(rule, "left");
+    struct BuildDrawObjHelper left_helper = {
+        .program=helper->program,
+        .selector=left_selector,
         .parent=helper->parent,
     };
     left = _build_draw_obj(&left_helper);
@@ -262,9 +280,10 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         }
     }
 
-    struct Helper right_helper = {
-        .program=program,
-        .rule=css_find_rule_prop(program, rule, "right"),
+    struct RuleSelector* right_selector = css_find_selector_prop(rule, "right");
+    struct BuildDrawObjHelper right_helper = {
+        .program=helper->program,
+        .selector=right_selector,
         .parent=helper->parent,
     };
     right = _build_draw_obj(&right_helper);
@@ -280,9 +299,10 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     }
 
     for(;;) {
-        struct Helper middle_helper = {
-            .program=program,
-            .rule=css_find_rule_prop(program, rule, "body"),
+        struct RuleSelector* middle_selector = css_find_selector_prop(rule, "middle");
+        struct BuildDrawObjHelper middle_helper = {
+            .program=helper->program,
+            .selector=middle_selector,
             .parent=helper->parent,
         };
         struct DrawObj* middle = _build_draw_obj(&middle_helper);
@@ -325,7 +345,7 @@ struct DrawObj* _build_filler(struct Helper* helper, enum FillDirection fill_dir
 
     struct Helper inner_helper = {
         .program=helper->program,
-        .rule=helper->rule,
+        .rule=rule,
         .parent=draw_obj,
     };
 
@@ -534,10 +554,11 @@ struct DrawObj* _build_void(struct Helper* helper) {
     draw_obj->obj = obj;
     draw_obj->parent = helper->parent;
 
-    struct Helper child_helper = {
+    struct RuleSelector* child_selector = css_find_selector_prop(rule, "child");
+    struct BuildDrawObjHelper child_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "child"),
-        .parent=draw_obj,
+        .selector=child_selector,
+        .parent=helper->parent,
     };
     obj->child = _build_draw_obj(&child_helper);
 
@@ -625,10 +646,10 @@ struct DrawObj* _build_pyramid(struct Helper* helper) {
 }
 
 struct DrawObj* builder_make(struct Program* program, struct Rule* world) {
-    struct Rule* body = css_find_rule_prop(program, world, "body");
-    struct Helper helper = {
+    struct RuleSelector* query = css_find_selector_prop(world, "body");
+    struct BuildDrawObjHelper helper = {
         .program=program,
-        .rule=body,
+        .selector=query,
         .parent=NULL,
     };
     return _build_draw_obj(&helper);

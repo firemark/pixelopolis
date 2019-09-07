@@ -117,3 +117,10 @@ void hash_destroy(struct HashMap* map) {
     free(map->items);
     free(map);
 }
+
+void hash_update(struct HashMap* map, struct HashMap* other) {
+    struct HashStrItem* item;
+    hash_iter(item, other) {
+        hash_set(map, item->key, item->value, NULL);
+    }
+}

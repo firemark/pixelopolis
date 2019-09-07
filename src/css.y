@@ -44,8 +44,17 @@ struct Program* make_program(struct Rule **rules) {
 
 struct Rule* make_rule(struct RuleSelector* selector, struct Prop **props) {
     struct Rule *rule = malloc(sizeof(struct Rule));
+    struct HashMap *map_props = hash_make();
+
+    struct Prop *prop;
+    css_iter(prop, props) { // transform array to hashmap
+        hash_set(map_props, prop->name, prop->objs, NULL);
+        free(prop);
+    }
+    free(props);
+
     rule->selector = selector;
-    rule->props = props;
+    rule->props = map_props;
     return rule;
 }
 
@@ -214,6 +223,7 @@ rule:
 
 rule_selector:
         WORD rule_addons { $$ = $2; $$->element = $1; }
+        | rule_addons { $$ = $1; }
         ;
 
 rule_addons:
