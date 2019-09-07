@@ -1,24 +1,32 @@
 world {
     width: 1800;
     height: 800;
-    body: d-series.city-and-road;
+    body: h-series.city-and-road;
 }
 
-d-series.city-and-road {
-    body: cube.road | h-series.city;
-    width: random(300, 600);
+h-series.city-and-road {
+    body: cube.road | d-filler.city;
+    width: random(400, 600);
+    depth: random(700, 900);
 }
 
-h-series.city {
+d-filler.city {
+  body: h-series.district;
+  width: 100%;
+  depth: 100%;
+  padding: 100;
+}
+
+h-series.district {
     body: cube.sidewalk | v-filler.city;
     width: 100%;
-    depth: random(300, 600);
+    depth: random(100, 300);
 }
 
 cube.road {
     roof: wall.road;
     width: 100%;
-    depth: 100;
+    depth: 100%;
     height: 0;
 }
 
@@ -30,14 +38,14 @@ v-filler.city {
 }
 
 d-filler.row {
-    body: choice(h-series.brick_house, h-series.brick_house, h-series.roman_house, void.null);
+    body: choice(h-series.brick_house, h-series.brick_house, h-series.roman_house);
     depth: 100%;
     padding: 100;
 }
 
 cube.sidewalk {
     roof: wall.grey-brick;
-    wall: wall.top;
+    wall: wall.grey-brick;
     width: 100%;
     depth: 100%;
     height: 5;

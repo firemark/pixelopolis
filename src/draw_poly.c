@@ -30,11 +30,12 @@ struct h_poly_diffx {
 
 struct h_fill_space {
     struct image *img; 
+    float *normal;
     struct FlatImage *img_to_draw;
     struct h_poly *left, *right;
 };
 
-void _compute_normal(int normal[3], int voxes[9]) {
+void _compute_normal(float normal[3], int voxes[9]) {
     // todo
     int vox_a[3] = {
         voxes[3 + 0] - voxes[0 + 0],
@@ -45,9 +46,22 @@ void _compute_normal(int normal[3], int voxes[9]) {
         voxes[6 + 1] - voxes[0 + 1],
         voxes[6 + 2] - voxes[0 + 2]};
 
-    normal[0] = vox_a[2] * vox_b[3] - vox_a[3] * vox_b[2];
-    normal[1] = vox_a[1] * vox_b[3] - vox_a[3] * vox_b[1];
-    normal[2] = vox_a[1] * vox_b[2] - vox_a[2] * vox_b[1];
+    normal[0] = vox_a[1] * vox_b[2] - vox_a[2] * vox_b[1];
+    normal[1] = vox_a[0] * vox_b[2] - vox_a[2] * vox_b[0];
+    normal[2] = vox_a[0] * vox_b[1] - vox_a[1] * vox_b[0];
+    float abs_normal[3] = {
+        fabs(normal[0]),
+        fabs(normal[1]),
+        fabs(normal[2]),
+    };
+    float _max = abs_normal[0] > abs_normal[1] ? abs_normal[0] : abs_normal[1];
+    float max = _max > abs_normal[2] ? _max : abs_normal[2];
+    if (max != 0.0) {
+        normal[0] /= max;
+        normal[1] /= max;
+        normal[2] /= max;
+    }
+    fprintf(stderr, "n{%6.2f, %6.2f, %6.2f}\n", normal[0], normal[1], normal[2]);
 }
 
 void _cpy_h_poly(struct h_poly *a, struct h_poly *b) {
@@ -105,13 +119,17 @@ void _diff_h_poly_with_x(
 void _putpixel(
         struct image *img, 
         struct FlatImage *img_to_draw,
+        float normal[3],
         struct h_poly *point) {
     int tmp_cor[2] = { round(point->u), round(point->v) };
     int img_cor[2] = { round(point->x), round(point->y) };
     struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
+    color.r *= (1.0 - normal[0] * 0.35);
+    color.g *= (1.0 - normal[0] * 0.35);
+    color.b *= (1.0 - normal[0] * 0.35);
     struct RoyalPixel royal_color = {
         .r=color.r, .g=color.g, .b=color.b,
-        .zindex=(int)point->zindex
+        .zindex=(int)point->zindex,
     };
 
     set_pixel(img, img_cor, royal_color);
@@ -147,10 +165,10 @@ void _fill_space(
         x_start = left->x;
         x_end = right->x;
         for(; x_start < x_end; x_start += 1.0) {
-            _putpixel(helper->img, helper->img_to_draw, &pointer);
+            _putpixel(helper->img, helper->img_to_draw, helper->normal, &pointer);
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
-        _putpixel(helper->img, helper->img_to_draw, &pointer);
+        _putpixel(helper->img, helper->img_to_draw, helper->normal, &pointer);
 
         _add_h_poly_diffy(left, diff_left);
         _add_h_poly_diffy(right, diff_right);
@@ -202,8 +220,12 @@ void draw_poly(
     _cpy_h_poly(&left, a);
     _cpy_h_poly(&right, a);
 
+    float normal[3];
+    _compute_normal(normal, voxes);
+
     struct h_fill_space helper = {
         .img=img,
+        .normal=normal,
         .img_to_draw=img_to_draw,
         .left=&left,
         .right=&right,
