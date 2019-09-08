@@ -125,11 +125,11 @@ body {
 
 ##### Pyramid
 
-##### Containers
+#### Containers
 
-#### Series
+##### Series
 
-#### Filler
+##### Filler
 
 ### Wall
 
