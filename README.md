@@ -115,15 +115,74 @@ body {
 
 ### DrawObj
 
+The 3D objects like cube, pyramid, row/column of objects.
+Each drawObj has width/height/depth properties
+
+```css
+draw-obj {
+    width: NUMBER / PERCENT; /* default: 50 */
+    height: NUMBER / PERCENT; /* default: 50 */
+    depth: NUMBER / PERCENT; /* default: 50 */
+}
+```
+
+This are 2 ways to make CSS rule for drawObj:
+
+```css
+/* first way */ draw-obj { /* ... */ }
+/* second way */ customize-element-name { display: draw-obj; /* ... */ }
+/* display has more priority than element name */
+```
+
 #### Basic
 
-#### Void
+##### Void
+
+Just empty cube. Nice to shift another element
+
+```css
+void {
+    child: SELECTOR-TO-DRAW-OBJ;
+    width: NUMBER / PERCENT;
+    height: NUMBER / PERCENT;
+    depth: NUMBER / PERCENT;
+}
+```
 
 ##### Cube
 
+```css
+void {
+    wall: SELECTOR-TO-WALL-OBJ;
+    roof: SELECTOR-TO-WALL-OBJ;
+    width: NUMBER / PERCENT;
+    height: NUMBER / PERCENT;
+    depth: NUMBER / PERCENT;
+}
+```
+
 ##### Triangle
 
+```css
+void {
+    wall: SELECTOR-TO-WALL-OBJ;
+    roof: SELECTOR-TO-WALL-OBJ;
+    width: NUMBER / PERCENT;
+    height: NUMBER / PERCENT;
+    depth: NUMBER / PERCENT;
+}
+```
+
 ##### Pyramid
+
+```css
+void {
+    wall: SELECTOR-TO-WALL-OBJ;
+    width: NUMBER / PERCENT;
+    height: NUMBER / PERCENT;
+    depth: NUMBER / PERCENT;
+}
+```
 
 #### Containers
 
@@ -136,6 +195,22 @@ body {
 ### Floor
 
 ### Texture
+
+## TODOS
+
+* [ ] EASY More DrawObj structures like city wall, stairs, cone, cylinder etc.
+* [ ] EASY CSS Comments
+* [ ] HARD City / Road / Place planner
+* [ ] HARD Customizing shape of buildings
+* [ ] HARD Parent CSS selector
+* [ ] MID More projections like perspective
+* [ ] MID Flat sprites (like in DOOM game) like grass, trees etc
+* [ ] MID More attributes for DrawObj like customize padding, margin 
+* [ ] MID Mixing textures
+* [ ] HARD Normal shader for textures
+* [ ] HARD rotation
+* [ ] NO-MERCY Opengl + shaders support
+* [ ] IMPOSIBRU Refactoring
 
 ## Contributors
 
