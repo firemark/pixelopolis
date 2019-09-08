@@ -207,7 +207,7 @@ floor.door_and_windows {
 }
 
 floor.windows {
-    middle: choice(null, null, null, tex.window);
+    middle: choice(null, tex.window);
     height: 12;
     padding: 12;
 }

@@ -74,11 +74,14 @@ struct rgb flat_image_get_aa_pixel(struct FlatImage* img, float cor[2]) {
 
 void _set_pixel(struct image* img, int cor[2], struct RoyalPixel color) {
     int index = _get_index(img, cor);
-    if (index >= img->width * img->height) return;
     img->buffer[index] = color;
 }
 
 void set_pixel(struct image* img, int cor[2], struct RoyalPixel color) {
+    if (cor[0] < 0) return;
+    if (cor[0] >= img->width) return;
+    if (cor[1] < 0) return;
+    if (cor[1] >= img->height) return;
     int index = _get_index(img, cor);
     struct RoyalPixel old_color = img->buffer[index];
     if (old_color.zindex >= color.zindex) {
