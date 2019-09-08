@@ -11,7 +11,6 @@ int* css_find_number_prop(struct Rule* rule, char* name);
 int* css_find_percent_prop(struct Rule* rule, char* name);
 char* css_find_string_prop(struct Rule* rule, char* name);
 struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name);
-struct Rule* css_find_rule_prop(struct Program* program, struct Rule* rule, char* name);
 
 struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSelector* selector);
 

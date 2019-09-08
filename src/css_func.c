@@ -70,9 +70,3 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name) {
 
     return (struct RuleSelector*)obj->value;
 }
-
-struct Rule* css_find_rule_prop(struct Program* program, struct Rule* rule, char* name) {
-    struct RuleSelector* selector = css_find_selector_prop(rule, name);
-    if (!selector) return NULL;
-    return css_find_rule_by_query(program, selector);
-}

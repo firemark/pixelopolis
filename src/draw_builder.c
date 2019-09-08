@@ -15,7 +15,7 @@ struct Helper {
     struct DrawObj* parent;
 };
 
-struct BuildDrawObjHelper {
+struct SelectorHelper {
     struct Program* program;
     struct RuleSelector* selector;
     struct DrawObj* parent;
@@ -59,7 +59,7 @@ struct FlatImage* _builder_get_texture(char *filename) {
     return texture;
 }
 
-struct Rule* _css_make_rule_from_helper(struct BuildDrawObjHelper *helper) {
+struct Rule* _css_make_rule_from_helper(struct SelectorHelper *helper) {
     if (!helper->selector) return NULL;
     return css_make_rule_from_selector(helper->program, helper->selector);
 }
@@ -148,7 +148,7 @@ int _check_el_name(struct RuleSelector *selector, char *name) {
     return strcmp(selector->element, name) == 0;
 }
 
-struct DrawObj* _build_draw_obj(struct BuildDrawObjHelper* helper) {
+struct DrawObj* _build_draw_obj(struct SelectorHelper* helper) {
     struct RuleSelector *query = helper->selector;
     if (!query) return NULL;
     struct Rule *rule = _css_make_rule_from_helper(helper);
@@ -203,7 +203,7 @@ struct DrawObj** _build_many_objs(struct SeriesObj* series, struct Helper* helpe
         struct RuleSelector* selector = css_eval_rule(obj);
         if (!selector) continue;
 
-        struct BuildDrawObjHelper inner_helper = {
+        struct SelectorHelper inner_helper = {
             .program=helper->program,
             .selector=selector,
             .parent=helper->parent,
@@ -261,7 +261,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     struct BasicObj basic_temp = _build_empty_basic();
 
     struct RuleSelector* left_selector = css_find_selector_prop(rule, "left");
-    struct BuildDrawObjHelper left_helper = {
+    struct SelectorHelper left_helper = {
         .program=helper->program,
         .selector=left_selector,
         .parent=helper->parent,
@@ -281,7 +281,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     }
 
     struct RuleSelector* right_selector = css_find_selector_prop(rule, "right");
-    struct BuildDrawObjHelper right_helper = {
+    struct SelectorHelper right_helper = {
         .program=helper->program,
         .selector=right_selector,
         .parent=helper->parent,
@@ -299,8 +299,8 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     }
 
     for(;;) {
-        struct RuleSelector* middle_selector = css_find_selector_prop(rule, "middle");
-        struct BuildDrawObjHelper middle_helper = {
+        struct RuleSelector* middle_selector = css_find_selector_prop(rule, "body");
+        struct SelectorHelper middle_helper = {
             .program=helper->program,
             .selector=middle_selector,
             .parent=helper->parent,
@@ -314,7 +314,11 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         }
         if (x + middle_width >= width) break;
 
-        _add_max_basic_by_fill_direction(&basic_temp, &middle->basic, fill_direction);
+        if (middle) {
+            _add_max_basic_by_fill_direction(&basic_temp, &middle->basic, fill_direction);
+        } else {
+            _add_basic_metric_by_fill_direction(&basic_temp, fill_direction, 12);
+        }
         _add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
         x += middle_width + padding;
         objs[size++] = middle;
@@ -355,14 +359,16 @@ struct DrawObj* _build_filler(struct Helper* helper, enum FillDirection fill_dir
     return draw_obj;
 }
 
-struct TexObj* _build_texture(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+struct TexObj* _build_texture(struct SelectorHelper* helper) {
+    struct Rule* rule = _css_make_rule_from_helper(helper);
     if (!rule) return NULL;
     char* filename = css_find_string_prop(rule, "texture"); 
     if (!filename) return NULL;
 
     struct TexObj* obj = malloc(sizeof(struct TexObj));
     obj->texture = filename ? _builder_get_texture(filename) : NULL;
+
+    css_free_rule_half(rule);
     return obj;
 }
 
@@ -388,9 +394,9 @@ void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int wa
     struct TexObj* left = NULL; 
     struct TexObj* right = NULL;
 
-    struct Helper left_helper = {
+    struct SelectorHelper left_helper = {
         .program=program,
-        .rule=css_find_rule_prop(program, rule, "left"),
+        .selector=css_find_selector_prop(rule, "left"),
         .parent=helper->parent,
     };
     left = _build_texture(&left_helper);
@@ -404,9 +410,9 @@ void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int wa
         }
     }
 
-    struct Helper right_helper = {
+    struct SelectorHelper right_helper = {
         .program=program,
-        .rule=css_find_rule_prop(program, rule, "right"),
+        .selector=css_find_selector_prop(rule, "right"),
         .parent=helper->parent,
     };
     right = _build_texture(&right_helper);
@@ -420,9 +426,9 @@ void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int wa
     }
 
     for(;;) {
-        struct Helper middle_helper = {
+        struct SelectorHelper middle_helper = {
             .program=program,
-            .rule=css_find_rule_prop(program, rule, "middle"),
+            .selector=css_find_selector_prop(rule, "middle"),
             .parent=helper->parent,
         };
         struct TexObj* middle = _build_texture(&middle_helper);
@@ -440,8 +446,8 @@ final:
     floor->left = left;
 }
 
-struct FloorObj* _build_floor(struct Helper* helper, int wall_width) {
-    struct Rule *rule = helper->rule;
+struct FloorObj* _build_floor(struct SelectorHelper* helper, int wall_width) {
+    struct Rule *rule = _css_make_rule_from_helper(helper);
     if (!rule) return NULL;
     int* height_ptr = css_find_number_prop(rule, "height");
     int* padding_ptr = css_find_number_prop(rule, "padding");
@@ -450,14 +456,21 @@ struct FloorObj* _build_floor(struct Helper* helper, int wall_width) {
     floor->padding = padding_ptr ? *padding_ptr : 0;
     floor->height = _get_floor_height(height_ptr, floor);
 
-    struct Helper tex_helper = {
+    struct SelectorHelper tex_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "texture"),
+        .selector=css_find_selector_prop(rule, "texture"),
         .parent=helper->parent,
     };
     floor->tex = _build_texture(&tex_helper);
-    _append_objs_to_floor(helper, floor, wall_width);
 
+    struct Helper inner_helper = {
+        .program=helper->program,
+        .rule=rule,
+        .parent=helper->parent,
+    };
+    _append_objs_to_floor(&inner_helper, floor, wall_width);
+
+    css_free_rule_half(rule);
     return floor;
 }
 
@@ -472,9 +485,9 @@ void _append_floors_to_wall(struct Helper* helper, struct WallObj* wall, int wal
     struct FloorObj* bottom = NULL;
     struct FloorObj* top = NULL;
 
-    struct Helper bottom_helper = {
+    struct SelectorHelper bottom_helper = {
         .program=program,
-        .rule=css_find_rule_prop(program, rule, "bottom"),
+        .selector=css_find_selector_prop(rule, "bottom"),
         .parent=helper->parent,
     };
     bottom = _build_floor(&bottom_helper, wall_width);
@@ -488,9 +501,9 @@ void _append_floors_to_wall(struct Helper* helper, struct WallObj* wall, int wal
         }
     }
 
-    struct Helper top_helper = {
+    struct SelectorHelper top_helper = {
         .program=program,
-        .rule=css_find_rule_prop(program, rule, "top"),
+        .selector=css_find_selector_prop(rule, "top"),
         .parent=helper->parent,
     };
     top = _build_floor(&top_helper, wall_width);
@@ -504,9 +517,9 @@ void _append_floors_to_wall(struct Helper* helper, struct WallObj* wall, int wal
     }
 
     for(;;) {
-        struct Helper middle_helper = {
+        struct SelectorHelper middle_helper = {
             .program=program,
-            .rule=css_find_rule_prop(program, rule, "middle"),
+            .selector=css_find_selector_prop(rule, "middle"),
             .parent=helper->parent,
         };
         struct FloorObj* middle = _build_floor(&middle_helper, wall_width);
@@ -524,8 +537,8 @@ final:
     wall->top = top;
 }
 
-struct WallObj* _build_wall(struct Helper* helper, int wall_width, int wall_height) {
-    struct Rule *rule = helper->rule;
+struct WallObj* _build_wall(struct SelectorHelper* helper, int wall_width, int wall_height) {
+    struct Rule *rule = _css_make_rule_from_helper(helper);
     if (!rule) return NULL;
     struct WallObj *wall = malloc(sizeof(struct WallObj));
     int* padding_ptr = css_find_number_prop(rule, "padding");
@@ -533,13 +546,20 @@ struct WallObj* _build_wall(struct Helper* helper, int wall_width, int wall_heig
 
     wall->padding = padding;
 
-    struct Helper tex_helper = {
+    struct SelectorHelper tex_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "texture"),
+        .selector=css_find_selector_prop(rule, "texture"),
         .parent=helper->parent,
     };
     wall->tex = _build_texture(&tex_helper);
-    _append_floors_to_wall(helper, wall, wall_width, wall_height);
+    struct Helper inner_helper = {
+        .program=helper->program,
+        .rule=rule,
+        .parent=helper->parent,
+    };
+    _append_floors_to_wall(&inner_helper, wall, wall_width, wall_height);
+
+    css_free_rule_half(rule);
     return wall;
 }
 
@@ -555,7 +575,7 @@ struct DrawObj* _build_void(struct Helper* helper) {
     draw_obj->parent = helper->parent;
 
     struct RuleSelector* child_selector = css_find_selector_prop(rule, "child");
-    struct BuildDrawObjHelper child_helper = {
+    struct SelectorHelper child_helper = {
         .program=helper->program,
         .selector=child_selector,
         .parent=helper->parent,
@@ -571,16 +591,16 @@ struct DrawObj* _build_cube(struct Helper* helper) {
     struct CubeObj* obj = malloc(sizeof(struct CubeObj));
     struct BasicObj basic = _build_basic(rule, helper->parent);
 
-    struct Helper wall_helper = {
+    struct SelectorHelper wall_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "wall"),
+        .selector=css_find_selector_prop(rule, "wall"),
         .parent=helper->parent,
     };
     obj->south_wall = _build_wall(&wall_helper, basic.width, basic.height);
     obj->east_wall = _build_wall(&wall_helper, basic.depth, basic.height);
-    struct Helper roof_helper = {
+    struct SelectorHelper roof_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "roof"),
+        .selector=css_find_selector_prop(rule, "roof"),
         .parent=helper->parent,
     };
     obj->roof = _build_wall(&roof_helper, basic.width, basic.depth);
@@ -600,15 +620,15 @@ struct DrawObj* _build_triangle(struct Helper* helper) {
     struct TriangleObj* obj = malloc(sizeof(struct TriangleObj));
     struct BasicObj basic = _build_basic(rule, helper->parent);
 
-    struct Helper wall_helper = {
+    struct SelectorHelper wall_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "wall"),
+        .selector=css_find_selector_prop(rule, "wall"),
         .parent=helper->parent,
     };
     obj->wall = _build_wall(&wall_helper, basic.width, basic.height);
-    struct Helper roof_helper = {
+    struct SelectorHelper roof_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "roof"),
+        .selector=css_find_selector_prop(rule, "roof"),
         .parent=helper->parent,
     };
     obj->roof = _build_wall(&roof_helper, basic.width, basic.depth);
@@ -628,9 +648,9 @@ struct DrawObj* _build_pyramid(struct Helper* helper) {
     struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
     struct BasicObj basic = _build_basic(rule, helper->parent);
 
-    struct Helper wall_helper = {
+    struct SelectorHelper wall_helper = {
         .program=helper->program,
-        .rule=css_find_rule_prop(helper->program, rule, "wall"),
+        .selector=css_find_selector_prop(rule, "wall"),
         .parent=helper->parent,
     };
     obj->south_wall = _build_wall(&wall_helper, basic.width, basic.height);
@@ -647,7 +667,7 @@ struct DrawObj* _build_pyramid(struct Helper* helper) {
 
 struct DrawObj* builder_make(struct Program* program, struct Rule* world) {
     struct RuleSelector* query = css_find_selector_prop(world, "body");
-    struct BuildDrawObjHelper helper = {
+    struct SelectorHelper helper = {
         .program=program,
         .selector=query,
         .parent=NULL,
