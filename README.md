@@ -1,5 +1,5 @@
 # Pixelopolis
-![oblique.png](oblique)
+![oblique](./oblique.png)
 
 *WARNING* - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
@@ -92,6 +92,14 @@ rule {
     another_child: child-rule;
     children: child-rule | child-rule.class | child-rule;
 }
+```
+
+##### Functions
+```css
+rule { 
+    random_number: random(0, 50); 
+    random_obj: choice(obj1, obj2, obj3);
+} 
 ```
 
 ### Body
