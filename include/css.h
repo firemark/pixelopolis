@@ -3,7 +3,8 @@
 #include "hash.h"
 
 #define REGULES_SIZE 255
-#define PROPS_SIZE 16
+#define KLASSES_SIZE 16
+#define PROPS_SIZE 32
 #define OBJS_SIZE 8
 
 #define CSS_CONCAT(a, b) _CSS_CONCAT(a, b)
@@ -44,7 +45,7 @@ struct FuncObj {
 
 struct RuleSelector {
     char* element;
-    char* klass;
+    char** klasses;
     char* pseudo_klass;
     // todo - support attributes el[x="foobar"]
 };

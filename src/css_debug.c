@@ -86,8 +86,9 @@ void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
     if (selector->element) {
         fprintf(fp, "%s", selector->element);
     }
-    if (selector->klass) {
-        fprintf(fp, ".%s", selector->klass);
+    char* klass;
+    css_iter(klass, selector->klasses) {
+        fprintf(fp, ".%s", klass);
     }
     if (selector->pseudo_klass) {
         fprintf(fp, ":%s", selector->pseudo_klass);

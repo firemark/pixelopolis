@@ -36,6 +36,22 @@ char* concat_and_free(char* a, char* b) {
     return out;
 }
 
+#define make_array(type, size, first_obj) \
+    type **arr = malloc(sizeof(type*) * (size + 1)); \
+    size_t i; \
+    arr[0] = first_obj; \
+    for(i=1; i < size; i++) { \
+        arr[i] = NULL; \
+    }
+
+#define append_to_array(arr, size, obj) \
+    size_t i; \
+    for(i=0; i < size; i++) { \
+        if (arr[i]) continue; \
+        arr[i] = obj; \
+        break; \
+    }
+
 struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
     char top[] = "top";
@@ -70,10 +86,15 @@ struct Prop* make_prop(char *name, struct Obj **objs) {
     return prop;
 }
 
+char** _make_klasses() {
+    make_array(char, KLASSES_SIZE, NULL);
+    return arr;
+}
+
 struct RuleSelector* make_rule_selector() {
     struct RuleSelector *rule_selector = malloc(sizeof(struct RuleSelector));
     rule_selector->element = NULL;
-    rule_selector->klass = NULL;
+    rule_selector->klasses = _make_klasses();
     rule_selector->pseudo_klass = NULL;
     return rule_selector;
 }
@@ -160,22 +181,6 @@ struct Obj* make_obj_as_noargs_func(char* name) {
     return make_obj_as_func(name, args);
 }
 
-#define make_array(type, size, first_obj) \
-    type **arr = malloc(sizeof(type*) * (size + 1)); \
-    size_t i; \
-    arr[0] = first_obj; \
-    for(i=1; i < size; i++) { \
-        arr[i] = NULL; \
-    }
-
-#define append_to_array(arr, size, obj) \
-    size_t i; \
-    for(i=0; i < size; i++) { \
-        if (arr[i]) continue; \
-        arr[i] = obj; \
-        break; \
-    }
-
 %}
 
 %start program
@@ -233,7 +238,7 @@ rule_selector:
 
 rule_addons:
         %empty { $$ = make_rule_selector(); }
-        | rule_addons CLASS { $$->klass = $2; }
+        | rule_addons CLASS { append_to_array($$->klasses, KLASSES_SIZE, $2); }
         | rule_addons PSEUDO_CLASS { $$->pseudo_klass = $2; }
         ;
 

@@ -8,7 +8,7 @@
 
 struct RuleSelector default_selector = {
     .element=NULL,
-    .klass=NULL,
+    .klasses=NULL,
     .pseudo_klass=NULL,
 };
 
@@ -21,7 +21,7 @@ struct Rule* css_find_rule_by_query(
         selector = rule->selector;
         if (
             (!query->element || !selector->element || !strcmp(selector->element, query->element))
-            && (!query->klass || !strcmp(selector->klass, query->klass))
+            //&& (!query->klass || !strcmp(selector->klass, query->klass))
             && (!query->pseudo_klass || !strcmp(selector->pseudo_klass, query->pseudo_klass))
            ) {
             return rule;
