@@ -42,11 +42,6 @@ struct FuncObj {
     size_t args_size;
 };
 
-struct Prop {
-    char* name;
-    struct Obj **objs;
-};
-
 struct RuleSelector {
     char* element;
     char* klass;

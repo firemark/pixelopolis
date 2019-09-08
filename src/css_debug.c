@@ -13,32 +13,32 @@ void css_debug_program(FILE* fp, struct Program* program) {
 
 void css_debug_rule(FILE* fp, struct Rule* rule) {
     int i = 0;
-    struct Prop* prop;
     css_debug_rule_selector(fp, rule->selector);
     fprintf(fp, " {\n");
-    //while(prop = rule->props[i++]) {
-    //    css_debug_prop(fp, prop);
-    //    fprintf(fp, ";\n");
-    //}
+    struct HashStrItem* item;
+    hash_iter(item, rule->props) {
+        fprintf(fp, "    %s: ", item->key);
+        css_debug_objs(fp, item->value);
+        fprintf(fp, ";\n");
+    }
     fprintf(fp, "}\n");
 }
 
-void css_debug_prop(FILE* fp, struct Prop* prop) {
-//    int i = 0;
-//    struct Obj* obj = prop->objs[i];
-//
-//    fprintf(fp, "    %s: ", prop->name);
-//    if (!obj) {
-//        fprintf(fp, "<NULL>");
-//        return;
-//    } 
-//
-//    for(;;) {
-//        css_debug_obj(fp, obj);
-//        obj = prop->objs[++i];
-//        if (!obj) break;
-//        fprintf(fp, " | ");
-//    }
+void css_debug_objs(FILE* fp, struct Obj** objs) {
+    int i = 0;
+    struct Obj* obj = objs[i];
+
+    if (!obj) {
+        fprintf(fp, "<NULL>");
+        return;
+    } 
+
+    for(;;) {
+        css_debug_obj(fp, obj);
+        obj = objs[++i];
+        if (!obj) break;
+        fprintf(fp, " | ");
+    }
 }
 
 void css_debug_pair(FILE* fp, struct Obj* obj, char op) {

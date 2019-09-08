@@ -11,6 +11,11 @@ int lines;
 int chars;
 int yylex(void);
 
+struct Prop {
+    char* name;
+    struct Obj **objs;
+};
+
 int yyerror (char* err) {
     fprintf(stderr, "%d:%d %s\n", lines, chars, err);
     return 1;
