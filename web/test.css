@@ -6,8 +6,8 @@ world {
 
 h-series.city-and-road {
     body: cube.road | d-filler.city;
-    width: random(0, 300) + 800;
-    depth: random(0, 300) + 800;
+    width: random(800, 1200);
+    depth: random(800, 1200);
 }
 
 d-filler.city {
