@@ -75,22 +75,10 @@ house.wood {
     body: cube.wood.house | choice(triangle.wood.house, pyramid.wood.house);
 }
 
-triangle.house {
+triangle.house, pyramid.house, cube.house {
     width: 100%;
     depth: 100%;
     height: random(30, 80);  
-}
-
-pyramid.house {
-    width: 100%;
-    depth: 100%;
-    height: random(30, 80);  
-}
-
-cube.house {
-    width: 100%;
-    depth: 100%;
-    height: random(40, 80);
 }
 
 triangle.brick {

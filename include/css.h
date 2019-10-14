@@ -6,6 +6,7 @@
 #define KLASSES_SIZE 16
 #define PROPS_SIZE 32
 #define OBJS_SIZE 8
+#define RULE_SELECTORS_SIZE 8
 
 #define CSS_CONCAT(a, b) _CSS_CONCAT(a, b)
 #define _CSS_CONCAT(a, b) a ## b

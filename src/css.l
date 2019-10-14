@@ -45,6 +45,7 @@ int chars = 1;
 \/                          return DIV_OP;
 \+                          return ADD_OP;
 -                           return SUB_OP;
+>                           return PARENT_OP;
 \n                          chars = 1; lines++;
 [ \r\t]+                    /* ignore */
 %%

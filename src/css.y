@@ -63,20 +63,48 @@ struct Program* make_program(struct Rule **rules) {
     return program;
 }
 
+struct Rule** concat_rules(struct Rule** a, struct Rule** b) {
+    struct Rule* rule;
+    size_t a_count = 0;
+    css_iter(rule, a) a_count++; // find last index
+    css_iter(rule, b) a[a_count++] = rule; // insert rules from b to end of 'a' array
+    free(b);
+    return a;
+}
+
 struct Rule* make_rule(struct RuleSelector* selector, struct Prop **props) {
-    struct Rule *rule = malloc(sizeof(struct Rule));
-    struct HashMap *map_props = hash_make();
+    struct Rule* rule = malloc(sizeof(struct Rule));
+    struct HashMap* map_props = hash_make();
 
     struct Prop *prop;
     css_iter(prop, props) { // transform array to hashmap
         hash_set(map_props, prop->name, prop->objs, NULL);
-        free(prop);
     }
-    free(props);
 
     rule->selector = selector;
     rule->props = map_props;
     return rule;
+}
+
+struct Rule** make_rules(struct RuleSelector** selectors, struct Prop **props) {
+    size_t rule_iter = 0;
+    struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
+    struct RuleSelector* selector;
+    css_iter(selector, selectors) {
+        rules[rule_iter++] = make_rule(selector, props);
+    }
+
+    for(; rule_iter <= RULE_SELECTORS_SIZE; rule_iter++) {
+        rules[rule_iter] = NULL;
+    }
+
+    struct Prop *prop;
+    css_iter(prop, props) { // cleaning
+        free(prop);
+    }
+    free(props);
+
+    return rules;
 }
 
 struct Prop* make_prop(char *name, struct Obj **objs) {
@@ -193,6 +221,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
     struct Prop* propPtr;
     struct Obj* objPtr;
     struct RuleSelector* ruleSelectorPtr;
+    struct RuleSelector** ruleSelectorPtrMany;
     struct Rule** rulePtrMany;
     struct Prop** propPtrMany;
     struct Obj** objPtrMany;
@@ -201,7 +230,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %token
     START_BODY END_BODY START_FUNC END_FUNC
     COLON SEMICOLON PIPE COMMA PERCENT
-    ADD_OP SUB_OP MUL_OP DIV_OP
+    ADD_OP SUB_OP MUL_OP DIV_OP PARENT_OP
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
 %left ADD_OP SUB_OP
@@ -209,13 +238,14 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %right START_FUNC END_FUNC
 %right START_BODY END_BODY
 %type <programPtr> program
-%type <rulePtr> rule
+%type <rulePtrMany> rule
 %type <propPtr> prop
 %type <objPtr> obj
-%type <rulePtrMany> rules;
-%type <propPtrMany> props;
-%type <objPtrMany> objs args;
-%type <ruleSelectorPtr> rule_selector rule_addons;
+%type <rulePtrMany> rules
+%type <propPtrMany> props
+%type <objPtrMany> objs args
+%type <ruleSelectorPtr> rule_selector rule_addons
+%type <ruleSelectorPtrMany> rule_selectors
 
 %%
 program:
@@ -223,12 +253,17 @@ program:
         ;
 
 rules:
-        rule { make_array(struct Rule, REGULES_SIZE, $1); $$ = arr; }
-        | rules rule { append_to_array($1, REGULES_SIZE, $2); $$ = $1; }
+        rule { make_array(struct Rule, REGULES_SIZE, NULL); concat_rules(arr, $1); $$ = arr; }
+        | rules rule { concat_rules($1, $2); $$ = $1; }
         ;
 
 rule:
-        rule_selector START_BODY props END_BODY { $$ = make_rule($1, $3); }
+        rule_selectors START_BODY props END_BODY { $$ = make_rules($1, $3); }
+        ;
+
+rule_selectors:
+        rule_selector { make_array(struct RuleSelector, RULE_SELECTORS_SIZE, $1); $$ = arr; }
+        | rule_selectors COMMA rule_selector { append_to_array($1, RULE_SELECTORS_SIZE, $3); $$ = $1; }
         ;
 
 rule_selector:

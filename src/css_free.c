@@ -40,6 +40,7 @@ void css_free_rule_selector(struct RuleSelector* selector) {
 }
 
 void css_free_objs(struct Obj** objs) {
+    return; // currently todo - without gargabage collector is hard to delete sth
     struct Obj* obj;
     css_iter(obj, objs) {
         css_free_obj(obj);
