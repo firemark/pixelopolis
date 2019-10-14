@@ -124,6 +124,7 @@ struct RuleSelector* make_rule_selector() {
     rule_selector->element = NULL;
     rule_selector->klasses = _make_klasses();
     rule_selector->pseudo_klass = NULL;
+    rule_selector->parent = NULL;
     return rule_selector;
 }
 
@@ -244,7 +245,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %type <rulePtrMany> rules
 %type <propPtrMany> props
 %type <objPtrMany> objs args
-%type <ruleSelectorPtr> rule_selector rule_addons
+%type <ruleSelectorPtr> rule_selector rule_addons rule_selector_in_rule
 %type <ruleSelectorPtrMany> rule_selectors
 
 %%
@@ -262,13 +263,18 @@ rule:
         ;
 
 rule_selectors:
-        rule_selector { make_array(struct RuleSelector, RULE_SELECTORS_SIZE, $1); $$ = arr; }
-        | rule_selectors COMMA rule_selector { append_to_array($1, RULE_SELECTORS_SIZE, $3); $$ = $1; }
+        rule_selector_in_rule { make_array(struct RuleSelector, RULE_SELECTORS_SIZE, $1); $$ = arr; }
+        | rule_selectors COMMA rule_selector_in_rule { append_to_array($1, RULE_SELECTORS_SIZE, $3); $$ = $1; }
         ;
 
 rule_selector:
         WORD rule_addons { $$ = $2; $$->element = $1; }
         | rule_addons { $$ = $1; }
+        ;
+
+rule_selector_in_rule:
+        rule_selector { $$ = $1; }
+        | rule_selector PARENT_OP rule_selector { $3->parent = $1; $$ = $3; }
         ;
 
 rule_addons:

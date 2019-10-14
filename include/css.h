@@ -48,6 +48,7 @@ struct RuleSelector {
     char* element;
     char** klasses;
     char* pseudo_klass;
+    struct RuleSelector* parent;
     // todo - support attributes el[x="foobar"]
 };
 extern struct RuleSelector default_selector;
