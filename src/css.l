@@ -29,7 +29,6 @@ int chars = 1;
 [a-zA-Z_][a-zA-Z0-9_-]*     push_string; return WORD;
 \"[^"]+\"                   crop_and_push_string(1, 2); return STRING;
 \.[a-zA-Z_][a-zA-Z0-9_-]*   crop_and_push_string(1, 0); return CLASS;
-\$[a-zA-Z0-9_-]*            crop_and_push_string(1, 0); return VARIABLE;
 :[a-zA-Z_][a-zA-Z0-9_-]*    crop_and_push_string(1, 0); return PSEUDO_CLASS;
 [0-9]+                      push_number; return NUMBER;
 \{                          return START_BODY;
