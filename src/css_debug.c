@@ -70,8 +70,8 @@ void css_debug_func(FILE* fp, struct Obj* obj) {
 void css_debug_obj(FILE* fp, struct Obj* obj) {
     switch(obj->type) {
         case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
+        case OBJ_PERCENT: fprintf(fp, "%d%%", *((int*)obj->value)); break;
         case OBJ_STRING: fprintf(fp, "\"%s\"", (char*)obj->value); break;
-        case OBJ_VARIABLE: fprintf(fp, "$%s", (char*)obj->value); break;
         case OBJ_ADD: css_debug_pair(fp, obj, '+'); break;
         case OBJ_SUB: css_debug_pair(fp, obj, '-'); break;
         case OBJ_MUL: css_debug_pair(fp, obj, '*'); break;
@@ -83,6 +83,10 @@ void css_debug_obj(FILE* fp, struct Obj* obj) {
 }
 
 void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
+    if (selector->parent) {
+        css_debug_rule_selector(fp, selector->parent);
+        fprintf(fp, " > ");
+    }
     if (selector->element) {
         fprintf(fp, "%s", selector->element);
     }

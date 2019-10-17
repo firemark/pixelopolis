@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "hash.h"
@@ -69,4 +70,37 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name) {
     if (obj->type != OBJ_RULE) return NULL;
 
     return (struct RuleSelector*)obj->value;
+}
+
+struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
+    struct RuleSelector* selector = malloc(sizeof(struct RuleSelector));
+
+    if (old->element) {
+        selector->element = malloc(sizeof(char) * strlen(old->element));
+        strcpy(selector->element, old->element);
+    } else {
+        selector->element = NULL;
+    }
+
+    if (old->pseudo_klass) {
+        selector->pseudo_klass = malloc(sizeof(char) * strlen(old->pseudo_klass));
+        strcpy(selector->pseudo_klass, old->pseudo_klass);
+    } else {
+        selector->pseudo_klass = NULL;
+    }
+
+    size_t i;
+    selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
+    for(i = 0; i < KLASSES_SIZE; i++) { // cpy klasses
+        char* old_klass = old->klasses[i];
+        if (!old_klass) {
+            selector->klasses[i] = NULL;
+            continue;
+        }
+        char* new_klass = malloc(sizeof(char) * strlen(old_klass));
+        strcpy(new_klass, old_klass);
+        selector->klasses[i] = new_klass;
+    }
+
+    selector->parent = old->parent ? css_cpy_selector(old->parent) : NULL;
 }

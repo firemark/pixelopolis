@@ -274,7 +274,7 @@ rule_selector:
 
 rule_selector_in_rule:
         rule_selector { $$ = $1; }
-        | rule_selector PARENT_OP rule_selector { $3->parent = $1; $$ = $3; }
+        | rule_selector_in_rule PARENT_OP rule_selector { $3->parent = $1; $$ = $3; }
         ;
 
 rule_addons:

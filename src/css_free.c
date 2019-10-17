@@ -36,6 +36,7 @@ void css_free_rule_selector(struct RuleSelector* selector) {
     }
     free(selector->klasses);
     free(selector->pseudo_klass);
+    // if (selector->parent) css_free_rule_selector(selector->parent);
     free(selector);
 }
 
