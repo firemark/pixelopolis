@@ -186,9 +186,35 @@ void {
 
 #### Containers
 
+Basic Shapes are not enough, we need to show many objects.
+
 ##### Series
 
+Is a CSS rule with list of another draw-obj selectors in given axis.
+We have a tree types of series obj:
+
+* `v-series` - vertical (on x-axis)
+* `d-series` - depth (on y-axis)
+* `h-series` - height (on z-axis)
+
+```css
+v-series { /* or d-series or h-series */
+    body: SELECTOR1 | SELECTOR2 | ...;
+    padding: NUMBER; /* optional */
+    width: NUMBER / PERCENT; /* optional */
+    height: NUMBER / PERCENT; /* optional */
+    depth: NUMBER / PERCENT; /* optional */
+}
+```
+
 ##### Filler
+
+Instead of series, Filler fills whole specific space (if can)
+We have a tree types of fillers obj:
+
+* `v-filler` - vertical (on x-axis)
+* `d-filler` - depth (on y-axis)
+* `h-filler` - height (on z-axis)
 
 ### Wall
 
