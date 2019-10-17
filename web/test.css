@@ -59,7 +59,7 @@ cube.sidewalk {
 
 house > roof.triangle { display: triangle; }
 house > roof.pyramid { display: pyramid;  }
-house > walls { display: cube; }
+house > walls, house > d-series > walls { display: cube; }
 
 house {
     display: h-series;
