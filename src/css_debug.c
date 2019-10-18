@@ -87,6 +87,10 @@ void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
         css_debug_rule_selector(fp, selector->parent);
         fprintf(fp, " > ");
     }
+    if (selector->greedy_parent) {
+        css_debug_rule_selector(fp, selector->greedy_parent);
+        fprintf(fp, " ");
+    }
     if (selector->element) {
         fprintf(fp, "%s", selector->element);
     }

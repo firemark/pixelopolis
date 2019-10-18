@@ -29,6 +29,13 @@ int _match_parent(struct RuleSelector* parent_query, struct RuleSelector* parent
     return _match(parent_query, parent_iter_query);
 }
 
+int _match_greedy_parent(struct RuleSelector* parent_query, struct RuleSelector* greedy_parent) {
+    return 1;
+    if (!greedy_parent) return 1;
+    if (!parent_query) return 0;
+    return 1;
+}
+
 int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
     char* element = query->element;
     char* pseudo_klass = query->pseudo_klass;
@@ -48,6 +55,10 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
     }
 
     if (!_match_parent(query->parent, iter_query->parent)) {
+        return 0;
+    }
+
+    if (!_match_greedy_parent(query->parent, iter_query->greedy_parent)) {
         return 0;
     }
 

@@ -121,6 +121,7 @@ struct RuleSelector* make_rule_selector(char* element, char** klasses) {
     rule_selector->klasses = klasses;
     rule_selector->pseudo_klass = NULL;
     rule_selector->parent = NULL;
+    rule_selector->greedy_parent = NULL;
     return rule_selector;
 }
 
@@ -280,6 +281,7 @@ classes:
 rule_selector_in_rule:
         rule_selector { $$ = $1; }
         | rule_selector_in_rule PARENT_OP sp rule_selector { $4->parent = $1; $$ = $4; }
+        | rule_selector_in_rule rule_selector { $2->greedy_parent = $1; $$ = $2; }
         ;
 
 props:

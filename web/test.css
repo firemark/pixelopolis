@@ -57,9 +57,9 @@ cube.sidewalk {
     height: 5;
 }
 
-house > roof.triangle { display: triangle; }
-house > roof.pyramid { display: pyramid; }
-house > walls, house > d-series > walls { display: cube; }
+house roof.triangle { display: triangle; }
+house roof.pyramid { display: pyramid; }
+house walls { display: cube; }
 
 house {
     display: h-series;
@@ -68,40 +68,40 @@ house {
     height: random(50, 120);
 }
 
-house > roof, house > walls {
+house roof, house walls {
     width: 100%;
     depth: 100%;
     height: random(30, 80);  
 }
 
-house.brick > roof.triangle {
+house.brick roof.triangle {
     wall: wall.brick;
     roof: wall.wood;
 }
 
-house.brick > roof.pyramid {
+house.brick roof.pyramid {
     wall: wall.wood;
 }
 
-house.brick > walls, house.brick > d-series > walls {
+house.brick walls {
     wall: wall.brick.with-windows;
 }
 
-house.clay > roof {
+house.clay roof {
     wall: wall.clay;
     roof: wall.clay;
 }
 
-house.clay > walls, house.clay > d-series > walls {
+house.clay walls {
     wall: wall.clay.with-windows;
 }
 
-house.wood > roof {
+house.wood roof {
     wall: wall.wood;
     roof: wall.wood;
 }
 
-house.wood > walls, house.wood > d-series > walls {
+house.wood walls {
     wall: wall.wood.with-windows;
 }
 
