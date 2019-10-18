@@ -4,7 +4,7 @@
 #include "css_debug.h"
 
 void css_debug_program(FILE* fp, struct Program* program) {
-    fprintf(fp, "PROGRAM %s\n", program->name);
+    fprintf(fp, "/* PROGRAM %s */\n", program->name);
     struct Rule* rule;
     css_iter(rule, program->rules) {
         css_debug_rule(fp, rule);
@@ -90,9 +90,11 @@ void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
     if (selector->element) {
         fprintf(fp, "%s", selector->element);
     }
-    char* klass;
-    css_iter(klass, selector->klasses) {
-        fprintf(fp, ".%s", klass);
+    if (selector->klasses) {
+        char* klass;
+        css_iter(klass, selector->klasses) {
+            fprintf(fp, ".%s", klass);
+        }
     }
     if (selector->pseudo_klass) {
         fprintf(fp, ":%s", selector->pseudo_klass);

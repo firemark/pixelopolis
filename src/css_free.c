@@ -30,9 +30,11 @@ void css_free_pair_obj(struct PairObj* pair) {
 
 void css_free_rule_selector(struct RuleSelector* selector) {
     free(selector->element);
-    char* klass;
-    css_iter(klass, selector->klasses) {
-        free(klass);
+    if (selector->klasses) {
+        char* klass;
+        css_iter(klass, selector->klasses) {
+            free(klass);
+        }
     }
     free(selector->klasses);
     free(selector->pseudo_klass);

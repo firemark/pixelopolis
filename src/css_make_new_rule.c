@@ -8,6 +8,9 @@
 int _match(struct RuleSelector* query, struct RuleSelector* iter_query);
 
 int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
+    if (!iter_query->klasses) return 1;
+    if (!query->klasses) return 0;
+
     char* iter_klass;
     css_iter(iter_klass, iter_query->klasses) {
         char* klass;

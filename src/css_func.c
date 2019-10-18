@@ -89,18 +89,23 @@ struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
         selector->pseudo_klass = NULL;
     }
 
-    size_t i;
-    selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
-    for(i = 0; i < KLASSES_SIZE; i++) { // cpy klasses
-        char* old_klass = old->klasses[i];
-        if (!old_klass) {
-            selector->klasses[i] = NULL;
-            continue;
+    if (old->klasses) {
+        size_t i;
+        selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
+        for(i = 0; i < KLASSES_SIZE; i++) { // cpy klasses
+            char* old_klass = old->klasses[i];
+            if (!old_klass) {
+                selector->klasses[i] = NULL;
+                continue;
+            }
+            char* new_klass = malloc(sizeof(char) * strlen(old_klass));
+            strcpy(new_klass, old_klass);
+            selector->klasses[i] = new_klass;
         }
-        char* new_klass = malloc(sizeof(char) * strlen(old_klass));
-        strcpy(new_klass, old_klass);
-        selector->klasses[i] = new_klass;
+    } else {
+        selector->klasses = NULL;
     }
+
 
     selector->parent = old->parent ? css_cpy_selector(old->parent) : NULL;
 }
