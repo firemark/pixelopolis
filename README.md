@@ -47,7 +47,7 @@ Pixelopolis has css-like syntax (not fully supported CSS2, *yet*)
 ```css
 RULE {
     property: <OBJ>;
-    property: <OBJ1> | <OBJ2>;
+    property: <OBJ1> | <OBJ2>; /* array of N elements */
     property: <OBJ>;
     /* ... */
 }
@@ -59,12 +59,11 @@ RULE {
 element { /*...properties...*/ }
 element.class { /*...properties...*/ }
 element.class1.class2 { /*...properties...*/ }
-element:pseudo_class { /*...properties...*/ }
+parent element { /*...properties...*/ } 
+parent > element { /*...properties...*/ }
 ```
 
-Sadly, parent operators are not supported :( - TODO
-
-#### Property
+#### Properties
 
 ##### Number
 

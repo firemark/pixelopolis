@@ -17,34 +17,35 @@
     yylval.string = out
 
 #define push_number yylval.number = atoi(yytext)
+#define count_chars old_chars = chars; chars += yyleng
 
 char* out;
 int lines = 1;
+int old_chars = 1;
 int chars = 1;
 
 %}
 
 %%
-.                           chars++; REJECT;
-[a-zA-Z_][a-zA-Z0-9_-]*     push_string; return WORD;
-\"[^"]+\"                   crop_and_push_string(1, 2); return STRING;
-\.[a-zA-Z_][a-zA-Z0-9_-]*   crop_and_push_string(1, 0); return CLASS;
-\$[a-zA-Z0-9_-]*            crop_and_push_string(1, 0); return VARIABLE;
-:[a-zA-Z_][a-zA-Z0-9_-]*    crop_and_push_string(1, 0); return PSEUDO_CLASS;
-[0-9]+                      push_number; return NUMBER;
-\{                          return START_BODY;
-\}                          return END_BODY;
-\(                          return START_FUNC;
-\)                          return END_FUNC;
-:                           return COLON;
-;                           return SEMICOLON;
-,                           return COMMA;
-%                           return PERCENT;
-\|                          return PIPE;
-\*                          return MUL_OP;
-\/                          return DIV_OP;
-\+                          return ADD_OP;
--                           return SUB_OP;
-\n                          chars = 1; lines++;
-[ \r\t]+                    /* ignore */
+[a-zA-Z_][a-zA-Z0-9_-]*     count_chars; push_string; return WORD;
+\"[^"]+\"                   count_chars; crop_and_push_string(1, 2); return STRING;
+\.[a-zA-Z_][a-zA-Z0-9_-]*   count_chars; crop_and_push_string(1, 0); return CLASS;
+:[a-zA-Z_][a-zA-Z0-9_-]*    count_chars; crop_and_push_string(1, 0); return PSEUDO_CLASS;
+[0-9]+                      count_chars; push_number; return NUMBER;
+\{                          count_chars; return START_BODY;
+\}                          count_chars; return END_BODY;
+\(                          count_chars; return START_FUNC;
+\)                          count_chars; return END_FUNC;
+:                           count_chars; return COLON;
+;                           count_chars; return SEMICOLON;
+,                           count_chars; return COMMA;
+%                           count_chars; return PERCENT;
+\|                          count_chars; return PIPE;
+\*                          count_chars; return MUL_OP;
+\/                          count_chars; return DIV_OP;
+\+                          count_chars; return ADD_OP;
+-                           count_chars; return SUB_OP;
+>                           count_chars; return PARENT_OP;
+\n                          old_chars = 1; chars = 1; lines++;
+[ \r\t]+                    count_chars; return SPACE;
 %%

@@ -4,7 +4,7 @@
 #include "css_debug.h"
 
 void css_debug_program(FILE* fp, struct Program* program) {
-    fprintf(fp, "PROGRAM %s\n", program->name);
+    fprintf(fp, "/* PROGRAM %s */\n", program->name);
     struct Rule* rule;
     css_iter(rule, program->rules) {
         css_debug_rule(fp, rule);
@@ -70,8 +70,8 @@ void css_debug_func(FILE* fp, struct Obj* obj) {
 void css_debug_obj(FILE* fp, struct Obj* obj) {
     switch(obj->type) {
         case OBJ_NUMBER: fprintf(fp, "%d", *((int*)obj->value)); break;
+        case OBJ_PERCENT: fprintf(fp, "%d%%", *((int*)obj->value)); break;
         case OBJ_STRING: fprintf(fp, "\"%s\"", (char*)obj->value); break;
-        case OBJ_VARIABLE: fprintf(fp, "$%s", (char*)obj->value); break;
         case OBJ_ADD: css_debug_pair(fp, obj, '+'); break;
         case OBJ_SUB: css_debug_pair(fp, obj, '-'); break;
         case OBJ_MUL: css_debug_pair(fp, obj, '*'); break;
@@ -83,12 +83,22 @@ void css_debug_obj(FILE* fp, struct Obj* obj) {
 }
 
 void css_debug_rule_selector(FILE* fp, struct RuleSelector* selector) {
+    if (selector->parent) {
+        css_debug_rule_selector(fp, selector->parent);
+        fprintf(fp, " > ");
+    }
+    if (selector->greedy_parent) {
+        css_debug_rule_selector(fp, selector->greedy_parent);
+        fprintf(fp, " ");
+    }
     if (selector->element) {
         fprintf(fp, "%s", selector->element);
     }
-    char* klass;
-    css_iter(klass, selector->klasses) {
-        fprintf(fp, ".%s", klass);
+    if (selector->klasses) {
+        char* klass;
+        css_iter(klass, selector->klasses) {
+            fprintf(fp, ".%s", klass);
+        }
     }
     if (selector->pseudo_klass) {
         fprintf(fp, ":%s", selector->pseudo_klass);

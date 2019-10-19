@@ -9,6 +9,7 @@ FILE *yyin;
 struct Program* global_program;
 int lines;
 int chars;
+int old_chars;
 int yylex(void);
 
 struct Prop {
@@ -17,7 +18,7 @@ struct Prop {
 };
 
 int yyerror (char* err) {
-    fprintf(stderr, "%d:%d %s\n", lines, chars, err);
+    fprintf(stderr, "%d:%d %s\n", lines, old_chars, err);
     return 1;
 }
 
@@ -63,20 +64,48 @@ struct Program* make_program(struct Rule **rules) {
     return program;
 }
 
+struct Rule** concat_rules(struct Rule** a, struct Rule** b) {
+    struct Rule* rule;
+    size_t a_count = 0;
+    css_iter(rule, a) a_count++; // find last index
+    css_iter(rule, b) a[a_count++] = rule; // insert rules from b to end of 'a' array
+    free(b);
+    return a;
+}
+
 struct Rule* make_rule(struct RuleSelector* selector, struct Prop **props) {
-    struct Rule *rule = malloc(sizeof(struct Rule));
-    struct HashMap *map_props = hash_make();
+    struct Rule* rule = malloc(sizeof(struct Rule));
+    struct HashMap* map_props = hash_make();
 
     struct Prop *prop;
     css_iter(prop, props) { // transform array to hashmap
         hash_set(map_props, prop->name, prop->objs, NULL);
-        free(prop);
     }
-    free(props);
 
     rule->selector = selector;
     rule->props = map_props;
     return rule;
+}
+
+struct Rule** make_rules(struct RuleSelector** selectors, struct Prop **props) {
+    size_t rule_iter = 0;
+    struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
+    struct RuleSelector* selector;
+    css_iter(selector, selectors) {
+        rules[rule_iter++] = make_rule(selector, props);
+    }
+
+    for(; rule_iter <= RULE_SELECTORS_SIZE; rule_iter++) {
+        rules[rule_iter] = NULL;
+    }
+
+    struct Prop *prop;
+    css_iter(prop, props) { // cleaning
+        free(prop);
+    }
+    free(props);
+
+    return rules;
 }
 
 struct Prop* make_prop(char *name, struct Obj **objs) {
@@ -86,16 +115,13 @@ struct Prop* make_prop(char *name, struct Obj **objs) {
     return prop;
 }
 
-char** _make_klasses() {
-    make_array(char, KLASSES_SIZE, NULL);
-    return arr;
-}
-
-struct RuleSelector* make_rule_selector() {
+struct RuleSelector* make_rule_selector(char* element, char** klasses) {
     struct RuleSelector *rule_selector = malloc(sizeof(struct RuleSelector));
-    rule_selector->element = NULL;
-    rule_selector->klasses = _make_klasses();
+    rule_selector->element = element;
+    rule_selector->klasses = klasses;
     rule_selector->pseudo_klass = NULL;
+    rule_selector->parent = NULL;
+    rule_selector->greedy_parent = NULL;
     return rule_selector;
 }
 
@@ -193,15 +219,18 @@ struct Obj* make_obj_as_noargs_func(char* name) {
     struct Prop* propPtr;
     struct Obj* objPtr;
     struct RuleSelector* ruleSelectorPtr;
+    struct RuleSelector** ruleSelectorPtrMany;
     struct Rule** rulePtrMany;
     struct Prop** propPtrMany;
     struct Obj** objPtrMany;
+    char** strMany;
 };
 
 %token
     START_BODY END_BODY START_FUNC END_FUNC
     COLON SEMICOLON PIPE COMMA PERCENT
-    ADD_OP SUB_OP MUL_OP DIV_OP
+    ADD_OP SUB_OP MUL_OP DIV_OP PARENT_OP
+    SPACE
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
 %left ADD_OP SUB_OP
@@ -209,37 +238,50 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %right START_FUNC END_FUNC
 %right START_BODY END_BODY
 %type <programPtr> program
-%type <rulePtr> rule
+%type <rulePtrMany> rule
 %type <propPtr> prop
 %type <objPtr> obj
-%type <rulePtrMany> rules;
-%type <propPtrMany> props;
-%type <objPtrMany> objs args;
-%type <ruleSelectorPtr> rule_selector rule_addons;
+%type <rulePtrMany> rules
+%type <propPtrMany> props
+%type <objPtrMany> objs args
+%type <ruleSelectorPtr> rule_selector rule_selector_in_rule
+%type <ruleSelectorPtrMany> rule_selectors
+%type <strMany> classes
 
 %%
 program:
-        rules { global_program = make_program($1); }
+        sp rules { global_program = make_program($2); }
         ;
 
 rules:
-        rule { make_array(struct Rule, REGULES_SIZE, $1); $$ = arr; }
-        | rules rule { append_to_array($1, REGULES_SIZE, $2); $$ = $1; }
+        rule { make_array(struct Rule, REGULES_SIZE, NULL); concat_rules(arr, $1); $$ = arr; }
+        | rules rule { concat_rules($1, $2); $$ = $1; }
         ;
 
 rule:
-        rule_selector START_BODY props END_BODY { $$ = make_rule($1, $3); }
+        rule_selectors START_BODY sp props END_BODY sp { $$ = make_rules($1, $4); }
+        ;
+
+rule_selectors:
+        rule_selector_in_rule { make_array(struct RuleSelector, RULE_SELECTORS_SIZE, $1); $$ = arr; }
+        | rule_selectors COMMA sp rule_selector_in_rule { append_to_array($1, RULE_SELECTORS_SIZE, $4); $$ = $1; }
         ;
 
 rule_selector:
-        WORD rule_addons { $$ = $2; $$->element = $1; }
-        | rule_addons { $$ = $1; }
-        ;
+        WORD sp { $$ = make_rule_selector($1, NULL); }
+        | WORD classes sp { $$ = make_rule_selector($1, $2); }
+        | classes sp { $$ = make_rule_selector(NULL, $1); }
+        ; /* TODO - pseudoklasses */
 
-rule_addons:
-        %empty { $$ = make_rule_selector(); }
-        | rule_addons CLASS { append_to_array($$->klasses, KLASSES_SIZE, $2); }
-        | rule_addons PSEUDO_CLASS { $$->pseudo_klass = $2; }
+classes:
+        CLASS { make_array(char, KLASSES_SIZE, $1); $$ = arr; }
+        | classes CLASS { append_to_array($$, KLASSES_SIZE, $2); }
+
+
+rule_selector_in_rule:
+        rule_selector { $$ = $1; }
+        | rule_selector_in_rule PARENT_OP sp rule_selector { $4->parent = $1; $$ = $4; }
+        | rule_selector_in_rule rule_selector { $2->greedy_parent = $1; $$ = $2; }
         ;
 
 props:
@@ -248,33 +290,35 @@ props:
         ;
 
 prop:
-        WORD COLON objs SEMICOLON { $$ = make_prop($1, $3); }
+        WORD sp COLON sp objs SEMICOLON sp { $$ = make_prop($1, $5); }
         ;
 
 objs:
         obj { make_array(struct Obj, OBJS_SIZE, $1); $$ = arr; }
-        | objs PIPE obj { append_to_array($1, OBJS_SIZE, $3); $$ = $1; }
+        | objs PIPE sp obj { append_to_array($1, OBJS_SIZE, $4); $$ = $1; }
         ;
 
 obj:
-        NUMBER { $$ = make_obj_as_number($1); }
-        | NUMBER PERCENT { $$ = make_obj_as_percent($1); }
-        | STRING { $$ = make_obj_as_string($1); }
-        | VARIABLE { $$ = make_obj_as_variable($1); }
+        NUMBER sp { $$ = make_obj_as_number($1); }
+        | NUMBER PERCENT sp { $$ = make_obj_as_percent($1); }
+        | STRING sp { $$ = make_obj_as_string($1); }
+        | VARIABLE sp { $$ = make_obj_as_variable($1); }
         | rule_selector { $$ = make_obj_as_rule($1); }
-        | obj ADD_OP obj { $$ = make_obj_as_add($1, $3); }
-        | obj SUB_OP obj { $$ = make_obj_as_sub($1, $3); }
-        | obj MUL_OP obj { $$ = make_obj_as_mul($1, $3); }
-        | obj DIV_OP obj { $$ = make_obj_as_div($1, $3); }
-        | START_FUNC obj END_FUNC { $$ = $2; }
-        | WORD START_FUNC END_FUNC { $$ = make_obj_as_noargs_func($1); }
-        | WORD START_FUNC args END_FUNC { $$ = make_obj_as_func($1, $3); }
+        | obj ADD_OP sp obj { $$ = make_obj_as_add($1, $4); }
+        | obj SUB_OP sp obj { $$ = make_obj_as_sub($1, $4); }
+        | obj MUL_OP sp obj { $$ = make_obj_as_mul($1, $4); }
+        | obj DIV_OP sp obj { $$ = make_obj_as_div($1, $4); }
+        | START_FUNC sp obj END_FUNC sp { $$ = $3; }
+        | WORD sp START_FUNC sp END_FUNC sp { $$ = make_obj_as_noargs_func($1); }
+        | WORD sp START_FUNC sp args END_FUNC sp { $$ = make_obj_as_func($1, $5); }
         ;
 
 args:
         obj { make_array(struct Obj, OBJS_SIZE, $1); $$ = arr; }
-        | args COMMA obj { append_to_array($1, OBJS_SIZE, $3); $$ = $1; }
+        | args COMMA sp obj { append_to_array($1, OBJS_SIZE, $4); $$ = $1; }
         ;
+
+sp: SPACE | %empty;
 %%
 
 struct Program* css_parse_file(char* filename) {

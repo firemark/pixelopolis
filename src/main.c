@@ -48,6 +48,7 @@ int main(int argc, char **argv) {
     } else {
         program = css_parse_file(in_filename);
     }
+    //css_debug_program(stderr, program);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
         fprintf(stderr, "world rule not found! :(\n");

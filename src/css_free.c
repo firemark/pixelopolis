@@ -30,16 +30,20 @@ void css_free_pair_obj(struct PairObj* pair) {
 
 void css_free_rule_selector(struct RuleSelector* selector) {
     free(selector->element);
-    char* klass;
-    css_iter(klass, selector->klasses) {
-        free(klass);
+    if (selector->klasses) {
+        char* klass;
+        css_iter(klass, selector->klasses) {
+            free(klass);
+        }
     }
     free(selector->klasses);
     free(selector->pseudo_klass);
+    // if (selector->parent) css_free_rule_selector(selector->parent);
     free(selector);
 }
 
 void css_free_objs(struct Obj** objs) {
+    return; // currently todo - without gargabage collector is hard to delete sth
     struct Obj* obj;
     css_iter(obj, objs) {
         css_free_obj(obj);
