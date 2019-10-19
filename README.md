@@ -1,7 +1,7 @@
 # Pixelopolis
 ![oblique](./oblique.png)
 
-*WARNING* - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
+**WARNING** - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
 ## Howto install
 
@@ -151,7 +151,7 @@ void {
 ##### Cube
 
 ```css
-void {
+cube {
     wall: SELECTOR-TO-WALL-OBJ;
     roof: SELECTOR-TO-WALL-OBJ;
     width: NUMBER / PERCENT;
@@ -163,7 +163,7 @@ void {
 ##### Triangle
 
 ```css
-void {
+triangle {
     wall: SELECTOR-TO-WALL-OBJ;
     roof: SELECTOR-TO-WALL-OBJ;
     width: NUMBER / PERCENT;
@@ -175,7 +175,7 @@ void {
 ##### Pyramid
 
 ```css
-void {
+pyramid {
     wall: SELECTOR-TO-WALL-OBJ;
     width: NUMBER / PERCENT;
     height: NUMBER / PERCENT;
