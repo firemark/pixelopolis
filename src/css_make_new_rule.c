@@ -30,10 +30,12 @@ int _match_parent(struct RuleSelector* parent_query, struct RuleSelector* parent
 }
 
 int _match_greedy_parent(struct RuleSelector* parent_query, struct RuleSelector* greedy_parent) {
-    return 1;
     if (!greedy_parent) return 1;
-    if (!parent_query) return 0;
-    return 1;
+    while (parent_query) {
+        if (_match(parent_query, greedy_parent)) return 1;
+        parent_query = parent_query->parent;
+    }
+    return 0;
 }
 
 int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
