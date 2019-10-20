@@ -14,9 +14,17 @@
     </head>
     <body>
         <h1>Pixelopolis</h1>
-        <form method="POST" action="/">
+        <ul class="file-list">
+        {% for file in files -%}
+            <li>
+                <a href="?file={{ file }}">{{ file }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+        <form method="POST">
             <textarea id="data" name="data">{{ data }}</textarea>
             <input type="submit" name="doit.png" />
+            <input type="hidden" name="type" value="{% if is_sass_support %}sass{% endif %}" />
         </form>
         <div class="box">
         {% if img %}

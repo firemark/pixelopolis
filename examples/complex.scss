@@ -1,0 +1,193 @@
+$min-width: 800;
+$max-width: 1200;
+world {
+    width: 1800;
+    height: 800;
+    body: h-series.city-and-road;
+}
+
+h-series.city-and-road {
+    body: cube.road | d-filler.city;
+    width: random($min-width, $max-width);
+    depth: random($min-width, $max-width);
+}
+
+%full-rect {
+    width: 100%;
+    depth: 100%;
+}
+
+d-filler.city {
+    @extend %full-rect;
+    body: h-series.district;
+    padding: 100;
+}
+
+h-series.district {
+    body: cube.sidewalk | v-filler.city;
+    width: 100%;
+    depth: random(100, 300);
+}
+
+cube.road {
+    @extend %full-rect;
+    roof: wall.road;
+    height: 0;
+}
+
+v-filler.city {
+    @extend %full-rect;
+    body: d-filler.row;
+    padding: 50;
+}
+
+d-filler.row {
+    body: choice(
+      house.brick,
+      house.clay,
+      house.wood,
+      house.wood.roman,
+      house.clay.roman
+    );
+    depth: 100%;
+    padding: 100;
+}
+
+cube.sidewalk {
+    @extend %full-rect;
+    roof: wall.grey-brick;
+    wall: wall.grey-brick;
+    height: 5;
+}
+
+house {
+    display: h-series;
+    body: walls | choice(roof.triangle, roof.pyramid);
+    width: random(50, 120);
+    height: random(50, 120);
+
+    roof.triangle { display: triangle; }
+    roof.pyramid { display: pyramid; }
+    walls { display: cube; }
+
+    roof, walls {
+        @extend %full-rect;
+        height: random(30, 80);  
+    }
+
+    &.brick {
+        roof.triangle {
+            wall: wall.brick;
+            roof: wall.wood;
+        }
+        roof.pyramid {
+            wall: wall.wood;
+        }
+        walls {
+            wall: wall.brick.with-windows;
+        }
+    }
+
+    &.clay {
+        roof {
+            wall: wall.clay;
+            roof: wall.clay;
+        }
+        walls { 
+            wall: wall.clay.with-windows;
+        }
+    }
+
+    &.wood {
+        roof {
+            wall: wall.wood;
+            roof: wall.wood;
+        }
+        walls {
+            wall: wall.wood.with-windows;
+        }
+    }
+
+    &.roman {
+        display: h-series;
+        body: d-series | roof.triangle;
+
+        &> d-series {
+            body: roman-fillars | walls;
+            width: 100%;
+            depth: 100%;
+            height: random(40, 80);
+            padding: 20;
+
+            &> walls {
+                width: 100%;
+                depth: 90%;
+                height: 100%;
+            }
+        }
+
+        &> roof {
+            width: 100%;
+            depth: 100%;
+            height: random(20, 30);  
+        }
+    }
+}
+
+roman-fillars {
+    display: v-filler;
+    body: roman-fillar;
+    width: 100%;
+    height: 100%;
+    padding: 20;
+}
+
+roman-fillar {
+    display: cube;
+    wall: wall.clay;
+    width: 5;
+    depth: 10%;
+    height: 100%;
+}
+
+wall.grey-brick { texture: tex.grey-brick; }
+wall.clay { texture: tex.clay; }
+wall.brick { texture: tex.brick; }
+
+wall.with-windows {
+    bottom: floor.door-and-windows;
+    middle: floor.windows;
+    top: floor.top;
+    padding: 4;
+}
+
+wall.top { texture: tex.bar; }
+wall.wood { texture: tex.wood; }
+wall.road { texture: tex.road; }
+
+floor.door-and-windows {
+    middle: choice(null, null, tex.door, tex.window);
+    height: 24;
+    padding: 12;
+}
+
+floor.windows {
+    middle: choice(null, tex.window);
+    height: 12;
+    padding: 12;
+}
+
+floor.top {
+    texture: tex.wood;
+    height: 8;
+}
+
+tex.bar { texture: "textures/bar.png"; }
+tex.brick { texture: "textures/brick.png"; }
+tex.clay { texture: "textures/clay.png"; }
+tex.door { texture: "textures/door.png"; }
+tex.window { texture: "textures/window.png"; }
+tex.bottom { texture: "textures/bottom.png"; }
+tex.road { texture: "textures/road.png"; }
+tex.grey-brick { texture: "textures/grey-brick.png"; }
+tex.wood { texture:  "textures/wood.png"; }

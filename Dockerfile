@@ -10,12 +10,14 @@ RUN apt-get update && apt-get install -y \
     python3-pip
 
 RUN pip3 install flask
+RUN pip3 install libsass
     
 RUN mkdir /code
 ADD Makefile /code/Makefile
 ADD src /code/src
 ADD include /code/include
 ADD textures /code/textures
+ADD examples /code/examples
 ADD web /code/web
 
 WORKDIR /code

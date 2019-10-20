@@ -1,0 +1,31 @@
+world {
+    width: 800;
+    height: 800;
+    body: cube.example;
+}
+
+.example {
+	wall: wall.grey-brick;
+    roof: wall.top;
+    width: 350;
+    depth: 350;
+    height: 150;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    middle: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+wall.top { texture: tex.wood; }
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    padding: 12;
+}
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.window { texture: "textures/window.png"; }
