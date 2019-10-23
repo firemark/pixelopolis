@@ -5,38 +5,36 @@ from glob import iglob
 from sass import compile as sass_compile, CompileError
 app = Flask(__name__)
 
-FILES = list(iglob('examples/*.css')) + list(iglob('examples/*.scss'));
+FILES = list(iglob('examples/*.css'))
 
 @app.route('/', methods=['GET'])
 def get():
-    data, is_sass_support = get_data_from_file()
-    return render_index(data=data, is_sass_support=is_sass_support)
+    data = get_data_from_file()
+    return render_index(data=data)
 
 
 @app.route('/', methods=['POST'])
 def post():
     data = request.form['data']
-    is_sass_support = request.form.get('type') == 'sass'
-    errors, img = run_pixelopolis(data, is_sass_support)
+    errors, img = run_pixelopolis(data)
     return render_index(
         data=data,
         errors=errors, 
         img=img, 
-        is_sass_support=is_sass_support,
     )
 
 
-def get_data_from_file() -> (str, bool):
+def get_data_from_file() -> str:
     if not FILES:
-        return '', False
+        return ''
     filename = request.args.get('file', '') or FILES[0]
     if filename not in FILES:
-        return '', False
+        return ''
     with open(filename) as fp:
-        return fp.read(), filename.endswith('.scss')
+        return fp.read()
 
 
-def render_index(errors=None, data='', img=None, is_sass_support=False):
+def render_index(errors=None, data='', img=None):
     errors = errors or []
     return render_template(
         'index.html', 
@@ -44,16 +42,10 @@ def render_index(errors=None, data='', img=None, is_sass_support=False):
         data=data,
         files=FILES, 
         img=img,
-        is_sass_support=is_sass_support,
     ) 
 
 
-def run_pixelopolis(data, is_sass_support=False):
-    if is_sass_support:
-        try:
-            data = sass_compile(string=data)
-        except CompileError as exp:
-            return [str(exp)], None
+def run_pixelopolis(data):
     try:
         proc = run(
             args=['../pixelopolis', '-', '-'],
