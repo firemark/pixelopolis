@@ -1,5 +1,11 @@
 # Pixelopolis
-![oblique](./oblique.png)
+![oblique](./images/oblique.png)
+
+Transform CSS-like into pixelart city in oblique (yet) projection.
+
+Directory with images: ?
+
+Site with examples: ?
 
 **WARNING** - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
@@ -83,6 +89,13 @@ rule {
 }
 ```
 
+#### Strings
+
+```css
+rule {
+    string: "foobar";
+}
+
 ##### Selectors
 
 ```css
@@ -119,9 +132,9 @@ Each drawObj has width/height/depth properties
 
 ```css
 draw-obj {
-    width: NUMBER / PERCENT; /* default: 50 */
-    height: NUMBER / PERCENT; /* default: 50 */
-    depth: NUMBER / PERCENT; /* default: 50 */
+    width: NUMBER | PERCENT; /* default: 50 */
+    height: NUMBER | PERCENT; /* default: 50 */
+    depth: NUMBER | PERCENT; /* default: 50 */
 }
 ```
 
@@ -130,7 +143,7 @@ This are 2 ways to make CSS rule for drawObj:
 ```css
 /* first way */ draw-obj { /* ... */ }
 /* second way */ customize-element-name { display: draw-obj; /* ... */ }
-/* display has more priority than element name */
+/* display has bigger priority than element name */
 ```
 
 #### Basic
@@ -142,9 +155,9 @@ Just empty cube. Nice to shift another element
 ```css
 void {
     child: SELECTOR-TO-DRAW-OBJ;
-    width: NUMBER / PERCENT;
-    height: NUMBER / PERCENT;
-    depth: NUMBER / PERCENT;
+    width: NUMBER | PERCENT;
+    height: NUMBER | PERCENT;
+    depth: NUMBER | PERCENT;
 }
 ```
 
@@ -154,9 +167,9 @@ void {
 cube {
     wall: SELECTOR-TO-WALL-OBJ;
     roof: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER / PERCENT;
-    height: NUMBER / PERCENT;
-    depth: NUMBER / PERCENT;
+    width: NUMBER | PERCENT;
+    height: NUMBER | PERCENT;
+    depth: NUMBER | PERCENT;
 }
 ```
 
@@ -166,9 +179,9 @@ cube {
 triangle {
     wall: SELECTOR-TO-WALL-OBJ;
     roof: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER / PERCENT;
-    height: NUMBER / PERCENT;
-    depth: NUMBER / PERCENT;
+    width: NUMBER | PERCENT;
+    height: NUMBER | PERCENT;
+    depth: NUMBER | PERCENT;
 }
 ```
 
@@ -177,9 +190,9 @@ triangle {
 ```css
 pyramid {
     wall: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER / PERCENT;
-    height: NUMBER / PERCENT;
-    depth: NUMBER / PERCENT;
+    width: NUMBER | PERCENT;
+    height: NUMBER | PERCENT;
+    depth: NUMBER | PERCENT;
 }
 ```
 
@@ -215,6 +228,14 @@ We have a tree types of fillers obj:
 * `d-filler` - depth (on y-axis)
 * `h-filler` - height (on z-axis)
 
+```css
+v-filler {
+    body: SELECTOR;
+    padding: NUMBER; /* optional */
+    
+}
+```
+
 ### Wall
 
 ### Floor
@@ -227,13 +248,14 @@ We have a tree types of fillers obj:
 * [ ] EASY CSS Comments
 * [ ] HARD City / Road / Place planner
 * [ ] HARD Customizing shape of buildings
-* [ ] HARD Parent CSS selector
+* [x] HARD Parent CSS selector
 * [ ] MID More projections like perspective
 * [ ] MID Flat sprites (like in DOOM game) like grass, trees etc
 * [ ] MID More attributes for DrawObj like customize padding, margin 
 * [ ] MID Mixing textures
 * [ ] HARD Normal shader for textures
 * [ ] HARD rotation
+* [ ] HARD Sass-like operator
 * [ ] NO-MERCY Opengl + shaders support
 * [ ] IMPOSIBRU Refactoring
 

@@ -1,36 +1,48 @@
 from flask import Flask, request, render_template, url_for
 from subprocess import run, TimeoutExpired, PIPE
 from base64 import b64encode
-from glob import iglob
 from sass import compile as sass_compile, CompileError
+
 app = Flask(__name__)
 
-FILES = list(iglob('examples/*.css'))
+FILES = {
+    'Cube': 'examples/cube.css',
+    'Pyramid': 'examples/pyramid.css',
+    'Triangle': 'examples/triangle.css',
+    'Series': 'examples/series.css',
+    'Complex': 'examples/complex.css',
+}
+
 
 @app.route('/', methods=['GET'])
 def get():
     data = get_data_from_file()
-    return render_index(data=data)
+    return render_and_run(data)
+
+
+@app.route('/examples/<filename>', methods=['GET'])
+def get_example(filename):
+    data = get_data_from_file(filename)
+    return render_and_run(data)
 
 
 @app.route('/', methods=['POST'])
 def post():
     data = request.form['data']
-    errors, img = run_pixelopolis(data)
-    return render_index(
-        data=data,
-        errors=errors, 
-        img=img, 
-    )
+    return render_and_run(data)
 
 
-def get_data_from_file() -> str:
+def get_data_from_file(filename=None) -> str:
     if not FILES:
         return ''
-    filename = request.args.get('file', '') or FILES[0]
-    if filename not in FILES:
+
+    if filename is None:
+        filename = 'Cube'
+
+    path = FILES.get(filename)
+    if path is None:
         return ''
-    with open(filename) as fp:
+    with open(path) as fp:
         return fp.read()
 
 
@@ -66,3 +78,12 @@ def run_pixelopolis(data):
     if proc.returncode != 0:
         errors = [f'sth is wrong (errocode {proc.returncode})'] + errors
     return errors, img
+
+
+def render_and_run(data):
+    errors, img = run_pixelopolis(data)
+    return render_index(
+        data=data,
+        errors=errors, 
+        img=img, 
+    )

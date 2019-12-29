@@ -2,44 +2,104 @@
     <head>
         <title>Pixelopolis</title>
         <link rel=stylesheet href="https://codemirror.net/lib/codemirror.css" />
+        <link rel=stylesheet href="https://codemirror.net/theme/dracula.css" />
         <script src="https://codemirror.net/lib/codemirror.js"></script>
         <script src="https://codemirror.net/mode/css/css.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://unpkg.com/purecss@1.0.1/build/pure-min.css"
+            integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47"
+            crossorigin="anonymous"
+        />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
-            body { background-color: grey; }
-            form { float: left; width: 50%; }
-            .CodeMirror { font-size: 12pt; height: 800px; }
-            .box { float: left; width: 50%; height: 800px; overflow: auto; }
-            .errs { float: left; width: 100%; max-height: 100px; overflow-y: auto; }
+            body { background-color: #35213f; color: white; } 
+            .CodeMirror { font-size: 10pt; height: calc(100vh - 250px); width: 100%; }
+            .errs { height: 100px; overflow-y: auto; color: #d77355; }
+            .image-box { height: calc(100vh - 150px); overflow: auto; }
+            .header > .pure-menu { height: 35px; }
+            .pure-menu, .pure-menu-children { background-color: #55415f; color: white; }
+            .pure-menu-item { height: inherit; }
+            .pure-menu-link, .pure-menu-heading { color: white; }
+            .pure-menu-link:hover, .pure-menu-heading:hover { background-color: #e6c86e; }
+            .image-box::-webkit-scrollbar { background: #55415f; }
+            .image-box::-webkit-scrollbar-thumb { background: #55415f; }
+            .image-box::-webkit-scrollbar-track { background: #35213f; }
         </style>
+        <script>
+            function scrollToBottom() {
+                var objDiv = document.getElementById("image-box");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+        </script>
     </head>
     <body>
-        <h1>Pixelopolis</h1>
-        <ul class="file-list">
-        {% for file in files -%}
-            <li>
-                <a href="?file={{ file }}">{{ file }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-        <form method="POST">
-            <textarea id="data" name="data">{{ data }}</textarea>
-            <input type="submit" name="doit.png" />
-        </form>
-        <div class="box">
-        {% if img %}
-            <img src="data:image/png;base64,{{ img }}" alt="result" />
-        {% endif %}
+        <div class="header">
+            <div class="pure-menu pure-menu-horizontal">
+                <a class="pure-menu-heading" href="/">Pixelopolis</a>
+
+                <ul class="pure-menu-list">
+                    <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                        <a class="pure-menu-link">Examples</a>
+                        <ul class="pure-menu-children">
+                        {% for file in files -%}
+                            <li class="pure-menu-item">
+                                <a class="pure-menu-link" href="/examples/{{ file }}">{{ file }}</a>
+                            </li>
+                        {%- endfor %}
+                        </ul>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a class="pure-menu-link" href="https://github.com/firemark/pixelopolis/blob/master/README.md" target="_blank">README</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a class="pure-menu-link" href="https://github.com/firemark/pixelopolis" target="_blank">Source</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <pre class="errs">
-        {% for err in errors -%} 
-            <strong>{{ err }}</strong>
-        {% endfor %}
-        </pre>
+        <div class="content pure-g">
+            <div class="pure-u-2-5 pure-u-md-5-5">
+                <form action="/" method="POST" class="pure-form pure-form-stacked">
+                    <fieldset>
+                        <textarea id="data" name="data">{{ data }}</textarea>
+                    </fieldset>
+                    <fieldset>
+                        <button
+                            type="submit"
+                            name="doit.png"
+                            class="pure-button pure-button-primary"
+                        >
+                            Send
+                        </button>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="pure-u-3-5 pure-u-md-5-5 image-box" id="image-box">
+            {% if img %}
+                <img src="data:image/png;base64,{{ img }}" alt="result" />
+            {% endif %}
+            </div>
+            {% if img %}
+            <script> scrollToBottom(); </script>
+            {% endif %}
+        </div>
+        <div class="pure-g">
+            <pre class="errs pure-u-5-5">
+            {% for err in errors -%}
+                <strong>{{ err }}</strong>
+            {%- endfor %}
+            </pre>
+        </div>
         <script>
             var textarea = document.querySelector('#data');
             var editor = CodeMirror.fromTextArea(textarea, {
                 lineNumbers: true,
                 mode: "css",
+                theme: "dracula",
+                lineNumbers: true,
+                lineWrapping: true,
+                indentUnit: 4,
             });
         </script>
     </body>
