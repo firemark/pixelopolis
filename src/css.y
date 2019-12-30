@@ -228,7 +228,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 
 %token
     START_BODY END_BODY START_FUNC END_FUNC
-    COLON SEMICOLON PIPE COMMA PERCENT
+    COLON SEMICOLON COMMA PERCENT
     ADD_OP SUB_OP MUL_OP DIV_OP PARENT_OP
     SPACE
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
@@ -295,7 +295,7 @@ prop:
 
 objs:
         obj { make_array(struct Obj, OBJS_SIZE, $1); $$ = arr; }
-        | objs PIPE sp obj { append_to_array($1, OBJS_SIZE, $4); $$ = $1; }
+        | objs COMMA sp obj { append_to_array($1, OBJS_SIZE, $4); $$ = $1; }
         ;
 
 obj:

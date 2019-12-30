@@ -40,7 +40,6 @@ int chars = 1;
 ;                           count_chars; return SEMICOLON;
 ,                           count_chars; return COMMA;
 %                           count_chars; return PERCENT;
-\|                          count_chars; return PIPE;
 \*                          count_chars; return MUL_OP;
 \/                          count_chars; return DIV_OP;
 \+                          count_chars; return ADD_OP;

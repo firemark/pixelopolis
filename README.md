@@ -53,7 +53,7 @@ Pixelopolis has css-like syntax (not fully supported CSS2, *yet*)
 ```css
 RULE {
     property: <OBJ>;
-    property: <OBJ1> | <OBJ2>; /* array of N elements */
+    property: <OBJ1>, <OBJ2>; /* array of N elements */
     property: <OBJ>;
     /* ... */
 }
@@ -102,7 +102,7 @@ rule {
 rule { 
     child: child-rule.child-class;
     another_child: child-rule;
-    children: child-rule | child-rule.class | child-rule;
+    children: child-rule, child-rule.class, child-rule;
 }
 ```
 
@@ -211,7 +211,7 @@ We have a tree types of series obj:
 
 ```css
 v-series { /* or d-series or h-series */
-    body: SELECTOR1 | SELECTOR2 | ...;
+    body: SELECTOR1, SELECTOR2, ...;
     padding: NUMBER; /* optional */
     width: NUMBER / PERCENT; /* optional */
     height: NUMBER / PERCENT; /* optional */
@@ -232,7 +232,6 @@ We have a tree types of fillers obj:
 v-filler {
     body: SELECTOR;
     padding: NUMBER; /* optional */
-    
 }
 ```
 
