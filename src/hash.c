@@ -14,20 +14,20 @@ unsigned long djb2(char *str) {
     return hash;
 }
 
-void _fill_null(struct HashMap* map, int old_size, int new_size) {
-    map->max_size = new_size;
+void _fill_null(struct HashStrItem **items, int new_size) {
     int i;
-    for(i = old_size; i < new_size; i++) {
-        map->items[i] = NULL;
+    for(i = 0; i < new_size; i++) {
+        items[i] = NULL;
     }
 }
 
 struct HashMap* hash_make(void) {
     struct HashMap* map = malloc(sizeof (struct HashMap));
-    int size = 64;
-    map->items = malloc(sizeof (struct HashStrItem*) * size);
+    int max_size = 32;
+    map->items = malloc(sizeof (struct HashStrItem*) * max_size);
     map->size = 0;
-    _fill_null(map, 0, size);
+    map->max_size = max_size;
+    _fill_null(map->items, max_size);
     return map;
 }
 
@@ -42,6 +42,7 @@ void* _remove(struct HashMap* map, int index) {
 int _insert(struct HashMap* map, char* key, void* value, int index) {
     struct HashStrItem *item = malloc(sizeof (struct HashStrItem)); 
     if (!item) return -1;
+
     map->items[index] = item;
     item->key = key;
     item->value = value;
@@ -52,15 +53,34 @@ unsigned long _probing(unsigned long hash, unsigned long shift) {
     return hash + shift * shift + 3L * shift;
 }
 
-void _resize_if_need(struct HashMap* map) {
+int _resize_if_need(struct HashMap* map) {
     float load = (float)(map->size) / (float)(map->max_size);
-    if (load < 0.8) return;
+    if (load < 0.8) return 0;
     int old_size = map->max_size;
     int new_size = old_size * 2;
     int i;
 
-    map->items = realloc(map->items, sizeof (struct HashStrItem*) * new_size);
-    _fill_null(map, old_size, new_size);
+    struct HashStrItem **new_items = malloc(sizeof (struct HashStrItem*) * new_size);
+    _fill_null(new_items, new_size);
+
+    struct HashStrItem *item;
+    hash_iter(item, map) { // make new table because index has changed
+        unsigned long hash = djb2(item->key);
+        unsigned long shift = 0;
+        int index;
+        for(;;) {
+            index = _probing(hash, shift++) % new_size;
+            if (!new_items[index]) {
+                new_items[index] = item;
+                break;
+            }
+        }
+    }
+
+    free(map->items);
+    map->items = new_items;
+    map->max_size = new_size;
+    return -1;
 }
 
 int if_key_eq(struct HashStrItem* item, char* key) {
@@ -77,7 +97,9 @@ int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) 
         index = _probing(hash, shift) % map->max_size;
         item = map->items[index];
         if (!item) {
-            _resize_if_need(map);
+            if (_resize_if_need(map)) {
+                continue;
+            }
             map->size++;
             if (removed_value) *removed_value = NULL;
             return _insert(map, key, value, index);
