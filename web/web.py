@@ -9,7 +9,9 @@ FILES = {
     'Cube': 'examples/cube.css',
     'Pyramid': 'examples/pyramid.css',
     'Triangle': 'examples/triangle.css',
+    'Fillers': 'examples/fillers.css',
     'Series': 'examples/series.css',
+    'Random': 'examples/random.css',
     'Complex': 'examples/complex.css',
 }
 

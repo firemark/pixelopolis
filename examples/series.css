@@ -56,7 +56,6 @@ wall.windows {
     padding: 4;
 }
 
-
 floor.windows {
     middle: tex.window;
     height: 12;

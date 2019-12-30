@@ -1,0 +1,32 @@
+world {
+    width: 800;
+    height: 800;
+    body: cubes;
+}
+
+cubes {
+    display: v-series;
+    body: 
+        cube.random, 
+        cube.random, 
+        cube.random, 
+        cube.random, 
+        cube.random;
+    padding: 50;
+}
+
+cube.random {
+    wall: choice(wall.grey-brick, wall.red-brick);
+    roof: wall.wood;
+    width: random(50, 100);
+    depth: random(100, 200);
+    height: random(20, 100);
+}
+
+wall.grey-brick { texture: tex.grey-brick; }
+wall.red-brick { texture: tex.red-brick; }
+wall.wood { texture: tex.wood; }
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.red-brick { texture:  "textures/brick.png"; }
