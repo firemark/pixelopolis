@@ -24,7 +24,7 @@ void _fill_null(struct HashMap* map, int old_size, int new_size) {
 
 struct HashMap* hash_make(void) {
     struct HashMap* map = malloc(sizeof (struct HashMap));
-    int size = 32;
+    int size = 64;
     map->items = malloc(sizeof (struct HashStrItem*) * size);
     map->size = 0;
     _fill_null(map, 0, size);

@@ -1,0 +1,100 @@
+world {
+    width: 800;
+    height: 800;
+    body: city;
+}
+
+city {
+    display: h-series;
+    body: road | v-series.example;
+    width: 450;
+    depth: 450;
+}
+
+v-series.example {
+    body: d-series.example1 | d-series.example2 | d-series.example1;
+    padding: 80;
+}
+
+d-series.example1 {
+    body: h-series.example1 | h-series.example2 | house.grey;
+    depth: 50;
+    padding: 40;
+}
+
+d-series.example2 {
+    body: house.red | house.grey.red-roof;
+    depth: 50;
+    padding: 70;
+}
+
+h-series.example1 {
+    body: house.grey | house.red.red-roof;
+    width: 100%;
+    depth: 100%;
+}
+
+h-series.example2 {
+    body: house.red | house.grey;
+    width: 100%;
+    depth: 100%;
+}
+
+house {
+    display: cube;
+    width: 80;
+    depth: 80;
+    height: 150;
+}
+
+house.grey {
+	wall: wall.grey-brick;
+    roof: wall.top;
+}
+
+house.red {
+	wall: wall.red-brick;
+    roof: wall.top;
+}
+
+house.red-roof {
+    roof: wall.red-only;
+}
+
+road {
+    display: cube;
+	wall: wall.grey-only;
+    roof: wall.grey-only;
+    width: 100%;
+    depth: 100%;
+    height: 5;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    middle: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+wall.red-brick {
+    texture: tex.red-brick;
+    middle: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+wall.grey-only { texture: tex.grey-brick; }
+wall.red-only { texture: tex.red-brick; }
+wall.top { texture: tex.wood; }
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    padding: 12;
+}
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.red-brick { texture:  "textures/brick.png"; }
+tex.window { texture: "textures/window.png"; }

@@ -1,0 +1,15 @@
+world {
+    width: 800;
+    height: 800;
+    body: pyramid.example;
+}
+
+pyramid.example {
+	wall: wall.wood;
+    width: 350;
+    depth: 350;
+    height: 150;
+}
+
+wall.wood { texture: tex.wood; padding: 4; }
+tex.wood { texture: "textures/wood.png"; }

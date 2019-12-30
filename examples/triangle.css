@@ -1,0 +1,36 @@
+world {
+    width: 800;
+    height: 800;
+    body: triangle.example;
+}
+
+triangle.example {
+	wall: wall.grey-brick;
+    roof: wall.top;
+    width: 350;
+    depth: 350;
+    height: 150;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+wall.top { 
+    texture: tex.wood; 
+    top: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    padding: 12;
+}
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.window { texture: "textures/window.png"; }
