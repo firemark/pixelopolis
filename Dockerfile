@@ -21,11 +21,12 @@ ADD web /code/web
 
 WORKDIR /code
 ARG VERSION=PROD
-RUN make all VERSION=$VERSION
+RUN make all
 
 WORKDIR /code/web
 ENV FLASK_APP=web.py
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+ENV PORT=80
 EXPOSE 80
-CMD python3 -m flask run -h 0.0.0.0 -p 80
+CMD python3 -m flask run -h 0.0.0.0 -p $PORT

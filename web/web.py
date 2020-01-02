@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, url_for
 from subprocess import run, TimeoutExpired, PIPE
 from base64 import b64encode
-from sass import compile as sass_compile, CompileError
 
 app = Flask(__name__)
 
