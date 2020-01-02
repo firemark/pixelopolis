@@ -12,7 +12,7 @@
 #define _CSS_CONCAT(a, b) a ## b
 #define css_iter(obj, container) \
     int CSS_CONCAT( css_iter_i, __LINE__ ) = 0; \
-    while(obj = container[CSS_CONCAT(css_iter_i, __LINE__)++])
+    while((obj = container[CSS_CONCAT(css_iter_i, __LINE__)++]))
 #define OBJ_DYNAMIC (1 << 5)
 #define OBJ_BINARY_OP (1 << 4)
 

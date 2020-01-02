@@ -8,7 +8,7 @@ unsigned long djb2(char *str) {
     unsigned long hash = 5381;
     int c;
 
-    while (c = *str++)
+    while ((c = *str++))
         hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
@@ -53,21 +53,18 @@ unsigned long _probing(unsigned long hash, unsigned long shift) {
     return hash + shift * shift + 3L * shift;
 }
 
-int _resize_if_need(struct HashMap* map) {
-    float load = (float)(map->size) / (float)(map->max_size);
-    if (load < 0.8) return 0;
-    int old_size = map->max_size;
-    int new_size = old_size * 2;
-    int i;
-
+struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
+    // make new table because index has changed
     struct HashStrItem **new_items = malloc(sizeof (struct HashStrItem*) * new_size);
     _fill_null(new_items, new_size);
 
+    unsigned long hash; 
+    unsigned long shift;
+    int index;
     struct HashStrItem *item;
-    hash_iter(item, map) { // make new table because index has changed
-        unsigned long hash = djb2(item->key);
-        unsigned long shift = 0;
-        int index;
+    hash_iter(item, map) { 
+        hash = djb2(item->key);
+        shift = 0;
         for(;;) {
             index = _probing(hash, shift++) % new_size;
             if (!new_items[index]) {
@@ -76,6 +73,17 @@ int _resize_if_need(struct HashMap* map) {
             }
         }
     }
+
+    return new_items;
+}
+
+int _resize_if_need(struct HashMap* map) {
+    float load = (float)(map->size) / (float)(map->max_size);
+    if (load < 0.8) return 0;
+    int old_size = map->max_size;
+    int new_size = old_size * 2;
+
+    struct HashStrItem** new_items = _hash_cpy_items(new_size, map);
 
     free(map->items);
     map->items = new_items;

@@ -178,7 +178,7 @@ struct Obj* _make_obj_as_op(enum ObjType type, struct Obj* left, struct Obj* rig
 
 #define APPEND_OP(name, op) \
     struct Obj* make_obj_as_ ## name(struct Obj* left, struct Obj* right) {\
-        _make_obj_as_op(op, left, right);\
+        return _make_obj_as_op(op, left, right);\
     }
 
 APPEND_OP(add, OBJ_ADD)

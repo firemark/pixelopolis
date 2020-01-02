@@ -405,7 +405,7 @@ void _css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
 
     struct DrawObj* middle = NULL;
     int index = 0;
-    while(middle = draw_objs[index++]) {
+    while((middle = draw_objs[index++])) {
         _draw_component_in_series(obj, middle, &draw_info, out_vox, 1);
     }
 

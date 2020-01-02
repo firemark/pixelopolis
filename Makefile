@@ -12,9 +12,9 @@ TEST_LIBS = -lm -lpng -lcheck
 INCLUDES = -Iinclude
 
 ifeq ($(VERSION),PROD)
-FLAGS = -O3 -g
+FLAGS = -O3 -g -Wall
 else
-FLAGS = -g #-fsanitize=address,undefined
+FLAGS = -g -Wall #-fsanitize=address,undefined
 endif
 
 all: make_dirs yacc pixelopolis

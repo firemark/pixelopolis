@@ -12,7 +12,6 @@ void css_debug_program(FILE* fp, struct Program* program) {
 }
 
 void css_debug_rule(FILE* fp, struct Rule* rule) {
-    int i = 0;
     css_debug_rule_selector(fp, rule->selector);
     fprintf(fp, " {\n");
     struct HashStrItem* item;

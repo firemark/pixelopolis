@@ -113,7 +113,7 @@ int _get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirecti
     }
 }
 
-int _add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x) {
+void _add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x) {
     switch(fill_direction) {
         case VERTICAL_FILL: basic->width += x; break;
         case HORIZONTAL_FILL: basic->height += x; break;
@@ -121,7 +121,7 @@ int _add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirecti
     }
 }
 
-int _add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction) {
+void _add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction) {
     switch(fill_direction) {
         case VERTICAL_FILL: 
             a->width += b->width;
@@ -255,7 +255,6 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     int padding = filler->padding;
     struct DrawObj** objs = malloc(sizeof(struct DrawObj*) * MAX_ELEMENTS);
     struct Rule* rule = helper->rule;
-    struct Program* program = helper->program;
     enum FillDirection fill_direction = filler->fill_direction;
 
     struct DrawObj* left = NULL; 

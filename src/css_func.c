@@ -68,39 +68,30 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name) {
     struct Obj* obj = css_find_1st_obj(rule, name);
     if (!obj) return NULL;
     if (obj->type != OBJ_RULE) return NULL;
-
     return (struct RuleSelector*)obj->value;
+}
+
+char* _css_cpy_str(char* old) {
+    if (old == NULL) {
+        return NULL;
+    }
+    size_t size = strlen(old) + 1;
+    char* new = malloc(sizeof(char) * size);
+    memcpy(new, old, size);
+    return new;
 }
 
 struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
     struct RuleSelector* selector = malloc(sizeof(struct RuleSelector));
 
-    if (old->element) {
-        selector->element = malloc(sizeof(char) * strlen(old->element));
-        strcpy(selector->element, old->element);
-    } else {
-        selector->element = NULL;
-    }
-
-    if (old->pseudo_klass) {
-        selector->pseudo_klass = malloc(sizeof(char) * strlen(old->pseudo_klass));
-        strcpy(selector->pseudo_klass, old->pseudo_klass);
-    } else {
-        selector->pseudo_klass = NULL;
-    }
+    selector->element = _css_cpy_str(old->element);
+    selector->pseudo_klass = _css_cpy_str(old->pseudo_klass); 
 
     if (old->klasses) {
         size_t i;
         selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
         for(i = 0; i < KLASSES_SIZE; i++) { // cpy klasses
-            char* old_klass = old->klasses[i];
-            if (!old_klass) {
-                selector->klasses[i] = NULL;
-                continue;
-            }
-            char* new_klass = malloc(sizeof(char) * strlen(old_klass));
-            strcpy(new_klass, old_klass);
-            selector->klasses[i] = new_klass;
+            selector->klasses[i] = _css_cpy_str(old->klasses[i]);
         }
     } else {
         selector->klasses = NULL;
@@ -108,4 +99,5 @@ struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
 
     selector->parent = old->parent ? css_cpy_selector(old->parent) : NULL;
     selector->greedy_parent = old->greedy_parent ? css_cpy_selector(old->greedy_parent) : NULL;
+    return selector;
 }

@@ -135,7 +135,7 @@ void flat_image_copy(struct FlatImage* img, struct FlatImage* filler, int img_x,
 }
 
 struct FlatImage* flat_image_read_png_file(char* file_name) {
-    char header[8];
+    unsigned char header[8];
     FILE *fp = NULL;
     png_structp png_ptr = NULL;
     png_infop info_ptr = NULL;
@@ -148,8 +148,8 @@ struct FlatImage* flat_image_read_png_file(char* file_name) {
         goto finalize;
     }
 
-    fread(header, 1, 8, fp);
-    if (png_sig_cmp(header, 0, 8)) {
+    size_t header_size = fread(header, 1, 8, fp);
+    if (header_size != 8 || png_sig_cmp(header, 0, 8)) {
         fprintf(stderr, "File %s is not a valid PNG\n", file_name);
         goto finalize;
     }
@@ -195,7 +195,7 @@ struct FlatImage* flat_image_read_png_file(char* file_name) {
         goto finalize;
     }
 
-    int number_of_passes = png_set_interlace_handling(png_ptr);
+    //int number_of_passes = png_set_interlace_handling(png_ptr);
     png_read_update_info(png_ptr, info_ptr);
 
     if (setjmp(png_jmpbuf(png_ptr))) {

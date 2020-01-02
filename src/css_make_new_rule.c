@@ -43,7 +43,7 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
     char* pseudo_klass = query->pseudo_klass;
 
     if (iter_query->element) {
-        if (!element || strcmp(element, iter_query->element))
+        if (!element || strcmp(element, iter_query->element) != 0)
             return 0;
     }
 
