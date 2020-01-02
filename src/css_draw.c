@@ -92,7 +92,7 @@ struct FlatImage* _make_texture_from_wall(struct WallObj *obj, int width, int he
         int tex_height = 0;
         if (middle) {
             _draw_floor_on_texture(img, middle, start_height, VALIGN_BOTTOM);
-            tex_height = _get_height_of_floor(bottom);
+            tex_height = _get_height_of_floor(middle);
         } else {
             tex_height = 12;
         }

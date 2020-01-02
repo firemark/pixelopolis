@@ -15,7 +15,6 @@ cube.example {
 wall.grey-brick {
     texture: tex.grey-brick;
     middle: floor.windows;
-    bottom: floor.windows;
     padding: 4;
 }
 

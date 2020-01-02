@@ -21,7 +21,6 @@ wall.grey-brick {
 wall.top { 
     texture: tex.wood; 
     top: floor.windows;
-    bottom: floor.windows;
     padding: 4;
 }
 
