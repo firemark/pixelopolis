@@ -28,7 +28,7 @@ struct image* make_img(struct Rule *world) {
 }
 
 void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
-    int vox[3] = {32, 32, 64};
+    int vox[3] = {0, 0, 0};
     struct DrawInfo draw_info = {
         .img=img,
         .vox=vox,
@@ -57,12 +57,7 @@ int main(int argc, char **argv) {
     struct image *img = make_img(world_rule);
     draw(draw_obj, world_rule, img);
 
-    if (!strcmp(out_filename, "-")) {
-        write_png_file(stdout, img);
-        return 0;
-    } 
-
-    FILE *fp = fopen(out_filename, "wb");
+    FILE *fp = strcmp(out_filename, "-") ? fopen(out_filename, "wb") : stdout;
     if (!fp) {
         fprintf(stderr, "Problem with creating file %s\n", out_filename);
         return -1;

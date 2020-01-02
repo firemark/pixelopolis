@@ -3,9 +3,7 @@
 
 Transform CSS-like into pixelart city in oblique (yet) projection.
 
-Directory with images: ?
-
-Site with examples: ?
+Site with examples: https://pixelopolis.herokuapp.com
 
 **WARNING** - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
@@ -213,9 +211,9 @@ We have a tree types of series obj:
 v-series { /* or d-series or h-series */
     body: SELECTOR1, SELECTOR2, ...;
     padding: NUMBER; /* optional */
-    width: NUMBER / PERCENT; /* optional */
-    height: NUMBER / PERCENT; /* optional */
-    depth: NUMBER / PERCENT; /* optional */
+    width: NUMBER | PERCENT; /* optional */
+    height: NUMBER | PERCENT; /* optional */
+    depth: NUMBER | PERCENT; /* optional */
 }
 ```
 
@@ -237,26 +235,67 @@ v-filler {
 
 ### Wall
 
+Rule to draw texture and specified floors on the wall. Used in objects.
+
+```css
+wall {
+    texture: SELECTOR-TO-TEX-OBJ;
+    top: SELECTOR-TO-FLOOR-OBJ; /* optional */
+    middle: SELECTOR-TO-FLOOR-OBJ; /* optional */
+    bottom: SELECTOR_TO_FLOOR_OBJ; /* optional */
+    padding: NUMBER; /* optional - padding between floors */
+}
+```
+
 ### Floor
 
+Rule to draw textures or/and set height on the floor.
+
+```css
+floor {
+    left: SELECTOR-TO-TEX-OBJ;
+    middle: SELECTOR-TO-TEX-OBJ;
+    right: SELECTOR-TO-TEX-OBJ;
+    padding: NUMBER; /* optional - padding between textures */
+}
+```
+
 ### Texture
+
+Rule to load image from file
+
+```css
+tex {
+    texture: STRING;
+}
+```
 
 ## TODOS
 
 * [ ] EASY More DrawObj structures like city wall, stairs, cone, cylinder etc.
+* [ ] EASY Support colors instead of textures
+* [ ] EASY Background texture
 * [ ] EASY CSS Comments
-* [ ] HARD City / Road / Place planner
-* [ ] HARD Customizing shape of buildings
-* [x] HARD Parent CSS selector
 * [ ] MID More projections like perspective
 * [ ] MID Flat sprites (like in DOOM game) like grass, trees etc
 * [ ] MID More attributes for DrawObj like customize padding, margin 
 * [ ] MID Mixing textures
+* [ ] MID Gradient in textures
 * [ ] HARD Normal shader for textures
-* [ ] HARD rotation
+* [ ] HARD Rotation
 * [ ] HARD Sass-like operator
+* [ ] HARD City / Road / Place planner
+* [ ] HARD Customizing shape of buildings
+* [x] HARD Parent CSS selector
 * [ ] NO-MERCY Opengl + shaders support
 * [ ] IMPOSIBRU Refactoring
+
+
+## Changelog
+
+### 0.0.1
+
+* Everything.
 
 ## Contributors
 
