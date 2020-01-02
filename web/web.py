@@ -38,7 +38,7 @@ def get_data_from_file(filename=None) -> str:
         return ''
 
     if filename is None:
-        filename = 'Cube'
+        filename = 'Complex'
 
     path = FILES.get(filename)
     if path is None:
