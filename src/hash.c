@@ -37,10 +37,10 @@ void* _remove(struct HashMap* map, int index) {
     map->items[index] = NULL;
     free(item);
     return value;
-} 
+}
 
 int _insert(struct HashMap* map, char* key, void* value, int index) {
-    struct HashStrItem *item = malloc(sizeof (struct HashStrItem)); 
+    struct HashStrItem *item = malloc(sizeof (struct HashStrItem));
     if (!item) return -1;
 
     map->items[index] = item;
@@ -58,11 +58,11 @@ struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     struct HashStrItem **new_items = malloc(sizeof (struct HashStrItem*) * new_size);
     _fill_null(new_items, new_size);
 
-    unsigned long hash; 
+    unsigned long hash;
     unsigned long shift;
     int index;
     struct HashStrItem *item;
-    hash_iter(item, map) { 
+    hash_iter(item, map) {
         hash = djb2(item->key);
         shift = 0;
         for(;;) {

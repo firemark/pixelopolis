@@ -17,36 +17,32 @@ void* hash_get(struct HashMap* map, char* key);
 void hash_update(struct HashMap* map, struct HashMap* other);
 void hash_destroy(struct HashMap* map);
 
-#define HASH_CONCAT(a, b) _HASH_CONCAT(a, b)
+#define HASH_LINE(a) _HASH_CONCAT(a, __LINE__)
 #define _HASH_CONCAT(a, b) a ## b
 
+#define _hash_iter(map) \
+    int HASH_LINE(hash_iter_i); \
+    for (HASH_LINE(hash_iter_i) = 0; \
+         HASH_LINE(hash_iter_i) < map->max_size; \
+         HASH_LINE(hash_iter_i)++)
+
+#define _hash_item(map) map->items[HASH_LINE(hash_iter_i)]
+
 #define hash_iter(obj, map) \
-    int HASH_CONCAT(hash_iter_i, __LINE__) = 0; \
-    for ( \
-            obj = map->items[0]; \
-            HASH_CONCAT(hash_iter_i, __LINE__) < map->max_size; \
-            obj = map->items[++HASH_CONCAT(hash_iter_i, __LINE__)] \
-        ) \
-        if (obj)
+    _hash_iter(map) if ( \
+        (obj = _hash_item(map)) \
+    )
 
 #define hash_iter_values(obj, map) \
-    int HASH_CONCAT(hash_iter_i, __LINE__) = 0; \
-    struct HashStrItem* HASH_CONCAT(hash_item, __LINE__); \
-    for ( \
-            HASH_CONCAT(hash_item, __LINE__) = map->items[0]; \
-            HASH_CONCAT(hash_iter_i, __LINE__) < map->max_size; \
-            HASH_CONCAT(hash_item, __LINE__) = map->items[++HASH_CONCAT(hash_iter_i, __LINE__)] \
-        ) \
-        if((obj = HASH_CONCAT(hash_item, __LINE__) ? \
-                  HASH_CONCAT(hash_item, __LINE__)->value : NULL ))
+    struct HashStrItem* HASH_LINE(hash_item); \
+    _hash_iter(map) if ( \
+        (HASH_LINE(hash_item) = _hash_item(map)), \
+        (obj = HASH_LINE(hash_item) ? HASH_LINE(hash_item)->value : NULL) \
+    )
 
 #define hash_iter_keys(obj, map) \
-    int HASH_CONCAT(hash_iter_i, __LINE__) = 0; \
-    struct HashStrItem* HASH_CONCAT(hash_item, __LINE__); \
-    for ( \
-            HASH_CONCAT(hash_item, __LINE__) = map->items[0]; \
-            HASH_CONCAT(hash_iter_i, __LINE__) < map->max_size; \
-            HASH_CONCAT(hash_item, __LINE__) = map->items[++HASH_CONCAT(hash_iter_i, __LINE__)] \
-        ) \
-        if ((obj = HASH_CONCAT(hash_item, __LINE__) ? \
-                   HASH_CONCAT(hash_item, __LINE__)->key : NULL))
+    struct HashStrItem* HASH_LINE(hash_item); \
+    _hash_iter(map) if ( \
+        (HASH_LINE(hash_item) = _hash_item(map)), \
+        (obj = HASH_LINE(hash_item) ? HASH_LINE(hash_item)->key : NULL) \
+    )
