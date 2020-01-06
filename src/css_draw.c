@@ -41,27 +41,13 @@ void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int hei
     flat_image_fill_column(img, texture, height);
 
 without_texture:;
-    int start_width = 0;
-    struct TexObj *left = obj->left;
-    if (left && left->texture) {
-        flat_image_copy(img, left->texture, height, start_width);
-        start_width += left->texture->width + obj->padding;
-    }
-
-    struct TexObj *right = obj->right;
-    if (right && right->texture) {
-        flat_image_copy(img, right->texture, img->width - right->texture->width, height);
-    }
-
     size_t obj_index;
     for(obj_index = 0; obj_index < obj->objs_size; obj_index++) {
-        struct TexObj *middle = obj->objs[obj_index];
-        if (!middle || !middle->texture) {
-            start_width += 12 + obj->padding;
-            continue;
-        }
-        flat_image_copy(img, middle->texture, start_width, height);
-        start_width += middle->texture->width + obj->padding;
+        struct ShiftTexPair* pair = obj->objs[obj_index];
+        struct TexObj* tex = pair->obj;
+        int shift = pair->shift;
+        if (!tex || !tex->texture) continue;
+        flat_image_copy(img, tex->texture, shift, height);
     }
 }
 

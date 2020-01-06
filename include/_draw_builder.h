@@ -36,6 +36,7 @@ int builder_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum Fill
 void builder_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x);
 void builder_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction);
 void builder_max_basic(struct BasicObj *a, struct BasicObj *b);
+struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
 
 //caches
 extern struct HashMap* css_builder_cache_textures;

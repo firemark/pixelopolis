@@ -256,7 +256,10 @@ floor {
     left: SELECTOR-TO-TEX-OBJ;
     middle: SELECTOR-TO-TEX-OBJ;
     right: SELECTOR-TO-TEX-OBJ;
-    padding: NUMBER; /* optional - padding between textures */
+    padding: NUMBER; /* optional - padding between textures, default is 0 */
+    left-padding: NUMBER; /* optional - default is from padding attribute */
+    right-padding: NUMBER; /* optional - default is from padding attribute */
+    middle-padding: NUMBER;  /* optional - default is from padding attribute */
 }
 ```
 

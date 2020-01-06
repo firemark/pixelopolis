@@ -51,12 +51,7 @@ struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection f
     obj->left = NULL;
     obj->right = NULL;
 
-    struct DrawObj *draw_obj = malloc(sizeof(struct DrawObj));
-    draw_obj->basic = builder_build_basic(rule, helper->parent);
-    draw_obj->type = DRAW_OBJ_SERIES;
-    draw_obj->obj = obj;
-    draw_obj->parent = helper->parent;
-
+    struct DrawObj *draw_obj = builder_make_draw_obj(helper, builder_build_basic(rule, helper->parent), DRAW_OBJ_SERIES, obj);
     struct Helper inner_helper = {
         .program=helper->program,
         .rule=helper->rule,

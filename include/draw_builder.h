@@ -23,18 +23,20 @@ struct DrawObj {
     struct DrawObj *parent;
 };
 
+struct ShiftTexPair {
+    int shift;
+    struct TexObj* obj;
+};
+
 struct TexObj {
     struct FlatImage *texture;
 };
 
 struct FloorObj {
     struct TexObj *tex;
-    struct TexObj **objs;
-    struct TexObj *left;
-    struct TexObj *right;
+    struct ShiftTexPair **objs;
     int objs_size;
     int height;
-    int padding;
 };
 
 struct WallObj {

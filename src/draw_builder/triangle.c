@@ -23,11 +23,5 @@ struct DrawObj* builder_build_triangle(struct Helper* helper) {
     };
     obj->roof = builder_build_wall(&roof_helper, basic.width, basic.depth);
 
-    struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
-    draw_obj->basic = basic;
-    draw_obj->type = DRAW_OBJ_TRIANGLE;
-    draw_obj->obj = obj;
-    draw_obj->parent = helper->parent;
-
-    return draw_obj;
+    return builder_make_draw_obj(helper, basic, DRAW_OBJ_TRIANGLE, obj);
 }

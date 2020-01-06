@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "_draw_builder.h"
 #include "css_func.h"
 
@@ -51,4 +52,14 @@ void builder_max_basic(struct BasicObj *a, struct BasicObj *b) {
     SET_GREATER(width);
     SET_GREATER(height);
     SET_GREATER(depth);
+}
+
+struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj) {
+    struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    draw_obj->basic = basic;
+    draw_obj->type = type;
+    draw_obj->obj = obj;
+    draw_obj->parent = helper->parent;
+
+    return draw_obj;
 }

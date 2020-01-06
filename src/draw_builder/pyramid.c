@@ -17,11 +17,5 @@ struct DrawObj* builder_build_pyramid(struct Helper* helper) {
     obj->south_wall = builder_build_wall(&wall_helper, basic.width, basic.height);
     obj->east_wall = builder_build_wall(&wall_helper, basic.depth, basic.height);
 
-    struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
-    draw_obj->basic = basic;
-    draw_obj->type = DRAW_OBJ_PYRAMID;
-    draw_obj->obj = obj;
-    draw_obj->parent = helper->parent;
-
-    return draw_obj;
+    return builder_make_draw_obj(helper, basic, DRAW_OBJ_PYRAMID, obj);
 }
