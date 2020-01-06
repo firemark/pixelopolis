@@ -71,6 +71,12 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name) {
     return (struct RuleSelector*)obj->value;
 }
 
+char* css_find_selector_element_prop(struct Rule* rule, char* name) {
+    struct RuleSelector* selector = css_find_selector_prop(rule, name);
+    if (!selector) return NULL;
+    return selector->element;
+}
+
 char* _css_cpy_str(char* old) {
     if (old == NULL) {
         return NULL;

@@ -4,15 +4,18 @@ from base64 import b64encode
 
 app = Flask(__name__)
 
-FILES = {
-    'Cube': 'examples/cube.css',
-    'Pyramid': 'examples/pyramid.css',
-    'Triangle': 'examples/triangle.css',
-    'Fillers': 'examples/fillers.css',
-    'Series': 'examples/series.css',
-    'Random': 'examples/random.css',
-    'Complex': 'examples/complex.css',
-}
+FILES = (
+    ('Cube', 'examples/cube.css'),
+    ('Pyramid', 'examples/pyramid.css'),
+    ('Triangle', 'examples/triangle.css'),
+    ('Floor-Align', 'examples/floor-align.css'),
+    ('Random', 'examples/random.css'),
+    ('Fillers', 'examples/fillers.css'),
+    ('Series', 'examples/series.css'),
+    ('Complex', 'examples/complex.css'),
+)
+
+FILES_TO_DICT = dict(FILES)
 
 
 @app.route('/', methods=['GET'])
@@ -40,7 +43,7 @@ def get_data_from_file(filename=None) -> str:
     if filename is None:
         filename = 'Complex'
 
-    path = FILES.get(filename)
+    path = FILES_TO_DICT.get(filename)
     if path is None:
         return ''
     with open(path) as fp:

@@ -1,0 +1,42 @@
+world {
+    width: 800;
+    height: 800;
+    body: cubes;
+}
+
+cubes {
+    display: d-series;
+    body: cube.left, cube.right, cube.middle, cube.justify;
+    padding: 150;
+}
+
+cube.left    floor.windows { align: left; }
+cube.right   floor.windows { align: right; }
+cube.middle  floor.windows { align: middle; }
+cube.justify floor.windows { align: justify; }
+
+cube {
+    width: 450;
+    depth: 50;
+    height: 50;
+	wall: wall.grey-brick;
+    roof: wall.top;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    middle: floor.windows;
+    padding: 4;
+}
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    middle-padding: 140;
+}
+
+wall.top { texture: tex.wood; }
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.window { texture: "textures/window.png"; }

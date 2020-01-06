@@ -43,7 +43,7 @@
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
                         <a class="pure-menu-link">Examples</a>
                         <ul class="pure-menu-children">
-                        {% for file in files -%}
+                        {% for file, _ in files -%}
                             <li class="pure-menu-item">
                                 <a class="pure-menu-link" href="/examples/{{ file }}">{{ file }}</a>
                             </li>

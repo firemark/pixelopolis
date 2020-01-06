@@ -1,6 +1,9 @@
 #include <stdlib.h>
+#include <string.h>
 #include "css_func.h"
 #include "_draw_builder.h"
+
+#define DEFAULT_WIDTH 12
 
 struct ShiftTexPair* _make_shift_pair(int shift, struct TexObj* obj) {
     struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
@@ -19,71 +22,141 @@ int _get_tex_padding_with_name(struct Rule* rule, char* name) {
     return padding_ptr ? *padding_ptr : _get_tex_padding(rule);
 }
 
-struct ShiftTexPair* _make_left_pair(struct Helper* helper, int *end_width, int* shift) {
-    struct SelectorHelper left_helper = {
+int _get_tex_obj_width(struct TexObj* obj) {
+    return obj && obj->texture ? obj->texture->width : DEFAULT_WIDTH;
+}
+
+struct TexObj* _make_tex_obj(struct Helper* helper, char* name) {
+    struct SelectorHelper tex_helper = {
         .program=helper->program,
         .parent_rule=helper->rule,
-        .selector=css_find_selector_prop(helper->rule, "left"),
+        .selector=css_find_selector_prop(helper->rule, name),
         .parent=helper->parent,
     };
-    struct TexObj* left = builder_build_texture(&left_helper);
-    if (!left) return NULL;
-    if (!left->texture) return NULL;
+    struct TexObj* tex = builder_build_texture(&tex_helper);
+    if (!tex) return NULL;
+    if (!tex->texture) return NULL;
+    return tex;
+}
+
+struct ShiftTexPair* _make_left_pair(struct Helper* helper, int *end_width, int* shift) {
+    struct ShiftTexPair* pair = NULL;
+    struct TexObj* left = _make_tex_obj(helper, "left");
+    if (!left) goto final;
 
     int left_width = left->texture->width;
-    if (left_width >= *end_width) return NULL;
+    if (left_width > *end_width) goto final;
 
-    struct ShiftTexPair* pair = _make_shift_pair(*shift, left);
-    int padding = _get_tex_padding_with_name(helper->rule, "left-padding");
-    *shift += left_width + padding;
+    pair = _make_shift_pair(*shift, left);
+    *shift += left_width;
+final:
+    *shift += _get_tex_padding_with_name(helper->rule, "left-padding");
     return pair;
 }
 
 struct ShiftTexPair* _make_right_pair(struct Helper* helper, int *end_width, int* shift) {
-    struct SelectorHelper right_helper = {
-        .program=helper->program,
-        .parent_rule=helper->rule,
-        .selector=css_find_selector_prop(helper->rule, "right"),
-        .parent=helper->parent,
-    };
-    struct TexObj* right = builder_build_texture(&right_helper);
-    if (!right) return NULL;
-    if (!right->texture) return NULL;
+    struct ShiftTexPair* pair = NULL;
+    struct TexObj* right = _make_tex_obj(helper, "right");
+    if (!right) goto final;
 
     int right_width = right->texture->width;
-    if (*shift + right_width >= *end_width) return NULL;
+    if (*shift + right_width > *end_width) goto final;
 
-    struct ShiftTexPair* pair = _make_shift_pair(*shift, right);
+    pair = _make_shift_pair(*shift, right);
     *end_width -= right_width;
+final:
+    *end_width -= _get_tex_padding_with_name(helper->rule, "right-padding");
     return pair;
 }
+
+
+void _add_margin_to_tex_objs(struct ShiftTexPair **pairs, size_t start_index, size_t end_index, int margin) {
+    size_t index;
+    for(index = start_index; index <= end_index; index++) {
+        struct ShiftTexPair* pair = pairs[index];
+        pair->shift += margin;
+    }
+}
+
+#define IF_NAME(name) if (!strcmp(align, name))
+void _align_tex_objs(
+        struct Helper* helper,
+        struct ShiftTexPair **pairs, size_t size,
+        int start_width, int end_width,
+        char with_left, char with_right) {
+    char* align = css_find_selector_element_prop(helper->rule, "align");
+    size_t start_index = with_left ? 1 : 0;
+    size_t end_index = with_right ? size - 2 : size - 1;
+
+    if (!align) return; // default is left
+    IF_NAME("left") {
+        // default is left aligned
+        // so we have done a job
+        return;
+    }
+    IF_NAME("right") {
+        // default is left aligned so we need to
+        // find distance between last texture and end of wall
+        // and add to shifts
+        struct ShiftTexPair* last_pair = pairs[end_index];
+        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
+        int margin = end_width - start_right_margin;
+        _add_margin_to_tex_objs(pairs, start_index, end_index, margin);
+        return;
+    }
+    IF_NAME("middle") {
+        // default is left aligned so we need to
+        // find distance between last texture and end of wall
+        // div by 2
+        // and add to shifts
+        struct ShiftTexPair* last_pair = pairs[end_index];
+        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
+        int margin = (end_width - start_right_margin) / 2;
+        _add_margin_to_tex_objs(pairs, start_index, end_index, margin);
+        return;
+    }
+    IF_NAME("justify") {
+        // we need to find a last margin and rescale other margins
+
+        // shift last element to the end
+        struct ShiftTexPair* last_pair = pairs[end_index];
+        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
+        int right_margin = (end_width - start_right_margin);
+
+        // find a scale of last margin
+        float ratio = (float)(last_pair->shift + right_margin) / (float)last_pair->shift;
+
+        // rescale margins (except last item)
+        size_t index;
+        for(index = start_index; index < end_index; index++) {
+            struct ShiftTexPair* next_pair = pairs[index + 1];
+            // move next element to increase margin
+            next_pair->shift *= ratio;
+        }
+        return;
+    }
+}
+#undef IF_NAME
 
 void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int end_width) {
     int shift = 0;
     int size = 0;
+    int start_width = 0;
     struct ShiftTexPair** objs = malloc(sizeof(struct ShiftTexPair*) * BUILDER_MAX_ELEMENTS);
     struct Rule* rule = helper->rule;
-    struct Program* program = helper->program;
 
     struct ShiftTexPair* left_pair = _make_left_pair(helper, &end_width, &shift);
     struct ShiftTexPair* right_pair = _make_right_pair(helper, &end_width, &shift);
 
-    int right_padding =  _get_tex_padding_with_name(rule, "right-padding");
-
     if (left_pair) { // add left as first
         objs[size++] = left_pair;
+        start_width = shift;
     }
 
     for(;;) {
-        struct SelectorHelper middle_helper = {
-            .program=program,
-            .parent_rule=rule,
-            .selector=css_find_selector_prop(rule, "middle"),
-            .parent=helper->parent,
-        };
-        struct TexObj* middle = builder_build_texture(&middle_helper);
-        int middle_width = middle && middle->texture ? middle->texture->width : 12;
-        if (shift + middle_width + right_padding >= end_width) break; // TODO - remove created tex-obj and to avoid memory leak
+        struct TexObj* middle = _make_tex_obj(helper, "middle");
+        int middle_width = _get_tex_obj_width(middle);
+        if (shift + middle_width > end_width) break; // TODO - remove created tex-obj and to avoid memory leak
         objs[size++] = _make_shift_pair(shift, middle);
         shift += middle_width + _get_tex_padding_with_name(rule, "middle-padding");
     }
@@ -91,6 +164,8 @@ void _append_objs_to_floor(struct Helper* helper, struct FloorObj* floor, int en
     if (right_pair) { // add right as last
         objs[size++] = right_pair;
     }
+
+    _align_tex_objs(helper, objs, size, start_width, end_width, !!left_pair, !!right_pair);
 
     // final
     objs[size] = NULL;
