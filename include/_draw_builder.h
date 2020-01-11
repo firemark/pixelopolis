@@ -32,11 +32,16 @@ struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 
 //utils
 struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper);
-int builder_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction);
-void builder_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x);
-void builder_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction);
-void builder_max_basic(struct BasicObj *a, struct BasicObj *b);
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
+int builder_get_padding(struct Rule* rule);
+
+//series utils
+struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);
+struct DrawObj* series_make_draw_obj(struct Helper* helper, struct RuleSelector* selector);
+int series_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction);
+void series_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x);
+void series_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction);
+void series_max_basic(struct BasicObj *a, struct BasicObj *b);
 
 //caches
 extern struct HashMap* css_builder_cache_textures;

@@ -346,58 +346,50 @@ void _css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
     }
 }
 
-void _draw_component_in_series(
-        struct SeriesObj *obj, struct DrawObj* draw_obj, 
-        struct DrawInfo *draw_info, int *out_vox, char shift) {
+int _draw_component_in_series(
+        struct SeriesObj *obj, struct DrawObj* draw_obj,
+        struct DrawInfo *draw_info, int *out_vox) {
     int inner_out_vox[3] = ZERO_VOX;
-    int padding = obj->padding;
     enum FillDirection fill_direction = obj->fill_direction;
 
     draw_component(draw_obj, draw_info, inner_out_vox);
-
-    if (shift) {
-        draw_info->vox[fill_direction] += inner_out_vox[fill_direction] + padding;
-    }
 
     if (out_vox) {
         if(inner_out_vox[0] > out_vox[0]) out_vox[0] = inner_out_vox[0];
         if(inner_out_vox[1] > out_vox[1]) out_vox[1] = inner_out_vox[1];
         if(inner_out_vox[2] > out_vox[2]) out_vox[2] = inner_out_vox[2];
     }
+
+    return inner_out_vox[fill_direction];
 }
 
 void _css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct SeriesObj *obj = draw_obj->obj;
+    enum FillDirection fill_direction = obj->fill_direction;
     if (!obj) return;
-    struct DrawObj **draw_objs = obj->objs;
-    if (!draw_objs) return;
+    struct ShiftDrawPair **pairs = obj->pairs;
+    if (!pairs) return;
 
-    int vox[3] = COPY_VOX(inner_info->vox);
     int *out_vox = inner_info->out_vox;
-    struct DrawInfo draw_info = {
-        .img=inner_info->img,
-        .vox=vox,
-    };
 
-    struct DrawObj *left = obj->left;
-    if (left) {
-        _draw_component_in_series(obj, left, &draw_info, out_vox, 1);
-    }
-
-    struct DrawObj *right = obj->right;
-    if (right) {
-        _draw_component_in_series(obj, right, &draw_info, out_vox, 0);
-    }
-
-    struct DrawObj* middle = NULL;
-    int index = 0;
-    while((middle = draw_objs[index++])) {
-        _draw_component_in_series(obj, middle, &draw_info, out_vox, 1);
+    struct ShiftDrawPair* pair = NULL;
+    int last_shift = 0;
+    int last_size = 0;
+    size_t index = 0;
+    while((pair = pairs[index++])) {
+        struct DrawObj* child = pair->obj;
+        int vox[3] = COPY_VOX(inner_info->vox);
+        vox[fill_direction] += pair->shift;
+        struct DrawInfo draw_info = {
+            .img=inner_info->img,
+            .vox=vox,
+        };
+        last_size = _draw_component_in_series(obj, child, &draw_info, out_vox);
+        last_shift = pair->shift;
     }
 
     if (out_vox) {
-        enum FillDirection fill_direction = obj->fill_direction;
-        out_vox[fill_direction] = inner_info->vox[fill_direction] - vox[fill_direction];
+        out_vox[fill_direction] = last_size + last_shift;
     }
 }
 

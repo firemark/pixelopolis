@@ -58,11 +58,12 @@ wall.windows {
 
 floor.windows {
     middle: tex.window;
+    align: middle;
     height: 12;
     padding: 12;
 }
 
 tex.wood { texture: "textures/wood.png"; }
-tex.grey-brick { texture:  "textures/grey-brick.png"; }
-tex.red-brick { texture:  "textures/brick.png"; }
+tex.grey-brick { texture: "textures/grey-brick.png"; }
+tex.red-brick { texture: "textures/brick.png"; }
 tex.window { texture: "textures/window.png"; }

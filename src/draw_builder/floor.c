@@ -12,14 +12,9 @@ struct ShiftTexPair* _make_shift_pair(int shift, struct TexObj* obj) {
     return pair;
 }
 
-int _get_tex_padding(struct Rule* rule) {
-    int* padding_ptr = css_find_number_prop(rule, "padding");
-    return padding_ptr ? *padding_ptr : 0;
-}
-
 int _get_tex_padding_with_name(struct Rule* rule, char* name) {
     int* padding_ptr = css_find_number_prop(rule, name);
-    return padding_ptr ? *padding_ptr : _get_tex_padding(rule);
+    return padding_ptr ? *padding_ptr : builder_get_padding(rule);
 }
 
 int _get_tex_obj_width(struct TexObj* obj) {

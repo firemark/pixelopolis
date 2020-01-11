@@ -1,6 +1,8 @@
 #include "_draw_builder.h"
 #include "css_func.h"
 
+#define DEFAULT_METRIC 0
+
 #define MAKE_GET_METRIC(NAME, ATTR, PARENT_TYPE) \
 int NAME ## _ ## ATTR(struct Rule* rule, int default_value, PARENT_TYPE* parent) { \
     struct Obj* obj = css_find_1st_obj(rule, #ATTR); \
@@ -20,9 +22,9 @@ struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
     struct BasicObj* parent_basic = parent ? &parent->basic : NULL;
 
     struct BasicObj basic = {
-        .width=_get_basic_metric_width(rule, 50, parent_basic),
-        .height=_get_basic_metric_height(rule, 50, parent_basic),
-        .depth=_get_basic_metric_depth(rule, 50, parent_basic),
+        .width=_get_basic_metric_width(rule, DEFAULT_METRIC, parent_basic),
+        .height=_get_basic_metric_height(rule, DEFAULT_METRIC, parent_basic),
+        .depth=_get_basic_metric_depth(rule, DEFAULT_METRIC, parent_basic),
     };
 
     return basic;

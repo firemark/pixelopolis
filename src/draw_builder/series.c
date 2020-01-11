@@ -3,61 +3,64 @@
 #include "css_func.h"
 #include "css_eval.h"
 
-struct DrawObj** _build_many_objs(struct SeriesObj* series, struct Helper* helper) {
-    struct Rule *rule = helper->rule;
-    struct Obj **prop_objs = css_find_objs(rule, "body");
-    if (!prop_objs) {
-        struct DrawObj **objs = malloc(sizeof(struct DrawObj*));
-        objs[0] = NULL;
-        return objs;
-    }
+size_t _get_size(struct Obj** prop_objs) {
+    size_t size = 0;
     struct Obj* obj = NULL;
-    int size = 0;
     css_iter(obj, prop_objs) size++; // counter
+    return size;
+}
 
+struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper* helper) {
+    struct Rule* rule = helper->rule;
+    enum FillDirection fill_direction = series->fill_direction;
+    struct Obj** prop_objs = css_find_objs(rule, "body");
+    if (!prop_objs) {
+        return NULL;
+    }
+
+    size_t size = _get_size(prop_objs);
     struct BasicObj basic_temp = builder_build_empty_basic();
-    struct DrawObj **objs = malloc(sizeof(struct DrawObj*) * (size + 1));
-    int i = 0;
+    struct ShiftDrawPair** pairs = malloc(sizeof(struct ShiftDrawPair*) * (size + 1));
+    int shift = 0;
+
+    size_t index = 0;
+    struct Obj* obj = NULL;
     css_iter(obj, prop_objs) {
         struct RuleSelector* selector = css_eval_rule(obj);
-        if (!selector) continue;
-
-        struct SelectorHelper inner_helper = {
-            .program=helper->program,
-            .parent_rule=rule,
-            .selector=selector,
-            .parent=helper->parent,
-        };
-        struct DrawObj *child = builder_build_draw_obj(&inner_helper);
+        struct DrawObj* child = series_make_draw_obj(helper, selector);
         if (!child) continue;
-        objs[i++] = child;
-        builder_add_max_basic_by_fill_direction(&basic_temp, &child->basic, series->fill_direction);
+
+        pairs[index++] = series_make_pair(shift, child);
+
+        int child_width = series_get_basic_metric_by_fill_direction(&child->basic, fill_direction);
+        int padding = builder_get_padding(rule);
+        series_add_max_basic_by_fill_direction(&basic_temp, &child->basic, fill_direction);
+        series_add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
+        shift += child_width + padding;
     }
 
-    objs = realloc(objs, sizeof(struct DrawObj*) * (i + 1));
-    objs[i] = NULL;
+    // resize array
+    pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (index + 1));
+    pairs[index] = NULL;
 
-    builder_max_basic(&helper->parent->basic, &basic_temp); // resize parent
-    return objs;
+    series_max_basic(&helper->parent->basic, &basic_temp); // resize parent
+    return pairs;
 }
 
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction) {
     struct Rule *rule = helper->rule;
-    int *padding_ptr = css_find_number_prop(rule, "padding");
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
-    obj->padding = padding_ptr? *padding_ptr : 0;
     obj->fill_direction = fill_direction;
-    obj->left = NULL;
-    obj->right = NULL;
 
-    struct DrawObj *draw_obj = builder_make_draw_obj(helper, builder_build_basic(rule, helper->parent), DRAW_OBJ_SERIES, obj);
+    struct BasicObj basic = builder_build_basic(rule, helper->parent);
+    struct DrawObj *draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_SERIES, obj);
     struct Helper inner_helper = {
         .program=helper->program,
         .rule=helper->rule,
         .parent=draw_obj,
     };
-    obj->objs = _build_many_objs(obj, &inner_helper);
+    obj->pairs = _build_many_objs(obj, &inner_helper);
 
     return draw_obj;
 }

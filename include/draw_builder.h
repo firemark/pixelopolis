@@ -28,6 +28,11 @@ struct ShiftTexPair {
     struct TexObj* obj;
 };
 
+struct ShiftDrawPair {
+    int shift;
+    struct DrawObj* obj;
+};
+
 struct TexObj {
     struct FlatImage *texture;
 };
@@ -66,11 +71,8 @@ struct PyramidObj {
 };
 
 struct SeriesObj {
-    struct DrawObj *left;
-    struct DrawObj **objs;
-    struct DrawObj *right;
+    struct ShiftDrawPair **pairs;
     enum FillDirection fill_direction;
-    int padding;
 };
 
 void builder_init(void);

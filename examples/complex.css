@@ -65,7 +65,7 @@ house {
     display: h-series;
     body: walls, choice(roof.triangle, roof.pyramid);
     width: random(50, 120);
-    height: random(50, 120);
+    depth: random(50, 120);
 }
 
 house roof, house walls {
@@ -142,7 +142,7 @@ roman-fillar {
     display: cube;
     wall: wall.clay;
     width: 5;
-    depth: 10%;
+    depth: 5;
     height: 100%;
 }
 
