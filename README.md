@@ -283,10 +283,10 @@ tex {
 * [ ] EASY More DrawObj structures like city wall, stairs, cone, cylinder etc.
 * [ ] EASY Support colors instead of textures
 * [ ] EASY Background texture
-* [ ] EASY CSS Comments
+* [x] EASY CSS Comments
 * [ ] MID More projections like perspective
 * [ ] MID Flat sprites (like in DOOM game) like grass, trees etc
-* [ ] MID More attributes for DrawObj like customize padding, margin 
+* [ ] MID More attributes for DrawObj like customize padding, margin (20% done)
 * [ ] MID Mixing textures
 * [ ] MID Gradient in textures
 * [ ] HARD Normal shader for textures

@@ -4,24 +4,25 @@ world {
     body: h-series.example;
 }
 
+/* STRUCT */
+
+h-series.example { body: road, v-series.example; }
+v-series.example { body: d-series.example, d-series.example; }
+d-series.example { body: house.grey.long, house.red, house.grey, house.red.long; }
+
+/* STYLES */
+
 h-series.example {
-    body: road, v-series.example;
     width: 450;
     depth: 450;
 }
 
 v-series.example {
-    body: d-series.example, d-series.example;
     width: 100%;
     align: stretch;
 }
 
 d-series.example {
-    body: 
-        house.grey.long, 
-        house.red, 
-        house.grey, 
-        house.red.long;
     depth: 50;
     padding: 50;
 }

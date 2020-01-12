@@ -27,6 +27,7 @@ int chars = 1;
 %}
 
 %%
+\/\*.+\*\/                  count_chars;
 [a-zA-Z_][a-zA-Z0-9_-]*     count_chars; push_string; return WORD;
 \"[^"]+\"                   count_chars; crop_and_push_string(1, 2); return STRING;
 \.[a-zA-Z_][a-zA-Z0-9_-]*   count_chars; crop_and_push_string(1, 0); return CLASS;

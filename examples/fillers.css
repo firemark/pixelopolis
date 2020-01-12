@@ -1,29 +1,22 @@
 world {
     width: 800;
     height: 800;
-    body: houses;
+    body: city;
 }
 
-houses {
-    display: d-filler;
-    body: house;
-    padding: 100;
-    depth: 400;
-}
+/* STRUCT */
 
-house {
-    display: h-series;
-    body: columns, triangle.grey;
-    width: 420;
-}
+city { display: h-series; body: road, houses; }
+houses { display: d-filler; body: house; }
+house { display: h-series; body: columns, triangle.grey; }
+columns { display: v-filler; body: column; }
 
-columns {
-    display: v-filler;
-    body: column;
-    padding: 20;
-    width: 100%; 
-    align: stretch;
-}
+/* STYLES */
+
+city { width: 420; depth: 420; }
+houses { padding: 100; width: 100%; depth: 100%; align: center; }
+house { width: 100%; }
+columns { padding: 20; width: 100%; align: stretch; }
 
 column {
     display: cube;
@@ -40,6 +33,15 @@ triangle.grey {
     width: 100%; 
     height: 50;
     depth: 10;
+}
+
+road {
+    display: cube;
+	wall: wall.grey-brick;
+    roof: wall.grey-brick;
+    width: 100%;
+    depth: 100%;
+    height: 5;
 }
 
 wall.grey-brick { texture: tex.grey-brick; }
