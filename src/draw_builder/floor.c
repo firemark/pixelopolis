@@ -73,50 +73,49 @@ void _add_margin_to_tex_objs(struct ShiftTexPair **pairs, size_t start_index, si
     }
 }
 
-#define IF_NAME(name) if (!strcmp(align, name))
+int _get_margin_to_align_floor(struct ShiftTexPair *pair, int end_width) {
+    int margin = pair->shift + _get_tex_obj_width(pair->obj);
+    return end_width - margin;
+}
+
+#define IF_NAME(name) else if (!strcmp(align, name))
 void _align_tex_objs(
         struct Helper* helper,
         struct ShiftTexPair **pairs, size_t size,
         int start_width, int end_width,
         char with_left, char with_right) {
+    if (size == 0) {
+        return;
+    }
     char* align = css_find_selector_element_prop(helper->rule, "align");
     size_t start_index = with_left ? 1 : 0;
     size_t end_index = with_right ? size - 2 : size - 1;
+    struct ShiftTexPair* last_pair = pairs[end_index];
 
     if (!align) return; // default is left
     IF_NAME("left") {
         // default is left aligned
         // so we have done a job
-        return;
     }
     IF_NAME("right") {
         // default is left aligned so we need to
         // find distance between last texture and end of wall
         // and add to shifts
-        struct ShiftTexPair* last_pair = pairs[end_index];
-        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
-        int margin = end_width - start_right_margin;
+        int margin = _get_margin_to_align_floor(last_pair, end_width);
         _add_margin_to_tex_objs(pairs, start_index, end_index, margin);
-        return;
     }
     IF_NAME("middle") {
         // default is left aligned so we need to
         // find distance between last texture and end of wall
         // div by 2
         // and add to shifts
-        struct ShiftTexPair* last_pair = pairs[end_index];
-        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
-        int margin = (end_width - start_right_margin) / 2;
+        int margin = _get_margin_to_align_floor(last_pair, end_width) / 2;
         _add_margin_to_tex_objs(pairs, start_index, end_index, margin);
-        return;
     }
     IF_NAME("justify") {
         // we need to find a last margin and rescale other margins
-
-        // shift last element to the end
-        struct ShiftTexPair* last_pair = pairs[end_index];
-        int start_right_margin = last_pair->shift + _get_tex_obj_width(last_pair->obj);
-        int right_margin = (end_width - start_right_margin);
+        // and shift last element to the end
+        int right_margin = _get_margin_to_align_floor(last_pair, end_width);
 
         // find a scale of last margin
         float ratio = (float)(last_pair->shift + right_margin) / (float)last_pair->shift;
@@ -128,7 +127,6 @@ void _align_tex_objs(
             // move next element to increase margin
             next_pair->shift *= ratio;
         }
-        return;
     }
 }
 #undef IF_NAME

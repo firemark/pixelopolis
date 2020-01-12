@@ -10,6 +10,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     struct ShiftDrawPair** pairs = malloc(sizeof(struct ShiftDrawPair*) * BUILDER_MAX_ELEMENTS);
 
     int shift = 0;
+    int padding = 0;
     size_t size = 0;
     for(;;) {
         struct RuleSelector* selector = css_find_selector_prop(rule, "body");
@@ -17,17 +18,25 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         if (!child) continue;
 
         int child_width = series_get_basic_metric_by_fill_direction(&child->basic, fill_direction);
-        if (shift + child_width >= width) break;
+        if (shift + child_width >= width) {
+            // undo last padding and stop
+            series_add_basic_metric_by_fill_direction(&basic_temp, fill_direction, -padding);
+            break;
+        }
 
         pairs[size++] = series_make_pair(shift, child);
 
-        int padding = builder_get_padding(rule);
+        padding = builder_get_padding(rule);
         series_add_max_basic_by_fill_direction(&basic_temp, &child->basic, fill_direction);
         series_add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
         shift += child_width + padding;
     }
 
     series_max_basic(&helper->parent->basic, &basic_temp); // resize parent
+
+    int end_width = series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
+    series_align_objs(helper, pairs, fill_direction, size, end_width);
+
     pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (size + 1));
     pairs[size] = NULL;
     filler->pairs = pairs;

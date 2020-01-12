@@ -12,7 +12,8 @@ h-series.example {
 
 v-series.example {
     body: d-series.example, d-series.example;
-    padding: 180;
+    width: 100%;
+    align: stretch;
 }
 
 d-series.example {

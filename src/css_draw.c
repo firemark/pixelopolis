@@ -133,9 +133,9 @@ void _css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
         int width = draw_obj->basic.width;
         int height = draw_obj->basic.height;
         int depth = draw_obj->basic.depth;
-        out_vox[0] += width;
-        out_vox[1] += depth;
-        out_vox[2] += height;
+        out_vox[0] = width;
+        out_vox[1] = depth;
+        out_vox[2] = height;
     }
 }
 
@@ -198,9 +198,9 @@ void _css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
 
     int *out_vox = inner_info->out_vox;
     if (out_vox) {
-        out_vox[0] += width;
-        out_vox[1] += depth;
-        out_vox[2] += height;
+        out_vox[0] = width;
+        out_vox[1] = depth;
+        out_vox[2] = height;
     }
 }
 
@@ -273,9 +273,9 @@ void _css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_in
 
     int *out_vox = inner_info->out_vox;
     if (out_vox) {
-        out_vox[0] += width;
-        out_vox[1] += depth;
-        out_vox[2] += height;
+        out_vox[0] = width;
+        out_vox[1] = depth;
+        out_vox[2] = height;
     }
 }
 
@@ -340,27 +340,10 @@ void _css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
 
     int *out_vox = inner_info->out_vox;
     if (out_vox) {
-        out_vox[0] += width;
-        out_vox[1] += depth;
-        out_vox[2] += height;
+        out_vox[0] = width;
+        out_vox[1] = depth;
+        out_vox[2] = height;
     }
-}
-
-int _draw_component_in_series(
-        struct SeriesObj *obj, struct DrawObj* draw_obj,
-        struct DrawInfo *draw_info, int *out_vox) {
-    int inner_out_vox[3] = ZERO_VOX;
-    enum FillDirection fill_direction = obj->fill_direction;
-
-    draw_component(draw_obj, draw_info, inner_out_vox);
-
-    if (out_vox) {
-        if(inner_out_vox[0] > out_vox[0]) out_vox[0] = inner_out_vox[0];
-        if(inner_out_vox[1] > out_vox[1]) out_vox[1] = inner_out_vox[1];
-        if(inner_out_vox[2] > out_vox[2]) out_vox[2] = inner_out_vox[2];
-    }
-
-    return inner_out_vox[fill_direction];
 }
 
 void _css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
@@ -370,26 +353,24 @@ void _css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
     struct ShiftDrawPair **pairs = obj->pairs;
     if (!pairs) return;
 
-    int *out_vox = inner_info->out_vox;
 
     struct ShiftDrawPair* pair = NULL;
-    int last_shift = 0;
-    int last_size = 0;
     size_t index = 0;
     while((pair = pairs[index++])) {
-        struct DrawObj* child = pair->obj;
         int vox[3] = COPY_VOX(inner_info->vox);
         vox[fill_direction] += pair->shift;
         struct DrawInfo draw_info = {
             .img=inner_info->img,
             .vox=vox,
         };
-        last_size = _draw_component_in_series(obj, child, &draw_info, out_vox);
-        last_shift = pair->shift;
+        draw_component(pair->obj, &draw_info, NULL);
     }
 
+    int *out_vox = inner_info->out_vox;
     if (out_vox) {
-        out_vox[fill_direction] = last_size + last_shift;
+        out_vox[0] = draw_obj->basic.width;
+        out_vox[1] = draw_obj->basic.depth;
+        out_vox[2] = draw_obj->basic.height;
     }
 }
 

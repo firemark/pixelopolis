@@ -35,8 +35,10 @@ struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper*
         int child_width = series_get_basic_metric_by_fill_direction(&child->basic, fill_direction);
         int padding = builder_get_padding(rule);
         series_add_max_basic_by_fill_direction(&basic_temp, &child->basic, fill_direction);
-        series_add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
-        shift += child_width + padding;
+        if (index < size) {
+            series_add_basic_metric_by_fill_direction(&basic_temp, fill_direction, padding);
+            shift += child_width + padding;
+        }
     }
 
     // resize array
@@ -44,6 +46,10 @@ struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper*
     pairs[index] = NULL;
 
     series_max_basic(&helper->parent->basic, &basic_temp); // resize parent
+
+    int end_width = series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
+    series_align_objs(helper, pairs, fill_direction, size, end_width);
+
     return pairs;
 }
 

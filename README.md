@@ -130,9 +130,9 @@ Each drawObj has width/height/depth properties
 
 ```css
 draw-obj {
-    width: NUMBER | PERCENT; /* default: 50 */
-    height: NUMBER | PERCENT; /* default: 50 */
-    depth: NUMBER | PERCENT; /* default: 50 */
+    width: NUMBER | PERCENT; /* default: 0 */
+    height: NUMBER | PERCENT; /* default: 0 */
+    depth: NUMBER | PERCENT; /* default: 0 */
 }
 ```
 
@@ -214,6 +214,7 @@ v-series { /* or d-series or h-series */
     width: NUMBER | PERCENT; /* optional */
     height: NUMBER | PERCENT; /* optional */
     depth: NUMBER | PERCENT; /* optional */
+    align: start | end | center | stretch; /* default is start */
 }
 ```
 
@@ -230,6 +231,10 @@ We have a tree types of fillers obj:
 v-filler {
     body: SELECTOR;
     padding: NUMBER; /* optional */
+    width: NUMBER | PERCENT; /* optional */
+    height: NUMBER | PERCENT; /* optional */
+    depth: NUMBER | PERCENT; /* optional */
+    align: start | end | center | stretch; /* default is start */
 }
 ```
 

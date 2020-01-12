@@ -1,4 +1,4 @@
-#include "draw_builder.h"
+#include "draw_builder.h" 
 #include "hash.h"
 
 #define BUILDER_MAX_ELEMENTS 128
@@ -42,6 +42,11 @@ int series_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillD
 void series_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x);
 void series_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction);
 void series_max_basic(struct BasicObj *a, struct BasicObj *b);
+void series_align_objs(
+        struct Helper* helper,
+        struct ShiftDrawPair** pairs, 
+        enum FillDirection fill_direction,
+        size_t size, int end_width);
 
 //caches
 extern struct HashMap* css_builder_cache_textures;
