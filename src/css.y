@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "css.h"
+#include "basic.h"
 
 FILE *yyin;
 struct Program* global_program;
@@ -213,6 +214,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %union {
     char sIndex; // symbol table index
 	int number;
+    struct rgb* color;
     char* string;
     struct Program* programPtr;
     struct Rule* rulePtr;
@@ -233,6 +235,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
     SPACE
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
+%token <color> COLOR
 %left ADD_OP SUB_OP
 %left MUL_OP DIV_OP
 %right START_FUNC END_FUNC
