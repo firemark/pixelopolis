@@ -158,6 +158,13 @@ struct Obj* make_obj_as_variable(char* variable) {
     return obj;
 }
 
+struct Obj* make_obj_as_color(struct rgb* color) {
+    struct Obj* obj = malloc(sizeof(struct Obj));
+    obj->type = OBJ_COLOR;
+    obj->value = (void*)color;
+    return obj;
+}
+
 struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
     struct Obj* obj = malloc(sizeof(struct Obj));
     obj->type = OBJ_RULE;
@@ -214,8 +221,8 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %union {
     char sIndex; // symbol table index
 	int number;
-    struct rgb* color;
     char* string;
+    struct rgb* color;
     struct Program* programPtr;
     struct Rule* rulePtr;
     struct Prop* propPtr;
@@ -306,6 +313,7 @@ obj:
         | NUMBER PERCENT sp { $$ = make_obj_as_percent($1); }
         | STRING sp { $$ = make_obj_as_string($1); }
         | VARIABLE sp { $$ = make_obj_as_variable($1); }
+        | COLOR sp { $$ = make_obj_as_color($1); }
         | rule_selector { $$ = make_obj_as_rule($1); }
         | obj ADD_OP sp obj { $$ = make_obj_as_add($1, $4); }
         | obj SUB_OP sp obj { $$ = make_obj_as_sub($1, $4); }
