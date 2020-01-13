@@ -35,6 +35,7 @@ struct ShiftDrawPair {
 
 struct TexObj {
     struct FlatImage *texture;
+    struct rgb* color;
 };
 
 struct FloorObj {

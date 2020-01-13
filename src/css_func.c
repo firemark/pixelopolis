@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "hash.h"
-#include "css_debug.h" 
+#include "basic.h"
+#include "css_debug.h"
 #include "css_func.h"
 #include "css_eval.h"
 
@@ -14,7 +14,7 @@ struct RuleSelector default_selector = {
 };
 
 struct Rule* css_find_rule_by_query(
-        struct Program* program, 
+        struct Program* program,
         struct RuleSelector* query) {
     struct Rule* rule;
     struct RuleSelector* selector;
@@ -77,6 +77,13 @@ char* css_find_selector_element_prop(struct Rule* rule, char* name) {
     return selector->element;
 }
 
+struct rgb* css_find_color_prop(struct Rule* rule, char* name) {
+    struct Obj* obj = css_find_1st_obj(rule, name);
+    if (!obj) return NULL;
+    if (obj->type != OBJ_COLOR) return NULL;
+    return (struct rgb*)obj->value;
+}
+
 char* _css_cpy_str(char* old) {
     if (old == NULL) {
         return NULL;
@@ -91,7 +98,7 @@ struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
     struct RuleSelector* selector = malloc(sizeof(struct RuleSelector));
 
     selector->element = _css_cpy_str(old->element);
-    selector->pseudo_klass = _css_cpy_str(old->pseudo_klass); 
+    selector->pseudo_klass = _css_cpy_str(old->pseudo_klass);
 
     if (old->klasses) {
         size_t i;
