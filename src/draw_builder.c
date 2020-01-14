@@ -13,9 +13,9 @@ void builder_init(void) {
 }
 
 void builder_stop(void) {
-    struct image* texture;
+    struct FlatImage* texture;
     hash_iter_values(texture, css_builder_cache_textures) {
-        destroy_image(texture);
+        flat_image_destroy(texture);
     }
     hash_destroy(css_builder_cache_textures);
 }

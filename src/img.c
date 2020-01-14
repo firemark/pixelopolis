@@ -75,6 +75,18 @@ struct FlatImage* flat_image_create(int width, int height) {
     return img;
 }
 
+struct FlatImage* flat_image_create_with_color(int width, int height, struct rgb* color) {
+    struct rgb c = *color;
+    struct FlatImage *img = flat_image_create(width, height);
+    int x, y;
+    for (y=0; y < img->height; y++) {
+        for(x=0; x < img->width; x++) {
+            img->buffer[y * width + x] = c;
+        }
+    }
+    return img;
+}
+
 size_t __get_index(struct FlatImage* img, int x, int y) {
     y = img->height - 1 - y;
     return y * img->width + x;
@@ -292,7 +304,7 @@ void destroy_image(struct image *img) {
     free(img);
 }
 
-void destroy_flat_image(struct FlatImage *img) {
+void flat_image_destroy(struct FlatImage *img) {
     free(img->buffer);
     free(img);
 }

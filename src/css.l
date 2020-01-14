@@ -1,5 +1,4 @@
 %{
-#include <stdio.h>
 #include <string.h>
 
 #include "css.y.h"
@@ -41,9 +40,9 @@ int old_chars = 1;
 int chars = 1;
 
 unsigned char char_to_hex(char x) {
-    if (x > 'A' || x <= 'Z') return x - 'A' + 10;
-    if (x > 'a' || x <= 'z') return x - 'a' + 10;
-    if (x > '0' || x <= '9') return x - '0';
+    if (x >= 'A' && x <= 'Z') return x - 'A' + 10;
+    if (x >= 'a' && x <= 'z') return x - 'a' + 10;
+    if (x >= '0' && x <= '9') return x - '0';
     return 0;
 }
 

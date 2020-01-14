@@ -55,7 +55,14 @@ struct FlatImage* _make_texture_from_wall(struct WallObj *obj, int width, int he
     struct FlatImage *img = flat_image_create(width, height);
     struct TexObj *tex_obj = obj->tex;
     if (tex_obj) {
-        flat_image_fill(img, obj->tex->texture);
+        if (tex_obj->texture) {
+            flat_image_fill(img, tex_obj->texture);
+        }
+        if (tex_obj->color) {
+            struct FlatImage* texture = flat_image_create_with_color(width, height, tex_obj->color);
+            flat_image_fill(img, texture);
+            flat_image_destroy(texture);
+        }
     }
 
     int max_height = height;
