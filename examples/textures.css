@@ -1,0 +1,33 @@
+world {
+    width: 800;
+    height: 800;
+    body: cubes;
+}
+
+cubes {
+    display: v-series;
+    body: 
+        cube.texture, 
+        cube.hex, 
+        cube.small_hex, 
+        cube.rgb, 
+        cube.name;
+    padding: 50;
+}
+
+cube.texture     tex { texture: "textures/grey-brick.png"; }
+cube.hex         tex { color: #FF2233; }
+cube.small_hex   tex { color: #2F3; }
+cube.rgb         tex { color: rgb(34, 51, 255); }
+cube.name        tex { color: yellow; }
+
+cube {
+    wall: wall;
+    roof: wall;
+    width: 100;
+    depth: 100;
+    height: 100;
+}
+
+wall { texture: tex; }
+

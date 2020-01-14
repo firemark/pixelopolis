@@ -8,6 +8,7 @@ FILES = (
     ('Cube', 'examples/cube.css'),
     ('Pyramid', 'examples/pyramid.css'),
     ('Triangle', 'examples/triangle.css'),
+    ('Textures', 'examples/textures.css'),
     ('Floor-Align', 'examples/floor-align.css'),
     ('Random', 'examples/random.css'),
     ('Fillers', 'examples/fillers.css'),
