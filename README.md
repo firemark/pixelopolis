@@ -295,6 +295,7 @@ tex {
 * [ ] HARD City / Road / Place planner
 * [ ] HARD Customizing shape of buildings
 * [x] HARD Parent CSS selector
+* [ ] HARD garbage collector
 * [ ] NO-MERCY Opengl + shaders support
 * [ ] IMPOSIBRU Refactoring
 

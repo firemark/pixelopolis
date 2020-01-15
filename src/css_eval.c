@@ -116,6 +116,28 @@ struct Obj* _do_choice(struct FuncObj* func) {
     return _eval(arg);
 }
 
+struct Obj* _do_rgb(struct FuncObj* func) {
+    if (func->args_size != 3) return NULL;
+    struct Obj* r_obj = _eval(func->args[0]);
+    struct Obj* g_obj = _eval(func->args[1]);
+    struct Obj* b_obj = _eval(func->args[2]);
+
+    if (!_is_number(r_obj)) return NULL;
+    if (!_is_number(g_obj)) return NULL;
+    if (!_is_number(b_obj)) return NULL;
+
+    struct rgb* color = malloc(sizeof(struct rgb));
+    color->r = *(unsigned char*)r_obj->value;
+    color->g = *(unsigned char*)g_obj->value;
+    color->b = *(unsigned char*)b_obj->value;
+
+    struct Obj* result_obj = malloc(sizeof(struct Obj)); //_make_obj_in_stack();
+    result_obj->type = OBJ_COLOR;
+    result_obj->value = color;
+
+    return result_obj;
+}
+
 struct Obj* _do_to_percent(struct FuncObj* func) {
     if (func->args_size == 0) return NULL;
     struct Obj* arg = func->args[0];
@@ -133,6 +155,7 @@ struct Obj* _eval_func(struct Obj* obj) {
     if (CMP("random")) return _do_random(func);
     if (CMP("choice")) return _do_choice(func);
     if (CMP("to-percent")) return _do_to_percent(func);
+    if (CMP("rgb")) return _do_rgb(func);
     return NULL;
 #undef CMP
 }
