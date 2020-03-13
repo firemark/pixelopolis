@@ -1,3 +1,4 @@
+#pragma once
 #include "draw_builder.h" 
 #include "hash.h"
 

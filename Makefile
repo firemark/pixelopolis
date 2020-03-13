@@ -3,14 +3,18 @@ CC = gcc
 YACC = yacc
 LEX = lex
 OBJS  = main img draw draw_poly draw_builder css.y css.l hash
-OBJS += css_func css_debug css_draw css_eval css_free css_make_new_rule
+OBJS += css_func css_debug css_eval css_free css_make_new_rule
 DRAW_BUILDER_OBJS  = basic utils draw_obj
 DRAW_BUILDER_OBJS += filler series series_utils
 DRAW_BUILDER_OBJS += void cube pyramid triangle
 DRAW_BUILDER_OBJS += wall floor texture
+CSS_DRAW_OBJS  = component base texture
+CSS_DRAW_OBJS += cube pyramid triangle
+CSS_DRAW_OBJS += series void
 TESTS = hash css_eval
 OBJS_PATH = $(foreach obj,$(OBJS),out/$(obj).o)
 OBJS_PATH += $(foreach obj,$(DRAW_BUILDER_OBJS),out/draw_builder/$(obj).o)
+OBJS_PATH += $(foreach obj,$(CSS_DRAW_OBJS),out/css_draw/$(obj).o)
 TESTS_PATH = $(foreach test,$(TESTS),tests_out/test_$(test))
 LIBS = -lm -lpng
 TEST_LIBS = -lm -lpng -lcheck
@@ -27,6 +31,7 @@ all: make_dirs yacc pixelopolis
 make_dirs:
 	mkdir out -p
 	mkdir out/draw_builder/ -p
+	mkdir out/css_draw/ -p
 	mkdir tests_out -p
 
 yacc: src/css.y src/css.l
@@ -49,10 +54,14 @@ tests_out/test_css_eval: tests/test_css_eval.c out/css_eval.o out/css_func.o out
 out/draw_builder/%.o: src/draw_builder/%.c
 	$(CC) $< $(FLAGS) -c -o $@ $(INCLUDES)
 
+out/css_draw/%.o: src/css_draw/%.c
+	$(CC) $< $(FLAGS) -c -o $@ $(INCLUDES)
+
 out/%.o: src/%.c
 	$(CC) $< $(FLAGS) -c -o $@ $(INCLUDES)
 
 clear:
 	rm -f out/*.o pixelopolis
 	rm -f out/draw_builder/*.o pixelopolis
+	rm -f out/css_draw/*.o pixelopolis
 	rm -f tests_out/*
