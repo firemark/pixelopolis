@@ -24,6 +24,7 @@ void css_base_draw_wide_triangle(struct image* img, struct FlatImage* img_to_dra
 // draw objs
 void css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
+void css_draw_cone(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_cylinder(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);

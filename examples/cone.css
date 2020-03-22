@@ -1,0 +1,46 @@
+world {
+    width: 800;
+    height: 800;
+    body: cones;
+}
+
+cones {
+    display: v-series;
+    body: cone.example.first, cone.example.second;
+    padding: 100;
+}
+
+cone.first {
+    sides: 32;
+}
+
+cone.second {
+    has-many-walls: 1;
+    sides: 6;
+}
+
+cone.example {
+    roof: wall.grey-brick;
+    width: 300;
+    depth: 200;
+    height: 150;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    middle: floor.windows;
+    padding: 4;
+}
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    padding: 32;
+    align: middle;
+}
+
+.first floor.windows { align: justify; }
+.second floor.windows { align: middle; }
+
+tex.grey-brick { texture: "textures/grey-brick.png"; }
+tex.window { texture: "textures/window.png"; }

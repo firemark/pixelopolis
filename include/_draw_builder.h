@@ -32,6 +32,7 @@ struct DrawObj* builder_build_void(struct Helper* helper);
 struct DrawObj* builder_build_pyramid(struct Helper* helper);
 struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
+struct DrawObj* builder_build_cone(struct Helper* helper);
 struct DrawObj* builder_build_cylinder(struct Helper* helper);
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction);
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction);

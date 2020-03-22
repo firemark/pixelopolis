@@ -5,6 +5,7 @@
 enum DrawObjType {
     DRAW_OBJ_VOID,
     DRAW_OBJ_CUBE,
+    DRAW_OBJ_CONE,
     DRAW_OBJ_CYLINDER,
     DRAW_OBJ_TRIANGLE,
     DRAW_OBJ_PYRAMID,
@@ -68,6 +69,11 @@ struct CubeObj {
 struct CylinderObj {
     struct WallObj *roof, **walls;
     int has_many_walls;
+    int sides;
+};
+
+struct ConeObj {
+    struct WallObj *roof;
     int sides;
 };
 
