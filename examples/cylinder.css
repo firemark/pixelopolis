@@ -38,8 +38,12 @@ wall.top { texture: tex.wood; }
 floor.windows {
     middle: tex.window;
     height: 12;
-    padding: 12;
+    padding: 32;
+    align: middle;
 }
+
+.first floor.windows { align: justify; }
+.second floor.windows { align: middle; }
 
 tex.wood { texture: "textures/wood.png"; }
 tex.grey-brick { texture:  "textures/grey-brick.png"; }
