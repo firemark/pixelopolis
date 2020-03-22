@@ -17,6 +17,13 @@ struct SelectorHelper {
     struct DrawObj* parent;
 };
 
+#define make_selector_helper(helper, prop) { \
+    .program=helper->program, \
+    .parent_rule=helper->rule, \
+    .selector=css_find_selector_prop(helper->rule, prop), \
+    .parent=helper->parent, \
+}
+
 //builders
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper);
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent);
@@ -25,6 +32,7 @@ struct DrawObj* builder_build_void(struct Helper* helper);
 struct DrawObj* builder_build_pyramid(struct Helper* helper);
 struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
+struct DrawObj* builder_build_cylinder(struct Helper* helper);
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction);
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction);
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height);

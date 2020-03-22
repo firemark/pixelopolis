@@ -76,6 +76,8 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     int padding = padding_ptr? *padding_ptr: 0;
 
     wall->padding = padding;
+    wall->width = wall_width;
+    wall->height = wall_height;
 
     struct SelectorHelper tex_helper = {
         .program=helper->program,

@@ -1,0 +1,46 @@
+world {
+    width: 800;
+    height: 800;
+    body: cylinders;
+}
+
+cylinders {
+    display: v-series;
+    body: cylinder.example.first, cylinder.example.second;
+    padding: 100;
+}
+
+cylinder.first {
+    sides: 32;
+}
+
+cylinder.second {
+    has-many-walls: 1;
+    sides: 6;
+}
+
+cylinder.example {
+	wall: wall.grey-brick;
+    roof: wall.top;
+    width: 300;
+    depth: 200;
+    height: 150;
+}
+
+wall.grey-brick {
+    texture: tex.grey-brick;
+    middle: floor.windows;
+    padding: 4;
+}
+
+wall.top { texture: tex.wood; }
+
+floor.windows {
+    middle: tex.window;
+    height: 12;
+    padding: 12;
+}
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture:  "textures/grey-brick.png"; }
+tex.window { texture: "textures/window.png"; }

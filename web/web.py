@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 FILES = (
     ('Cube', 'examples/cube.css'),
+    ('Cylinder', 'examples/cylinder.css'),
     ('Pyramid', 'examples/pyramid.css'),
     ('Triangle', 'examples/triangle.css'),
     ('Textures', 'examples/textures.css'),
