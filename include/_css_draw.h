@@ -26,6 +26,7 @@ void css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_cone(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_cylinder(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
+void css_draw_dome(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);

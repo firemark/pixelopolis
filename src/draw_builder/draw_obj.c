@@ -23,7 +23,7 @@ struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper) {
     IF_NAME("cube")             obj = builder_build_cube(&inner_helper);
     IF_NAME("cone")             obj = builder_build_cone(&inner_helper);
     IF_NAME("cylinder")         obj = builder_build_cylinder(&inner_helper);
-    //IF_NAME("dome")             obj = builder_build_dome(&inner_helper);
+    IF_NAME("dome")             obj = builder_build_dome(&inner_helper);
     //IF_NAME("trapezoid")        obj = builder_build_trapezoid(&inner_helper);
     //IF_NAME("stairs")           obj = builder_build_stairs(&inner_helper);
     IF_NAME("triangle")         obj = builder_build_triangle(&inner_helper);

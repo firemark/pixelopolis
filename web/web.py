@@ -8,6 +8,7 @@ FILES = (
     ('Cube', 'examples/cube.css'),
     ('Cylinder', 'examples/cylinder.css'),
     ('Cone', 'examples/cone.css'),
+    ('Dome', 'examples/dome.css'),
     ('Pyramid', 'examples/pyramid.css'),
     ('Triangle', 'examples/triangle.css'),
     ('Textures', 'examples/textures.css'),

@@ -34,6 +34,7 @@ struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
 struct DrawObj* builder_build_cone(struct Helper* helper);
 struct DrawObj* builder_build_cylinder(struct Helper* helper);
+struct DrawObj* builder_build_dome(struct Helper* helper);
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction);
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction);
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height);
