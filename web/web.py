@@ -4,22 +4,36 @@ from base64 import b64encode
 
 app = Flask(__name__)
 
-FILES = (
-    ('Cube', 'examples/cube.css'),
-    ('Cylinder', 'examples/cylinder.css'),
-    ('Cone', 'examples/cone.css'),
-    ('Dome', 'examples/dome.css'),
-    ('Pyramid', 'examples/pyramid.css'),
-    ('Triangle', 'examples/triangle.css'),
-    ('Textures', 'examples/textures.css'),
-    ('Floor-Align', 'examples/floor-align.css'),
-    ('Random', 'examples/random.css'),
-    ('Fillers', 'examples/fillers.css'),
-    ('Series', 'examples/series.css'),
-    ('Complex', 'examples/complex.css'),
-)
+MENU = [
+    ('Basic shapes', [
+        ('Cube', 'examples/cube.css'),
+        ('Cylinder', 'examples/cylinder.css'),
+        ('Cone', 'examples/cone.css'),
+        ('Dome', 'examples/dome.css'),
+        ('Pyramid', 'examples/pyramid.css'),
+        ('Triangle', 'examples/triangle.css'),
+    ]),
+    ('Containers', [
+        ('Fillers', 'examples/fillers.css'),
+        ('Series', 'examples/series.css'),
+    ]),
+    ('Textures', [
+        ('Textures', 'examples/textures.css'),
+        ('Floor-Align', 'examples/floor-align.css'),
+    ]),
+    ('Attributes', [
+        ('Random', 'examples/random.css'),
+    ]),
+    ('Complex', [
+        ('Complex', 'examples/complex.css'),
+    ]),
+]
 
-FILES_TO_DICT = dict(FILES)
+FILES_TO_DICT = {
+    f'{category.replace(" ", "-")}/{name}': filepath
+    for category, files in MENU
+    for name, filepath in files
+}
 
 
 @app.route('/', methods=['GET'])
@@ -28,9 +42,9 @@ def get():
     return render_and_run(data)
 
 
-@app.route('/examples/<filename>', methods=['GET'])
-def get_example(filename):
-    data = get_data_from_file(filename)
+@app.route('/examples/<category>/<filename>', methods=['GET'])
+def get_example(category, filename):
+    data = get_data_from_file(f'{category}/{filename}')
     return render_and_run(data)
 
 
@@ -41,11 +55,11 @@ def post():
 
 
 def get_data_from_file(filename=None) -> str:
-    if not FILES:
+    if not MENU:
         return ''
 
     if filename is None:
-        filename = 'Complex'
+        filename = 'Complex/Complex'
 
     path = FILES_TO_DICT.get(filename)
     if path is None:
@@ -60,7 +74,7 @@ def render_index(errors=None, data='', img=None):
         'index.html', 
         errors=errors, 
         data=data,
-        files=FILES, 
+        menu=MENU,
         img=img,
     ) 
 

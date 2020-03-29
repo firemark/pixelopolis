@@ -40,16 +40,18 @@
                 <a class="pure-menu-heading" href="/">Pixelopolis</a>
 
                 <ul class="pure-menu-list">
+                    {% for category, files in menu -%}
                     <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
-                        <a class="pure-menu-link">Examples</a>
+                        <a class="pure-menu-link">{{ category }}</a>
                         <ul class="pure-menu-children">
                         {% for file, _ in files -%}
                             <li class="pure-menu-item">
-                                <a class="pure-menu-link" href="/examples/{{ file }}">{{ file }}</a>
+                                <a class="pure-menu-link" href="/examples/{{category | replace(' ', '-')}}/{{ file }}">{{ file }}</a>
                             </li>
                         {%- endfor %}
                         </ul>
                     </li>
+                    {%- endfor %}
                     <li class="pure-menu-item">
                         <a class="pure-menu-link" href="https://github.com/firemark/pixelopolis/blob/master/README.md" target="_blank">README</a>
                     </li>
