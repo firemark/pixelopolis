@@ -31,11 +31,7 @@ int angle_iter_iterate(struct AngleIter *iter) {
     iter->y = iter->ny;
     iter->i++;
 
-    if (iter->i == iter->sides) {
-        iter->theta = iter->start_theta;
-    } else {
-        iter->theta += iter->theta_iter;
-    }
+    iter->theta += iter->theta_iter;
 
     _angle_iter_update_ncords(iter);
 

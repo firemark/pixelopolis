@@ -25,6 +25,7 @@ MENU = [
         ('Random', 'examples/random.css'),
     ]),
     ('Complex', [
+        ('Mosque', 'examples/complex/mosque.css'),
         ('Complex', 'examples/complex/complex.css'),
     ]),
 ]

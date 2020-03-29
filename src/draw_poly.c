@@ -30,12 +30,12 @@ struct h_poly_diffx {
 
 struct h_fill_space {
     struct image *img; 
-    float *normal;
+    double *normal;
     struct FlatImage *img_to_draw;
     struct h_poly *left, *right;
 };
 
-void _compute_normal(float normal[3], int voxes[9]) {
+void _compute_normal(double normal[3], int voxes[9]) {
     int vox_a[3] = {
         voxes[3 + 0] - voxes[0 + 0],
         voxes[3 + 1] - voxes[0 + 1],
@@ -48,13 +48,15 @@ void _compute_normal(float normal[3], int voxes[9]) {
     normal[0] = vox_a[1] * vox_b[2] - vox_a[2] * vox_b[1];
     normal[1] = vox_a[0] * vox_b[2] - vox_a[2] * vox_b[0];
     normal[2] = vox_a[0] * vox_b[1] - vox_a[1] * vox_b[0];
-    float abs_normal[3] = {
-        fabs(normal[0]),
-        fabs(normal[1]),
-        fabs(normal[2]),
-    };
-    float _max = abs_normal[0] > abs_normal[1] ? abs_normal[0] : abs_normal[1];
-    float max = _max > abs_normal[2] ? _max : abs_normal[2];
+
+    double _min = normal[0] < normal[1] ? normal[0] : normal[1];
+    double min = _min < normal[2] ? _min : normal[2];
+    normal[0] -= min;
+    normal[1] -= min;
+    normal[2] -= min;
+
+    double _max = normal[0] > normal[1] ? normal[0] : normal[1];
+    double max = _max > normal[2] ? _max : normal[2];
     if (max != 0.0) {
         normal[0] /= max;
         normal[1] /= max;
@@ -117,7 +119,7 @@ void _diff_h_poly_with_x(
 void _putpixel(
         struct image *img, 
         struct FlatImage *img_to_draw,
-        float normal[3],
+        double normal[3],
         struct h_poly *point) {
     int tmp_cor[2] = { round(point->u), round(point->v) };
     int img_cor[2] = { round(point->x), round(point->y) };
@@ -233,7 +235,7 @@ void draw_poly(
     _cpy_h_poly(&left, a);
     _cpy_h_poly(&right, a);
 
-    float normal[3];
+    double normal[3];
     _compute_normal(normal, voxes);
 
     struct h_fill_space helper = {
