@@ -6,26 +6,26 @@ app = Flask(__name__)
 
 MENU = [
     ('Basic shapes', [
-        ('Cube', 'examples/cube.css'),
-        ('Cylinder', 'examples/cylinder.css'),
-        ('Cone', 'examples/cone.css'),
-        ('Dome', 'examples/dome.css'),
-        ('Pyramid', 'examples/pyramid.css'),
-        ('Triangle', 'examples/triangle.css'),
+        ('Cube', 'examples/basic/cube.css'),
+        ('Cylinder', 'examples/basic/cylinder.css'),
+        ('Cone', 'examples/basic/cone.css'),
+        ('Dome', 'examples/basic/dome.css'),
+        ('Pyramid', 'examples/basic/pyramid.css'),
+        ('Triangle', 'examples/basic/triangle.css'),
     ]),
     ('Containers', [
-        ('Fillers', 'examples/fillers.css'),
-        ('Series', 'examples/series.css'),
+        ('Fillers', 'examples/containers/fillers.css'),
+        ('Series', 'examples/containers/series.css'),
     ]),
     ('Textures', [
-        ('Textures', 'examples/textures.css'),
-        ('Floor-Align', 'examples/floor-align.css'),
+        ('Textures', 'examples/textures/textures.css'),
+        ('Floor-Align', 'examples/textures/floor-align.css'),
     ]),
     ('Attributes', [
         ('Random', 'examples/random.css'),
     ]),
     ('Complex', [
-        ('Complex', 'examples/complex.css'),
+        ('Complex', 'examples/complex/complex.css'),
     ]),
 ]
 
