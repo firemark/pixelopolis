@@ -49,14 +49,9 @@ void _compute_normal(double normal[3], int voxes[9]) {
     normal[1] = vox_a[0] * vox_b[2] - vox_a[2] * vox_b[0];
     normal[2] = vox_a[0] * vox_b[1] - vox_a[1] * vox_b[0];
 
-    double _min = normal[0] < normal[1] ? normal[0] : normal[1];
-    double min = _min < normal[2] ? _min : normal[2];
-    normal[0] -= min;
-    normal[1] -= min;
-    normal[2] -= min;
-
     double _max = normal[0] > normal[1] ? normal[0] : normal[1];
     double max = _max > normal[2] ? _max : normal[2];
+
     if (max != 0.0) {
         normal[0] /= max;
         normal[1] /= max;
@@ -125,10 +120,15 @@ void _putpixel(
     int img_cor[2] = { round(point->x), round(point->y) };
     struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
 
+    if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
+        // 0xFF00FF color reversed for transparency color
+        return;
+    }
+
     // primitive shading
-    color.r *= (1.0 - normal[0] * 0.35);
-    color.g *= (1.0 - normal[0] * 0.35);
-    color.b *= (1.0 - normal[0] * 0.35);
+    color.r *= fmin(1.0, 1.0 - normal[0] * 0.35);
+    color.g *= fmin(1.0, 1.0 - normal[0] * 0.35);
+    color.b *= fmin(1.0, 1.0 - normal[0] * 0.35);
 
     struct RoyalPixel royal_color = {
         .r=color.r, .g=color.g, .b=color.b,

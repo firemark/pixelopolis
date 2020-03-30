@@ -1,5 +1,7 @@
 #include "_css_draw.h"
 
+struct rgb PURPLE = { .r=0xFF, .g=0x00, .b=0xFF };
+
 int _get_height_of_floor(struct FloorObj* obj) {
     int height = obj->height;
 
@@ -34,7 +36,7 @@ without_texture:;
 }
 
 struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width, int height) {
-    struct FlatImage *img = flat_image_create(width, height);
+    struct FlatImage *img = flat_image_create_with_color(width, height, &PURPLE);
     struct TexObj *tex_obj = obj->tex;
     if (tex_obj) {
         if (tex_obj->texture) {
