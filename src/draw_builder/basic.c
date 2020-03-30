@@ -18,6 +18,15 @@ MAKE_GET_METRIC(_get_basic_metric, width, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, height, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, depth, struct BasicObj)
 
+int _builder_build_basic_get_rotate(
+        struct Rule* rule,
+        struct BasicObj* parent_basic) {
+    int* p_rotate = css_find_number_prop(rule, "rotate");
+    int child_rotate = p_rotate? *p_rotate : 0;
+    int parent_rotate = parent_basic ? parent_basic->rotate : 0;
+    return (child_rotate + parent_rotate) % 360;
+}
+
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
     struct BasicObj* parent_basic = parent ? &parent->basic : NULL;
 
@@ -25,6 +34,7 @@ struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
         .width=_get_basic_metric_width(rule, DEFAULT_METRIC, parent_basic),
         .height=_get_basic_metric_height(rule, DEFAULT_METRIC, parent_basic),
         .depth=_get_basic_metric_depth(rule, DEFAULT_METRIC, parent_basic),
+        .rotate=_builder_build_basic_get_rotate(rule, parent_basic),
     };
 
     return basic;
