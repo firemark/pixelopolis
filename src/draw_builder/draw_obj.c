@@ -32,7 +32,7 @@ struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper) {
 
     // advanced
     //IF_NAME("union")            obj = builder_build_union(&inner_helper);
-    //IF_NAME("border-walls")     obj = builder_build_border_walls(&inner_helper);
+    IF_NAME("square-fence")     obj = builder_build_square_fence(&inner_helper);
     IF_NAME("v-series")         obj = builder_build_series(&inner_helper, VERTICAL_FILL);
     IF_NAME("d-series")         obj = builder_build_series(&inner_helper, DEPTH_FILL);
     IF_NAME("h-series")         obj = builder_build_series(&inner_helper, HORIZONTAL_FILL);

@@ -21,30 +21,31 @@ MAKE_GET_METRIC(_get_basic_metric, width, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, height, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, depth, struct BasicObj)
 
-int _builder_build_basic_get_rotate(
-        struct Rule* rule,
-        struct BasicObj* parent_basic) {
-    int* p_rotate = css_find_number_prop(rule, "rotate");
-    int child_rotate = p_rotate? *p_rotate : 0;
-    int parent_rotate = parent_basic ? parent_basic->rotate : 0;
-    return (child_rotate + parent_rotate) % 360;
-}
-
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
     struct BasicObj* parent_basic = parent ? &parent->basic : NULL;
-    int rotate = _builder_build_basic_get_rotate(rule, parent_basic);
-    double theta = rotate * M_PI / 180.0;
+    const int primal_rotate = builder_get_int(rule, "rotate", 0);
+    const int rotate = builder_compute_rotate(primal_rotate, parent_basic);
+    const int width = _get_basic_metric_width(rule, DEFAULT_METRIC, parent_basic);
+    const int height = _get_basic_metric_height(rule, DEFAULT_METRIC, parent_basic);
+    const int depth = _get_basic_metric_depth(rule, DEFAULT_METRIC, parent_basic);
 
-    struct BasicObj basic = {
-        .width=_get_basic_metric_width(rule, DEFAULT_METRIC, parent_basic),
-        .height=_get_basic_metric_height(rule, DEFAULT_METRIC, parent_basic),
-        .depth=_get_basic_metric_depth(rule, DEFAULT_METRIC, parent_basic),
+    return builder_build_custom_basic(width, height, depth, rotate);
+}
+
+struct BasicObj builder_build_custom_basic(
+        const int width, 
+        const int height, 
+        const int depth,
+        const int rotate) {
+    const double theta = rotate * M_PI / 180.0;
+    return (struct BasicObj) {
+        .width=width,
+        .height=height,
+        .depth=depth,
         .rotate=rotate,
         .sin_th=sin(theta),
         .cos_th=cos(theta),
     };
-
-    return basic;
 }
 
 struct BasicObj builder_build_empty_basic() {
@@ -52,6 +53,9 @@ struct BasicObj builder_build_empty_basic() {
         .width=0,
         .height=0,
         .depth=0,
+        .rotate=0,
+        .sin_th=0.0,
+        .cos_th=1.0,
     };
 
     return basic;

@@ -5,7 +5,7 @@
 #include "css_func.h"
 #include "angle_iter.h"
 
-void _cylinder_build_many_walls(struct SelectorHelper* wall_helper, struct CylinderObj* obj, struct BasicObj* basic) {
+static void _cylinder_build_many_walls(struct SelectorHelper* wall_helper, struct CylinderObj* obj, struct BasicObj* basic) {
     int width = basic->width;
     int depth = basic->depth;
     obj->walls = malloc(sizeof(struct WallObj*) * obj->sides);
@@ -18,7 +18,7 @@ void _cylinder_build_many_walls(struct SelectorHelper* wall_helper, struct Cylin
     }
 }
 
-void _cylinder_build_single_wall(struct SelectorHelper* wall_helper, struct CylinderObj* obj, struct BasicObj* basic) {
+static void _cylinder_build_single_wall(struct SelectorHelper* wall_helper, struct CylinderObj* obj, struct BasicObj* basic) {
     int width = basic->width;
     int depth = basic->depth;
     int total_length = ceil(M_PI * (3.0 / 2.0) * (width + depth) - sqrt(width * depth)); 
@@ -33,11 +33,8 @@ struct DrawObj* builder_build_cylinder(struct Helper* helper) {
     struct CylinderObj* obj = malloc(sizeof(struct CylinderObj));
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
-    int* has_many_walls = css_find_number_prop(rule, "has-many-walls");
-    obj->has_many_walls = has_many_walls ? *has_many_walls : 0;
-
-    int* sides = css_find_number_prop(rule, "sides");
-    obj->sides = sides ? *sides : 8;
+    obj->has_many_walls = builder_get_int(rule, "has-many-walls", 0);
+    obj->sides = builder_get_int(rule, "sides", 8);
 
     struct SelectorHelper wall_helper = make_selector_helper(helper, "wall");
     if (!wall_helper.selector) {

@@ -1,7 +1,7 @@
 #include "_css_draw.h"
 #include "css_draw.h"
 
-static inline void _update_shift(int vox[3], struct DrawObj *draw_obj, int shift) {
+static inline void _update_shift(int vox[3], const struct DrawObj *draw_obj, const int shift) {
     struct SeriesObj *obj = draw_obj->obj;
 
     switch(obj->fill_direction) {

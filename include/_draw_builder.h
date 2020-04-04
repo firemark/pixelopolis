@@ -28,13 +28,23 @@ struct SelectorHelper {
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper);
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent);
 struct BasicObj builder_build_empty_basic();
+struct BasicObj builder_build_custom_basic(
+        const int width, 
+        const int height, 
+        const int depth,
+        const int rotate);
 struct DrawObj* builder_build_void(struct Helper* helper);
+struct DrawObj* builder_build_custom_void(
+        struct Helper* helper, 
+        struct BasicObj basic,
+        struct RuleSelector* child_selector);
 struct DrawObj* builder_build_pyramid(struct Helper* helper);
 struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
 struct DrawObj* builder_build_cone(struct Helper* helper);
 struct DrawObj* builder_build_cylinder(struct Helper* helper);
 struct DrawObj* builder_build_dome(struct Helper* helper);
+struct DrawObj* builder_build_square_fence(struct Helper* helper);
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction);
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction);
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height);
@@ -44,7 +54,9 @@ struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 //utils
 struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper);
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
+int builder_get_int(struct Rule* rule, char* key, const int default_value);
 int builder_get_padding(struct Rule* rule);
+int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic);
 
 //series utils
 struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);
