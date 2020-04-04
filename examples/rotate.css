@@ -1,23 +1,60 @@
 world {
     width: 800;
     height: 800;
-    body: cubes;
+    body: objs;
+}
+
+.rotate_0   { rotate:   0; }
+.rotate_15  { rotate:  15; }
+.rotate_30  { rotate:  30; }
+.rotate_45  { rotate:  45; }
+.rotate_90  { rotate:  90; }
+.rotate_200 { rotate: 200; }
+
+objs {
+    display: d-series;
+    body: cubes, series;
+    padding: 200;
 }
 
 cubes {
     display: v-series;
-    body: 
+    body:
         cube.rotate_0,
         cube.rotate_15,
         cube.rotate_30,
-        cube.rotate_45, 
-        cube.rotate_90, 
-        cube.rotate_200,
-        cube.rotate_720;
+        cube.rotate_45,
+        cube.rotate_90,
+        cube.rotate_200;
     padding: 60;
 }
 
-cube {
+series {
+    display: v-series;
+    body:
+        mini-series.rotate_0,
+        mini-series.rotate_15,
+        mini-series.rotate_30,
+        mini-series.rotate_45;
+    padding: 100;
+}
+
+mini-series {
+    display: d-series;
+    body:
+        building.rotate_0.grey,
+        building.rotate_0,
+        building.rotate_0,
+        building.rotate_0.grey;
+    padding: 20;
+}
+
+building {
+    display: h-series;
+    body: cube, pyramid;
+}
+
+cube, pyramid {
     wall: wall.red-brick;
     roof: wall.red-brick;
     width: 50;
@@ -25,13 +62,12 @@ cube {
     height: 100;
 }
 
-cube.rotate_0   { rotate:   0; }
-cube.rotate_15  { rotate:  15; }
-cube.rotate_30  { rotate:  30; }
-cube.rotate_45  { rotate:  45; }
-cube.rotate_90  { rotate:  90; }
-cube.rotate_200 { rotate: 200; }
-cube.rotate_720 { rotate: 720; }
+.grey > cube, .grey > pyramid {
+    wall: wall.grey-brick;
+    roof: wall.grey-brick;
+}
 
 wall.red-brick { texture: tex.red-brick; }
+wall.grey-brick { texture: tex.grey-brick; }
 tex.red-brick  { texture: "textures/brick.png"; }
+tex.grey-brick  { texture: "textures/grey-brick.png"; }
