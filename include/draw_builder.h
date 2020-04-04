@@ -18,6 +18,7 @@ enum FillDirection { VERTICAL_FILL = 0, HORIZONTAL_FILL = 2, DEPTH_FILL = 1 };
 struct BasicObj {
     int width, height, depth;
     int rotate;
+    double sin_th, cos_th;
 };
 
 struct DrawObj {

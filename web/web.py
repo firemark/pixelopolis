@@ -23,6 +23,7 @@ MENU = [
     ]),
     ('Attributes', [
         ('Random', 'examples/random.css'),
+        ('Rotate', 'examples/rotate.css'),
     ]),
     ('Complex', [
         ('Mosque', 'examples/complex/mosque.css'),
