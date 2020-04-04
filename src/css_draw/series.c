@@ -3,7 +3,6 @@
 
 static inline void _update_shift(int vox[3], struct DrawObj *draw_obj, int shift) {
     struct SeriesObj *obj = draw_obj->obj;
-    double sin_th, cos_th;
 
     switch(obj->fill_direction) {
         case VERTICAL_FILL:
