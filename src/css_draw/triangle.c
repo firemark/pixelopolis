@@ -2,24 +2,25 @@
 #include "_css_draw.h"
 
 void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct TriangleObj *obj = draw_obj->obj;
+    const struct TriangleObj *obj = draw_obj->obj;
     if (!obj) return;
-    int *vox = inner_info->vox;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
-    int w = width;
-    int wh = width / 2;
-    int h = height;
-    int d = depth;
+    const int *vox = inner_info->vox;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
+    const int w = width;
+    const int wh = width / 2;
+    const int h = height;
+    const int d = depth;
 
     struct WallObj *wall_obj = obj->wall;
     if (wall_obj && width > 0 && height > 0) {
         int voxes[9] = {
-            POINT(vox, 0 , 0, 0),
-            POINT(vox, w , 0, 0),
-            POINT(vox, wh, 0, h),
+            0 , 0, 0,
+            w , 0, 0,
+            wh, 0, h,
         };
+        _transform(voxes, vox, &draw_obj->basic, 3);
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall_obj, width, height);
         css_base_draw_wide_triangle(inner_info->img, img_to_draw, voxes);
         free(img_to_draw);
@@ -31,19 +32,22 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
         struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(roof_obj, width, height);
 
         int voxes_first[12] = {
-            POINT(vox, w , 0, 0),
-            POINT(vox, w , d, 0),
-            POINT(vox, wh, 0, h),
-            POINT(vox, wh, d, h),
+            w , 0, 0,
+            w , d, 0,
+            wh, 0, h,
+            wh, d, h,
         };
-        css_base_draw_plane(inner_info->img, img_to_draw_first, voxes_first);
-
         int voxes_second[12] = {
-            POINT(vox, w , 0, 0),
-            POINT(vox, w , d, 0),
-            POINT(vox, wh, 0, h),
-            POINT(vox, wh, d, h),
+            w , 0, 0,
+            w , d, 0,
+            wh, 0, h,
+            wh, d, h,
         };
+
+        _transform(voxes_first, vox, &draw_obj->basic, 4);
+        _transform(voxes_second, vox, &draw_obj->basic, 4);
+
+        css_base_draw_plane(inner_info->img, img_to_draw_first, voxes_first);
         css_base_draw_plane(inner_info->img, img_to_draw_second, voxes_second);
 
         free(img_to_draw_first);

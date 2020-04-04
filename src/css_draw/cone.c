@@ -7,30 +7,31 @@
 #include "draw_poly.h"
 
 
-void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct ConeObj *obj = draw_obj->obj;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
-    int *vox = inner_info->vox;
+static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    const struct ConeObj *obj = draw_obj->obj;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
+    const int *vox = inner_info->vox;
 
     struct WallObj *roof = obj->roof;
-    int wh = width / 2;
-    int dh = depth / 2;
+    const int wh = width / 2;
+    const int dh = depth / 2;
 
     struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, roof->width, roof->height);
 
-    int total_length = roof->width;
+    const int total_length = roof->width;
     int iter_length = 0;
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
     while(angle_iter_iterate(&angle_iter)) {
         int voxes[9] = {
-            POINT(vox, angle_iter.x  + wh, angle_iter.y  + dh, 0),
-            POINT(vox, angle_iter.nx + wh, angle_iter.ny + dh, 0),
-            POINT(vox, wh, dh, height),
+            angle_iter.x  + wh, angle_iter.y  + dh, 0,
+            angle_iter.nx + wh, angle_iter.ny + dh, 0,
+            wh, dh, height,
         };
+        _transform(voxes, vox, &draw_obj->basic, 3);
 
         int next_length = iter_length + angle_iter_get_length(&angle_iter);
         if (next_length > total_length) next_length = total_length;

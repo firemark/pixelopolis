@@ -20,17 +20,20 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(south_wall_obj, width, height);
 
         int voxes_first[9] = {
-            POINT(vox, 0 , 0 , 0),
-            POINT(vox, w , 0 , 0),
-            POINT(vox, wh, dh, h),
+            0 , 0 , 0,
+            w , 0 , 0,
+            wh, dh, h,
         };
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
-
         int voxes_second[9] = {
-            POINT(vox, 0 , d , 0),
-            POINT(vox, w , d , 0),
-            POINT(vox, wh, dh, h),
+            0 , d , 0,
+            w , d , 0,
+            wh, dh, h,
         };
+
+        _transform(voxes_first, vox, &draw_obj->basic, 3);
+        _transform(voxes_second, vox, &draw_obj->basic, 3);
+
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
 
         free(img_to_draw_first);
@@ -43,18 +46,21 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(east_wall_obj, width, height);
 
         int voxes_first[9] = {
-            POINT(vox, 0 , 0 , 0),
-            POINT(vox, 0 , d , 0),
-            POINT(vox, wh, dh, h),
+            0 , 0 , 0,
+            0 , d , 0,
+            wh, dh, h,
         };
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
-
         int voxes_second[9] = {
-            POINT(vox, w , 0 , 0),
-            POINT(vox, w , d , 0),
-            POINT(vox, wh, dh, h),
+            w , 0 , 0,
+            w , d , 0,
+            wh, dh, h,
         };
+
+        _transform(voxes_first, vox, &draw_obj->basic, 3);
+        _transform(voxes_second, vox, &draw_obj->basic, 3);
+
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
 
         free(img_to_draw_first);
         free(img_to_draw_second);

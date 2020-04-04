@@ -9,16 +9,15 @@
 #define NORMALIZE_VAL 200
 
 
-void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct DomeObj *obj = draw_obj->obj;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
-    int *vox = inner_info->vox;
+static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    const struct DomeObj *obj = draw_obj->obj;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
 
     struct WallObj *roof = obj->roof;
-    int wh = width / 2;
-    int dh = depth / 2;
+    const int wh = width / 2;
+    const int dh = depth / 2;
 
     struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, roof->width, roof->height);
 
@@ -26,7 +25,7 @@ void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_i
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->vertical_sides);
     while(angle_iter_iterate(&angle_iter)) {
-        int nw_length = w_length + angle_iter_get_length(&angle_iter);
+        const int nw_length = w_length + angle_iter_get_length(&angle_iter);
 
         int h_length = 0;
         struct AngleIter height_angle_iter;
@@ -36,23 +35,25 @@ void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_i
             // s - start
             // e - end
             // n - next
-            int  sx = NORM(angle_iter.x , x);
-            int  sy = NORM(angle_iter.y , x);
-            int snx = NORM(angle_iter.nx, x);
-            int sny = NORM(angle_iter.ny, x);
-            int  ex = NORM(angle_iter.x , nx);
-            int  ey = NORM(angle_iter.y , nx);
-            int enx = NORM(angle_iter.nx, nx);
-            int eny = NORM(angle_iter.ny, nx);
+            const int  sx = NORM(angle_iter.x , x);
+            const int  sy = NORM(angle_iter.y , x);
+            const int snx = NORM(angle_iter.nx, x);
+            const int sny = NORM(angle_iter.ny, x);
+            const int  ex = NORM(angle_iter.x , nx);
+            const int  ey = NORM(angle_iter.y , nx);
+            const int enx = NORM(angle_iter.nx, nx);
+            const int eny = NORM(angle_iter.ny, nx);
 #undef NORM
             int voxes[12] = {
-                POINT(vox,  sx + wh,  sy + dh, height_angle_iter.y),
-                POINT(vox, snx + wh, sny + dh, height_angle_iter.y),
-                POINT(vox,  ex + wh,  ey + dh, height_angle_iter.ny),
-                POINT(vox, enx + wh, eny + dh, height_angle_iter.ny),
+                 sx + wh,  sy + dh, height_angle_iter.y,
+                snx + wh, sny + dh, height_angle_iter.y,
+                 ex + wh,  ey + dh, height_angle_iter.ny,
+                enx + wh, eny + dh, height_angle_iter.ny,
             };
+            _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
 
-            int nh_length = h_length + angle_iter_get_length(&height_angle_iter);
+
+            const int nh_length = h_length + angle_iter_get_length(&height_angle_iter);
 
             int uv[4] = {
                  w_length,  h_length,

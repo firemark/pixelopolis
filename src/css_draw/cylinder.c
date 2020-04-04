@@ -6,26 +6,26 @@
 #include "angle_iter.h"
 #include "draw_poly.h"
 
-#define CREATE_VOXES(vox, angle_iter, basic) { \
-    POINT(vox, basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , 0), \
-    POINT(vox, basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, 0), \
-    POINT(vox, basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , basic.height), \
-    POINT(vox, basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, basic.height), \
+#define CREATE_VOXES(angle_iter, basic) { \
+    basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , 0, \
+    basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, 0, \
+    basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , basic.height, \
+    basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, basic.height, \
 }
 
 
-void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct CylinderObj *obj = draw_obj->obj;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
+static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    const struct CylinderObj *obj = draw_obj->obj;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
 
     struct WallObj **walls = obj->walls;
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
     while(angle_iter_iterate(&angle_iter)) {
-        int voxes[12] = CREATE_VOXES(inner_info->vox, angle_iter, draw_obj->basic);
+        int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
         struct WallObj *wall = walls[angle_iter.i];
 
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall, wall->width, height);
@@ -34,11 +34,11 @@ void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawInnerInf
     }
 }
 
-void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct CylinderObj *obj = draw_obj->obj;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
+static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    const struct CylinderObj *obj = draw_obj->obj;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
 
     struct WallObj *wall = obj->walls[0];
 
@@ -50,7 +50,8 @@ void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct DrawInnerIn
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
     while(angle_iter_iterate(&angle_iter)) {
-        int voxes[12] = CREATE_VOXES(inner_info->vox, angle_iter, draw_obj->basic);
+        int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
+        _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
 
         int next_length = iter_length + angle_iter_get_length(&angle_iter);
         if (next_length > total_length) next_length = total_length;
@@ -67,17 +68,16 @@ void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct DrawInnerIn
     free(img_to_draw);
 }
 
-
-void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
-    struct CylinderObj *obj = draw_obj->obj;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
-    int *vox = inner_info->vox;
+static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+    const struct CylinderObj *obj = draw_obj->obj;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
+    const int *vox = inner_info->vox;
 
     struct WallObj *roof = obj->roof;
-    int wh = width / 2;
-    int dh = depth / 2;
+    const int wh = width / 2;
+    const int dh = depth / 2;
 
     struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, width, depth);
 
@@ -85,10 +85,11 @@ void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inn
     angle_iter_start(&angle_iter, width, depth, obj->sides);
     while(angle_iter_iterate(&angle_iter)) {
         int voxes[9] = {
-            POINT(vox, angle_iter.x + wh, angle_iter.y + dh, height),
-            POINT(vox, angle_iter.nx + wh, angle_iter.ny + dh, height),
-            POINT(vox, wh, dh, height),
+            angle_iter.x + wh, angle_iter.y + dh, height,
+            angle_iter.nx + wh, angle_iter.ny + dh, height,
+            wh, dh, height,
         };
+        _transform(voxes, vox, &draw_obj->basic, 3);
 
         int uv[6] = {
             angle_iter.x + wh, angle_iter.y + dh,

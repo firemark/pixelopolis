@@ -2,8 +2,6 @@
 #include "img.h"
 #include "draw_builder.h"
 
-#define POINT(v, a, b, c) v[0] + a, v[1] + b, v[2] + c
-
 struct DrawInnerInfo {
     struct image *img; 
     int *vox;
