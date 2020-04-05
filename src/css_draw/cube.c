@@ -36,15 +36,23 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
 
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
-        int voxes[12] = {
+        int voxes_first[12] = {
             0, 0, 0,
             w, 0, 0,
             0, 0, h,
             w, 0, h,
         };
-        _transform(voxes, vox, &draw_obj->basic, 4);
+        int voxes_second[12] = {
+            0, d, 0,
+            w, d, 0,
+            0, d, h,
+            w, d, h,
+        };
+        _transform(voxes_first, vox, &draw_obj->basic, 4);
+        _transform(voxes_second, vox, &draw_obj->basic, 4);
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(south_wall_obj, width, height);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_first);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_second);
         free(img_to_draw);
     }
 
