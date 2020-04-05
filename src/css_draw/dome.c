@@ -18,6 +18,7 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     struct WallObj *roof = obj->roof;
     const int wh = width / 2;
     const int dh = depth / 2;
+    const int h2 = height * 2;
 
     struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, roof->width, roof->height);
 
@@ -29,7 +30,7 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
 
         int h_length = 0;
         struct AngleIter height_angle_iter;
-        angle_iter_start_with_range(&height_angle_iter, NORMALIZE_VAL, height, obj->horizontal_sides * 4, 0, obj->horizontal_sides - 1);
+        angle_iter_start_with_range(&height_angle_iter, NORMALIZE_VAL, h2, obj->horizontal_sides * 4, 0, obj->horizontal_sides - 1);
         while(angle_iter_iterate(&height_angle_iter)) {
 #define NORM(val, n) (val * 2 * height_angle_iter . n / NORMALIZE_VAL)
             // s - start

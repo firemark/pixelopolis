@@ -1,22 +1,30 @@
 #include "_css_draw.h"
 #include "css_draw.h"
 
-static inline void _update_shift(int vox[3], const struct DrawObj *draw_obj, const int shift) {
+static inline void _update_shift(
+        int vox[3],
+        const struct DrawObj *draw_obj,
+        const struct ShiftDrawPair *pair) {
+    const int shift = pair->shift;
+    const struct DrawObj *child_obj = pair->obj;
     struct SeriesObj *obj = draw_obj->obj;
 
     switch(obj->fill_direction) {
         case VERTICAL_FILL:
             vox[0] += shift * draw_obj->basic.cos_th;
             vox[1] += shift * draw_obj->basic.sin_th;
+            _justify_d(vox, &child_obj->basic, &draw_obj->basic);
             break;
         case DEPTH_FILL:
             // rotate 90°, reduced trygonometry functions
             vox[0] += shift * -draw_obj->basic.sin_th;
             vox[1] += shift * draw_obj->basic.cos_th;
+            _justify_v(vox, &child_obj->basic, &draw_obj->basic);
             break;
         case HORIZONTAL_FILL:
             vox[2] += shift;
-            return;
+            _justify_vd(vox, &child_obj->basic, &draw_obj->basic);
+            break;
     }
 }
 
@@ -30,7 +38,7 @@ void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info)
     size_t index = 0;
     while((pair = pairs[index++])) {
         int vox[3] = COPY_VOX(inner_info->vox);
-        _update_shift(vox, draw_obj, pair->shift);
+        _update_shift(vox, draw_obj, pair);
         struct DrawInfo draw_info = {
             .img=inner_info->img,
             .vox=vox,
