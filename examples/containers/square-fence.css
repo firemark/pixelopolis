@@ -1,0 +1,67 @@
+world {
+    width: 800;
+    height: 800;
+    body: square-fence.example;
+}
+
+/* STRUCT */
+
+square-fence.example {
+    edge-size: 40;
+    body: body;
+    edge: edge;
+    corner: corner;
+    width: 400;
+    depth: 400;
+}
+
+/* STYLES */
+
+edge {
+    display: cube;
+    wall: wall.red-brick.windows;
+    roof: wall.red-brick;
+    width: 100%;
+    depth: 100%;
+    height: 50;
+}
+
+corner {
+    display: cube;
+    wall: wall.grey-brick.windows;
+    roof: wall.grey-brick;
+    width: 100%;
+    depth: 100%;
+    height: 100;
+}
+
+body {
+    display: cube;
+    wall: wall.wood.windows;
+    roof: wall.wood;
+    width: 50%;
+    depth: 50%;
+    height: 80;
+}
+
+wall.grey-brick { texture: tex.grey-brick; }
+wall.red-brick { texture: tex.red-brick; }
+wall.wood { texture: tex.wood; }
+
+wall.windows {
+    middle: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+floor.windows {
+    middle: tex.window;
+    align: middle;
+    height: 12;
+    padding: 12;
+}
+
+tex.wood { texture: "textures/wood.png"; }
+tex.grey-brick { texture: "textures/grey-brick.png"; }
+tex.red-brick { texture: "textures/brick.png"; }
+tex.window { texture: "textures/window.png"; }

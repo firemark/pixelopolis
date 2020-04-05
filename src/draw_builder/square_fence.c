@@ -47,7 +47,7 @@ static struct DrawObj* _make_edge(
         const int primal_rotate) {
     struct BasicObj* parent_basic = &helper->parent->basic;
     const int edge_size = obj->edge_size;
-    const int primal_width = is_vertical ? parent_basic->width : parent_basic->height;
+    const int primal_width = is_vertical ? parent_basic->width : parent_basic->depth;
     const int width = primal_width - edge_size * 2;
     const int height = parent_basic->height;
     const int depth = edge_size;

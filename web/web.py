@@ -16,6 +16,7 @@ MENU = [
     ('Containers', [
         ('Fillers', 'examples/containers/fillers.css'),
         ('Series', 'examples/containers/series.css'),
+        ('Square-Fence', 'examples/containers/square-fence.css'),
     ]),
     ('Textures', [
         ('Textures', 'examples/textures/textures.css'),
