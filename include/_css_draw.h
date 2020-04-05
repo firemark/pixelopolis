@@ -1,4 +1,6 @@
 #pragma once
+#include <stdlib.h>
+
 #include "img.h"
 #include "draw_builder.h"
 
@@ -58,3 +60,57 @@ static inline void _transform(int *voxes, const int vox[3], const struct BasicOb
         voxes[i + 2] = vox_z + z;
     }
 }
+
+static inline void _do_justify(
+        int vox[3], 
+        const enum Justify justify, 
+        const int x, const int y) {
+    switch (justify) {
+        case JUSTIFY_START: break; // do nothing
+        case JUSTIFY_END: 
+            vox[0] += x; 
+            vox[1] += y; 
+            break;
+        case JUSTIFY_CENTER: 
+            vox[0] += x / 2; 
+            vox[1] += y / 2; 
+            break;
+        case JUSTIFY_RANDOM: 
+            if (x > 0) vox[0] += rand() % x; 
+            if (x < 0) vox[0] -= rand() % -x; 
+            if (y > 0) vox[1] += rand() % y; 
+            if (y < 0) vox[1] -= rand() % -y; 
+            break;
+    }
+} 
+
+static inline void _justify_v(
+        int vox[3], 
+        const struct BasicObj* basic, 
+        const struct BasicObj* parent_basic) {
+    const int sub = parent_basic->width - basic->width;
+    if (!sub) return;
+    const int sub_x = _x_rotate(sub, 0, parent_basic);
+    const int sub_y = _y_rotate(sub, 0, parent_basic);
+    _do_justify(vox, parent_basic->v_justify, sub_x, sub_y);
+};
+
+static inline void _justify_d(
+        int vox[3], 
+        const struct BasicObj* basic, 
+        const struct BasicObj* parent_basic) {
+    const int sub = parent_basic->depth - basic->depth;
+    if (!sub) return;
+    const int sub_x = _x_rotate(0, sub, parent_basic);
+    const int sub_y = _y_rotate(0, sub, parent_basic);
+    _do_justify(vox, parent_basic->d_justify, sub_x, sub_y);
+};
+
+static inline void _justify_vd(
+        int vox[3], 
+        const struct BasicObj* basic, 
+        const struct BasicObj* parent_basic) {
+    _justify_v(vox, basic, parent_basic);
+    _justify_d(vox, basic, parent_basic);
+};
+

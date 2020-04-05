@@ -1,28 +1,38 @@
 world {
     width: 800;
     height: 800;
-    body: square-fence.example;
+    body: example;
+}
+
+example {
+    display: h-series;
+    body: road, prison;
+    width: 500;
+    depth: 600;
 }
 
 /* STRUCT */
 
-square-fence.example {
+prison {
+    display: square-fence;
     edge-size: 40;
     body: body;
+    body-justify: center;
     edge: edge;
+    edge-justify: start;
     corner: corner;
-    width: 400;
-    depth: 400;
+    width: 100%;
+    depth: 100%;
 }
 
 /* STYLES */
 
 edge {
     display: cube;
-    wall: wall.red-brick.windows;
+    wall: wall.red-brick;
     roof: wall.red-brick;
     width: 100%;
-    depth: 100%;
+    depth: 20%;
     height: 50;
 }
 
@@ -37,16 +47,24 @@ corner {
 
 body {
     display: cube;
-    wall: wall.wood.windows;
+    wall: wall.red-brick.windows;
     roof: wall.wood;
     width: 50%;
     depth: 50%;
     height: 80;
 }
 
+road {
+  display: cube;
+  width: 100%;
+  depth: 100%;
+  roof: wall.sand;
+}
+
 wall.grey-brick { texture: tex.grey-brick; }
 wall.red-brick { texture: tex.red-brick; }
 wall.wood { texture: tex.wood; }
+wall.sand { texture: tex.sand; }
 
 wall.windows {
     middle: floor.windows;
@@ -61,6 +79,7 @@ floor.windows {
     padding: 12;
 }
 
+tex.sand { texture: "textures/clay-sand.png"; }
 tex.wood { texture: "textures/wood.png"; }
 tex.grey-brick { texture: "textures/grey-brick.png"; }
 tex.red-brick { texture: "textures/brick.png"; }

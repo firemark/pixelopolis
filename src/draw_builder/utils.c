@@ -71,9 +71,12 @@ static inline enum Justify _builder_get_single_justify(const char* name) {
 
 enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index) {
     struct Obj** prop_objs = css_find_objs(rule, key);
+    if (!prop_objs) {
+        return JUSTIFY_START;
+    }
     const size_t size = _get_size(prop_objs);
 
-    if (size < 1) {
+    if (size == 0) {
         return JUSTIFY_START;
     }
 

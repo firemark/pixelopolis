@@ -13,6 +13,8 @@ static void _fill_body(struct SquareFenceObj* obj, struct Helper *helper) {
         .height=parent_basic->height,
         .depth=parent_basic->depth - edge_size,
         .rotate=builder_compute_rotate(0, parent_basic),
+        .v_justify=builder_get_justify(helper->rule, "body-justify", V_JUSTIFY),
+        .d_justify=builder_get_justify(helper->rule, "body-justify", D_JUSTIFY),
     };
     builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "body");
@@ -29,6 +31,8 @@ static struct DrawObj* _make_corner(
         .height=parent_basic->height,
         .depth=size,
         .rotate=builder_compute_rotate(0, parent_basic),
+        .v_justify=builder_get_justify(helper->rule, "corner-justify", V_JUSTIFY),
+        .d_justify=builder_get_justify(helper->rule, "corner-justify", D_JUSTIFY),
     };
     builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "corner");
@@ -58,6 +62,8 @@ static struct DrawObj* _make_edge(
         .height=parent_basic->height,
         .depth=edge_size,
         .rotate=builder_compute_rotate(primal_rotate, parent_basic),
+        .v_justify=builder_get_justify(helper->rule, "edge-justify", D_JUSTIFY),
+        .d_justify=builder_get_justify(helper->rule, "edge-justify", V_JUSTIFY),
     };
     builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "edge");
