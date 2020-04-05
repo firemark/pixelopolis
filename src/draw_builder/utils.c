@@ -21,7 +21,7 @@ struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj bas
 }
 
 int builder_get_int(struct Rule* rule, char* key, const int default_value) {
-    int* ptr = css_find_number_prop(rule, "padding");
+    int* ptr = css_find_number_prop(rule, key);
     return ptr ? *ptr : default_value;
 }
 
