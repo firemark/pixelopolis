@@ -8,7 +8,6 @@ Site with examples: https://pixelopolis.herokuapp.com
 **WARNING** - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
 ## Howto install
-
 ```bash
 make all
 ./pixelopolis
@@ -27,7 +26,7 @@ docker run -it --rm -p 8000:80 pixelopolis
 ./pixelopolis [CSS_IN_FILE] [PNG_OUT_FILE]
 ```
 
-## CSS 
+## CSS
 
 ### Structure
 
@@ -63,7 +62,7 @@ RULE {
 element { /*...properties...*/ }
 element.class { /*...properties...*/ }
 element.class1.class2 { /*...properties...*/ }
-parent element { /*...properties...*/ } 
+parent element { /*...properties...*/ }
 parent > element { /*...properties...*/ }
 ```
 
@@ -72,7 +71,7 @@ parent > element { /*...properties...*/ }
 ##### Number
 
 ```css
-rule { 
+rule {
     number: 100;
     math: 100 * (2 + 2); /* mathematical operators are supported */
 }
@@ -81,7 +80,7 @@ rule {
 ##### Percents
 
 ```css
-rule { 
+rule {
     full-percent: 100%;
     half-percent: 50%;
 }
@@ -97,7 +96,7 @@ rule {
 ##### Selectors
 
 ```css
-rule { 
+rule {
     child: child-rule.child-class;
     another_child: child-rule;
     children: child-rule, child-rule.class, child-rule;
@@ -106,10 +105,10 @@ rule {
 
 ##### Functions
 ```css
-rule { 
-    random_number: random(0, 50); 
+rule {
+    random_number: random(0, 50);
     random_obj: choice(obj1, obj2, obj3);
-} 
+}
 ```
 
 ### Body
@@ -280,25 +279,78 @@ tex {
 
 ## TODOS
 
-* [ ] EASY More DrawObj structures like city wall, stairs, cone, cylinder etc.
-* [ ] EASY Support colors instead of textures
-* [ ] EASY Background texture
-* [x] EASY CSS Comments
-* [ ] MID More projections like perspective
-* [ ] MID Flat sprites (like in DOOM game) like grass, trees etc
-* [ ] MID More attributes for DrawObj like customize padding, margin (20% done)
-* [ ] MID Mixing textures
-* [ ] MID Gradient in textures
-* [ ] HARD Normal shader for textures
-* [ ] HARD Rotation
-* [ ] HARD Sass-like operator
-* [ ] HARD City / Road / Place planner
-* [ ] HARD Customizing shape of buildings
-* [x] HARD Parent CSS selector
-* [ ] HARD garbage collector
-* [ ] NO-MERCY Opengl + shaders support
-* [ ] IMPOSIBRU Refactoring
-
+* Rendering System
+    * [ ] EASY Background color/transparency
+    * [ ] EASY Scale output image
+    * [ ] EASY Random seed
+    * [ ] MID More projections support (like isometric)
+    * [ ] MID More layers export (Normal/Zindex/Color)
+    * [ ] MID Limited Pallette colors
+    * [ ] MID Outline
+    * [ ] HARD Better Shading
+    * [ ] HARD 2.5D Background Mountains and floor
+    * [ ] HARD 2.5D Clouds
+    * [ ] NO-MERCY Opengl + shaders support
+* CSS Parser
+    * [x] EASY CSS Comments
+    * [ ] EASY Star operator
+    * [ ] MID Nth child pseudoclass
+    * [ ] MID Imports
+    * [ ] MID Class joins
+    * [ ] HARD Variables
+    * [ ] HARD if/switch
+    * [ ] HARD SASS-like syntax
+    * [ ] HARD Custom parameters in value
+    * [x] HARD Parent CSS selector
+* Shapes
+    * [x] EASY Cube
+    * [x] EASY Triangle
+    * [x] EASY Pyramid
+    * [x] MID Cone
+    * [x] MID Cylinder
+    * [x] MID Dome
+    * [ ] MID Stairs
+    * [ ] MID Trapezoid
+    * [ ] MID Trapezoid+Stairs
+    * [x] EASY Half-Triangle
+    * [x] MID Series
+    * [x] MID Fillers
+    * [x] MID Square Fences
+    * [ ] MID Grid
+    * [ ] MID Union
+    * [x] MID Align for series
+    * [x] MID Justify shapes
+    * [ ] MID Margin shapes
+    * [x] HARD Rotation
+    * [ ] HARD City / Road / Place planner
+    * [ ] HARD Python support to generate custom shapes
+* Textures
+    * [x] EASY Support colors instead of textures
+    * [ ] MID Gradient in textures
+    * [ ] MID Point noise
+    * [ ] MID Perlin noise
+    * [ ] MID Grid pattern
+    * [ ] MID Brick pattern
+    * [ ] MID Tile pattern
+    * [ ] MID Chess pattern
+    * [ ] MID Wave pattern
+    * [ ] MID Spiral pattern
+    * [ ] MID Disc pattern
+    * [ ] MID Cross pattern
+    * [ ] MID Bars pattern
+    * [ ] MID Flat sprites (like in DOOM game) like grass, items, people etc.
+    * [ ] MID Point clouds
+    * [ ] HARD Rock pattern
+    * [ ] HARD Edges
+    * [ ] HARD Simple generators
+    * [ ] HARD Mixing textures
+    * [ ] HARD Better scaling/rotating textures
+    * [ ] HARD Normal shader for textures
+    * [ ] HARD Bump map to normal shader
+* Core
+    * [ ] HARD Make sphinx documentation on github pages
+    * [ ] HARD garbage collector
+    * [ ] IMPOSIBRU Refactoring
 
 ## Changelog
 
