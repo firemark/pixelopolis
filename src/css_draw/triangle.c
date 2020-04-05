@@ -38,8 +38,8 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
             wh, d, h,
         };
         int voxes_second[12] = {
-            w , 0, 0,
-            w , d, 0,
+            0 , 0, 0,
+            0 , d, 0,
             wh, 0, h,
             wh, d, h,
         };
