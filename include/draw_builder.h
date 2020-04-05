@@ -15,11 +15,12 @@ enum DrawObjType {
 };
 
 enum FillDirection { VERTICAL_FILL = 0, HORIZONTAL_FILL = 2, DEPTH_FILL = 1 };
-enum EdgeAlign { EDGE_ALIGN_FRONT, EDGE_ALIGN_CENTER, EDGE_ALIGN_BACK };
+enum Justify { JUSTIFY_START, JUSTIFY_CENTER, JUSTIFY_END, JUSTIFY_RANDOM };
 
 struct BasicObj {
     int width, height, depth;
     int rotate;
+    enum Justify v_justify, d_justify;
     double sin_th, cos_th;
 };
 

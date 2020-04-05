@@ -8,12 +8,13 @@
 static void _fill_body(struct SquareFenceObj* obj, struct Helper *helper) {
     struct BasicObj* parent_basic = &helper->parent->basic;
     const int edge_size = obj->edge_size * 2;
-    const int width = parent_basic->width - edge_size;
-    const int height = parent_basic->height;
-    const int depth = parent_basic->depth - edge_size;
-    const int rotate = builder_compute_rotate(0, parent_basic);
-
-    struct BasicObj basic = builder_build_custom_basic(width, height, depth, rotate);
+    struct BasicObj basic = {
+        .width=parent_basic->width - edge_size,
+        .height=parent_basic->height,
+        .depth=parent_basic->depth - edge_size,
+        .rotate=builder_compute_rotate(0, parent_basic),
+    };
+    builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "body");
 
     obj->body = builder_build_custom_void(helper, basic, child_selector);
@@ -23,10 +24,13 @@ static struct DrawObj* _make_corner(
         struct Helper *helper,
         const int size) {
     struct BasicObj* parent_basic = &helper->parent->basic;
-    const int height = parent_basic->height;
-    const int rotate = builder_compute_rotate(0, parent_basic);
-
-    struct BasicObj basic = builder_build_custom_basic(size, height, size, rotate);
+    struct BasicObj basic = {
+        .width=size,
+        .height=parent_basic->height,
+        .depth=size,
+        .rotate=builder_compute_rotate(0, parent_basic),
+    };
+    builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "corner");
 
     return builder_build_custom_void(helper, basic, child_selector);
@@ -48,12 +52,14 @@ static struct DrawObj* _make_edge(
     struct BasicObj* parent_basic = &helper->parent->basic;
     const int edge_size = obj->edge_size;
     const int primal_width = is_vertical ? parent_basic->width : parent_basic->depth;
-    const int width = primal_width - edge_size * 2;
-    const int height = parent_basic->height;
-    const int depth = edge_size;
-    const int rotate = builder_compute_rotate(primal_rotate, parent_basic);
 
-    struct BasicObj basic = builder_build_custom_basic(width, height, depth, rotate);
+    struct BasicObj basic = {
+        .width=primal_width - edge_size * 2,
+        .height=parent_basic->height,
+        .depth=edge_size,
+        .rotate=builder_compute_rotate(primal_rotate, parent_basic),
+    };
+    builder_init_basic(&basic);
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "edge");
     return builder_build_custom_void(helper, basic, child_selector);
 }

@@ -17,6 +17,8 @@ struct SelectorHelper {
     struct DrawObj* parent;
 };
 
+enum JustifyIndex { V_JUSTIFY = 0, D_JUSTIFY = 1 };
+
 #define make_selector_helper(helper, prop) { \
     .program=helper->program, \
     .parent_rule=helper->rule, \
@@ -27,12 +29,8 @@ struct SelectorHelper {
 //builders
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper);
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent);
+void builder_init_basic(struct BasicObj* basic);
 struct BasicObj builder_build_empty_basic();
-struct BasicObj builder_build_custom_basic(
-        const int width, 
-        const int height, 
-        const int depth,
-        const int rotate);
 struct DrawObj* builder_build_void(struct Helper* helper);
 struct DrawObj* builder_build_custom_void(
         struct Helper* helper, 
@@ -57,6 +55,7 @@ struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj bas
 int builder_get_int(struct Rule* rule, char* key, const int default_value);
 int builder_get_padding(struct Rule* rule);
 int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic);
+enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index);
 
 //series utils
 struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);

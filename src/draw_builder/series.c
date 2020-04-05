@@ -3,7 +3,7 @@
 #include "css_func.h"
 #include "css_eval.h"
 
-size_t _get_size(struct Obj** prop_objs) {
+static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
     css_iter(obj, prop_objs) size++; // counter

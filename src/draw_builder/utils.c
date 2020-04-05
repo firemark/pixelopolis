@@ -1,4 +1,6 @@
 #include <stdlib.h>
+#include <string.h>
+
 #include "_draw_builder.h"
 #include "css_func.h"
 
@@ -32,4 +34,55 @@ int builder_get_padding(struct Rule* rule) {
 int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic) {
     int parent_rotate = parent_basic ? parent_basic->rotate : 0;
     return (child_rotate + parent_rotate) % 360;
+}
+
+static inline size_t _get_size(struct Obj** prop_objs) {
+    size_t size = 0;
+    struct Obj* obj = NULL;
+    css_iter(obj, prop_objs) size++; // counter
+    return size;
+}
+
+static inline char* _builder_get_name_justify(const struct Obj* obj) {
+    if (!obj || obj->type != OBJ_RULE) return NULL;
+    const struct RuleSelector* selector = obj->value;
+    return selector->element;
+}
+
+static inline enum Justify _builder_get_main_justify(const char* name) {
+#define IF_NAME(s) else if (!strcmp(name, s))
+    if (!name) return JUSTIFY_START;
+    IF_NAME("center") return JUSTIFY_CENTER;
+    IF_NAME("random") return JUSTIFY_RANDOM;
+#undef IF_NAME
+    return JUSTIFY_START;
+}
+
+static inline enum Justify _builder_get_single_justify(const char* name) {
+#define IF_NAME(s) else if (!strcmp(name, s))
+    if (!name) return JUSTIFY_START;
+    IF_NAME("start") return JUSTIFY_START;
+    IF_NAME("center") return JUSTIFY_CENTER;
+    IF_NAME("end") return JUSTIFY_END;
+    IF_NAME("random") return JUSTIFY_RANDOM;
+#undef IF_NAME
+    return JUSTIFY_START;
+}
+
+enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index) {
+    struct Obj** prop_objs = css_find_objs(rule, key);
+    const size_t size = _get_size(prop_objs);
+
+    if (size < 1) {
+        return JUSTIFY_START;
+    }
+
+    if (size <= index) {
+        // check if justify has a global parameter when is only 1 element
+        const char* name = _builder_get_name_justify(prop_objs[0]);
+        return _builder_get_main_justify(name);
+    }
+
+    const char* name = _builder_get_name_justify(prop_objs[index]);
+    return _builder_get_single_justify(name);
 }
