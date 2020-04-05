@@ -26,6 +26,7 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawI
     angle_iter_start(&angle_iter, width, depth, obj->sides);
     while(angle_iter_iterate(&angle_iter)) {
         int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
+        _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
         struct WallObj *wall = walls[angle_iter.i];
 
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall, wall->width, height);
