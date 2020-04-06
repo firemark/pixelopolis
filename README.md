@@ -306,13 +306,14 @@ tex {
     * [x] EASY Cube
     * [x] EASY Triangle
     * [x] EASY Pyramid
+    * [ ] EASY Half-Triangle
     * [x] MID Cone
     * [x] MID Cylinder
     * [x] MID Dome
     * [ ] MID Stairs
     * [ ] MID Trapezoid
     * [ ] MID Trapezoid+Stairs
-    * [x] EASY Half-Triangle
+    * [ ] MID Arc
     * [x] MID Series
     * [x] MID Fillers
     * [x] MID Square Fences
