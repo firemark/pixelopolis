@@ -53,6 +53,18 @@ void css_base_draw_plane_with_uv(struct image* img, struct FlatImage* img_to_dra
     draw_poly(img, img_to_draw, voxes_b, uv_b);
 }
 
+void css_base_draw_plane_random(struct image* img, struct FlatImage* img_to_draw, int voxes[12]) {
+#define VEC(n) voxes[(n) * 3 + 0], voxes[(n) * 3 + 1], voxes[(n) * 3 + 2]
+    int voxes_a[9] = { VEC(0), VEC(1), VEC(3) };
+    int voxes_b[9] = { VEC(3), VEC(2), VEC(0) };
+#undef VEC
+    int i;
+    for(i=0; i < 300; i++) {
+        draw_sprite_in_random_position_in_poly(img, img_to_draw, voxes_a);
+        draw_sprite_in_random_position_in_poly(img, img_to_draw, voxes_b);
+    }
+}
+
 void css_base_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, int voxes[9]) {
     /*     2
      *    / \

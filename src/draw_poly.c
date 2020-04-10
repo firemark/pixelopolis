@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #include "draw_poly.h"
@@ -29,13 +29,13 @@ struct h_poly_diffx {
 };
 
 struct h_fill_space {
-    struct image *img; 
+    struct image *img;
     double *normal;
     struct FlatImage *img_to_draw;
     struct h_poly *left, *right;
 };
 
-void _compute_normal(double normal[3], int voxes[9]) {
+static inline void _compute_normal(double normal[3], const int voxes[9]) {
     int vox_a[3] = {
         voxes[3 + 0] - voxes[0 + 0],
         voxes[3 + 1] - voxes[0 + 1],
@@ -59,7 +59,7 @@ void _compute_normal(double normal[3], int voxes[9]) {
     }
 }
 
-void _cpy_h_poly(struct h_poly *a, struct h_poly *b) {
+static inline void _cpy_h_poly(struct h_poly *a, const struct h_poly *b) {
     a->x = b->x;
     a->y = b->y;
     a->u = b->u;
@@ -67,7 +67,7 @@ void _cpy_h_poly(struct h_poly *a, struct h_poly *b) {
     a->zindex = b->zindex;
 }
 
-void _add_h_poly_diffy(struct h_poly *a, struct h_poly_diffy *b) {
+static inline void _add_h_poly_diffy(struct h_poly *a, const struct h_poly_diffy *b) {
     a->y += 1.0;
     a->x += b->x;
     a->u += b->u;
@@ -75,18 +75,18 @@ void _add_h_poly_diffy(struct h_poly *a, struct h_poly_diffy *b) {
     a->zindex += b->zindex;
 }
 
-void _add_h_poly_diffx(struct h_poly *a, struct h_poly_diffx *b) {
+static inline void _add_h_poly_diffx(struct h_poly *a, const struct h_poly_diffx *b) {
     a->x += 1.0;
     a->u += b->u;
     a->v += b->v;
     a->zindex += b->zindex;
 }
 
-void _diff_h_poly_with_y(
+static inline void _diff_h_poly_with_y(
         struct h_poly_diffy *diff,
-        struct h_poly *a,
-        struct h_poly *b) {
-    double diff_y = SUB(a, b, y);
+        const struct h_poly *a,
+        const struct h_poly *b) {
+    const double diff_y = SUB(a, b, y);
     if (diff_y <= 0.0) {
         diff->x = diff->u = diff->v = diff->zindex = 0;
         return;
@@ -97,11 +97,11 @@ void _diff_h_poly_with_y(
     diff->zindex = SUB(a, b, zindex) / diff_y;
 }
 
-void _diff_h_poly_with_x(
+static inline void _diff_h_poly_with_x(
         struct h_poly_diffx *diff,
-        struct h_poly *a,
-        struct h_poly *b) {
-    double diff_x = SUB(a, b, x);
+        const struct h_poly *a,
+        const struct h_poly *b) {
+    const double diff_x = SUB(a, b, x);
     if (diff_x <= 0.0) {
         diff->u = diff->v = diff->zindex = 0;
         return;
@@ -111,14 +111,14 @@ void _diff_h_poly_with_x(
     diff->zindex = SUB(a, b, zindex) / diff_x;
 }
 
-void _putpixel(
-        struct image *img, 
+static inline void _putpixel(
+        struct image *img,
         struct FlatImage *img_to_draw,
-        double normal[3],
-        struct h_poly *point) {
-    int tmp_cor[2] = { round(point->u), round(point->v) };
-    int img_cor[2] = { round(point->x), round(point->y) };
-    struct rgb color = flat_image_get_pixel(img_to_draw, tmp_cor);
+        int img_cor[2],
+        int uv_cor[2],
+        const int zindex,
+        const double normal[3]) {
+    struct rgb color = flat_image_get_pixel(img_to_draw, uv_cor);
 
     if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
         // 0xFF00FF color reversed for transparency color
@@ -132,15 +132,29 @@ void _putpixel(
 
     struct RoyalPixel royal_color = {
         .r=color.r, .g=color.g, .b=color.b,
-        .zindex=(int)point->zindex,
+        .zindex=zindex,
     };
 
     set_pixel(img, img_cor, royal_color);
 }
 
-void _fill_space(
+static inline void _putpixel_with_h_poly(
         struct h_fill_space *helper,
-        struct h_poly_diffy *diff_left, 
+        struct h_poly *point) {
+    int uv_cor[2] = { round(point->u), round(point->v) };
+    int img_cor[2] = { round(point->x), round(point->y) };
+    _putpixel(
+        helper->img,
+        helper->img_to_draw,
+        img_cor,
+        uv_cor,
+        (int)point->zindex,
+        helper->normal);
+}
+
+static void _fill_space(
+        struct h_fill_space *helper,
+        struct h_poly_diffy *diff_left,
         struct h_poly_diffy *diff_right,
         double y_end) {
     double y_start, x_start, x_end;
@@ -168,10 +182,10 @@ void _fill_space(
         x_start = left->x;
         x_end = right->x;
         for(; x_start < x_end; x_start += 1.0) {
-            _putpixel(helper->img, helper->img_to_draw, helper->normal, &pointer);
+            _putpixel_with_h_poly(helper, &pointer);
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
-        _putpixel(helper->img, helper->img_to_draw, helper->normal, &pointer);
+        _putpixel_with_h_poly(helper, &pointer);
 
         _add_h_poly_diffy(left, diff_left);
         _add_h_poly_diffy(right, diff_right);
@@ -222,7 +236,7 @@ void draw_poly(
     if (a->y > b->y) SWAP(a, b);
     if (a->y > c->y) SWAP(a, c);
     if (b->y > c->y) SWAP(b, c);
-#undef SWAP   
+#undef SWAP
 
     // compute diffs to linear interpolation
     struct h_poly_diffy diff_ba, diff_ca, diff_cb;
@@ -256,3 +270,57 @@ void draw_poly(
         _fill_space(&helper, &diff_cb, &diff_ca, c->y);
     }
 };
+
+void draw_sprite(
+        struct image *img,
+        struct FlatImage *img_to_draw,
+        int vox[3],
+        double normal[3]) {
+    int uv_cor[2];
+    struct h_poly vec;
+    _projection_poly(vox, uv_cor, &vec); // TODO - how to avoid uv? new structure, new function?
+
+    const int w = img_to_draw->width;
+    const int h = img_to_draw->height;
+    const int wh = 0; //w / 2;
+    const int hh = 0; //h / 2;
+    const int zindex = vec.zindex;
+    const int x = vec.x;
+    const int y = vec.y;
+
+    for(uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
+        for(uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
+            int img_cor[2] = {uv_cor[0] + x - wh, uv_cor[1] + y - hh};
+            _putpixel(img, img_to_draw, img_cor, uv_cor, zindex, normal);
+        }
+    }
+}
+
+void draw_sprite_in_random_position_in_poly(
+        struct image *img,
+        struct FlatImage *img_to_draw,
+        int voxes[9]) {
+    int vox[3];
+    double rand_a = (rand() % 1024) / 1024.0;
+    double rand_b = (rand() % 1024) / 1024.0;
+
+    if (rand_a + rand_b >= 1.0) {
+        rand_a = 1.0 - rand_a;
+        rand_b = 1.0 - rand_b;
+    }
+
+#define COMP_RAND(axis) (\
+        (double)voxes[axis + 0] \
+        + rand_a * (voxes[axis + 3] - voxes[axis + 0]) \
+        + rand_b * (voxes[axis + 6] - voxes[axis + 0]) \
+    )
+    vox[0] = COMP_RAND(0);
+    vox[1] = COMP_RAND(1);
+    vox[2] = COMP_RAND(2);
+#undef COMP_RAND
+
+    double normal[3];
+    _compute_normal(normal, voxes);
+
+    draw_sprite(img, img_to_draw, vox, normal);
+}

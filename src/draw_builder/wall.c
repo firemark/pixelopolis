@@ -72,10 +72,9 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     struct Rule *rule = builder_make_rule_from_helper(helper);
     if (!rule) return NULL;
     struct WallObj *wall = malloc(sizeof(struct WallObj));
-    int* padding_ptr = css_find_number_prop(rule, "padding");
-    int padding = padding_ptr? *padding_ptr: 0;
 
-    wall->padding = padding;
+    wall->padding = builder_get_padding(rule);
+    wall->points_density = builder_get_int(rule, "points-density", 0);
     wall->width = wall_width;
     wall->height = wall_height;
 
@@ -86,6 +85,15 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
         .parent=helper->parent,
     };
     wall->tex = builder_build_texture(&tex_helper);
+
+    struct SelectorHelper points_tex_helper = {
+        .program=helper->program,
+        .parent_rule=rule,
+        .selector=css_find_selector_prop(rule, "points-texture"),
+        .parent=helper->parent,
+    };
+    wall->points_tex = builder_build_texture(&points_tex_helper);
+
     struct Helper inner_helper = {
         .program=helper->program,
         .rule=rule,

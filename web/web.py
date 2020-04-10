@@ -21,6 +21,7 @@ MENU = [
     ('Textures', [
         ('Textures', 'examples/textures/textures.css'),
         ('Floor-Align', 'examples/textures/floor-align.css'),
+        ('Points', 'examples/textures/points.css'),
     ]),
     ('Attributes', [
         ('Random', 'examples/random.css'),

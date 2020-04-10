@@ -65,8 +65,14 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             w, d, h,
         };
         _transform(voxes, vox, &draw_obj->basic, 4);
+
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof_obj, width, depth);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes);
+
+        if (roof_obj->points_tex) {
+            struct FlatImage *sprite = roof_obj->points_tex->texture;
+            css_base_draw_plane_random(inner_info->img, sprite, voxes);
+        }
         free(img_to_draw);
     }
 

@@ -54,12 +54,13 @@ struct FloorObj {
 };
 
 struct WallObj {
-    struct TexObj *tex;
+    struct TexObj *tex, *points_tex;
     struct FloorObj **floors;
     struct FloorObj *bottom;
     struct FloorObj *top;
     int floors_size;
     int padding;
+    int points_density;
     int width;
     int height;
 };

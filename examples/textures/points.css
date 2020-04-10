@@ -14,18 +14,14 @@ cube.example {
 
 wall.grey-brick {
     texture: tex.grey-brick;
-    middle: floor.windows;
     padding: 4;
 }
 
-wall.top { texture: tex.wood; }
-
-floor.windows {
-    middle: tex.window;
-    height: 12;
-    padding: 12;
+wall.top { 
+    texture: tex.wood;
+    points-texture: tex.disc;
 }
 
 tex.wood        { texture: "textures/wood.png"; }
 tex.grey-brick  { texture: "textures/grey-brick.png"; }
-tex.window      { texture: "textures/window.png"; }
+tex.disc        { texture: "textures/disc.png"; }
