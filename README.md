@@ -339,8 +339,9 @@ tex {
     * [ ] MID Disc pattern
     * [ ] MID Cross pattern
     * [ ] MID Bars pattern
-    * [ ] MID Flat sprites (like in DOOM game) like grass, items, people etc.
-    * [ ] MID Point clouds
+    * [x] MID Flat sprites (like in DOOM game) like grass, items, people etc.
+    * [x] MID Point clouds
+    * [ ] MID Point clouds parameters
     * [ ] HARD Rock pattern
     * [ ] HARD Edges
     * [ ] HARD Simple generators
