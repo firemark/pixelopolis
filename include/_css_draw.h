@@ -19,7 +19,7 @@ struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width
 // base
 void css_base_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes[12]);
 void css_base_draw_plane_with_uv(struct image* img, struct FlatImage* img_to_draw, int voxes[12], int uv[4]);
-void css_base_draw_plane_random(struct image* img, struct FlatImage* img_to_draw, int voxes[12]);
+void css_base_draw_plane_random(struct image* img, struct FlatImage* img_to_draw, int voxes[12], int density);
 void css_base_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, int voxes[9]);
 
 // draw objs

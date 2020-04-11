@@ -74,7 +74,7 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     struct WallObj *wall = malloc(sizeof(struct WallObj));
 
     wall->padding = builder_get_padding(rule);
-    wall->points_density = builder_get_int(rule, "points-density", 0);
+    wall->points_density = builder_get_percent(rule, "points-density", 0);
     wall->width = wall_width;
     wall->height = wall_height;
 

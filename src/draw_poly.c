@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -191,7 +192,7 @@ static void _fill_space(
     }
 }
 
-void _projection_poly_isometric(int *vox, int *uv, struct h_poly *vec) {
+void _projection_poly_isometric(const int *vox, const int *uv, struct h_poly *vec) {
     vec->x = vox[0] - vox[1] + 600.0;
     vec->y = vox[2] + vox[0] * 0.5 + vox[1] * 0.5;
 
@@ -200,7 +201,7 @@ void _projection_poly_isometric(int *vox, int *uv, struct h_poly *vec) {
     vec->v = uv[1];
 }
 
-void _projection_poly_oblique(int *vox, int *uv, struct h_poly *vec) {
+void _projection_poly_oblique(const int *vox, const int *uv, struct h_poly *vec) {
     // https://en.wikipedia.org/wiki/Oblique_projection
     double s = vox[1] * SCALE_PROJECTION;
 
@@ -212,7 +213,7 @@ void _projection_poly_oblique(int *vox, int *uv, struct h_poly *vec) {
     vec->v = uv[1];
 }
 
-void (*_projection_poly)(int*, int*, struct h_poly*) = _projection_poly_oblique;
+void (*_projection_poly)(const int*, const int*, struct h_poly*) = _projection_poly_oblique;
 
 void draw_poly(
         struct image *img, struct FlatImage *img_to_draw,
@@ -272,17 +273,17 @@ void draw_poly(
 
 void draw_sprite(
         struct image *img,
-        struct FlatImage *img_to_draw,
-        int vox[3],
-        double normal[3]) {
+        const struct FlatImage *img_to_draw,
+        const int vox[3],
+        const double normal[3]) {
     int uv_cor[2];
     struct h_poly vec;
     _projection_poly(vox, uv_cor, &vec); // TODO - how to avoid uv? new structure, new function?
 
     const int w = img_to_draw->width;
     const int h = img_to_draw->height;
-    const int x_offset = -w / 2;
-    const int y_offset = 0; //h / 2;
+    const int x_offset = 0; //-w / 2; - TODO better offset
+    const int y_offset = 0; //-h / 2;
     const int zindex = vec.zindex;
     const int x = vec.x;
     const int y = vec.y;
@@ -298,11 +299,7 @@ void draw_sprite(
     }
 }
 
-void draw_sprite_in_random_position_in_poly(
-        struct image *img,
-        struct FlatImage *img_to_draw,
-        int voxes[9]) {
-    int vox[3];
+static inline void _get_random_vox_in_poly(int vox[3], const int voxes[9]) {
     double rand_a = (rand() % 1024) / 1024.0;
     double rand_b = (rand() % 1024) / 1024.0;
 
@@ -320,9 +317,53 @@ void draw_sprite_in_random_position_in_poly(
     vox[1] = COMP_RAND(1);
     vox[2] = COMP_RAND(2);
 #undef COMP_RAND
+}
 
+static inline int _get_area_of_poly(const int voxes[9]) {
+#define X 0
+#define Y 1
+#define Z 2
+    const int ab[3] = {
+        voxes[X] - voxes[3 + X],
+        voxes[Y] - voxes[3 + Y],
+        voxes[Z] - voxes[3 + Z],
+    };
+    const int ac[3] = {
+        voxes[X] - voxes[6 + Y],
+        voxes[Y] - voxes[6 + Y],
+        voxes[Z] - voxes[6 + Z],
+    };
+#define PARTIAL_CROSS(axis_a, axis_b) (ab[axis_a] * ac[axis_b] - ab[axis_b] * ac[axis_a])
+    const int yz = PARTIAL_CROSS(Y, Z);
+    const int xy = PARTIAL_CROSS(X, Y);
+    const int xz = PARTIAL_CROSS(X, Z);
+#undef PARTIAL_CROSS
+
+    return sqrt(yz * yz + xz * xz + xy * xy) / 2.0;
+#undef X
+#undef Y
+#undef Z
+}
+
+void draw_sprites_in_random_position_in_poly(
+        struct image *img,
+        const struct FlatImage *img_to_draw,
+        const int voxes[3],
+        const int density) {
+    if (density == 0) return;
+
+    int vox[3];
     double normal[3];
     _compute_normal(normal, voxes);
 
-    draw_sprite(img, img_to_draw, vox, normal);
+    const int area = _get_area_of_poly(voxes);
+    const int sprite_area = img_to_draw->width * img_to_draw->height;
+    const int count = (area * density) / (10 * sprite_area); // IDK - 10 is fine for eyecandy
+    fprintf(stderr, "area: %d, density: %d\n", area, density);
+
+    int i;
+    for(i = 0; i < count; i++) {
+        _get_random_vox_in_poly(vox, voxes);
+        draw_sprite(img, img_to_draw, vox, normal);
+    }
 }

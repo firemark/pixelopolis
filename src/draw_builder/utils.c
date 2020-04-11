@@ -27,6 +27,11 @@ int builder_get_int(struct Rule* rule, char* key, const int default_value) {
     return ptr ? *ptr : default_value;
 }
 
+int builder_get_percent(struct Rule* rule, char* key, const int default_value) {
+    int* ptr = css_find_percent_prop(rule, key);
+    return ptr ? *ptr : default_value;
+}
+
 int builder_get_padding(struct Rule* rule) {
     return builder_get_int(rule, "padding", 0);
 }

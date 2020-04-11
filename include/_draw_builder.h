@@ -53,6 +53,8 @@ struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper);
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
 int builder_get_int(struct Rule* rule, char* key, const int default_value);
+int builder_get_percent(struct Rule* rule, char* key, const int default_value);
+
 int builder_get_padding(struct Rule* rule);
 int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic);
 enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index);

@@ -71,7 +71,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
 
         if (roof_obj->points_tex) {
             struct FlatImage *sprite = roof_obj->points_tex->texture;
-            css_base_draw_plane_random(inner_info->img, sprite, voxes);
+            css_base_draw_plane_random(inner_info->img, sprite, voxes, roof_obj->points_density);
         }
         free(img_to_draw);
     }

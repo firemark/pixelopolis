@@ -9,17 +9,19 @@ cube.example {
     roof: wall.top;
     width: 350;
     depth: 350;
-    height: 150;
+    height: 50;
 }
 
 wall.grey-brick {
     texture: tex.grey-brick;
-    padding: 4;
+    points-texture: tex.disc;
+    points-density: 5%;
 }
 
 wall.top { 
     texture: tex.wood;
     points-texture: tex.disc;
+    points-density: 10%;
 }
 
 tex.wood        { texture: "textures/wood.png"; }
