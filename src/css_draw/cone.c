@@ -43,6 +43,8 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         };
 
         draw_poly(inner_info->img, img_to_draw, voxes, uv);
+        css_base_draw_poly_random(inner_info->img, voxes, roof);
+
         iter_length = next_length;
     }
     free(img_to_draw);

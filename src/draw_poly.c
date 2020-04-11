@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -216,8 +215,10 @@ void _projection_poly_oblique(const int *vox, const int *uv, struct h_poly *vec)
 void (*_projection_poly)(const int*, const int*, struct h_poly*) = _projection_poly_oblique;
 
 void draw_poly(
-        struct image *img, struct FlatImage *img_to_draw,
-        int voxes[9], int uv[6]) {
+        struct image *img, 
+        const struct FlatImage *img_to_draw,
+        const int voxes[9], 
+        const int uv[6]) {
     struct h_poly at, bt, ct;
     struct h_poly *a, *b, *c;
 
@@ -329,7 +330,7 @@ static inline int _get_area_of_poly(const int voxes[9]) {
         voxes[Z] - voxes[3 + Z],
     };
     const int ac[3] = {
-        voxes[X] - voxes[6 + Y],
+        voxes[X] - voxes[6 + X],
         voxes[Y] - voxes[6 + Y],
         voxes[Z] - voxes[6 + Z],
     };
@@ -359,7 +360,6 @@ void draw_sprites_in_random_position_in_poly(
     const int area = _get_area_of_poly(voxes);
     const int sprite_area = img_to_draw->width * img_to_draw->height;
     const int count = (area * density) / (10 * sprite_area); // IDK - 10 is fine for eyecandy
-    fprintf(stderr, "area: %d, density: %d\n", area, density);
 
     int i;
     for(i = 0; i < count; i++) {

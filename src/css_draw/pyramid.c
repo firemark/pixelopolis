@@ -33,8 +33,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         _transform(voxes_first, vox, &draw_obj->basic, 3);
         _transform(voxes_second, vox, &draw_obj->basic, 3);
 
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first, south_wall_obj);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second, south_wall_obj);
 
         free(img_to_draw_first);
         free(img_to_draw_second);
@@ -59,8 +59,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         _transform(voxes_first, vox, &draw_obj->basic, 3);
         _transform(voxes_second, vox, &draw_obj->basic, 3);
 
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second);
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second, east_wall_obj);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first, east_wall_obj);
 
         free(img_to_draw_first);
         free(img_to_draw_second);

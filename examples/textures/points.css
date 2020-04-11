@@ -1,29 +1,69 @@
 world {
     width: 800;
     height: 800;
-    body: cube.example;
+    body: objs;
 }
 
+/* TEXTURES */
+
+wall.leafs { points-texture: tex.leaf;  points-density: 50%; }
+wall.grass { points-texture: tex.grass; points-density: 15%; }
+wall.wood  { texture: tex.wood; }
+
+tex.leaf  { texture: "textures/leaf.png"; }
+tex.grass { texture: "textures/grass.png"; }
+tex.wood  { texture: "textures/wood.png"; }
+
+/* OBJS */
+
+objs {
+    display: v-series;
+    body: forest, cube.example;
+    padding: 50;
+}
+
+
+/* TREES */
+
+forest {
+    display: d-filler;
+    body: tree;
+    depth: 500;
+    width: 100;
+    padding: 10;
+    justify: center;
+}
+
+tree {
+    display: h-series;
+    width: 100;
+    depth: 100;
+    justify: center;
+    body: trunk, leafs;
+}
+
+tree > trunk {
+ 	display: cylinder;
+    wall: wall.wood;
+    width: 10;
+    depth: 10;
+    height: random(100, 120);
+}
+
+tree > leafs {
+    display: dome;
+    roof: wall.leafs;
+    width: 100%;
+    depth: 100%;
+    height: 80;
+}
+
+/* CUBE */
+
 cube.example {
-	wall: wall.grey-brick;
-    roof: wall.top;
+	wall: wall.wood;
+    roof: wall.wood.grass;
     width: 350;
     depth: 350;
     height: 50;
 }
-
-wall.grey-brick {
-    texture: tex.grey-brick;
-    points-texture: tex.disc;
-    points-density: 5%;
-}
-
-wall.top { 
-    texture: tex.wood;
-    points-texture: tex.disc;
-    points-density: 10%;
-}
-
-tex.wood        { texture: "textures/wood.png"; }
-tex.grey-brick  { texture: "textures/grey-brick.png"; }
-tex.disc        { texture: "textures/disc.png"; }

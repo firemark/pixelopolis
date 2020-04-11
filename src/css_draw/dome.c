@@ -61,7 +61,7 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
                 nw_length, nh_length,
             };
 
-            css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv);
+            css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv, roof);
             h_length = nh_length;
         }
         w_length = nw_length;

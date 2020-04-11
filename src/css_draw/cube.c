@@ -29,8 +29,8 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(east_wall_obj, depth, height);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes_first);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes_second);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_first, east_wall_obj);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_second, east_wall_obj);
         free(img_to_draw);
     }
 
@@ -51,8 +51,8 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(south_wall_obj, width, height);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes_first);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes_second);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_first, south_wall_obj);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes_second, south_wall_obj);
         free(img_to_draw);
     }
 
@@ -67,12 +67,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         _transform(voxes, vox, &draw_obj->basic, 4);
 
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof_obj, width, depth);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes);
-
-        if (roof_obj->points_tex) {
-            struct FlatImage *sprite = roof_obj->points_tex->texture;
-            css_base_draw_plane_random(inner_info->img, sprite, voxes, roof_obj->points_density);
-        }
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes, roof_obj);
         free(img_to_draw);
     }
 

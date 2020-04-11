@@ -30,7 +30,7 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawI
         struct WallObj *wall = walls[angle_iter.i];
 
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall, wall->width, height);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes);
+        css_base_draw_plane(inner_info->img, img_to_draw, voxes, wall);
         free(img_to_draw);
     }
 }
@@ -62,7 +62,7 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct Draw
             next_length, height,
         };
 
-        css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv);
+        css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv, wall);
         iter_length = next_length;
     }
 
@@ -99,6 +99,7 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
         };
 
         draw_poly(inner_info->img, img_to_draw, voxes, uv);
+        css_base_draw_poly_random(inner_info->img, voxes, roof);
     }
     free(img_to_draw);
 }

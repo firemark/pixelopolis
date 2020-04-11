@@ -22,7 +22,7 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
         };
         _transform(voxes, vox, &draw_obj->basic, 3);
         struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall_obj, width, height);
-        css_base_draw_wide_triangle(inner_info->img, img_to_draw, voxes);
+        css_base_draw_wide_triangle(inner_info->img, img_to_draw, voxes, wall_obj);
         free(img_to_draw);
     }
 
@@ -47,8 +47,8 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
 
-        css_base_draw_plane(inner_info->img, img_to_draw_first, voxes_first);
-        css_base_draw_plane(inner_info->img, img_to_draw_second, voxes_second);
+        css_base_draw_plane(inner_info->img, img_to_draw_first, voxes_first, roof_obj);
+        css_base_draw_plane(inner_info->img, img_to_draw_second, voxes_second, roof_obj);
 
         free(img_to_draw_first);
         free(img_to_draw_second);

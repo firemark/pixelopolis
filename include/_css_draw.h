@@ -17,10 +17,26 @@ enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
 struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width, int height);
 
 // base
-void css_base_draw_plane(struct image* img, struct FlatImage* img_to_draw, int voxes[12]);
-void css_base_draw_plane_with_uv(struct image* img, struct FlatImage* img_to_draw, int voxes[12], int uv[4]);
-void css_base_draw_plane_random(struct image* img, struct FlatImage* img_to_draw, int voxes[12], int density);
-void css_base_draw_wide_triangle(struct image* img, struct FlatImage* img_to_draw, int voxes[9]);
+void css_base_draw_plane(
+        struct image* img,
+        const struct FlatImage* img_to_draw,
+        const int voxes[12],
+        const struct WallObj* wall);
+void css_base_draw_plane_with_uv(
+        struct image* img,
+        const struct FlatImage* img_to_draw,
+        const int voxes[12],
+        const int uv[4],
+        const struct WallObj* wall);
+void css_base_draw_wide_triangle(
+        struct image* img,
+        const struct FlatImage* img_to_draw,
+        const int voxes[9],
+        const struct WallObj* wall);
+void css_base_draw_poly_random(
+        struct image* img,
+        const int voxes[9],
+        const struct WallObj* wall);
 
 // draw objs
 void css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
@@ -63,31 +79,31 @@ static inline void _transform(int *voxes, const int vox[3], const struct BasicOb
 }
 
 static inline void _do_justify(
-        int vox[3], 
-        const enum Justify justify, 
+        int vox[3],
+        const enum Justify justify,
         const int x, const int y) {
     switch (justify) {
         case JUSTIFY_START: break; // do nothing
-        case JUSTIFY_END: 
-            vox[0] += x; 
-            vox[1] += y; 
+        case JUSTIFY_END:
+            vox[0] += x;
+            vox[1] += y;
             break;
-        case JUSTIFY_CENTER: 
-            vox[0] += x / 2; 
-            vox[1] += y / 2; 
+        case JUSTIFY_CENTER:
+            vox[0] += x / 2;
+            vox[1] += y / 2;
             break;
-        case JUSTIFY_RANDOM: 
-            if (x > 0) vox[0] += rand() % x; 
-            if (x < 0) vox[0] -= rand() % -x; 
-            if (y > 0) vox[1] += rand() % y; 
-            if (y < 0) vox[1] -= rand() % -y; 
+        case JUSTIFY_RANDOM:
+            if (x > 0) vox[0] += rand() % x;
+            if (x < 0) vox[0] -= rand() % -x;
+            if (y > 0) vox[1] += rand() % y;
+            if (y < 0) vox[1] -= rand() % -y;
             break;
     }
-} 
+}
 
 static inline void _justify_v(
-        int vox[3], 
-        const struct BasicObj* basic, 
+        int vox[3],
+        const struct BasicObj* basic,
         const struct BasicObj* parent_basic) {
     const int sub = parent_basic->width - basic->width;
     if (!sub) return;
@@ -97,8 +113,8 @@ static inline void _justify_v(
 };
 
 static inline void _justify_d(
-        int vox[3], 
-        const struct BasicObj* basic, 
+        int vox[3],
+        const struct BasicObj* basic,
         const struct BasicObj* parent_basic) {
     const int sub = parent_basic->depth - basic->depth;
     if (!sub) return;
@@ -108,8 +124,8 @@ static inline void _justify_d(
 };
 
 static inline void _justify_vd(
-        int vox[3], 
-        const struct BasicObj* basic, 
+        int vox[3],
+        const struct BasicObj* basic,
         const struct BasicObj* parent_basic) {
     _justify_v(vox, basic, parent_basic);
     _justify_d(vox, basic, parent_basic);
