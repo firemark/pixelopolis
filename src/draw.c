@@ -3,19 +3,19 @@
 #include <math.h>
 
 
-int _get_index(struct image* img, int cor[2]) {
-    int x = cor[0];
-    int y = img->height - 1 - cor[1];
+static inline int _get_index(const struct image* img, const int cor[2]) {
+    const int x = cor[0];
+    const int y = img->height - 1 - cor[1];
     return y * img->width + x;
 }
 
-int _flat_image_get_index(struct FlatImage* img, int cor[2]) {
-    int x = cor[0];
-    int y = img->height - 1 - cor[1];
+static inline int _flat_image_get_index(const struct FlatImage* img, const int cor[2]) {
+    const int x = cor[0];
+    const int y = img->height - 1 - cor[1];
     return y * img->width + x;
 }
 
-struct RoyalPixel get_pixel(struct image* img, int cor[2]) {
+struct RoyalPixel get_pixel(const struct image* img, const int cor[2]) {
     int index = _get_index(img, cor);
     if (index < 0 || index >= img->width * img->height) {
         index = 0;
@@ -23,7 +23,7 @@ struct RoyalPixel get_pixel(struct image* img, int cor[2]) {
     return img->buffer[index];
 }
 
-struct rgb flat_image_get_pixel(struct FlatImage* img, int cor[2]) {
+struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]) {
     int index = _flat_image_get_index(img, cor);
     if (index < 0 || index >= img->width * img->height) {
         index = 0;
@@ -31,7 +31,7 @@ struct rgb flat_image_get_pixel(struct FlatImage* img, int cor[2]) {
     return img->buffer[index];
 }
 
-struct rgb flat_image_get_aa_pixel(struct FlatImage* img, float cor[2]) {
+struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor[2]) {
     // lu - left up; ld - left down
     // ru - right up; rd - right down
     float x = cor[0];
@@ -72,26 +72,26 @@ struct rgb flat_image_get_aa_pixel(struct FlatImage* img, float cor[2]) {
     return p;
 }
 
-void _set_pixel(struct image* img, int cor[2], struct RoyalPixel color) {
-    int index = _get_index(img, cor);
+static void _set_pixel(struct image* img, const int cor[2], const struct RoyalPixel color) {
+    const int index = _get_index(img, cor);
     img->buffer[index] = color;
 }
 
-void set_pixel(struct image* img, int cor[2], struct RoyalPixel color) {
+void set_pixel(struct image* img, const int cor[2], const struct RoyalPixel color) {
     if (cor[0] < 0) return;
     if (cor[0] >= img->width) return;
     if (cor[1] < 0) return;
     if (cor[1] >= img->height) return;
-    int index = _get_index(img, cor);
-    struct RoyalPixel old_color = img->buffer[index];
+    const int index = _get_index(img, cor);
+    const struct RoyalPixel old_color = img->buffer[index];
     if (old_color.zindex >= color.zindex) {
         img->buffer[index] = color;
     }
 }
 
-struct RoyalPixel _mix_color(struct RoyalPixel a, struct RoyalPixel b, float ratio) {
+static inline struct RoyalPixel _mix_color(const struct RoyalPixel a, const struct RoyalPixel b, const double ratio) {
+    const float inv_ratio = 1 - ratio;
     struct RoyalPixel c;
-    float inv_ratio = 1 - ratio;
 
     c.r = a.r * ratio + b.r * inv_ratio;
     c.g = a.g * ratio + b.g * inv_ratio;
@@ -100,7 +100,7 @@ struct RoyalPixel _mix_color(struct RoyalPixel a, struct RoyalPixel b, float rat
     return c;
 }
 
-void set_aa_pixel(struct image* img, float cor[2], struct RoyalPixel color) {
+void set_aa_pixel(struct image* img, const double cor[2], const struct RoyalPixel color) {
     // lu - left up; ld - left down
     // ru - right up; rd - right down
     float x = cor[0];

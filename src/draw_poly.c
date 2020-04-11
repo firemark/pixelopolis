@@ -10,7 +10,6 @@
 
 #define SUB(a, b, val) ((a) -> val - (b) -> val)
 
-
 struct h_poly {
     double x, y;
     double u, v;
@@ -113,9 +112,9 @@ static inline void _diff_h_poly_with_x(
 
 static inline void _putpixel(
         struct image *img,
-        struct FlatImage *img_to_draw,
-        int img_cor[2],
-        int uv_cor[2],
+        const struct FlatImage *img_to_draw,
+        const int img_cor[2],
+        const int uv_cor[2],
         const int zindex,
         const double normal[3]) {
     struct rgb color = flat_image_get_pixel(img_to_draw, uv_cor);
@@ -141,8 +140,8 @@ static inline void _putpixel(
 static inline void _putpixel_with_h_poly(
         struct h_fill_space *helper,
         struct h_poly *point) {
-    int uv_cor[2] = { round(point->u), round(point->v) };
-    int img_cor[2] = { round(point->x), round(point->y) };
+    const int uv_cor[2] = { round(point->u), round(point->v) };
+    const int img_cor[2] = { round(point->x), round(point->y) };
     _putpixel(
         helper->img,
         helper->img_to_draw,
@@ -282,15 +281,18 @@ void draw_sprite(
 
     const int w = img_to_draw->width;
     const int h = img_to_draw->height;
-    const int wh = 0; //w / 2;
-    const int hh = 0; //h / 2;
+    const int x_offset = -w / 2;
+    const int y_offset = 0; //h / 2;
     const int zindex = vec.zindex;
     const int x = vec.x;
     const int y = vec.y;
 
     for(uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
         for(uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
-            int img_cor[2] = {uv_cor[0] + x - wh, uv_cor[1] + y - hh};
+            const int img_cor[2] = {
+                uv_cor[0] + x + x_offset,
+                uv_cor[1] + y + y_offset,
+            };
             _putpixel(img, img_to_draw, img_cor, uv_cor, zindex, normal);
         }
     }

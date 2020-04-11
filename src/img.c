@@ -7,14 +7,14 @@
 #include <img.h>
 
 
-void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
+static void _fill_rows_from_image_to_png(const struct image* img, png_structp png_ptr) {
     int x, y;
     png_bytep row = malloc(3 * img->width * sizeof(png_byte));
 
     for (y=0; y < img->height; y++) {
         png_bytep ptr = row;
         for(x=0; x < img->width; x++) {
-            struct RoyalPixel* pixel = &img->buffer[y * img->width + x];
+            const struct RoyalPixel* pixel = &img->buffer[y * img->width + x];
             ptr[0] = pixel->r;
             ptr[1] = pixel->g;
             ptr[2] = pixel->b;
@@ -26,7 +26,7 @@ void _fill_rows_from_image_to_png(struct image* img, png_structp png_ptr) {
     free(row);
 }
 
-void _fill_rows_from_png_to_image(png_structp png_ptr, struct FlatImage* img, int pixel_size) {
+static void _fill_rows_from_png_to_image(const png_structp png_ptr, struct FlatImage* img, const int pixel_size) {
     int x, y;
     png_bytep row = malloc(pixel_size * img->width * sizeof(png_byte));
 
@@ -34,7 +34,7 @@ void _fill_rows_from_png_to_image(png_structp png_ptr, struct FlatImage* img, in
         png_bytep ptr = row;
         png_read_row(png_ptr, ptr, NULL);
         for(x=0; x < img->width; x++) {
-            struct rgb pixel = {
+            const struct rgb pixel = {
                 .r=ptr[0],
                 .g=ptr[1],
                 .b=ptr[2],
@@ -47,7 +47,7 @@ void _fill_rows_from_png_to_image(png_structp png_ptr, struct FlatImage* img, in
     free(row);
 }
 
-struct image* create_black_image(int width, int height) {
+struct image* create_black_image(const int width, const int height) {
     struct image *img = malloc(sizeof(struct image));
     img->width = width;
     img->height = height;
@@ -67,7 +67,7 @@ struct image* create_black_image(int width, int height) {
     return img;
 }
 
-struct FlatImage* flat_image_create(int width, int height) {
+struct FlatImage* flat_image_create(const int width, const int height) {
     struct FlatImage *img = malloc(sizeof(struct FlatImage));
     img->width = width;
     img->height = height;
@@ -75,7 +75,7 @@ struct FlatImage* flat_image_create(int width, int height) {
     return img;
 }
 
-struct FlatImage* flat_image_create_with_color(int width, int height, struct rgb* color) {
+struct FlatImage* flat_image_create_with_color(const int width, const int height, const struct rgb* color) {
     struct rgb c = *color;
     struct FlatImage *img = flat_image_create(width, height);
     int x, y;
@@ -87,52 +87,52 @@ struct FlatImage* flat_image_create_with_color(int width, int height, struct rgb
     return img;
 }
 
-size_t __get_index(struct FlatImage* img, int x, int y) {
-    y = img->height - 1 - y;
-    return y * img->width + x;
+static inline size_t __get_index(const struct FlatImage* img, const int x, const int y) {
+    const int real_y = img->height - 1 - y;
+    return real_y * img->width + x;
 }
 
-void flat_image_fill(struct FlatImage* img, struct FlatImage* filler) {
-    int width = img->width;
-    int height = img->height;
-    int filler_width = filler->width;
-    int filler_height = filler->height;
+void flat_image_fill(struct FlatImage* img, const struct FlatImage* filler) {
+    const int width = img->width;
+    const int height = img->height;
+    const int filler_width = filler->width;
+    const int filler_height = filler->height;
     int x, y;
     for (y=0; y < height; y++) {
         for(x=0; x < width; x++) {
-            size_t filler_index = __get_index(filler, x % filler_width, y % filler_height);
-            size_t img_index = __get_index(img, x, y);
+            const size_t filler_index = __get_index(filler, x % filler_width, y % filler_height);
+            const size_t img_index = __get_index(img, x, y);
             img->buffer[img_index] = filler->buffer[filler_index];
         }
     }
 }
 
-void flat_image_fill_column(struct FlatImage* img, struct FlatImage* filler, int img_y) {
-    int width = img->width;
-    int height = img->height;
-    int filler_width = filler->width;
-    int filler_height = filler->height;
+void flat_image_fill_column(struct FlatImage* img, const struct FlatImage* filler, int img_y) {
+    const int width = img->width;
+    const int height = img->height;
+    const int filler_width = filler->width;
+    const int filler_height = filler->height;
 
-    int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
+    const int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
     int x, y;
     for (y=0; y < limit_height; y++) {
         for(x=0; x < width; x++) {
-            size_t filler_index = __get_index(filler, x % filler_width, y);
-            size_t img_index = __get_index(img, x, img_y);
+            const size_t filler_index = __get_index(filler, x % filler_width, y);
+            const size_t img_index = __get_index(img, x, img_y);
             img->buffer[img_index] = filler->buffer[filler_index];
         }
         img_y++;
     }
 }
 
-void flat_image_copy(struct FlatImage* img, struct FlatImage* filler, int img_x, int img_y) {
-    int width = img->width;
-    int height = img->height;
-    int filler_width = filler->width;
-    int filler_height = filler->height;
+void flat_image_copy(struct FlatImage* img, const struct FlatImage* filler, int img_x, int img_y) {
+    const int width = img->width;
+    const int height = img->height;
+    const int filler_width = filler->width;
+    const int filler_height = filler->height;
 
-    int limit_width = img_x + filler_width < width ? filler_width : width - img_x; 
-    int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
+    const int limit_width = img_x + filler_width < width ? filler_width : width - img_x; 
+    const int limit_height = img_y + filler_height < height ? filler_height : height - img_y; 
     int x, y, tmp_img_x;
     for (y=0; y < limit_height; y++) {
         tmp_img_x = img_x;
@@ -146,7 +146,7 @@ void flat_image_copy(struct FlatImage* img, struct FlatImage* filler, int img_x,
     }
 }
 
-struct FlatImage* flat_image_read_png_file(char* file_name) {
+struct FlatImage* flat_image_read_png_file(const char* file_name) {
     unsigned char header[8];
     FILE *fp = NULL;
     png_structp png_ptr = NULL;
@@ -235,7 +235,7 @@ struct FlatImage* flat_image_read_png_file(char* file_name) {
 }
 
 
-int write_png_file(FILE *fp, struct image* img) {
+int write_png_file(FILE *fp, const struct image* img) {
     int code = 0;
     png_structp png_ptr = NULL;
     png_infop info_ptr = NULL;
