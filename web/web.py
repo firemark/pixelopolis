@@ -29,7 +29,8 @@ MENU = [
     ]),
     ('Complex', [
         ('Mosque', 'examples/complex/mosque.css'),
-        ('Complex', 'examples/complex/complex.css'),
+        ('Village', 'examples/complex/village.css'),
+        ('Complex-old', 'examples/complex/complex.css'),
     ]),
 ]
 
@@ -63,7 +64,7 @@ def get_data_from_file(filename=None) -> str:
         return ''
 
     if filename is None:
-        filename = 'Complex/Complex'
+        filename = 'Complex/Village'
 
     path = FILES_TO_DICT.get(filename)
     if path is None:

@@ -320,7 +320,7 @@ static inline void _get_random_vox_in_poly(int vox[3], const int voxes[9]) {
 #undef COMP_RAND
 }
 
-static inline int _get_area_of_poly(const int voxes[9]) {
+static inline double _get_area_of_poly(const int voxes[9]) {
 #define X 0
 #define Y 1
 #define Z 2
@@ -335,9 +335,9 @@ static inline int _get_area_of_poly(const int voxes[9]) {
         voxes[Z] - voxes[6 + Z],
     };
 #define PARTIAL_CROSS(axis_a, axis_b) (ab[axis_a] * ac[axis_b] - ab[axis_b] * ac[axis_a])
-    const int yz = PARTIAL_CROSS(Y, Z);
-    const int xy = PARTIAL_CROSS(X, Y);
-    const int xz = PARTIAL_CROSS(X, Z);
+    const double yz = PARTIAL_CROSS(Y, Z);
+    const double xy = PARTIAL_CROSS(X, Y);
+    const double xz = PARTIAL_CROSS(X, Z);
 #undef PARTIAL_CROSS
 
     return sqrt(yz * yz + xz * xz + xy * xy) / 2.0;
@@ -357,9 +357,9 @@ void draw_sprites_in_random_position_in_poly(
     double normal[3];
     _compute_normal(normal, voxes);
 
-    const int area = _get_area_of_poly(voxes);
-    const int sprite_area = img_to_draw->width * img_to_draw->height;
-    const int count = (area * density) / (10 * sprite_area); // IDK - 10 is fine for eyecandy
+    const double area = _get_area_of_poly(voxes);
+    const double sprite_area = img_to_draw->width * img_to_draw->height;
+    const int count = (area * (double)density) / (25.0 * sprite_area); // IDK - 25 is fine for eyes
 
     int i;
     for(i = 0; i < count; i++) {
