@@ -67,7 +67,7 @@ cube, pyramid {
     roof: wall.grey-brick;
 }
 
-wall.red-brick { texture: tex.red-brick; }
-wall.grey-brick { texture: tex.grey-brick; }
-tex.red-brick  { texture: "textures/brick.png"; }
-tex.grey-brick  { texture: "textures/grey-brick.png"; }
+wall.red-brick      { texture: tex.red-brick; }
+wall.grey-brick     { texture: tex.grey-brick; }
+tex.red-brick       { texture: "textures/wall/brick.png"; }
+tex.grey-brick      { texture: "textures/wall/grey-brick.png"; }

@@ -12,4 +12,4 @@ pyramid.example {
 }
 
 wall.wood { texture: tex.wood; padding: 4; }
-tex.wood { texture: "textures/wood.png"; }
+tex.wood { texture: "textures/nature-wall/wood.png"; }

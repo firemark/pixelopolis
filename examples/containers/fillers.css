@@ -45,7 +45,7 @@ road {
 }
 
 wall.grey-brick { texture: tex.grey-brick; }
-wall.red-brick { texture: tex.red-brick; }
+wall.red-brick  { texture: tex.red-brick; }
 
-tex.grey-brick { texture: "textures/grey-brick.png"; }
-tex.red-brick { texture: "textures/brick.png"; }
+tex.grey-brick { texture: "textures/wall/grey-brick.png"; }
+tex.red-brick  { texture: "textures/wall/brick.png"; }

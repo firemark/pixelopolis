@@ -16,7 +16,7 @@ cubes {
     padding: 20;
 }
 
-cube.texture     tex { texture: "textures/wood.png"; }
+cube.texture     tex { texture: "textures/nature-wall/wood.png"; }
 cube.transparent tex { texture: "textures/trans.png"; }
 cube.hex         tex { color: #FF2233; }
 cube.small_hex   tex { color: #2F3; }

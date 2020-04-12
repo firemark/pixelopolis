@@ -65,7 +65,7 @@ floor.windows {
     padding: 12;
 }
 
-tex.wood { texture: "textures/wood.png"; }
-tex.grey-brick { texture: "textures/grey-brick.png"; }
-tex.red-brick { texture: "textures/brick.png"; }
-tex.window { texture: "textures/window.png"; }
+tex.wood        { texture: "textures/nature-wall/wood.png"; }
+tex.grey-brick  { texture: "textures/wall/grey-brick.png"; }
+tex.red-brick   { texture: "textures/wall/brick.png"; }
+tex.window      { texture: "textures/wall-objs/window.png"; }

@@ -10,9 +10,9 @@ wall.leafs { points-texture: tex.leaf;  points-density: 50%; }
 wall.grass { points-texture: tex.grass; points-density: 15%; }
 wall.wood  { texture: tex.wood; }
 
-tex.leaf  { texture: "textures/leaf.png"; }
-tex.grass { texture: "textures/grass.png"; }
-tex.wood  { texture: "textures/wood.png"; }
+tex.leaf  { texture: "textures/sprites/leaf.png"; }
+tex.grass { texture: "textures/sprites/grass.png"; }
+tex.wood  { texture: "textures/nature-wall/wood.png"; }
 
 /* OBJS */
 

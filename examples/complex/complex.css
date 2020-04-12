@@ -183,11 +183,11 @@ floor.top {
 }
 
 tex.bar { texture: "textures/bar.png"; }
-tex.brick { texture: "textures/brick.png"; }
-tex.clay { texture: "textures/clay.png"; }
-tex.door { texture: "textures/door.png"; }
-tex.window { texture: "textures/window.png"; }
+tex.brick { texture: "textures/wall/brick.png"; }
+tex.clay { texture: "textures/nature-wall/clay.png"; }
+tex.door { texture: "textures/wall-objs/door.png"; }
+tex.window { texture: "textures/wall-objs/window.png"; }
 tex.bottom { texture: "textures/bottom.png"; }
-tex.road { texture: "textures/road.png"; }
-tex.grey-brick { texture: "textures/grey-brick.png"; }
-tex.wood { texture:  "textures/wood.png"; }
+tex.road { texture: "textures/wall/road.png"; }
+tex.grey-brick { texture: "textures/wall/grey-brick.png"; }
+tex.wood { texture:  "textures/nature-wall/wood.png"; }

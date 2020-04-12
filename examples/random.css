@@ -27,6 +27,6 @@ wall.grey-brick { texture: tex.grey-brick; }
 wall.red-brick { texture: tex.red-brick; }
 wall.wood { texture: tex.wood; }
 
-tex.wood { texture: "textures/wood.png"; }
-tex.grey-brick { texture:  "textures/grey-brick.png"; }
-tex.red-brick { texture:  "textures/brick.png"; }
+tex.wood        { texture: "textures/nature-wall/wood.png"; }
+tex.grey-brick  { texture: "textures/wall/grey-brick.png"; }
+tex.red-brick   { texture: "textures/wall/brick.png"; }

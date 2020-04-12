@@ -42,5 +42,5 @@ floor.windows {
 .first floor.windows { align: justify; }
 .second floor.windows { align: middle; }
 
-tex.grey-brick { texture: "textures/grey-brick.png"; }
-tex.window { texture: "textures/window.png"; }
+tex.grey-brick { texture: "textures/wall/grey-brick.png"; }
+tex.window { texture: "textures/wall-objs/window.png"; }

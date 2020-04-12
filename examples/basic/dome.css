@@ -39,5 +39,5 @@ floor.windows {
     align: justify;
 }
 
-tex.grey-brick { texture: "textures/grey-brick.png"; }
-tex.window { texture: "textures/window.png"; }
+tex.grey-brick  { texture: "textures/wall/grey-brick.png"; }
+tex.window      { texture: "textures/wall-objs/window.png"; }
