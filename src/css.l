@@ -81,6 +81,7 @@ unsigned char char_to_hex_double(char x) {
 \+                          count_chars; return ADD_OP;
 -                           count_chars; return SUB_OP;
 >                           count_chars; return PARENT_OP;
+&                           count_chars; return PARENT_SELECTOR_OP;
 \n                          old_chars = 1; chars = 1; lines++;
 [ \r\t]+                    count_chars; return SPACE;
 %%

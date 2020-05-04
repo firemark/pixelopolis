@@ -13,6 +13,16 @@ int chars;
 int old_chars;
 int yylex(void);
 
+enum RuleAttrType {
+    RULE_ATTR_PROP,
+    RULE_ATTR_RULE,
+};
+
+struct RuleAttr {
+    enum RuleAttrType type;
+    void* obj;
+};
+
 struct Prop {
     char* name;
     struct Obj **objs;
@@ -74,13 +84,19 @@ struct Rule** concat_rules(struct Rule** a, struct Rule** b) {
     return a;
 }
 
-struct Rule* make_rule(struct RuleSelector* selector, struct Prop **props) {
+struct Rule* make_rule(struct RuleSelector* selector, struct RuleAttr **attrs) {
     struct Rule* rule = malloc(sizeof(struct Rule));
     struct HashMap* map_props = hash_make();
 
-    struct Prop *prop;
-    css_iter(prop, props) { // transform array to hashmap
-        hash_set(map_props, prop->name, prop->objs, NULL);
+    struct RuleAttr *attr;
+    css_iter(attr, attrs) { // transform array to hashmap
+        switch (attr->type) {
+            case RULE_ATTR_PROP:
+                struct Prop *prop = attr->obj;
+                hash_set(map_props, prop->name, prop->objs, NULL);
+                break;
+            default: break;
+        }
     }
 
     rule->selector = selector;
@@ -88,23 +104,51 @@ struct Rule* make_rule(struct RuleSelector* selector, struct Prop **props) {
     return rule;
 }
 
-struct Rule** make_rules(struct RuleSelector** selectors, struct Prop **props) {
+struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attrs) {
+    size_t rule_iter = 0;
+    struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
+    rules[rule_iter++] = make_rule(selector, attr);
+
+    struct RuleAttr *attr;
+    css_iter(attr, attrs) { // unpack nested rules
+        switch (attr->type) {
+            case RULE_ATTR_RULE: 
+                struct Rule *rule = attr->obj;
+                add_parent_to_nested_rule(rule);
+                rules[rule_iter++] = rule; 
+            break;
+            default: break;
+        }
+    }
+    return rules;
+}
+
+struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attrs) {
     size_t rule_iter = 0;
     struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
     struct RuleSelector* selector;
     css_iter(selector, selectors) {
-        rules[rule_iter++] = make_rule(selector, props);
+        struct Rule** nested_rules = unpack_rules(selector, attrs);
+        struct Rule* nested_rule;
+        css_iter(nested_rule, nested_rules) { // concat rules
+            rules[rule_iter++] = nested_rule;
+        }   
+        free(nested_rules);
     }
 
-    for(; rule_iter <= RULE_SELECTORS_SIZE; rule_iter++) {
-        rules[rule_iter] = NULL;
+    while(rule_iter <= RULE_SELECTORS_SIZE) {
+        rules[rule_iter++] = NULL;
     }
 
-    struct Prop *prop;
-    css_iter(prop, props) { // cleaning
-        free(prop);
+    struct RuleAttr *attr;
+    css_iter(attr, attrs) { // cleaning
+        switch (attrs->type) {
+            case RULE_ATTR_PROP: free(attr->obj); break;
+            default: break;
+        }
+        free(attr);
     }
-    free(props);
+    free(attrs);
 
     return rules;
 }
@@ -238,7 +282,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %token
     START_BODY END_BODY START_FUNC END_FUNC
     COLON SEMICOLON COMMA PERCENT
-    ADD_OP SUB_OP MUL_OP DIV_OP PARENT_OP
+    ADD_OP SUB_OP MUL_OP DIV_OP PARENT_OP PARENT_SELECTOR_OP
     SPACE
 %token <string> WORD STRING CLASS PSEUDO_CLASS VARIABLE
 %token <number> NUMBER
@@ -278,15 +322,21 @@ rule_selectors:
         ;
 
 rule_selector:
-        WORD sp { $$ = make_rule_selector($1, NULL); }
-        | WORD classes sp { $$ = make_rule_selector($1, $2); }
+        rule_selector_word sp { $$ = make_rule_selector($1, NULL); }
+        | rule_selector_word classes sp { $$ = make_rule_selector($1, $2); }
         | classes sp { $$ = make_rule_selector(NULL, $1); }
         ; /* TODO - pseudoklasses */
+
+rule_selector_word:
+        WORD { $$ = $1; }
+        | PARENT_SELECTOR_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "&"); }
+        | MUL_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "*"); }
+        ;
 
 classes:
         CLASS { make_array(char, KLASSES_SIZE, $1); $$ = arr; }
         | classes CLASS { append_to_array($$, KLASSES_SIZE, $2); }
-
+        ;
 
 rule_selector_in_rule:
         rule_selector { $$ = $1; }
@@ -294,9 +344,14 @@ rule_selector_in_rule:
         | rule_selector_in_rule rule_selector { $2->greedy_parent = $1; $$ = $2; }
         ;
 
-props:
-        prop { make_array(struct Prop, PROPS_SIZE, $1); $$ = arr; }
-        | props prop { append_to_array($1, PROPS_SIZE, $2); $$ = $1; }
+props_and_selectors:
+        prop_or_selector { make_array(struct RuleAttr, RULE_ATTRS_SIZE, $1); $$ = arr; }
+        | props_and_selectors prop { append_to_array($1, RULE_ATTRS_SIZE, $2); $$ = $1; }
+        ;
+
+prop_or_selector:
+        prop { $$ = make_rule_attr($1, RULE_ATTR_PROP); }
+        | rule { $$ = make_rule_attr($1, RULE_ATTR_RULE); }
         ;
 
 prop:
