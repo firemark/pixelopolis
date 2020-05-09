@@ -76,12 +76,13 @@ struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSel
     css_iter(iter_rule, program->rules) {
         struct RuleSelector* iter_query = iter_rule->selector;
         if (!_match(query, iter_query)) continue;
-        // filtering done - this is time to copy props
         // DEBUG
         //css_debug_rule_selector(stderr, query);
         //fprintf(stderr, " VS ");
         //css_debug_rule(stderr, iter_rule);
         //fprintf(stderr, "\n");
+
+        // filtering done - this is time to copy props
         hash_update(rule->props, iter_rule->props);
     }
 

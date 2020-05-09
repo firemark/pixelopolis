@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "css.h"
+#include "css_func.h"
 #include "basic.h"
 
 FILE *yyin;
@@ -14,8 +15,8 @@ int old_chars;
 int yylex(void);
 
 enum RuleAttrType {
-    RULE_ATTR_PROP,
-    RULE_ATTR_RULE,
+    RULE_ATTR_PROP, // struct Prop*
+    RULE_ATTR_RULE, // struct Rule**
 };
 
 struct RuleAttr {
@@ -90,9 +91,10 @@ struct Rule* make_rule(struct RuleSelector* selector, struct RuleAttr **attrs) {
 
     struct RuleAttr *attr;
     css_iter(attr, attrs) { // transform array to hashmap
+        struct Prop *prop;
         switch (attr->type) {
             case RULE_ATTR_PROP:
-                struct Prop *prop = attr->obj;
+                prop = attr->obj;
                 hash_set(map_props, prop->name, prop->objs, NULL);
                 break;
             default: break;
@@ -104,24 +106,113 @@ struct Rule* make_rule(struct RuleSelector* selector, struct RuleAttr **attrs) {
     return rule;
 }
 
+struct RuleAttr* make_rule_attr(void* obj, enum RuleAttrType type) {
+    struct RuleAttr* rule_attr = malloc(sizeof(struct RuleAttr));
+    rule_attr->obj = obj;
+    rule_attr->type = type;
+    return rule_attr;
+}
+
+char find_and_replace_parent_op_with_parent_rule(struct RuleSelector**, struct RuleSelector*);
+
+void _cpy_classes_for_parent_op(
+        struct RuleSelector* selector,
+        struct RuleSelector* copied_selector) {
+    if (!selector->klasses) return;
+
+    if (!copied_selector->klasses) {
+        make_array(char, KLASSES_SIZE, NULL);
+        copied_selector->klasses = arr;
+    }
+
+    size_t copied_klass_len = 0;
+    while(copied_selector->klasses[copied_klass_len++]);
+
+    size_t i = 0;
+    for(i = 0; i < KLASSES_SIZE; i++) {
+        char* klass = css_cpy_str(selector->klasses[i++]);
+        if (!klass) break;
+        copied_selector->klasses[copied_klass_len++] = klass;
+    }
+}
+
+void _replace_parent_op(
+        struct RuleSelector** selector_pointer,
+        struct RuleSelector* selector_to_replace) {
+    struct RuleSelector* selector = *selector_pointer;
+    struct RuleSelector* copied_selector = css_cpy_selector(selector_to_replace);
+    struct RuleSelector* parent_copied_selector = css_find_last_parent_selector(copied_selector);
+
+    _cpy_classes_for_parent_op(selector, copied_selector);
+
+    if (selector->parent) {
+        parent_copied_selector->parent = selector->parent;
+        find_and_replace_parent_op_with_parent_rule(
+            &parent_copied_selector->parent,
+            parent_copied_selector);
+    }
+
+    if (selector->greedy_parent) {
+        parent_copied_selector->greedy_parent = selector->greedy_parent;
+        find_and_replace_parent_op_with_parent_rule(
+            &parent_copied_selector->greedy_parent,
+            parent_copied_selector);
+    }
+
+    *selector_pointer = copied_selector;
+    css_free_rule_selector(selector);
+}
+
+char find_and_replace_parent_op_with_parent_rule(
+        struct RuleSelector** selector_pointer,
+        struct RuleSelector* selector_to_replace) {
+    struct RuleSelector* selector = *selector_pointer;
+    char* element = selector->element;
+
+    if (element && strcmp(element, "&") != 0) {
+        _replace_parent_op(
+            selector_pointer,
+            selector_to_replace);
+        return 1;
+    }
+
+    if (selector->parent) {
+        return find_and_replace_parent_op_with_parent_rule(
+            &selector->parent,
+            selector_to_replace);
+    }
+
+    if (selector->greedy_parent) {
+        return find_and_replace_parent_op_with_parent_rule(
+            &selector->greedy_parent,
+            selector_to_replace);
+    }
+
+    return 0;
+}
+
+
 struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attrs) {
     size_t rule_iter = 0;
     struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
-    rules[rule_iter++] = make_rule(selector, attr);
+    rules[rule_iter++] = make_rule(selector, attrs);
 
     struct RuleAttr *attr;
     css_iter(attr, attrs) { // unpack nested rules
-        switch (attr->type) {
-            case RULE_ATTR_RULE: 
-                struct Rule *rule = attr->obj;
-                add_parent_to_nested_rule(rule);
-                rules[rule_iter++] = rule; 
-            break;
-            default: break;
+        if (attr->type != RULE_ATTR_RULE) continue;
+
+        struct Rule **inner_rules = attr->obj;
+        struct Rule *rule;
+        css_iter(rule, inner_rules) {
+            find_and_replace_parent_op_with_parent_rule(
+                &rule->selector,
+                selector);
+            rules[rule_iter++] = rule;
         }
     }
     return rules;
 }
+
 
 struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attrs) {
     size_t rule_iter = 0;
@@ -132,7 +223,7 @@ struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attr
         struct Rule* nested_rule;
         css_iter(nested_rule, nested_rules) { // concat rules
             rules[rule_iter++] = nested_rule;
-        }   
+        }
         free(nested_rules);
     }
 
@@ -142,7 +233,7 @@ struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attr
 
     struct RuleAttr *attr;
     css_iter(attr, attrs) { // cleaning
-        switch (attrs->type) {
+        switch (attr->type) {
             case RULE_ATTR_PROP: free(attr->obj); break;
             default: break;
         }
@@ -264,17 +355,18 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %start program
 %union {
     char sIndex; // symbol table index
-	int number;
+    int number;
     char* string;
     struct rgb* color;
     struct Program* programPtr;
     struct Rule* rulePtr;
     struct Prop* propPtr;
+    struct RuleAttr* ruleAttrPtr;
     struct Obj* objPtr;
     struct RuleSelector* ruleSelectorPtr;
     struct RuleSelector** ruleSelectorPtrMany;
     struct Rule** rulePtrMany;
-    struct Prop** propPtrMany;
+    struct RuleAttr** ruleAttrPtrMany;
     struct Obj** objPtrMany;
     char** strMany;
 };
@@ -293,10 +385,12 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %right START_BODY END_BODY
 %type <programPtr> program
 %type <rulePtrMany> rule
+%type <string> rule_selector_word
 %type <propPtr> prop
+%type <ruleAttrPtr> rule_or_prop
 %type <objPtr> obj
 %type <rulePtrMany> rules
-%type <propPtrMany> props
+%type <ruleAttrPtrMany> rules_and_props
 %type <objPtrMany> objs args
 %type <ruleSelectorPtr> rule_selector rule_selector_in_rule
 %type <ruleSelectorPtrMany> rule_selectors
@@ -313,7 +407,7 @@ rules:
         ;
 
 rule:
-        rule_selectors START_BODY sp props END_BODY sp { $$ = make_rules($1, $4); }
+        rule_selectors START_BODY sp rules_and_props END_BODY sp { $$ = make_rules($1, $4); }
         ;
 
 rule_selectors:
@@ -329,8 +423,8 @@ rule_selector:
 
 rule_selector_word:
         WORD { $$ = $1; }
-        | PARENT_SELECTOR_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "&"); }
-        | MUL_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "*"); }
+        | PARENT_SELECTOR_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "&", 2); }
+        | MUL_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "*", 2); }
         ;
 
 classes:
@@ -344,12 +438,12 @@ rule_selector_in_rule:
         | rule_selector_in_rule rule_selector { $2->greedy_parent = $1; $$ = $2; }
         ;
 
-props_and_selectors:
-        prop_or_selector { make_array(struct RuleAttr, RULE_ATTRS_SIZE, $1); $$ = arr; }
-        | props_and_selectors prop { append_to_array($1, RULE_ATTRS_SIZE, $2); $$ = $1; }
+rules_and_props:
+        rule_or_prop { make_array(struct RuleAttr, RULE_ATTRS_SIZE, $1); $$ = arr; }
+        | rules_and_props rule_or_prop { append_to_array($1, RULE_ATTRS_SIZE, $2); $$ = $1; }
         ;
 
-prop_or_selector:
+rule_or_prop:
         prop { $$ = make_rule_attr($1, RULE_ATTR_PROP); }
         | rule { $$ = make_rule_attr($1, RULE_ATTR_RULE); }
         ;

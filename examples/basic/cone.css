@@ -8,15 +8,12 @@ cones {
     display: v-series;
     body: cone.example.first, cone.example.second;
     padding: 100;
-}
 
-cone.first {
-    sides: 32;
-}
-
-cone.second {
-    has-many-walls: 1;
-    sides: 6;
+    &.first { sides: 32; }
+    &.second {
+        has-many-walls: 1;
+        sides: 6;
+    }
 }
 
 cone.example {
