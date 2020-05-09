@@ -1,6 +1,7 @@
 *.o
 *.swp
 *.swo
+*.output
 out.png
 pixelopolis
 src/css.l.c

@@ -36,7 +36,7 @@ make_dirs:
 	mkdir tests_out -p
 
 yacc: src/css.y src/css.l
-	$(YACC) src/css.y --defines=include/css.y.h --output=src/css.y.c
+	$(YACC) src/css.y --defines=include/css.y.h --output=src/css.y.c -v
 	$(LEX) -t src/css.l > src/css.l.c
 
 pixelopolis: $(OBJS_PATH)

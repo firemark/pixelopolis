@@ -6,6 +6,7 @@
 #include "css.h"
 #include "css_func.h"
 #include "basic.h"
+#define YYDEBUG 1
 
 FILE *yyin;
 struct Program* global_program;
@@ -203,12 +204,16 @@ struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attr
     css_iter(attr, attrs) { // unpack nested rules
         if (attr->type != RULE_ATTR_RULE) continue;
 
-        struct Rule **inner_rules = attr->obj;
+        struct Rule **nested_rules = attr->obj;
         struct Rule *rule;
-        css_iter(rule, inner_rules) {
-            find_and_replace_parent_op_with_parent_rule(
+        css_iter(rule, nested_rules) {
+            char is_changed = find_and_replace_parent_op_with_parent_rule(
                 &rule->selector,
                 selector);
+            if (!is_changed) { // add parent rule to the end
+                struct RuleSelector* parent = css_find_last_parent_selector(rule->selector);
+                parent->greedy_parent = css_cpy_selector(selector);
+            }
             rules[rule_iter++] = rule;
         }
     }
@@ -394,7 +399,7 @@ struct Obj* make_obj_as_noargs_func(char* name) {
 %type <rulePtrMany> rules
 %type <ruleAttrPtrMany> rules_and_props
 %type <objPtrMany> objs args
-%type <ruleSelectorPtr> rule_selector rule_selector_in_rule
+%type <ruleSelectorPtr> rule_selector rule_selector_in_rule rule_selector_simple
 %type <ruleSelectorPtrMany> rule_selectors
 %type <strMany> classes
 
@@ -417,18 +422,6 @@ rule_selectors:
         | rule_selectors COMMA sp rule_selector_in_rule { append_to_array($1, RULE_SELECTORS_SIZE, $4); $$ = $1; }
         ;
 
-rule_selector:
-        rule_selector_word sp { $$ = make_rule_selector($1, NULL); }
-        | rule_selector_word classes sp { $$ = make_rule_selector($1, $2); }
-        | classes sp { $$ = make_rule_selector(NULL, $1); }
-        ; /* TODO - pseudoklasses */
-
-rule_selector_word:
-        WORD { $$ = $1; }
-        | PARENT_SELECTOR_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "&", 2); }
-        | MUL_OP { $$ = malloc(sizeof(char) * 2); memcpy($$, "*", 2); }
-        ;
-
 classes:
         CLASS { make_array(char, KLASSES_SIZE, $1); $$ = arr; }
         | classes CLASS { append_to_array($$, KLASSES_SIZE, $2); }
@@ -438,6 +431,18 @@ rule_selector_in_rule:
         rule_selector { $$ = $1; }
         | rule_selector_in_rule PARENT_OP sp rule_selector { $4->parent = $1; $$ = $4; }
         | rule_selector_in_rule rule_selector { $2->greedy_parent = $1; $$ = $2; }
+        ;
+
+rule_selector:
+        rule_selector_word { $$ = make_rule_selector($1, NULL); }
+        | rule_selector_word classes sp { $$ = make_rule_selector($1, $2); }
+        | classes sp { $$ = make_rule_selector(NULL, $1); }
+        ; /* TODO - pseudoklasses */
+
+rule_selector_word:
+        WORD sp { $$ = $1; }
+        | PARENT_SELECTOR_OP sp { $$ = malloc(sizeof(char) * 2); memcpy($$, "&", 2); }
+        | MUL_OP sp { $$ = malloc(sizeof(char) * 2); memcpy($$, "*", 2); }
         ;
 
 rules_and_props:
@@ -451,7 +456,7 @@ rule_or_prop:
         ;
 
 prop:
-        WORD sp COLON sp objs SEMICOLON sp { $$ = make_prop($1, $5); }
+        WORD sp COLON sp objs SEMICOLON sp{ $$ = make_prop($1, $5); }
         ;
 
 objs:
@@ -465,7 +470,7 @@ obj:
         | STRING sp { $$ = make_obj_as_string($1); }
         | VARIABLE sp { $$ = make_obj_as_variable($1); }
         | COLOR sp { $$ = make_obj_as_color($1); }
-        | rule_selector { $$ = make_obj_as_rule($1); }
+        | rule_selector_simple { $$ = make_obj_as_rule($1); }
         | obj ADD_OP sp obj { $$ = make_obj_as_add($1, $4); }
         | obj SUB_OP sp obj { $$ = make_obj_as_sub($1, $4); }
         | obj MUL_OP sp obj { $$ = make_obj_as_mul($1, $4); }
@@ -473,6 +478,12 @@ obj:
         | START_FUNC sp obj END_FUNC sp { $$ = $3; }
         | WORD sp START_FUNC sp END_FUNC sp { $$ = make_obj_as_noargs_func($1); }
         | WORD sp START_FUNC sp args END_FUNC sp { $$ = make_obj_as_func($1, $5); }
+        ;
+
+rule_selector_simple:
+        WORD sp { $$ = make_rule_selector($1, NULL); }
+        | WORD classes sp { $$ = make_rule_selector($1, $2); }
+        | classes sp { $$ = make_rule_selector(NULL, $1); }
         ;
 
 args:

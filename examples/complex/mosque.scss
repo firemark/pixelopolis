@@ -112,7 +112,7 @@ tower {
 }
 
 .building {
-    & cube.base {
+    cube.base {
         width: 100%;
         depth: 100%;
         height: random(50, 100);
@@ -120,7 +120,7 @@ tower {
         wall: wall.clay;
     }
 
-    & cylinder.base {
+    cylinder.base {
         width: 100%;
         depth: 100%;
         height: random(200, 300);
@@ -128,28 +128,28 @@ tower {
         sides: 32;
     }
 
-    & .deco {
+    .deco {
         wall: wall.deco;
     }
 
-    & cylinder.windows {
+    cylinder.windows {
         height: 13;
         wall: wall.clay.with-windows;
         sides: 32;
     }
 
-    & dome {
+    dome {
         roof: wall.gold;
         horizontal-sides: 12;
         vertical-sides: 32;
     }
 
-    & .full {
+    .full {
         width: 100%;
         depth: 100%;
     }
 
-    & .small {
+    .small {
         width: 50;
         depth: 50;
     }
