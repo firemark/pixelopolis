@@ -28,7 +28,7 @@ MENU = [
         ('Rotate', 'examples/rotate.css'),
     ]),
     ('Complex', [
-        ('Mosque', 'examples/complex/mosque.css'),
+        ('Mosque', 'examples/complex/mosque.scss'),
         ('Village', 'examples/complex/village.css'),
         ('Complex-old', 'examples/complex/complex.css'),
     ]),
@@ -76,12 +76,12 @@ def get_data_from_file(filename=None) -> str:
 def render_index(errors=None, data='', img=None):
     errors = errors or []
     return render_template(
-        'index.html', 
-        errors=errors, 
+        'index.html',
+        errors=errors,
         data=data,
         menu=MENU,
         img=img,
-    ) 
+    )
 
 
 def run_pixelopolis(data):
@@ -111,6 +111,6 @@ def render_and_run(data):
     errors, img = run_pixelopolis(data)
     return render_index(
         data=data,
-        errors=errors, 
-        img=img, 
+        errors=errors,
+        img=img,
     )
