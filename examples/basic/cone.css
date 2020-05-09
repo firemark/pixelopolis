@@ -9,11 +9,6 @@ cones {
     body: cone.example.first, cone.example.second;
     padding: 100;
 
-    &.first { sides: 32; }
-    &.second {
-        has-many-walls: 1;
-        sides: 6;
-    }
 }
 
 cone.example {
@@ -21,6 +16,14 @@ cone.example {
     width: 300;
     depth: 200;
     height: 150;
+
+    &.first {
+        sides: 32;
+    }
+    &.second {
+        has-many-walls: 1;
+        sides: 6;
+    }
 }
 
 wall.grey-brick {

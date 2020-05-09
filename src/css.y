@@ -126,11 +126,13 @@ void _cpy_classes_for_parent_op(
     }
 
     size_t copied_klass_len = 0;
-    while(copied_selector->klasses[copied_klass_len++]);
+    while(copied_selector->klasses[copied_klass_len]) {
+        copied_klass_len++;
+    };
 
     size_t i = 0;
     for(i = 0; i < KLASSES_SIZE; i++) {
-        char* klass = css_cpy_str(selector->klasses[i++]);
+        char* klass = css_cpy_str(selector->klasses[i]);
         if (!klass) break;
         copied_selector->klasses[copied_klass_len++] = klass;
     }
@@ -149,14 +151,14 @@ void _replace_parent_op(
         parent_copied_selector->parent = selector->parent;
         find_and_replace_parent_op_with_parent_rule(
             &parent_copied_selector->parent,
-            parent_copied_selector);
+            selector_to_replace);
     }
 
     if (selector->greedy_parent) {
         parent_copied_selector->greedy_parent = selector->greedy_parent;
         find_and_replace_parent_op_with_parent_rule(
             &parent_copied_selector->greedy_parent,
-            parent_copied_selector);
+            selector_to_replace);
     }
 
     *selector_pointer = copied_selector;
@@ -169,7 +171,7 @@ char find_and_replace_parent_op_with_parent_rule(
     struct RuleSelector* selector = *selector_pointer;
     char* element = selector->element;
 
-    if (element && strcmp(element, "&") != 0) {
+    if (element && strcmp(element, "&") == 0) {
         _replace_parent_op(
             selector_pointer,
             selector_to_replace);

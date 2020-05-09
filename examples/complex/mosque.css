@@ -194,5 +194,5 @@ tex.clay { texture: "textures/nature-wall/clay-sand.png"; }
 tex.deco { texture: "textures/wall-objs/deco.png"; }
 tex.road { texture: "textures/nature-wall/clay-sand2.png"; }
 tex.gold { texture: "textures/wall/gold.png"; }
-tex.door { texture: "textures/wall-objs/wooden-door.png"; }
+tex.door { texture: "textures/wall-objs/door.png"; }
 tex.window { texture: "textures/wall-objs/window.png"; }
