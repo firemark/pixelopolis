@@ -6,7 +6,7 @@ world {
 
 village-and-road {
     display: h-series;
-    body: cube.road, village;
+    body: road, village;
     width: random(800, 1200);
     depth: random(800, 1200);
     justify: center;
@@ -17,60 +17,41 @@ village {
     body: village-row;
     width: 100%;
     depth: 100%;
+
+    village-row {
+        display: d-filler;
+        body: village-cell;
+        width: random(200, 400);
+        depth: 100%;
+    }
+
+    village-cell {
+        display: square-fence;
+        width: 100%;
+        depth: random(200, 400);
+        edge-size: 50;
+        body: district;
+        body-justify: center;
+    }
+
+    district {
+        display: h-series;
+        body: sidewalk, city;
+        width: 100%;
+        depth: 100%;
+    }
 }
 
-village-row {
-    display: d-filler;
-    body: village-cell;
-    width: random(200, 400);
-    depth: 100%;
-}
-
-village-cell {
-    display: square-fence;
-    width: 100%;
-    depth: random(200, 400);
-    edge-size: 50;
-    body: district;
-    body-justify: center;
-}
-
-district {
-    display: h-series;
-    body: cube.sidewalk, v-filler.city;
-    width: 100%;
-    depth: 100%;
-}
-
-cube.road {
+road {
+    display: cube;
     roof: wall.road.grass;
     width: 100%;
     depth: 100%;
     height: 0;
 }
 
-v-filler.city {
-    body: d-filler.row;
-    width: 100%;
-    depth: 100%;
-    padding: 50;
-    align: center;
-}
-
-d-filler.row {
-    body: choice(
-      house.brick,
-      house.clay,
-      house.wood,
-      house.wood.roman,
-      house.clay.roman
-    );
-    depth: 100%;
-    padding: 100;
-    align: center;
-}
-
-cube.sidewalk {
+sidewalk {
+    display: cube;
     roof: wall.grey-brick;
     wall: wall.grey-brick;
     width: 100%;
@@ -78,94 +59,127 @@ cube.sidewalk {
     height: 8;
 }
 
-house roof.triangle { display: triangle; }
-house roof.pyramid { display: pyramid; }
-house walls { display: cube; }
+city {
+    display: v-filler;
+    body: d-filler.row;
+    width: 100%;
+    depth: 100%;
+    padding: 50;
+    align: center;
+
+    & > d-filler.row {
+        body: choice(
+          house.brick,
+          house.clay,
+          house.wood,
+          house.wood.roman,
+          house.clay.roman
+        );
+        depth: 100%;
+        padding: 100;
+        align: center;
+    }
+}
 
 house {
     display: h-series;
-    body: walls, choice(roof.triangle, roof.pyramid);
+    body:
+        choice(zero-floor, first-floor),
+        choice(null, first-floor),
+        choice(null, first-floor),
+        choice(roof.triangle, roof.pyramid);
     width: random(50, 120);
     depth: random(50, 120);
+
+    roof, first-floor, zero-floor {
+        width: 100%;
+        depth: 100%;
+        height: random(30, 80);
+    }
+
+    roof.triangle { display: triangle; }
+    roof.pyramid { display: pyramid; }
+    first-floor { display: cube; }
+
+    zero-floor {
+        display: square-fence;
+        body: body;
+        body-justify: center;
+        corner: corner;
+        edge-size: 10;
+
+        & > body {
+            width: 80%;
+            depth: 80%;
+            height: 100%;
+        }
+
+        & > corner {
+            display: cube;
+            wall: wall.wood;
+            width: 100%;
+            depth: 100%;
+            height: 100%;
+        }
+    }
 }
 
-house roof, house walls {
-    width: 100%;
-    depth: 100%;
-    height: random(30, 80);  
+house.brick {
+    roof.triangle {
+        wall: wall.brick;
+        roof: wall.wood;
+    }
+
+    roof.pyramid {
+        wall: wall.brick;
+        roof: wall.wood;
+    }
+
+    zero-floor > body, first-floor {
+        wall: wall.brick.with-windows;
+    }
 }
 
-house.brick roof.triangle {
-    wall: wall.brick;
-    roof: wall.wood;
+house.clay {
+    roof {
+        wall: wall.clay;
+        roof: wall.clay;
+    }
+
+    zero-floor > body, first-floor {
+        wall: wall.clay.with-windows;
+    }
 }
 
-house.brick roof.pyramid {
-    wall: wall.wood;
+house.wood {
+    roof {
+        wall: wall.wood;
+        roof: wall.wood;
+    }
+
+    zero-floor > body, first-floor {
+        wall: wall.wood.with-windows;
+    }
 }
 
-house.brick walls {
-    wall: wall.brick.with-windows;
-}
+/*market {}*/
 
-house.clay roof {
-    wall: wall.clay;
-    roof: wall.clay;
-}
-
-house.clay walls {
-    wall: wall.clay.with-windows;
-}
-
-house.wood roof {
-    wall: wall.wood;
-    roof: wall.wood;
-}
-
-house.wood walls {
-    wall: wall.wood.with-windows;
-}
-
-house.roman {
-  	display: h-series;
-    body: d-series, roof.triangle;
-}
-
-house.roman > d-series {
-    body: roman-fillars, walls;
-    width: 100%;
-    depth: 100%;
-    height: random(40, 80);
-    padding: 20;
-}
-
-house.roman > d-series > walls {
-    width: 100%;
-    depth: 90%;
-    height: 100%;
-}
-
-house.roman > roof {
-    width: 100%;
-    depth: 100%;
-    height: random(20, 30);  
-}
-
-roman-fillars {
+fillars {
     display: v-filler;
-    body: roman-fillar;
+    body: fillar;
     width: 100%;
     height: 100%;
-    padding: 20;
     align: center;
-}
 
-roman-fillar {
-    display: cube;
-    wall: wall.clay;
-    width: 5;
-    depth: 5;
-    height: 100%;
+    & > fillar {
+        display: cube;
+        width: 5;
+        depth: 5;
+        height: 100%;
+    }
+
+    &.clay > fillar { wall: wall.clay; }
+    &.wood > fillar { wall: wall.wood; }
 }
 
 
