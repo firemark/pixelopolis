@@ -47,7 +47,7 @@ void css_draw_dome(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
-void css_draw_square_fence(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
+void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 
 // utils
 static inline const int _x_rotate(

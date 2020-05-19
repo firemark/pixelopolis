@@ -38,10 +38,11 @@ struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
 }
 
 void builder_init_basic(struct BasicObj* basic) {
-    const double theta = basic->rotate * M_PI / 180.0;
+    const double theta = builder_make_theta(basic->rotate);
     basic->sin_th = sin(theta);
     basic->cos_th = cos(theta);
 }
+
 
 struct BasicObj builder_build_empty_basic() {
     return (struct BasicObj) {

@@ -17,6 +17,6 @@ void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vo
         case DRAW_OBJ_TRIANGLE: css_draw_triangle(draw_obj, &inner_info); break;
         case DRAW_OBJ_PYRAMID: css_draw_pyramid(draw_obj, &inner_info); break;
         case DRAW_OBJ_SERIES: css_draw_series(draw_obj, &inner_info); break;
-        case DRAW_OBJ_SQUARE_FENCE: css_draw_square_fence(draw_obj, &inner_info); break;
+        case DRAW_OBJ_BOARD: css_draw_board(draw_obj, &inner_info); break;
     }
 }

@@ -11,7 +11,7 @@ enum DrawObjType {
     DRAW_OBJ_TRIANGLE,
     DRAW_OBJ_PYRAMID,
     DRAW_OBJ_SERIES,
-    DRAW_OBJ_SQUARE_FENCE,
+    DRAW_OBJ_BOARD,
 };
 
 enum FillDirection { VERTICAL_FILL = 0, HORIZONTAL_FILL = 2, DEPTH_FILL = 1 };
@@ -104,12 +104,13 @@ struct SeriesObj {
     enum FillDirection fill_direction;
 };
 
-struct SquareFenceObj {
-    int edge_size;
-    struct DrawObj *body;
-    struct DrawObj **edges;
-    struct DrawObj **corners;
-    //enum EdgeAlign edge_align;
+struct BoardChild {
+    struct DrawObj *obj;
+    int x, y;
+};
+
+struct BoardObj {
+    struct BoardChild **children;
 };
 
 void builder_init(void);

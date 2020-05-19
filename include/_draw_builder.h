@@ -1,6 +1,7 @@
 #pragma once
-#include "draw_builder.h" 
+#include "draw_builder.h"
 #include "hash.h"
+#include <math.h>
 
 #define BUILDER_MAX_ELEMENTS 128
 
@@ -33,9 +34,10 @@ void builder_init_basic(struct BasicObj* basic);
 struct BasicObj builder_build_empty_basic();
 struct DrawObj* builder_build_void(struct Helper* helper);
 struct DrawObj* builder_build_custom_void(
-        struct Helper* helper, 
+        struct Helper* helper,
         struct BasicObj basic,
         struct RuleSelector* child_selector);
+struct BoardChild* builder_build_board_child(struct DrawObj* obj, int x, int y);
 struct DrawObj* builder_build_pyramid(struct Helper* helper);
 struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
@@ -68,9 +70,14 @@ void series_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj 
 void series_max_basic(struct BasicObj *a, struct BasicObj *b);
 void series_align_objs(
         struct Helper* helper,
-        struct ShiftDrawPair** pairs, 
+        struct ShiftDrawPair** pairs,
         enum FillDirection fill_direction,
         size_t size, int end_width);
 
 //caches
 extern struct HashMap* css_builder_cache_textures;
+
+//inlines
+static inline const double builder_make_theta(const int rotate) {
+    return rotate * M_PI / 180.0;
+}
