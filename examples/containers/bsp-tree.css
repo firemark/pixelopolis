@@ -18,9 +18,11 @@ bsp {
     body: body;
     iterations-count: 4;
     padding: 10;
-    justify: random;
+    justify: center;
     width: 100%;
     depth: 100%;
+    min-width: 100;
+    min-height: 100;
 }
 
 

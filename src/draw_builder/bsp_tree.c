@@ -31,7 +31,8 @@ struct BspData {
 
 static struct BspTree* _make_tree(
         const int iterations_count,
-        const struct BspTreeCord* cord) {
+        const struct BspTreeCord* cord,
+        const struct Helper* helper) {
     if (iterations_count < 1) return NULL;
 
     const double ratio = RATIO_START + (double)rand() / RAND_MAX * (RATIO_END - RATIO_START);
@@ -41,11 +42,19 @@ static struct BspTree* _make_tree(
     tree->direction = rand() % 2 ? BSD_TREE_VERTICAL : BSD_TREE_HORIZONTAL;
 
     struct BspTreeCord cord_a, cord_b;
+    int min_width, min_height;
 
     switch(tree->direction) {
         case BSD_TREE_VERTICAL:
+            min_width = builder_get_int(helper->rule, "min-width", 0);
             cord_a.width = cord->width * ratio;
             cord_b.width = cord->width * (1.0 - ratio);
+
+            if (cord_a.width < min_width || cord_b.width < min_width) {
+                tree->a = NULL;
+                tree->b = NULL;
+                return tree;
+            }
 
             cord_a.height = cord->height;
             cord_b.height = cord->height;
@@ -57,11 +66,18 @@ static struct BspTree* _make_tree(
             cord_b.y = cord->y;
         break;
         case BSD_TREE_HORIZONTAL:
-            cord_a.width = cord->width;
-            cord_b.width = cord->width;
-
+            min_height = builder_get_int(helper->rule, "min-height", 0);
             cord_a.height = cord->height * ratio;
             cord_b.height = cord->height * (1.0 - ratio);
+
+            if (cord_a.height < min_height || cord_b.height < min_height) {
+                tree->a = NULL;
+                tree->b = NULL;
+                return tree;
+            }
+
+            cord_a.width = cord->width;
+            cord_b.width = cord->width;
 
             cord_a.x = cord->x;
             cord_b.x = cord->x;
@@ -71,8 +87,8 @@ static struct BspTree* _make_tree(
         break;
     }
 
-    tree->a = _make_tree(iterations_count - 1, &cord_a);
-    tree->b = _make_tree(iterations_count - 1, &cord_b);
+    tree->a = _make_tree(iterations_count - 1, &cord_a, helper);
+    tree->b = _make_tree(iterations_count - 1, &cord_b, helper);
 
     return tree;
 }
@@ -122,12 +138,9 @@ void _free_tree(struct BspTree* tree) {
     free(tree);
 }
 
-static inline const int _len_tree(const int iterations_count) {
-    // power for ints
-    int sum = 1;
-    int i;
-    for(i = 0; i < iterations_count - 1; i++) sum *= 2;
-    return sum;
+static inline const int _len_tree(struct BspTree* tree) {
+    if (!tree->a && !tree->b) return 1;
+    return _len_tree(tree->a) + _len_tree(tree->b);
 }
 
 static void _fill_board(
@@ -140,10 +153,10 @@ static void _fill_board(
         .height=draw_obj->basic.depth,
         .x=0, .y=0,
     };
-    struct BspTree* tree = _make_tree(iterations_count, &cord);
+    struct BspTree* tree = _make_tree(iterations_count, &cord, inner_helper);
 
     struct BoardObj* obj = draw_obj->obj;
-    const int children_len = _len_tree(iterations_count);
+    const int children_len = _len_tree(tree);
     obj->children = malloc(sizeof(struct BoardChild*) * (children_len + 1));
     obj->children[children_len] = NULL;
 

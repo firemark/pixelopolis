@@ -19,7 +19,7 @@ village {
     padding: 50;
     width: 100%;
     depth: 100%;
-    iterations-count: 3;
+    iterations-count: 4;
 
     district {
         display: h-series;
@@ -48,7 +48,7 @@ sidewalk {
 
 city {
     display: bsp-tree;
-    iterations-count: 3;
+    iterations-count: 4;
     justify: center;
     body: choice(
       house.brick,
@@ -56,6 +56,8 @@ city {
       house.wood,
       house.wood.roman,
       house.clay.roman);
+    min-width: 100;
+    min-height: 100;
     width: 100%;
     depth: 100%;
     padding: 20;
@@ -68,8 +70,8 @@ house {
         choice(null, first-floor),
         choice(null, first-floor),
         choice(roof.triangle, roof.pyramid);
-    width: random(50, 120);
-    depth: random(50, 120);
+    width: 100%;
+    depth: 100%;
 
     roof, first-floor, zero-floor {
         width: 100%;
