@@ -13,26 +13,13 @@ village-and-road {
 }
 
 village {
-    display: v-filler;
-    body: village-row;
+    display: bsp-tree;
+    body: district;
+    justify: center;
+    padding: 50;
     width: 100%;
     depth: 100%;
-
-    village-row {
-        display: d-filler;
-        body: village-cell;
-        width: random(200, 400);
-        depth: 100%;
-    }
-
-    village-cell {
-        display: square-fence;
-        width: 100%;
-        depth: random(200, 400);
-        edge-size: 50;
-        body: district;
-        body-justify: center;
-    }
+    iterations-count: 3;
 
     district {
         display: h-series;
@@ -60,25 +47,18 @@ sidewalk {
 }
 
 city {
-    display: v-filler;
-    body: d-filler.row;
+    display: bsp-tree;
+    iterations-count: 3;
+    justify: center;
+    body: choice(
+      house.brick,
+      house.clay,
+      house.wood,
+      house.wood.roman,
+      house.clay.roman);
     width: 100%;
     depth: 100%;
-    padding: 50;
-    align: center;
-
-    & > d-filler.row {
-        body: choice(
-          house.brick,
-          house.clay,
-          house.wood,
-          house.wood.roman,
-          house.clay.roman
-        );
-        depth: 100%;
-        padding: 100;
-        align: center;
-    }
+    padding: 20;
 }
 
 house {

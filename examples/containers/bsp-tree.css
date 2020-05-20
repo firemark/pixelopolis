@@ -1,0 +1,83 @@
+world {
+    width: 800;
+    height: 800;
+    body: example;
+}
+
+example {
+    display: h-series;
+    body: road, bsp;
+    width: 500;
+    depth: 600;
+}
+
+/* STRUCT */
+
+bsp {
+    display: bsp-tree;
+    body: body;
+    iterations-count: 4;
+    padding: 10;
+    justify: random;
+    width: 100%;
+    depth: 100%;
+}
+
+
+body {
+    display: h-series;
+    body: carpet, house;
+    width: 80%;
+    depth: 80%;
+    justify: center;
+
+    & > carpet {
+        display: cube;
+        height: 10;
+        width: 100%;
+        depth: 100%;
+        roof: wall.grey-brick;
+        wall: wall.grey-brick;
+    }
+
+    & > house {
+        display: cube;
+        wall: wall.red-brick.windows;
+        roof: wall.wood;
+        height: 80;
+        width: 50%;
+        depth: 50%;
+    }
+
+}
+
+road {
+  display: cube;
+  width: 100%;
+  depth: 100%;
+  roof: wall.sand;
+}
+
+wall.grey-brick { texture: tex.grey-brick; }
+wall.red-brick { texture: tex.red-brick; }
+wall.wood { texture: tex.wood; }
+wall.sand { texture: tex.sand; }
+
+wall.windows {
+    middle: floor.windows;
+    bottom: floor.windows;
+    padding: 4;
+}
+
+floor.windows {
+    middle: tex.window;
+    align: middle;
+    height: 12;
+    padding: 12;
+}
+
+tex.sand        { texture: "textures/nature-wall/clay-sand.png"; }
+tex.wood        { texture: "textures/nature-wall/wood.png"; }
+tex.grey-brick  { texture: "textures/wall/grey-brick.png"; }
+tex.red-brick   { texture: "textures/wall/brick.png"; }
+tex.window      { texture: "textures/wall-objs/window.png"; }

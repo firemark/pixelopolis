@@ -92,14 +92,14 @@ static void _fill_edges_and_corners(
         const double cos_th = cos(theta);
 
         const char is_vertical = (i % 2) == 0;
-        struct DrawObj* edge = _make_edge(helper, is_vertical, rotate, data);
-        struct DrawObj* corner = _make_corner(helper, data->edge_size);
 
+        struct DrawObj* corner = _make_corner(helper, data->edge_size);
         children[CORNER_INDEX + i] = builder_build_board_child(corner, corner_x, corner_y);
 
         edge_x += edge_size * cos_th;
         edge_y += edge_size * sin_th;
 
+        struct DrawObj* edge = _make_edge(helper, is_vertical, rotate, data);
         children[EDGE_INDEX + i] = builder_build_board_child(edge, edge_x, edge_y);
 
         const int len = edge->basic.width + edge_size;
