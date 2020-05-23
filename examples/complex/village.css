@@ -20,8 +20,10 @@ village {
     width: 100%;
     depth: 100%;
     iterations-count: 4;
+    min-width: 200;
+    min-height: 200;
     max-width: 600;
-    min-height: 600;
+    max-height: 600;
 
     district {
         display: h-series;
@@ -58,13 +60,13 @@ city {
       house.wood,
       house.wood.roman,
       house.clay.roman);
-    min-width: 100;
-    min-height: 100;
-    max-width: 300;
-    min-height: 300;
+    min-width: 50;
+    min-height: 50;
+    max-width: 150;
+    max-height: 150;
     width: 100%;
     depth: 100%;
-    padding: 20;
+    padding: 5;
 }
 
 house {
@@ -95,8 +97,9 @@ house {
         edge-size: 10;
 
         & > body {
-            width: 80%;
-            depth: 80%;
+            display: cube;
+            width: 95%;
+            depth: 95%;
             height: 100%;
         }
 
@@ -121,7 +124,11 @@ house.brick {
         roof: wall.wood;
     }
 
-    zero-floor > body, first-floor {
+    zero-floor > body {
+        wall: wall.brick.with-windows.with-doors;
+    }
+
+    first-floor {
         wall: wall.brick.with-windows;
     }
 }
@@ -132,7 +139,11 @@ house.clay {
         roof: wall.clay;
     }
 
-    zero-floor > body, first-floor {
+    zero-floor > body {
+        wall: wall.clay.with-windows.with-doors;
+    }
+
+    first-floor {
         wall: wall.clay.with-windows;
     }
 }
@@ -143,7 +154,11 @@ house.wood {
         roof: wall.wood;
     }
 
-    zero-floor > body, first-floor {
+    zero-floor > body {
+        wall: wall.wood.with-windows.with-doors;
+    }
+
+    first-floor {
         wall: wall.wood.with-windows;
     }
 }
@@ -174,10 +189,13 @@ wall.clay { texture: tex.clay; }
 wall.brick { texture: tex.brick; }
 
 wall.with-windows {
-    bottom: floor.door-and-windows;
     middle: floor.windows;
     top: floor.top;
     padding: 4;
+}
+
+wall.with-doors {
+    bottom: floor.door-and-windows;
 }
 
 wall.top { texture: tex.bar; }
