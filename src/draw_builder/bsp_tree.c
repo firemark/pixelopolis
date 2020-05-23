@@ -4,8 +4,8 @@
 #include "css_func.h"
 #include "css_eval.h"
 
-#define RATIO_START 0.4
-#define RATIO_END 0.6
+#define RATIO_START 0.3
+#define RATIO_END 0.7
 
 enum BspTreeDirection {
     BSD_TREE_VERTICAL,
@@ -16,7 +16,6 @@ struct BspTreeCord {
     int width, height;
     int x, y;
 };
-
 struct BspTree {
     struct BspTree* a;
     struct BspTree* b;
@@ -29,24 +28,46 @@ struct BspData {
     int iterations_count;
 };
 
+static inline enum BspTreeDirection _get_direction(
+        const char is_greater_width,
+        const char is_greater_height) {
+    if (is_greater_width && !is_greater_height) {
+        return BSD_TREE_VERTICAL;
+    }
+
+    if (!is_greater_width && is_greater_height) {
+        return BSD_TREE_HORIZONTAL;
+    }
+
+    return rand() % 2 ? BSD_TREE_VERTICAL : BSD_TREE_HORIZONTAL;
+}
+
+
 static struct BspTree* _make_tree(
         const int iterations_count,
         const struct BspTreeCord* cord,
         const struct Helper* helper) {
-    if (iterations_count < 1) return NULL;
+    const int max_width = builder_get_int(helper->rule, "max-width", 0);
+    const int max_height = builder_get_int(helper->rule, "max-height", 0);
+    const char is_greater_width = max_width > 0 && cord->width > max_width;
+    const char is_greater_height = max_height > 0 && cord->height > max_height;
+    if (
+            !is_greater_width
+            && !is_greater_height
+            && iterations_count < 1) return NULL;
 
-    const double ratio = RATIO_START + (double)rand() / RAND_MAX * (RATIO_END - RATIO_START);
     struct BspTree* tree = malloc(sizeof(struct BspTree));
     tree->cord = *cord;
-
-    tree->direction = rand() % 2 ? BSD_TREE_VERTICAL : BSD_TREE_HORIZONTAL;
+    tree->direction = _get_direction(is_greater_width, is_greater_height);
 
     struct BspTreeCord cord_a, cord_b;
     int min_width, min_height;
+    const double ratio = RATIO_START + (double)rand() / RAND_MAX * (RATIO_END - RATIO_START);
 
     switch(tree->direction) {
         case BSD_TREE_VERTICAL:
             min_width = builder_get_int(helper->rule, "min-width", 0);
+            min_width = min_width < max_width ? min_width : max_width;
             cord_a.width = cord->width * ratio;
             cord_b.width = cord->width * (1.0 - ratio);
 
@@ -67,6 +88,7 @@ static struct BspTree* _make_tree(
         break;
         case BSD_TREE_HORIZONTAL:
             min_height = builder_get_int(helper->rule, "min-height", 0);
+            min_height = min_height < max_height ? min_height : max_height;
             cord_a.height = cord->height * ratio;
             cord_b.height = cord->height * (1.0 - ratio);
 
@@ -99,10 +121,19 @@ static struct DrawObj* _make_child(
         const int padding) {
     struct BasicObj* parent_basic = &helper->parent->basic;
 
+    const int width = tree->cord.width - padding * 2;
+    const int depth = tree->cord.height - padding * 2;
+
+    if (width < 0 || depth < 0) {
+        // TODO - Support better algorithm to binary splitting
+        // probably we need move padding to tree building
+        return NULL;
+    }
+
     struct BasicObj basic = {
-        .width=tree->cord.width - padding * 2,
+        .width=width,
         .height=parent_basic->height,
-        .depth=tree->cord.height - padding * 2,
+        .depth=depth,
         .rotate=builder_compute_rotate(0, parent_basic),
         .v_justify=builder_get_justify(helper->rule, "justify", D_JUSTIFY),
         .d_justify=builder_get_justify(helper->rule, "justify", V_JUSTIFY),

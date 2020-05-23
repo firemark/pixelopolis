@@ -20,6 +20,8 @@ village {
     width: 100%;
     depth: 100%;
     iterations-count: 4;
+    max-width: 600;
+    min-height: 600;
 
     district {
         display: h-series;
@@ -58,6 +60,8 @@ city {
       house.clay.roman);
     min-width: 100;
     min-height: 100;
+    max-width: 300;
+    min-height: 300;
     width: 100%;
     depth: 100%;
     padding: 20;

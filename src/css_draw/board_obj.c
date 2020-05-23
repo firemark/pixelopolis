@@ -11,6 +11,9 @@ void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
 
     struct BoardChild *child;
     while((child = *children++)) {
+        if (!child->obj) {
+            continue;
+        }
         int vox[3] = COPY_VOX(inner_info->vox);
         vox[0] += _x_rotate(child->x, child->y, basic);
         vox[1] += _y_rotate(child->x, child->y, basic);
