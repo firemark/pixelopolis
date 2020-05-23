@@ -20,8 +20,8 @@ village {
     width: 100%;
     depth: 100%;
     iterations-count: 4;
-    min-width: 200;
-    min-height: 200;
+    min-width: 50;
+    min-height: 50;
 
     district {
         display: h-series;
@@ -264,6 +264,10 @@ market {
         width: random(50, 80);
         depth: 40;
 
+        sidewalk {
+            height: 5;
+        }
+
         ceil {
             display: cube;
             width: 100%;
@@ -284,7 +288,7 @@ market {
         roof {
             display: triangle;
             wall: wall.wood;
-            roof: wall.tile.red;
+            roof: wall.stall;
             width: 100%;
             depth: 100%;
             height: 20;
@@ -299,24 +303,6 @@ market {
         }
     }
 
-}
-
-
-fillars {
-    display: v-filler;
-    body: fillar;
-    width: 100%;
-    height: 100%;
-    align: center;
-
-    & > fillar {
-        display: cube;
-        width: 5;
-        depth: 5;
-        height: 100%;
-    }
-
-    &.wood > fillar { wall: wall.wood; }
 }
 
 
@@ -340,6 +326,7 @@ wall.clay-wood { texture: tex.clay-wood; }
 wall.brick { texture: tex.brick; }
 wall.grass { points-texture: tex.grass; points-density: 50%; }
 wall.leafs { points-texture: tex.leaf;  points-density: 50%; }
+wall.stall { texture: tex.stall; }
 
 
 floor.door-and-windows {
@@ -368,6 +355,11 @@ tex.clay-wood { texture: choice(
     "textures/nature-wall/clay-wood.png",
     "textures/nature-wall/clay-wood-x.png",
     "textures/nature-wall/clay-wood-v.png");
+}
+tex.stall { texture: choice(
+    "textures/wall/stall-red.png",
+    "textures/wall/stall-blue.png",
+    "textures/wall/stall-green.png");
 }
 tex.door { texture: "textures/wall-objs/door.png"; }
 tex.window { texture: "textures/wall-objs/wooden-window.png"; }
