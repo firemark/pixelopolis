@@ -3,7 +3,7 @@
 #include "css_func.h"
 #include "css_eval.h"
 
-static inline size_t _get_size(struct Obj** prop_objs) {
+static inline const size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
     css_iter(obj, prop_objs) size++; // counter
@@ -18,7 +18,7 @@ struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper*
         return NULL;
     }
 
-    size_t size = _get_size(prop_objs);
+    const size_t size = _get_size(prop_objs);
     struct BasicObj basic_temp = builder_build_empty_basic();
     struct ShiftDrawPair** pairs = malloc(sizeof(struct ShiftDrawPair*) * (size + 1));
     int shift = 0;

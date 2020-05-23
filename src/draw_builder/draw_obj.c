@@ -31,7 +31,7 @@ struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper) {
     IF_NAME("void")             obj = builder_build_void(&inner_helper);
 
     // advanced
-    //IF_NAME("union")            obj = builder_build_union(&inner_helper);
+    IF_NAME("union")            obj = builder_build_union(&inner_helper);
     IF_NAME("bsp-tree")         obj = builder_build_bsp_tree(&inner_helper);
     IF_NAME("square-fence")     obj = builder_build_square_fence(&inner_helper);
     IF_NAME("v-series")         obj = builder_build_series(&inner_helper, VERTICAL_FILL);

@@ -44,10 +44,15 @@ struct DrawObj* builder_build_cube(struct Helper* helper);
 struct DrawObj* builder_build_cone(struct Helper* helper);
 struct DrawObj* builder_build_cylinder(struct Helper* helper);
 struct DrawObj* builder_build_dome(struct Helper* helper);
+
+//builder containers
 struct DrawObj* builder_build_bsp_tree(struct Helper* helper);
 struct DrawObj* builder_build_square_fence(struct Helper* helper);
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction);
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction);
+struct DrawObj* builder_build_union(struct Helper* helper);
+
+//builder textures
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height);
 struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_width);
 struct TexObj* builder_build_texture(struct SelectorHelper* helper);

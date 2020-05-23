@@ -1,0 +1,55 @@
+world {
+    width: 800;
+    height: 800;
+    body: obj;
+}
+
+/* STRUCT */
+
+obj {
+    display: union;
+    body: roof, chimney, chimney;
+    justify: random;
+
+    roof {
+        display: triangle;
+        width: 100%;
+        depth: 100%;
+    }
+
+    chimney {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+    }
+}
+
+/* STYLES */
+
+obj {
+    width: 420;
+    depth: 420;
+}
+
+roof {
+	wall: wall.wood;
+    roof: wall.wood;
+    height: 200;
+}
+
+chimney {
+    wall: wall.red-brick;
+    roof: wall.red-brick;
+    width: 10;
+    depth: 10;
+    height: random(250, 300);
+}
+
+
+/* TEXTURES */
+
+wall.red-brick { texture: tex.red-brick; }
+wall.wood  { texture: tex.wood; }
+
+tex.red-brick { texture: "textures/wall/brick.png"; }
+tex.wood { texture: "textures/nature-wall/wood.png"; }
