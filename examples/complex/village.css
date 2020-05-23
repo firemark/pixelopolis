@@ -14,7 +14,7 @@ village-and-road {
 
 village {
     display: bsp-tree;
-    body: choice(district, district, forest);
+    body: choice(district, district, market, forest);
     justify: center;
     padding: 50;
     width: 100%;
@@ -206,7 +206,7 @@ tree {
         depth: 10;
     }
 
-    & > trunk { height: random(100, 120); }
+    & > trunk { height: random(50, 80); }
 
     & > corona {
         display: union;
@@ -228,6 +228,77 @@ tree {
             height: 100%;
         }
     }
+}
+
+market {
+    display: square-fence;
+    edge-size: 40;
+    width: 100%;
+    depth: 100%;
+    body: stall-bsp;
+    edge: stall-row;
+
+    stall-row {
+        display: v-filler;
+        width: 100%;
+        depth: 100%;
+        body: stall;
+        align: center;
+        padding: 20;
+    }
+
+    stall-bsp {
+        display: bsp-tree;
+        body: stall;
+        iterations-count: 3;
+        width: 100%;
+        depth: 100%;
+        min-width: 50;
+        min-height: 50;
+        justify: random;
+    }
+
+    stall {
+        display: h-series;
+        body: sidewalk, ceil, body, roof;
+        width: random(50, 80);
+        depth: 40;
+
+        ceil {
+            display: cube;
+            width: 100%;
+            depth: 100%;
+            height: 10;
+            wall: wall.wood;
+        }
+
+        body {
+            display: square-fence;
+            corner: corner;
+            edge-size: 5;
+            width: 100%;
+            depth: 100%;
+            height: 10;
+        }
+
+        roof {
+            display: triangle;
+            wall: wall.wood;
+            roof: wall.tile.red;
+            width: 100%;
+            depth: 100%;
+            height: 20;
+        }
+
+        corner {
+            display: cube;
+            wall: wall.wood;
+            width: 100%;
+            depth: 100%;
+            height: 100%;
+        }
+    }
+
 }
 
 
