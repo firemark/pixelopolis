@@ -14,12 +14,12 @@ village-and-road {
 
 village {
     display: bsp-tree;
-    body: district;
+    body: choice(district, district, forest);
     justify: center;
     padding: 50;
     width: 100%;
     depth: 100%;
-    iterations-count: 5;
+    iterations-count: 4;
     min-width: 200;
     min-height: 200;
 
@@ -183,7 +183,53 @@ house.wood {
     }
 }
 
-/*market {}*/
+forest {
+    display: bsp-tree;
+    iterations-count: 5;
+    body: tree;
+    width: 100%;
+    depth: 100%;
+    justify: random;
+}
+
+tree {
+    display: h-series;
+    width: 100;
+    depth: 100;
+    justify: center;
+    body: trunk, corona;
+
+    trunk {
+        display: cylinder;
+        wall: wall.wood;
+        width: 10;
+        depth: 10;
+    }
+
+    & > trunk { height: random(100, 120); }
+
+    & > corona {
+        display: union;
+        body: trunk, leafs;
+        justify: center;
+        width: 100%;
+        depth: 100%;
+        height: random(70, 80);
+
+        & > trunk {
+            height: 90%;
+        }
+
+        & > leafs {
+            display: dome;
+            roof: wall.leafs;
+            width: 100%;
+            depth: 100%;
+            height: 100%;
+        }
+    }
+}
+
 
 fillars {
     display: v-filler;
@@ -201,6 +247,7 @@ fillars {
 
     &.wood > fillar { wall: wall.wood; }
 }
+
 
 wall.with-windows {
     middle: floor.windows;
@@ -221,6 +268,8 @@ wall.clay { texture: tex.clay; }
 wall.clay-wood { texture: tex.clay-wood; }
 wall.brick { texture: tex.brick; }
 wall.grass { points-texture: tex.grass; points-density: 50%; }
+wall.leafs { points-texture: tex.leaf;  points-density: 50%; }
+
 
 floor.door-and-windows {
     middle: choice(null, null, tex.door, tex.window);
@@ -257,3 +306,4 @@ tex.grey-brick { texture: "textures/wall/grey-brick.png"; }
 tex.wood { texture:  "textures/nature-wall/wood.png"; }
 tex.red-tile { texture:  "textures/wall/red-tile.png"; }
 tex.grass { texture: "textures/sprites/grass.png"; }
+tex.leaf  { texture: "textures/sprites/leaf.png"; }
