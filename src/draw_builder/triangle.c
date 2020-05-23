@@ -15,13 +15,18 @@ struct DrawObj* builder_build_triangle(struct Helper* helper) {
         .parent=helper->parent,
     };
     obj->wall = builder_build_wall(&wall_helper, basic.width, basic.height);
+
     struct SelectorHelper roof_helper = {
         .program=helper->program,
         .parent_rule=rule,
         .selector=css_find_selector_prop(rule, "roof"),
         .parent=helper->parent,
     };
-    obj->roof = builder_build_wall(&roof_helper, basic.width, basic.depth);
+    const int roof_length = sqrt(
+        basic.width * basic.width / 4.0
+        + basic.height * basic.height
+    );
+    obj->roof = builder_build_wall(&roof_helper, basic.depth, roof_length);
 
     return builder_make_draw_obj(helper, basic, DRAW_OBJ_TRIANGLE, obj);
 }

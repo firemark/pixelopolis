@@ -5,19 +5,19 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
     struct PyramidObj *obj = draw_obj->obj;
     if (!obj) return;
     int *vox = inner_info->vox;
-    int width = draw_obj->basic.width;
-    int height = draw_obj->basic.height;
-    int depth = draw_obj->basic.depth;
-    int w = width;
-    int wh = width / 2;
-    int dh = depth / 2;
-    int h = height;
-    int d = depth;
+    const int width = draw_obj->basic.width;
+    const int height = draw_obj->basic.height;
+    const int depth = draw_obj->basic.depth;
+    const int w = width;
+    const int wh = width / 2;
+    const int dh = depth / 2;
+    const int h = height;
+    const int d = depth;
 
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(south_wall_obj, width, height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(south_wall_obj, width, height);
+        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(south_wall_obj, south_wall_obj->width, south_wall_obj->height);
+        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(south_wall_obj, south_wall_obj->width, south_wall_obj->height);
 
         int voxes_first[9] = {
             0 , 0 , 0,
@@ -42,8 +42,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
 
     struct WallObj *east_wall_obj = obj->east_wall;
     if (east_wall_obj && width > 0 && height > 0) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(east_wall_obj, width, height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(east_wall_obj, width, height);
+        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(east_wall_obj, east_wall_obj->width, east_wall_obj->height);
+        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(east_wall_obj, east_wall_obj->width, east_wall_obj->height);
 
         int voxes_first[9] = {
             0 , 0 , 0,

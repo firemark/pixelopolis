@@ -28,8 +28,8 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
 
     struct WallObj *roof_obj = obj->roof;
     if (roof_obj) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(roof_obj, width, height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(roof_obj, width, height);
+        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(roof_obj, roof_obj->width, roof_obj->height);
+        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(roof_obj, roof_obj->width, roof_obj->height);
 
         int voxes_first[12] = {
             w , 0, 0,
