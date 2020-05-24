@@ -22,6 +22,8 @@ village {
     iterations-count: 4;
     min-width: 50;
     min-height: 50;
+    max-width: 400;
+    max-height: 400;
 
     district {
         display: h-series;
