@@ -15,13 +15,14 @@ enum BspTreeDirection {
 struct BspTreeCord {
     int width, height;
     int x, y;
+    int real_width, real_height;
+    int padding;
 };
+
 struct BspTree {
     struct BspTree* a;
     struct BspTree* b;
     struct BspTreeCord cord;
-    int real_width, real_height;
-    int padding;
     enum BspTreeDirection direction;
 };
 
@@ -29,6 +30,17 @@ struct BspData {
     int counter;
     int iterations_count;
 };
+
+static inline void _fill_cord(
+        struct BspTreeCord* cord,
+        const struct Helper* helper) {
+    const int padding = builder_get_int(helper->rule, "padding", 0);
+    const int double_padding = padding * 2;
+
+    cord->padding = padding;
+    cord->real_width = cord->width - double_padding;
+    cord->real_height = cord->height - double_padding;
+}
 
 static inline enum BspTreeDirection _get_direction(
         const char is_greater_width,
@@ -53,21 +65,17 @@ static void _make_branches(
 
 static struct BspTree* _make_tree(
         const int iterations_count,
-        const struct BspTreeCord* cord,
+        struct BspTreeCord* cord,
         const struct Helper* helper) {
-    const int padding = builder_get_int(helper->rule, "padding", 0);
-    const int double_padding = padding * 2;
-    const int real_width = cord->width - double_padding;
-    const int real_height = cord->height - double_padding;
     const int min_width = builder_get_int(helper->rule, "min-width", -1);
     const int min_height = builder_get_int(helper->rule, "min-height", -1);
-    if (real_width < min_width
-        || real_height < min_height) return NULL;
+    if (cord->real_width < min_width
+        || cord->real_height < min_height) return NULL;
 
     const int max_width = builder_get_int(helper->rule, "max-width", 0);
     const int max_height = builder_get_int(helper->rule, "max-height", 0);
-    const char is_greater_width = max_width > 0 && real_width > max_width;
-    const char is_greater_height = max_height > 0 && real_height > max_height;
+    const char is_greater_width = max_width > 0 && cord->real_width > max_width;
+    const char is_greater_height = max_height > 0 && cord->real_height > max_height;
     if (!is_greater_width
         && !is_greater_height
         && iterations_count < 1) return NULL;
@@ -75,9 +83,6 @@ static struct BspTree* _make_tree(
     struct BspTree* tree = malloc(sizeof(struct BspTree));
     tree->cord = *cord;
     tree->direction = _get_direction(is_greater_width, is_greater_height);
-    tree->padding = padding;
-    tree->real_width = real_width;
-    tree->real_height = real_height;
 
     _make_branches(tree, iterations_count, helper, max_width, max_height);
 
@@ -100,17 +105,19 @@ static void _make_branches(
 
     switch(tree->direction) {
         case BSD_TREE_VERTICAL:
-            min_width = builder_get_int(helper->rule, "min-width", 0);
-            min_width = min_width < max_width ? min_width : max_width;
             cord_a.width = cord->width * ratio;
             cord_b.width = cord->width * (1.0 - ratio);
-
-            if (cord_a.width < min_width || cord_b.width < min_width) {
-                return;
-            }
-
             cord_a.height = cord->height;
             cord_b.height = cord->height;
+
+            _fill_cord(&cord_a, helper);
+            _fill_cord(&cord_b, helper);
+
+            min_width = builder_get_int(helper->rule, "min-width", 0);
+            min_width = min_width < max_width ? min_width : max_width;
+
+            if (cord_a.real_width < min_width
+                || cord_b.real_width < min_width) return;
 
             cord_a.x = cord->x;
             cord_b.x = cord->x + cord_a.width;
@@ -119,17 +126,19 @@ static void _make_branches(
             cord_b.y = cord->y;
         break;
         case BSD_TREE_HORIZONTAL:
-            min_height = builder_get_int(helper->rule, "min-height", 0);
-            min_height = min_height < max_height ? min_height : max_height;
             cord_a.height = cord->height * ratio;
             cord_b.height = cord->height * (1.0 - ratio);
-
-            if (cord_a.height < min_height || cord_b.height < min_height) {
-                return;
-            }
-
             cord_a.width = cord->width;
             cord_b.width = cord->width;
+
+            _fill_cord(&cord_a, helper);
+            _fill_cord(&cord_b, helper);
+
+            min_height = builder_get_int(helper->rule, "min-height", 0);
+            min_height = min_height < max_height ? min_height : max_height;
+
+            if (cord_a.real_height < min_height
+                || cord_b.real_height < min_height) return;
 
             cord_a.x = cord->x;
             cord_b.x = cord->x;
@@ -149,9 +158,9 @@ static struct DrawObj* _make_child(
     struct BasicObj* parent_basic = &helper->parent->basic;
 
     struct BasicObj basic = {
-        .width=tree->real_width,
+        .width=tree->cord.real_width,
+        .depth=tree->cord.real_height,
         .height=parent_basic->height,
-        .depth=tree->real_height,
         .rotate=builder_compute_rotate(0, parent_basic),
         .v_justify=builder_get_justify(helper->rule, "justify", D_JUSTIFY),
         .d_justify=builder_get_justify(helper->rule, "justify", V_JUSTIFY),
@@ -174,7 +183,7 @@ static void _fill_board_from_tree(
         return;
     }
 
-    const int padding = tree->padding;
+    const int padding = tree->cord.padding;
     const int x = tree->cord.x + padding;
     const int y = tree->cord.y + padding;
 
@@ -200,11 +209,13 @@ static void _fill_board(
         struct Helper* inner_helper,
         struct BspData* data) {
     const int iterations_count = data->iterations_count;
-    const struct BspTreeCord cord = {
+    struct BspTreeCord cord = {
         .width=draw_obj->basic.width,
         .height=draw_obj->basic.depth,
         .x=0, .y=0,
     };
+    _fill_cord(&cord, inner_helper);
+
     struct BspTree* tree = _make_tree(iterations_count, &cord, inner_helper);
 
     struct BoardObj* obj = draw_obj->obj;
