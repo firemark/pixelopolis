@@ -128,7 +128,8 @@ It’s equality this same with:
         property-red: OBJ1;
     }
 
-Warning, order of rules is neccesary, bottom rule overwrite properites from top rule, in example:
+.. warning::
+    order of rules is neccesary, bottom rule overwrite properites from top rule, in example:
 
 .. code-block:: scss
 
