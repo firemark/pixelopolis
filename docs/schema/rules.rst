@@ -32,8 +32,8 @@ Properties
 Selectors
 ---------------
 
-By Element
-^^^^^^^^^^^^^^
+By Element name
+^^^^^^^^^^^^^^^^^
 
 .. code-block:: scss
 
@@ -46,9 +46,14 @@ By Class
 .. code-block:: scss
 
     .class { /*...properties...*/ }
+
+Element can have many classes
+
+.. code-block:: scss
+
     .class1.class2 { /*...properties...*/ }
 
-We can join with element's name:
+We can join with element name:
 
 .. code-block:: scss
 
@@ -73,6 +78,25 @@ Greedy parent
 .. code-block:: scss
 
     parent element { /*...properties...*/ }
+
+
+In example, if you have these structure:
+
+.. graphviz::
+
+   digraph {
+     parent -> "child.first"
+     parent -> "child.second"
+     "child.first" -> grandchild
+   }
+
+And one rule:
+
+.. code-block:: scss
+
+    parent grandchild { color: red; }
+
+Then grandchild should have red color.
 
 
 Many Selectors
