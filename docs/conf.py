@@ -35,7 +35,7 @@ templates_path = ['_templates']
 
 source_suffix = '.rst'
 
-master_doc = 'index'
+master_doc = 'articles/index'
 
 # General information about the project.
 project = u'Pixelopolis'
