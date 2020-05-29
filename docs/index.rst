@@ -12,6 +12,7 @@ Welcome to Pixelopolis's documentation!
 
    structure
    schema/index
+   draw-objs/index
 
 
 Indices and tables
