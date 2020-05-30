@@ -23,7 +23,7 @@
 
 # -- General configuration ------------------------------------------------
 
-# needs_sphinx = '1.0'
+needs_sphinx = '1.0'
 extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.graphviz',
@@ -35,17 +35,17 @@ templates_path = ['_templates']
 
 source_suffix = '.rst'
 
-master_doc = 'articles/index'
+master_doc = 'index'
 
 # General information about the project.
-project = u'Pixelopolis'
-copyright = u'2020, Firemark'
-author = u'Firemark'
+project = 'Pixelopolis'
+copyright = '2020, Firemark'
+author = 'Firemark'
 
-version = u'0.2'
-release = u'0.2'
+version = '0.2'
+release = '0.2'
 
-language = None
+language = 'en'
 
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
@@ -65,7 +65,16 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    'description': 'A pixelart render engine',
+    'show_related': True,
+
+    'github_button': True,
+    'github_user': 'firemark',
+    'github_repo': 'pixelopolis',
+
+    'font_family': 'sans-serif',
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -79,8 +88,10 @@ html_static_path = ['_static']
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
     '**': [
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
+        'about.html',
+        'relations.html',
+        'globaltoc.html',
+        'sourcelink.html',
     ]
 }
 
