@@ -1,7 +1,7 @@
 Draw Objs
 ==========
 
-3D Objects rendered on the image. Draw Objs can have textures and another draw objects (children).
+3D Objects render on the image. Draw Objs can have textures and another draw objects (children). We have a two types of draw objects - containers and basic shapes.
 
 .. toctree::
    :maxdepth: 2
@@ -17,39 +17,49 @@ Primal properties
 Each Draw Obj has a few primal properties:
 
 
-.. list-table:: Properties
-    :header-rows: 1
+.. css:property:: display
+    :type: DISPLAY-TYPE
+    :default: element's name
 
-    * - Name
-      - Type
-      - Description
-      - Default
+    type of draw-obj to howto display draw-obj (in ex. cube, triangle, dome, etc). Each display's type has another properties and another shape.
 
-    * - display
-      - draw-obj type name
-      - select type of draw-obj,
-        if display is incorrect then draw-obj will not be rendered
-      - element name from selector's rule
+    If display is incorrect then draw-obj will not be rendered.
 
-    * - width
-      - INTEGER / PERCENTAGE
-      - size on X axis. Percentage borrows from parent draw-obj
-      - 0
 
-    * - depth
-      - INTEGER / PERCENTAGE
-      - size on Y axis. Percentage borrows from parent draw-obj
-      - 0
+.. css:property:: width
+    :type: INTEGER | PERCENTAGE
+    :default: 0
 
-    * - height
-      - INTEGER / PERCENTAGE
-      - size on Z axis. Percentage borrows from parent draw-obj
-      - 0
+    size on X axis. Percentage borrows from parent draw-obj
 
-    * - rotate
-      - INTEGER (degrees)
-      - rotation values on X-Y axis
-      - 0
+    :type INTEGER: width in pixels
+    :type PERCENTAGE: get width from parent object and multiples by this value
+
+
+.. css:property:: depth
+    :type: INTEGER | PERCENTAGE
+    :default: 0
+
+    size on Y axis. Percentage borrows from parent draw-obj
+
+    :type INTEGER: depth in pixels
+    :type PERCENTAGE: get depth from parent object and multiples by this value
+
+.. css:property:: height
+    :type: INTEGER | PERCENTAGE
+    :default: 0
+
+    size on Z axis. Percentage borrows from parent draw-obj
+
+    :type INTEGER: height in pixels
+    :type PERCENTAGE: get height from parent object and multiples by this value
+
+.. css::property:: rotate
+    :type: INTEGER
+    :default: 0
+
+    rotation values on X-Y axis
+
 
 Examples
 -----------
