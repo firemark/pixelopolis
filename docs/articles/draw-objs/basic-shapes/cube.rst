@@ -1,6 +1,12 @@
 Cube
 ========
 
+.. image:: images/cube.png
+    :alt: cube
+
+
+Just Cube.
+
 Properties
 -----------
 
@@ -31,3 +37,5 @@ Example
         roof: wall.roof;
         wall: wall.brick;
     }
+
+You can try in on https://pixelopolis.herokuapp.com/examples/Basic-shapes/Cube
