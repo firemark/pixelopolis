@@ -19,7 +19,6 @@ You can tests it online: https://pixelopolis.herokuapp.com
     :caption: Contents:
 
     articles/installation
-    articles/hello-world
     articles/structure
     articles/schema/index
     articles/draw-objs/index

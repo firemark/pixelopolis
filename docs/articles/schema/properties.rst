@@ -120,7 +120,7 @@ Example:
     }
 
 choice
----------
+^^^^^^^^^
 
 Randoms one element from arguments list
 

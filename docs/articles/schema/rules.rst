@@ -47,7 +47,6 @@ Just element name - can be everything - *cube*, *wall*, *texture*, *house*, *dis
 
     element { /*...properties...*/ }
 
-
 By Class
 ^^^^^^^^^^^^^^
 
@@ -163,7 +162,7 @@ It’s equality this same with:
     }
 
 .. warning::
-    order of rules is neccesary, bottom rule overwrite properites from top rule, in example:
+    order of rules is neccesary, bottom rule overwrite properties from top rule, in example:
 
     .. code-block:: scss
 
