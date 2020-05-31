@@ -17,28 +17,25 @@ Properties
 
 .. css:property:: roof
     :type: SELECTOR-TO-WALL | null
+    :default: null
+
+    wall of side faces stretched vertically.
 
 .. css:property:: sides
     :type: INTEGER
+    :default: 8
 
-    number of sides of cone. If have more sides then is more circular:
+    number of cone sides. If have more sides then is more circular:
 
-    .. figure:: images/cone-6-sides.png
-        :alt: cone 6 sides
+    .. list-table::
 
-        6 sides
+        * - .. figure:: images/cone-6-sides.png
 
-    .. figure:: images/cone-12-sides.png
-        :alt: cone 12 sides
+                sides: 6
 
-        12 sides
+          - .. figure:: images/cone-12-sides.png
 
-.. css:property:: has-many-walls
-    :type: 1 | 0
-    :default: 0
-
-    :type 1: Render each side seperately
-    :type 0: Render one wall stretched to whole area of cone
+                sides: 12
 
 
 Example

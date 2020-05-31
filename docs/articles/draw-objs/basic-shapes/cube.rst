@@ -17,10 +17,16 @@ Properties
 
 .. css:property:: wall
     :type: SELECTOR-TO-WALL | null
+    :default: null
+
+    wall of side faces.
 
 
 .. css:property:: roof
     :type: SELECTOR-TO-WALL | null
+    :default: null
+
+    wall of top face.
 
 
 Example

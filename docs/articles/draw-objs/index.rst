@@ -1,7 +1,7 @@
 Draw Objs
 ==========
 
-3D Objects render on the image. Draw Objs can have textures and another draw objects (children). We have a two types of draw objects - containers and basic shapes.
+3D Objects render on the image. Draw Objs can have textures and another draw objects (children). We have two types of draw objects - containers and basic shapes.
 
 .. toctree::
    :maxdepth: 2
@@ -30,29 +30,29 @@ Each Draw Obj has a few primal properties:
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on X axis. Percentage borrows from parent draw-obj
+    size on X axis.
 
     :type INTEGER: width in pixels
-    :type PERCENTAGE: get width from parent object and multiples by this value
+    :type PERCENTAGE: relative width to the parent object
 
 
 .. css:property:: depth
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on Y axis. Percentage borrows from parent draw-obj
+    size on Y axis.
 
     :type INTEGER: depth in pixels
-    :type PERCENTAGE: get depth from parent object and multiples by this value
+    :type PERCENTAGE: relative depth to the parent object
 
 .. css:property:: height
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on Z axis. Percentage borrows from parent draw-obj
+    size on Z axis.
 
     :type INTEGER: height in pixels
-    :type PERCENTAGE: get height from parent object and multiples by this value
+    :type PERCENTAGE: relative height to the parent object
 
 .. css::property:: rotate
     :type: INTEGER

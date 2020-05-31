@@ -16,14 +16,16 @@ Properties
 
 .. css:property:: wall
     :type: SELECTOR-TO-WALL | null
+    :default: null
 
-    wall of sides
+    wall of side triangles.
 
 
 .. css:property:: roof
     :type: SELECTOR-TO-WALL | null
+    :default: null
 
-    roof texture
+    wall of top faces.
 
 
 Example
