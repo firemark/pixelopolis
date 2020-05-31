@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Draw Objs &#8212; Pixelopolis 0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Basic Shapes" href="basic-shapes/index.html" />
+    <link rel="prev" title="Properties" href="../schema/properties.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="draw-objs">
+<h1>Draw Objs<a class="headerlink" href="#draw-objs" title="Permalink to this headline">¶</a></h1>
+<p>3D Objects render on the image. Draw Objs can have textures and another draw objects (children). We have two types of draw objects - containers and basic shapes.</p>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="basic-shapes/index.html">Basic Shapes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/cube.html">Cube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/triangle.html">Triangle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/pyramid.html">Pyramid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/cylinder.html">Cylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/cone.html">Cone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/dome.html">Dome</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="containers/index.html">Containers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="containers/void.html">Void</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/series.html">Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/fillers.html">Fillers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/square-fence.html">Square Fence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/bsp-tree.html">BSP Tree</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="primal-properties">
+<h2>Primal properties<a class="headerlink" href="#primal-properties" title="Permalink to this headline">¶</a></h2>
+<p>Each Draw Obj has a few primal properties:</p>
+<dl class="css property">
+<dt>
+<code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">DISPLAY-TYPE;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">element's name</code></dd>
+</dl>
+<p>type of draw-obj to howto display draw-obj (in ex. cube, triangle, dome, etc). Each display’s type has another properties and another shape.</p>
+<p>If display is incorrect then draw-obj will not be rendered.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">width</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER | PERCENTAGE;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">0</code></dd>
+</dl>
+<p>size on X axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type INTEGER</dt>
+<dd class="field-odd"><p>width in pixels</p>
+</dd>
+<dt class="field-even">Type PERCENTAGE</dt>
+<dd class="field-even"><p>relative width to the parent object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">depth</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER | PERCENTAGE;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">0</code></dd>
+</dl>
+<p>size on Y axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type INTEGER</dt>
+<dd class="field-odd"><p>depth in pixels</p>
+</dd>
+<dt class="field-even">Type PERCENTAGE</dt>
+<dd class="field-even"><p>relative depth to the parent object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">height</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER | PERCENTAGE;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">0</code></dd>
+</dl>
+<p>size on Z axis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type INTEGER</dt>
+<dd class="field-odd"><p>height in pixels</p>
+</dd>
+<dt class="field-even">Type PERCENTAGE</dt>
+<dd class="field-even"><p>relative height to the parent object</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span>draw-obj {
+    display: cube;
+    width: 200;
+    depth: 100%;
+    height: 100;
+    rotate: 90;
+}
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Pixelopolis</a></h1>
+
+
+
+<p class="blurb">A pixelart render engine</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=firemark&repo=pixelopolis&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../schema/properties.html" title="previous chapter">Properties</a></li>
+      <li>Next: <a href="basic-shapes/index.html" title="next chapter">Basic Shapes</a></li>
+  </ul></li>
+</ul>
+</div>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema/index.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Draw Objs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/index.html">Basic Shapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/index.html">Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#primal-properties">Primal properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/articles/draw-objs/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Firemark.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/articles/draw-objs/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

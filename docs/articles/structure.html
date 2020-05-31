@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Structure &#8212; Pixelopolis 0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Schema" href="schema/index.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="structure">
+<h1>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="hierarchy">
+<h2>Hierarchy<a class="headerlink" href="#hierarchy" title="Permalink to this headline">¶</a></h2>
+<div class="graphviz"><img src="../_images/graphviz-1b2eac1c8fdecefbb9d6dcf30ab297ab107475ca.png" alt="digraph {
+  world -&gt; container
+  container[label=&quot;draw-obj\n(container)&quot;]
+  world -&gt; &quot;draw-obj\n(another container)&quot;
+  container -&gt; &quot;draw-obj\n(nested container)&quot;
+  container -&gt; draw_obj
+  draw_obj[label=&quot;draw-obj\n(basic shape)&quot;]
+  container -&gt; &quot;another draw-obj&quot;
+  draw_obj -&gt; &quot;another wall&quot;
+  draw_obj -&gt; wall
+  wall -&gt; &quot;another floor&quot;
+  wall -&gt; floor
+  wall -&gt; texture
+  floor -&gt; texture
+}" class="graphviz" /></div>
+</div>
+<div class="section" id="real-example">
+<h2>Real example<a class="headerlink" href="#real-example" title="Permalink to this headline">¶</a></h2>
+<img alt="../_images/structure.png" src="../_images/structure.png" />
+</div>
+<div class="section" id="elements">
+<h2>Elements<a class="headerlink" href="#elements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="world">
+<h3>World<a class="headerlink" href="#world" title="Permalink to this headline">¶</a></h3>
+<p>First element in file, describes width, height and select first draw-obj as root</p>
+</div>
+<div class="section" id="draw-obj">
+<h3>Draw-Obj<a class="headerlink" href="#draw-obj" title="Permalink to this headline">¶</a></h3>
+<p>3D object on the image, usually has links to walls and another draw-obj. Each draw-obj has 4 primal properties:</p>
+<ul class="simple">
+<li><p>Width (in pixels/percents, x axis)</p></li>
+<li><p>Depth (in pixels/percents, y axis)</p></li>
+<li><p>Height (in pixels/percents, z axis)</p></li>
+<li><p>Rotate (in degress, rotate only XY axis)</p></li>
+</ul>
+<p>We have a two categories: Container and Basic shape.</p>
+<div class="section" id="container">
+<h4>Container<a class="headerlink" href="#container" title="Permalink to this headline">¶</a></h4>
+<p>Can have a nested and many another draw-obj. Can have a additional properties like padding, align nested objects etc.</p>
+</div>
+<div class="section" id="basic-shape">
+<h4>Basic Shape<a class="headerlink" href="#basic-shape" title="Permalink to this headline">¶</a></h4>
+<p>Simple shape like a Cube or Dome. Basic shape has walls.</p>
+</div>
+</div>
+<div class="section" id="wall">
+<h3>Wall<a class="headerlink" href="#wall" title="Permalink to this headline">¶</a></h3>
+<p>TODO</p>
+</div>
+<div class="section" id="floor">
+<h3>Floor<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h3>
+<p>TODO</p>
+</div>
+<div class="section" id="texture">
+<h3>Texture<a class="headerlink" href="#texture" title="Permalink to this headline">¶</a></h3>
+<p>TODO</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Pixelopolis</a></h1>
+
+
+
+<p class="blurb">A pixelart render engine</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=firemark&repo=pixelopolis&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="installation.html" title="previous chapter">Installation</a></li>
+      <li>Next: <a href="schema/index.html" title="next chapter">Schema</a></li>
+  </ul></li>
+</ul>
+</div>
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hierarchy">Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#real-example">Real example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#elements">Elements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="schema/index.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="draw-objs/index.html">Draw Objs</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/articles/structure.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Firemark.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/articles/structure.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

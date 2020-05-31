@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Cylinder &#8212; Pixelopolis 0.2 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Cone" href="cone.html" />
+    <link rel="prev" title="Pyramid" href="pyramid.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="cylinder">
+<h1>Cylinder<a class="headerlink" href="#cylinder" title="Permalink to this headline">¶</a></h1>
+<img alt="cylinder" src="../../../_images/cylinder.png" />
+<p>Great for body’s tower or ancient area.</p>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="css property">
+<dt>
+<code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">cone;</code></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Required</dt>
+<dd class="field-odd">YES</dd>
+</dl>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">roof</code><code class="sig-name descname">: </code><code class="sig-name descname">SELECTOR-TO-WALL | null;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">null</code></dd>
+</dl>
+<p>wall of top disk.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">wall</code><code class="sig-name descname">: </code><code class="sig-name descname">SELECTOR-TO-WALL | null;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">null</code></dd>
+</dl>
+<p>wall of side faces stretched vertically.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<code class="sig-name descname">sides</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><dl class="field-list">
+<dt class="field-odd">Default value</dt>
+<dd class="field-odd"><code class="sig-name descname">8</code></dd>
+</dl>
+<p>number of cylinder sides. If have more sides then is more circular:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="figure align-default" id="id1">
+<img alt="cylinder 6 sides" src="../../../_images/cylinder-6-sides.png" />
+<p class="caption"><span class="caption-text">sides: 6</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="figure align-default" id="id2">
+<img alt="cylinder 32 sides" src="../../../_images/cylinder-32-sides.png" />
+<p class="caption"><span class="caption-text">sides: 32</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">ancient-area</span> <span class="p">{</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">cylinder</span><span class="o">;</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">depth</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">height</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+
+    <span class="nt">roof</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.roof</span><span class="o">;</span>
+    <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick</span><span class="o">;</span>
+    <span class="nt">sides</span><span class="nd">:</span> <span class="nt">32</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can try in on <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Basic-shapes/Cylinder">https://pixelopolis.herokuapp.com/examples/Basic-shapes/Cylinder</a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Pixelopolis</a></h1>
+
+
+
+<p class="blurb">A pixelart render engine</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=firemark&repo=pixelopolis&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Draw Objs</a><ul>
+  <li><a href="index.html">Basic Shapes</a><ul>
+      <li>Previous: <a href="pyramid.html" title="previous chapter">Pyramid</a></li>
+      <li>Next: <a href="cone.html" title="next chapter">Cone</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../schema/index.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Draw Objs</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Basic Shapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../containers/index.html">Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#primal-properties">Primal properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../index.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/articles/draw-objs/basic-shapes/cylinder.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Firemark.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../../_sources/articles/draw-objs/basic-shapes/cylinder.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

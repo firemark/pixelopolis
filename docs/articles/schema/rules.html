@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Rule &#8212; Pixelopolis 0.2 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Properties" href="properties.html" />
+    <link rel="prev" title="Schema" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="rule">
+<h1>Rule<a class="headerlink" href="#rule" title="Permalink to this headline">¶</a></h1>
+<p>Rules describe elements of scenario like which objects you want in scenario
+or which textures with options are you need.</p>
+<p>Language is very easy - is based mostly on CSS language (we have a little exceptions like math operators or nested rules). In this language, we can link to another rules (in example, cube can link to wall rule who links to texture rule), and is enough to describe city-like scenarios.</p>
+<p>The example of rule is below:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">SELECTOR</span> <span class="p">{</span>
+    <span class="nt">property</span><span class="nd">:</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;;</span>
+    <span class="nt">property</span><span class="nd">:</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;,</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;;</span> <span class="o">/*</span> <span class="nt">array</span> <span class="nt">of</span> <span class="nt">N</span> <span class="nt">elements</span> <span class="o">*/</span>
+    <span class="nt">property</span><span class="nd">:</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;;</span>
+
+    <span class="o">/*</span> <span class="nc">...</span> <span class="o">*/</span>
+
+    <span class="nt">CHILD-SELECTOR</span> <span class="p">{</span>
+        <span class="nt">property</span><span class="nd">:</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;;</span>
+        <span class="o">/*</span> <span class="nc">...</span> <span class="o">*/</span>
+    <span class="p">}</span>
+    <span class="cm">/* ... */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We have a few elements:</p>
+<ul class="simple">
+<li><p><strong>Selector</strong> - it’s a query with requirements to affect properties to element. In example we can make rule only for <em>house</em> object or we can make rule for <em>roof</em> with <em>brick</em> class. More details are in <a class="reference internal" href="#selectors"><span class="std std-ref">Selectors</span></a> section.</p></li>
+<li><p><strong>Property</strong> - name of attribute of rule. With property we can decribe dimension of object, set texture path or links to another elements.</p></li>
+<li><p><strong>Value</strong> - value of property, can be an integer, string or link to another rule. Is possible to use functions.</p></li>
+<li><p><strong>Child</strong> - nested rules for children of overriding rule - very usefull for container where we have a many elements. Of course, child can have a another children.</p></li>
+</ul>
+<div class="section" id="selectors">
+<span id="id1"></span><h2>Selectors<a class="headerlink" href="#selectors" title="Permalink to this headline">¶</a></h2>
+<p>Selectors are powerfull syntax - we can describe elements with specified classes and makes relations with parent ↔ children of element. More details are below:</p>
+<div class="section" id="by-element-name">
+<h3>By Element name<a class="headerlink" href="#by-element-name" title="Permalink to this headline">¶</a></h3>
+<p>Just element name - can be everything - <em>cube</em>, <em>wall</em>, <em>texture</em>, <em>house</em>, <em>district</em> or even <em>fancy-cow</em>. Rule, like element can only have one element’s name.</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">element</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="by-class">
+<h3>By Class<a class="headerlink" href="#by-class" title="Permalink to this headline">¶</a></h3>
+<p>Element can have variations - in example, <em>house</em> can cave white or yellow wals, so we can write generic rule for <em>house</em> and write two rules for classes <em>.white</em> and <em>.yellow</em> to describe walls of our house.</p>
+<p>Class starts with dot (like in CSS syntax).</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nc">.white</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nc">.yellow</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Rule can have many classes (remember about no-space between classes - it’s neccesary!)</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nc">.class1.class2</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>We can join with element’s name:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">house</span><span class="nc">.yellow</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nt">element</span><span class="nc">.class1.class2</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="parent-operator">
+<h3>Parent operator<a class="headerlink" href="#parent-operator" title="Permalink to this headline">¶</a></h3>
+<p>Containers can have a children - in example, we can have a district with N buildings, and we can have a <em>oldtown</em> district and <em>modern</em> district. So we can change shapes and textures of buldings depends of the parent element.</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">element</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nt">parent</span> <span class="o">&gt;</span> <span class="nc">.class</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">element</span><span class="nc">.class</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">el1</span> <span class="o">&gt;</span> <span class="nt">el2</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>With district example, rule should be as</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">district</span><span class="nc">.oldtown</span> <span class="o">&gt;</span> <span class="nt">building</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+<span class="nt">district</span><span class="nc">.modern</span> <span class="o">&gt;</span> <span class="nt">building</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="greedy-parent">
+<h3>Greedy parent<a class="headerlink" href="#greedy-parent" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes, we have a too nested structure - then we need a greedy parent selector.</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">parent</span> <span class="nt">element</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>In example, imagine if you have a <em>oldtown</em> district which buldings have only wooden roof, so we can desribe rule with</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">district</span><span class="nc">.oldtown</span> <span class="nt">roof</span> <span class="p">{</span> <span class="nt">roof</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.wooden</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>In another example, if you have these structure:</p>
+<div class="graphviz"><img src="../../_images/graphviz-f238b6ba512dcc66962756581841236ff969bf2d.png" alt="digraph {
+  parent -&gt; &quot;child.first&quot;
+  parent -&gt; &quot;child.second&quot;
+  &quot;child.first&quot; -&gt; grandchild
+}" class="graphviz" /></div>
+<p>And one rule:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">parent</span> <span class="nt">grandchild</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">red</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Then grandchild should have red color.</p>
+</div>
+</div>
+<div class="section" id="many-selectors">
+<h2>Many Selectors<a class="headerlink" href="#many-selectors" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, many elements can have a similar configuration, so it’s possible to have an one rule for many selectors:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">selector1</span><span class="o">,</span> <span class="nt">selector2</span><span class="o">,</span> <span class="nt">selector3</span> <span class="p">{</span>
+    <span class="cm">/*...properties...*/</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="merge-rules">
+<h2>Merge Rules<a class="headerlink" href="#merge-rules" title="Permalink to this headline">¶</a></h2>
+<p>It’s possible to write many rules for one element. In example:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.red</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.brick</span> <span class="p">{</span> <span class="nt">property-brick</span><span class="nd">:</span> <span class="nt">OBJ2</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.red</span> <span class="p">{</span> <span class="nt">property-red</span><span class="nd">:</span> <span class="nt">OBJ1</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It’s equality this same with:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.red</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.brick.red</span> <span class="p">{</span>
+    <span class="nt">property-brick</span><span class="nd">:</span> <span class="nt">OBJ2</span><span class="o">;</span>
+    <span class="nt">property-red</span><span class="nd">:</span> <span class="nt">OBJ1</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>order of rules is neccesary, bottom rule overwrite properties from top rule, in example:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.grass</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.brick</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">red</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.grass</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">green</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>It’s equality this same with:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.grass</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.brick.grass</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">green</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Pixelopolis</a></h1>
+
+
+
+<p class="blurb">A pixelart render engine</p>
+
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=firemark&repo=pixelopolis&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
+
+
+
+
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Schema</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Schema</a></li>
+      <li>Next: <a href="properties.html" title="next chapter">Properties</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Schema</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Properties</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../draw-objs/index.html">Draw Objs</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/articles/schema/rules.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Firemark.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/articles/schema/rules.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
