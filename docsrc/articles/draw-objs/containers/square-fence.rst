@@ -4,7 +4,7 @@ Square Fence
 .. image:: images/square-fence.png
     :alt: Square fence
 
-Renders many draw-objs in specified direction. Unline series, filler try to fill specified space with draw-objs.
+Advanced container, has three type of objects: edges, corners and body (in the middle). Great for city walls, castles, greek-style columns, prisons or fence for cottage house.
 
 Properties
 -----------
@@ -18,24 +18,34 @@ Properties
 
     Links to draw-obj which be rendered in the center.
 
-    .. image:: images/square-fence-body.png
-        :alt: Square fence
+    .. figure:: images/square-fence-body.png
+        :alt: Square fence body
+        :figclass: align-center
+
+        The body (blue)
+
 
 .. css:property:: edge
     :type: SELECTOR-TO-DRAW-OBJ
 
     Links to draw-obj which be rendered in four edges.
 
-    .. image:: images/square-fence-edge.png
-        :alt: Square fence
+    .. figure:: images/square-fence-edge.png
+        :alt: Square fence edge
+        :figclass: align-center
+
+        Edges (blue)
 
 .. css:property:: corner
     :type: SELECTOR-TO-DRAW-OBJ
 
     Links to draw-obj which be rendered in four corners.
 
-    .. image:: images/square-fence-corner.png
-        :alt: Square fence
+    .. figure:: images/square-fence-corner.png
+        :alt: Square fence corner
+        :figclass: align-center
+
+        Corners (blue)
 
 .. css:property:: body-justify
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
@@ -45,27 +55,33 @@ Properties
 
     .. list-table::
 
-        * - .. figure:: images/series-justify-start.png
+        * - .. figure:: images/sf-body-justify-start.png
+                :figclass: align-center
 
-                justify: start
+                justify: start, start
 
-          - .. figure:: images/series-justify-end.png
+          - .. figure:: images/sf-body-justify-end.png
+                :figclass: align-center
 
-                justify: end
+                justify: end, end
 
-        * - .. figure:: images/series-justify-center.png
+        * - .. figure:: images/sf-body-justify-center.png
+                :figclass: align-center
 
                 justify: center
 
-          - .. figure:: images/series-justify-random.png
+          - .. figure:: images/sf-body-justify-random.png
+                :figclass: align-center
 
                 justify: random
 
-        * - .. figure:: images/series-justify-start-center.png
+        * - .. figure:: images/sf-body-justify-start-center.png
+                :figclass: align-center
 
                 justify: start, center
 
-          - .. figure:: images/series-justify-end-center.png
+          - .. figure:: images/sf-body-justify-end-center.png
+                :figclass: align-center
 
                 justify: end, center
 
@@ -77,29 +93,25 @@ Properties
 
     .. list-table::
 
-        * - .. figure:: images/series-justify-start.png
+        * - .. figure:: images/sf-edge-justify-start.png
+                :figclass: align-center
 
                 justify: start
 
-          - .. figure:: images/series-justify-end.png
+          - .. figure:: images/sf-edge-justify-end.png
+                :figclass: align-center
 
                 justify: end
 
-        * - .. figure:: images/series-justify-center.png
+        * - .. figure:: images/sf-edge-justify-center.png
+                :figclass: align-center
 
                 justify: center
 
-          - .. figure:: images/series-justify-random.png
+          - .. figure:: images/sf-edge-justify-random.png
+                :figclass: align-center
 
                 justify: random
-
-        * - .. figure:: images/series-justify-start-center.png
-
-                justify: start, center
-
-          - .. figure:: images/series-justify-end-center.png
-
-                justify: end, center
 
 .. css:property:: edge-size
     :type: INTEGER
