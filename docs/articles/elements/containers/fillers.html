@@ -1,0 +1,450 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Fillers &mdash; Pixelopolis 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Square Fence" href="square-fence.html" />
+    <link rel="prev" title="Series" href="series.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../schema/index.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Elements</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../world.html">World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../texture.html">Texture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wall.html">Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../floor.html">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../draw-objs.html">Draw Objs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basic-shapes/index.html">Basic Shapes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="void.html">Void</a></li>
+<li class="toctree-l3"><a class="reference internal" href="series.html">Series</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Fillers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="square-fence.html">Square Fence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsp-tree.html">BSP Tree</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Elements</a> &raquo;</li>
+        
+          <li><a href="index.html">Containers</a> &raquo;</li>
+        
+      <li>Fillers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/articles/elements/containers/fillers.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fillers">
+<h1>Fillers<a class="headerlink" href="#fillers" title="Permalink to this headline">¶</a></h1>
+<img alt="fillers" src="../../../_images/series.png" />
+<p>Renders many draw-objs in specified direction. Unline series, filler try to fill specified space with draw-objs.</p>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">v-filler | d-filler | h-filler;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Required</td>
+<td>YES</td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type v-filler</dt>
+<dd class="field-odd"><p>filler on X (width) axis</p>
+</dd>
+<dt class="field-even">Type d-filler</dt>
+<dd class="field-even"><p>filler on Y (depth) axis</p>
+</dd>
+<dt class="field-odd">Type h-filler</dt>
+<dd class="field-odd"><p>filler on Z (height) axis</p>
+</dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id1">
+<img alt="../../../_images/v-direction.png" src="../../../_images/v-direction.png" />
+<p class="caption"><span class="caption-text">v-series</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id2">
+<img alt="../../../_images/d-direction.png" src="../../../_images/d-direction.png" />
+<p class="caption"><span class="caption-text">d-series</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id3">
+<img alt="../../../_images/h-direction.png" src="../../../_images/h-direction.png" />
+<p class="caption"><span class="caption-text">h-series</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">body</code><code class="sig-name descname">: </code><code class="sig-name descname">SELECTOR-TO-DRAW-OBJ;</code></dt>
+<dd><p>Links to draw-obj to fill the specified space.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">padding</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Minimal padding between objects.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">align</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | stretch;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">start</code></td>
+</tr>
+</tbody>
+</table>
+<p>align of objects in specified axis.</p>
+<p>For this property is neccessary to set width/depth/height (depends on type)</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id4">
+<img alt="../../../_images/align-start.png" src="../../../_images/align-start.png" />
+<p class="caption"><span class="caption-text">align: start</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id5">
+<img alt="../../../_images/align-end.png" src="../../../_images/align-end.png" />
+<p class="caption"><span class="caption-text">align: end</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="align-center figure align-default" id="id6">
+<img alt="../../../_images/align-center.png" src="../../../_images/align-center.png" />
+<p class="caption"><span class="caption-text">align: center</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id7">
+<img alt="../../../_images/align-stretch.png" src="../../../_images/align-stretch.png" />
+<p class="caption"><span class="caption-text">align: stretch</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">(v-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
+<dd></dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">(d-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
+<dd></dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">(h-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">JUSTIFY-X, JUSTIFY-Y | center | random;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">start</code></td>
+</tr>
+</tbody>
+</table>
+<p>align of objects for the rest axis.</p>
+<ul class="simple">
+<li><p>for v-filler: align of Y (depth) axis</p></li>
+<li><p>for d-filler: align of X (width) axis</p></li>
+<li><p>for h-filler: align of Y and X axis (with two arguments)</p></li>
+</ul>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id8">
+<img alt="../../../_images/series-justify-start.png" src="../../../_images/series-justify-start.png" />
+<p class="caption"><span class="caption-text">justify: start</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id9">
+<img alt="../../../_images/series-justify-end.png" src="../../../_images/series-justify-end.png" />
+<p class="caption"><span class="caption-text">justify: end</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="align-center figure align-default" id="id10">
+<img alt="../../../_images/series-justify-center.png" src="../../../_images/series-justify-center.png" />
+<p class="caption"><span class="caption-text">justify: center</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id11">
+<img alt="../../../_images/series-justify-random.png" src="../../../_images/series-justify-random.png" />
+<p class="caption"><span class="caption-text">justify: random</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id12">
+<img alt="../../../_images/series-justify-start-center.png" src="../../../_images/series-justify-start-center.png" />
+<p class="caption"><span class="caption-text">justify: start, center</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id13">
+<img alt="../../../_images/series-justify-end-center.png" src="../../../_images/series-justify-end-center.png" />
+<p class="caption"><span class="caption-text">justify: end, center</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">row</span> <span class="p">{</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">v-filler</span><span class="o">;</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">300</span><span class="o">;</span>
+    <span class="nt">depth</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">align</span><span class="nd">:</span> <span class="nt">stretch</span><span class="o">;</span>
+
+    <span class="nt">body</span><span class="nd">:</span> <span class="nt">house</span><span class="nc">.red</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can try on <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Containers/Series">https://pixelopolis.herokuapp.com/examples/Containers/Series</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="square-fence.html" class="btn btn-neutral float-right" title="Square Fence" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="series.html" class="btn btn-neutral float-left" title="Series" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

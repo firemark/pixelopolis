@@ -1,0 +1,488 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BSP Tree &mdash; Pixelopolis 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="Square Fence" href="square-fence.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../schema/index.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Elements</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../world.html">World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../texture.html">Texture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wall.html">Wall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../floor.html">Floor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../draw-objs.html">Draw Objs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../basic-shapes/index.html">Basic Shapes</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="void.html">Void</a></li>
+<li class="toctree-l3"><a class="reference internal" href="series.html">Series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fillers.html">Fillers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="square-fence.html">Square Fence</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">BSP Tree</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Elements</a> &raquo;</li>
+        
+          <li><a href="index.html">Containers</a> &raquo;</li>
+        
+      <li>BSP Tree</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/articles/elements/containers/bsp-tree.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bsp-tree">
+<h1>BSP Tree<a class="headerlink" href="#bsp-tree" title="Permalink to this headline">¶</a></h1>
+<img alt="../../../_images/bsp.png" src="../../../_images/bsp.png" />
+<p><strong>BSP</strong> means <em>Binary Space partitioning</em>. It’s an advanced container which parts area into smaller areas randomically.</p>
+<p>The algorithm of partitioning is here: <a class="reference external" href="http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation">http://www.roguebasin.com/index.php?title=Basic_BSP_Dungeon_generation</a></p>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">bsp-tree;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Required</td>
+<td>YES</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">body</code><code class="sig-name descname">: </code><code class="sig-name descname">DRAW-OBJ-SELECTOR;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">null</code></td>
+</tr>
+</tbody>
+</table>
+<p>links subareas with draw-obj</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">padding</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>padding between subareas.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id1">
+<img alt="../../../_images/bsp-p-5.png" src="../../../_images/bsp-p-5.png" />
+<p class="caption"><span class="caption-text">padding: 5</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id2">
+<img alt="../../../_images/bsp-p-20.png" src="../../../_images/bsp-p-20.png" />
+<p class="caption"><span class="caption-text">padding: 20</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">justify</code><code class="sig-name descname">: </code><code class="sig-name descname">JUSTIFY-X, JUSTIFY-Y | center | random;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">start, start</code></td>
+</tr>
+</tbody>
+</table>
+<p>align of body element</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id3">
+<img alt="../../../_images/bsp-j-start.png" src="../../../_images/bsp-j-start.png" />
+<p class="caption"><span class="caption-text">justify: start, start</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id4">
+<img alt="../../../_images/bsp-j-end.png" src="../../../_images/bsp-j-end.png" />
+<p class="caption"><span class="caption-text">justify: end, end</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="align-center figure align-default" id="id5">
+<img alt="../../../_images/bsp-j-center.png" src="../../../_images/bsp-j-center.png" />
+<p class="caption"><span class="caption-text">justify: center</span><a class="headerlink" href="#id5" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id6">
+<img alt="../../../_images/bsp-j-random.png" src="../../../_images/bsp-j-random.png" />
+<p class="caption"><span class="caption-text">justify: random</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">iterations-count</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">3</code></td>
+</tr>
+</tbody>
+</table>
+<p>How many iterations will be executed to parts area into two smaller areas. Each iteration split each area to two smaller areas (vertically or horizontally). Max number of areas is <code class="docutils literal notranslate"><span class="pre">(iterations-count</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">**</span> <span class="pre">2</span></code> where <code class="docutils literal notranslate"><span class="pre">**</span></code> is a power operator</p>
+<p>If area is too small to split (with <em>min-width</em> and <em>min-height</em>) then splitting will be stopped.</p>
+<p>If iteration is greater than <em>iterations-count</em> and width of area is greater than <em>max-width</em> (or vice-versa with height), then area should split into two areas again.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id7">
+<img alt="../../../_images/bsp-i-1.png" src="../../../_images/bsp-i-1.png" />
+<p class="caption"><span class="caption-text">iterations-count: 1</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id8">
+<img alt="../../../_images/bsp-i-2.png" src="../../../_images/bsp-i-2.png" />
+<p class="caption"><span class="caption-text">iterations-count: 2</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="align-center figure align-default" id="id9">
+<img alt="../../../_images/bsp-i-3.png" src="../../../_images/bsp-i-3.png" />
+<p class="caption"><span class="caption-text">iterations-count: 3</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id10">
+<img alt="../../../_images/bsp-i-4.png" src="../../../_images/bsp-i-4.png" />
+<p class="caption"><span class="caption-text">iterations-count: 4</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">min-width</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>If width of subarea (+ padding) is smaller than min-width then splitting will be stopped</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">min-height</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>If height of subarea (+ padding) is smaller than min-height then splitting will be stopped</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">max-width</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">width of subarea</code></td>
+</tr>
+</tbody>
+</table>
+<p>If iteration is greater than <em>iterations-count</em> and width of area if greater than <em>max-width</em>, then area should split into two areas again.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">max-height</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">height of subarea</code></td>
+</tr>
+</tbody>
+</table>
+<p>If iteration is greater than <em>iterations-count</em> and height of area if greater than <em>max-height</em>, then area should split into two areas again.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">district</span> <span class="p">{</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">bsp-tree</span><span class="o">;</span>
+    <span class="nt">body</span><span class="nd">:</span> <span class="nt">house</span><span class="o">;</span>
+    <span class="nt">iterations-count</span><span class="nd">:</span> <span class="nt">4</span><span class="o">;</span>
+    <span class="nt">padding</span><span class="nd">:</span> <span class="nt">10</span><span class="o">;</span>
+    <span class="nt">justify</span><span class="nd">:</span> <span class="nt">center</span><span class="o">;</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">500</span><span class="o">;</span>
+    <span class="nt">depth</span><span class="nd">:</span> <span class="nt">500</span><span class="o">;</span>
+    <span class="nt">min-width</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">min-height</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>You can try on <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Containers/Bsp-tree">https://pixelopolis.herokuapp.com/examples/Containers/Bsp-tree</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="square-fence.html" class="btn btn-neutral float-left" title="Square Fence" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

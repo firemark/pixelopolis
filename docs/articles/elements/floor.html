@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Floor &mdash; Pixelopolis 0.1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Draw Objs" href="draw-objs.html" />
+    <link rel="prev" title="Wall" href="wall.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema/index.html">Schema</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Elements</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="world.html">World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="texture.html">Texture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wall.html">Wall</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Floor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#floor-description">Floor Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#properties">Properties</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="draw-objs.html">Draw Objs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic-shapes/index.html">Basic Shapes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers/index.html">Containers</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Elements</a> &raquo;</li>
+        
+      <li>Floor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/articles/elements/floor.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="floor">
+<h1>Floor<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h1>
+<p>This element is used as part of wall.</p>
+<div class="section" id="floor-description">
+<h2>Floor Description<a class="headerlink" href="#floor-description" title="Permalink to this headline">¶</a></h2>
+<img alt="../../_images/floor-description.png" src="../../_images/floor-description.png" />
+<ul class="simple">
+<li><p>Green - Texture (background) from wall</p></li>
+<li><p>Blue - Texture (background) from floor</p></li>
+<li><p>Grey - Left floor object</p></li>
+<li><p>Yellow - Right floor object</p></li>
+<li><p>Darkred - middle floor object</p></li>
+</ul>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">texture</code><code class="sig-name descname">: </code><code class="sig-name descname">TEXTURE-SELECTOR;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Links to texture as background.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">height</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Height of floor. If is not set, then try to borrow from background’s height.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">padding</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">0</code></td>
+</tr>
+</tbody>
+</table>
+<p>Padding between middle floor objects.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">left-padding</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">padding value</code></td>
+</tr>
+</tbody>
+</table>
+<p>Padding between left and middle floor objects.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">right-padding</code><code class="sig-name descname">: </code><code class="sig-name descname">INTEGER;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">padding value</code></td>
+</tr>
+</tbody>
+</table>
+<p>Padding between right and middle floor objects.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">align</code><code class="sig-name descname">: </code><code class="sig-name descname">left | middle | right | justify;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">left</code></td>
+</tr>
+</tbody>
+</table>
+<p>Align of floor objects.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><div class="align-center figure align-default" id="id1">
+<img alt="../../_images/floor-a-left.png" src="../../_images/floor-a-left.png" />
+<p class="caption"><span class="caption-text">align: left</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id2">
+<img alt="../../_images/floor-a-right.png" src="../../_images/floor-a-right.png" />
+<p class="caption"><span class="caption-text">align: right</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="align-center figure align-default" id="id3">
+<img alt="../../_images/floor-a-middle.png" src="../../_images/floor-a-middle.png" />
+<p class="caption"><span class="caption-text">align: middle</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+<td><div class="align-center figure align-default" id="id4">
+<img alt="../../_images/floor-a-justify.png" src="../../_images/floor-a-justify.png" />
+<p class="caption"><span class="caption-text">align: justify</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">middle</code><code class="sig-name descname">: </code><code class="sig-name descname">TEXTURE-SELECTOR;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Links with texture selector.</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">top</code><code class="sig-name descname">: </code><code class="sig-name descname">TEXTURE-SELECTOR;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Links with texture selector and render only on left of floor. Ignores paddings and align</p>
+</dd></dl>
+
+<dl class="css property">
+<dt>
+<em class="property">property </em><code class="sig-name descname">bottom</code><code class="sig-name descname">: </code><code class="sig-name descname">TEXTURE-SELECTOR;</code></dt>
+<dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td>Default</td>
+<td><code class="sig-name descname">null</code></td>
+</tr>
+</tbody>
+</table>
+<p>Links with texture selector and render only on right of right. Ignores paddings and align</p>
+</dd></dl>
+
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Textures/Floor-Align">https://pixelopolis.herokuapp.com/examples/Textures/Floor-Align</a></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="draw-objs.html" class="btn btn-neutral float-right" title="Draw Objs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="wall.html" class="btn btn-neutral float-left" title="Wall" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
