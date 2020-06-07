@@ -138,4 +138,4 @@ Example
         body: house.red, house.white, house.red;
     }
 
-You can try in on https://pixelopolis.herokuapp.com/examples/Containers/Series
+You can try on https://pixelopolis.herokuapp.com/examples/Containers/Series
