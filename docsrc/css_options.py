@@ -1,3 +1,5 @@
+from itertools import chain
+
 from docutils.parsers.rst import directives
 from docutils import nodes
 
@@ -26,7 +28,7 @@ class CssProperty(ObjectDescription):
 
     def handle_signature(self, sig, signode):
         property_name = sig.strip()
-        #signode += addnodes.desc_addname(property_name, 'property ')
+        signode += addnodes.desc_annotation(property_name, 'property ')
         signode += addnodes.desc_name(property_name, property_name)
 
         value_type = self.options.get('type')
@@ -40,35 +42,60 @@ class CssProperty(ObjectDescription):
     def _push_required_field(self):
         if 'required' not in self.options:
             return
-        field_name = nodes.field_name(text='Required: ')
-        field_name += addnodes.desc_name(text='YES')
-        field_body = nodes.field_body()
-        field = nodes.field()
-        field += field_name
-        field += field_body
+        header = nodes.entry()
+        header += nodes.Text('Required')
 
-        return field
+        value = nodes.entry()
+        value += nodes.Text('YES')
+
+        row = nodes.row()
+        row += header
+        row += value
+
+        return row
 
     def _push_default_field(self):
         default_value = self.options.get('default')
         if default_value is None:
             return
-        default_value = default_value.strip()
-        field_name = nodes.field_name(text='Default: ')
-        field_name += addnodes.desc_name(text=default_value)
-        field_body = nodes.field_body()
-        field = nodes.field()
-        field += field_name
-        field += field_body
+        header = nodes.entry()
+        header += nodes.Text('Default')
 
-        return field
+        value = nodes.entry()
+        value += addnodes.desc_name(text=default_value)
+
+        row = nodes.row()
+        row += header
+        row += value
+
+        return row
 
     def transform_content(self, contentnode):
-        field_list = nodes.field_list()
-        field_list += self._push_required_field()
-        field_list += self._push_default_field()
+        rows = [
+            self._push_required_field(),
+            self._push_default_field(),
+        ]
+        rows = [r for r in rows if r is not None]
 
-        contentnode.insert(0, field_list)
+        if not rows:
+            return
+
+        tbody = nodes.tbody()
+        tbody.extend(rows)
+
+        tgroup = nodes.tgroup(cols=2)
+        for _ in range(2):
+            colspec = nodes.colspec(colwidth=1)
+            tgroup += colspec
+        tgroup += tbody
+
+        table = nodes.table()
+        table += tgroup
+
+        if len(contentnode) > 0:
+            contentnode.insert(0, table)
+        else:
+            contentnode += table
 
 
 class CssDomain(Domain):
