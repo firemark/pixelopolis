@@ -1,5 +1,5 @@
 # Pixelopolis
-![oblique](./docs/images/oblique.png)
+![oblique](./docsrc/images/oblique.png)
 
 Transform CSS-like into pixelart city in oblique (yet) projection.
 

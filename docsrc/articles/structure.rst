@@ -60,15 +60,16 @@ Simple shape like a Cube or Dome. Basic shape has walls.
 
 Wall
 ^^^^^
-
-TODO
+Image put on the side in basic shape. Wall can have floors, background and particles
 
 Floor
 ^^^^^^
 
-TODO
+Floor can have background and another textures (like decoration or windows or door etc.)
 
 Texture
 ^^^^^^^^
+
+Have only filepath to PNG file or one solid color.
 
 TODO
