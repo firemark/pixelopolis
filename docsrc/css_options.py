@@ -40,10 +40,11 @@ class CssProperty(ObjectDescription):
     def _push_required_field(self):
         if 'required' not in self.options:
             return
+        field_name = nodes.field_name(text='Required: ')
+        field_name += addnodes.desc_name(text='YES')
         field_body = nodes.field_body()
-        field_body += nodes.Text('YES')
         field = nodes.field()
-        field += nodes.field_name(text='Required')
+        field += field_name
         field += field_body
 
         return field
@@ -53,10 +54,11 @@ class CssProperty(ObjectDescription):
         if default_value is None:
             return
         default_value = default_value.strip()
+        field_name = nodes.field_name(text='Default: ')
+        field_name += addnodes.desc_name(text=default_value)
         field_body = nodes.field_body()
-        field_body += addnodes.desc_name(text=default_value)
         field = nodes.field()
-        field += nodes.field_name(text='Default value')
+        field += field_name
         field += field_body
 
         return field

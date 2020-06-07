@@ -20,14 +20,17 @@ Properties
     .. list-table::
 
         * - .. figure:: images/v-direction.png
+                :figclass: align-center
 
                 v-series
 
           - .. figure:: images/d-direction.png
+                :figclass: align-center
 
                 d-series
 
           - .. figure:: images/h-direction.png
+                :figclass: align-center
 
                 h-series
 
@@ -53,18 +56,22 @@ Properties
     .. list-table::
 
         * - .. figure:: images/align-start.png
+                :figclass: align-center
 
                 align: start
 
           - .. figure:: images/align-end.png
+                :figclass: align-center
 
                 align: end
 
         * - .. figure:: images/align-center.png
+                :figclass: align-center
 
                 align: center
 
           - .. figure:: images/align-stretch.png
+                :figclass: align-center
 
                 align: stretch
 
@@ -88,26 +95,32 @@ Properties
     .. list-table::
 
         * - .. figure:: images/series-justify-start.png
+                :figclass: align-center
 
                 justify: start
 
           - .. figure:: images/series-justify-end.png
+                :figclass: align-center
 
                 justify: end
 
         * - .. figure:: images/series-justify-center.png
+                :figclass: align-center
 
                 justify: center
 
           - .. figure:: images/series-justify-random.png
+                :figclass: align-center
 
                 justify: random
 
         * - .. figure:: images/series-justify-start-center.png
+                :figclass: align-center
 
                 justify: start, center
 
           - .. figure:: images/series-justify-end-center.png
+                :figclass: align-center
 
                 justify: end, center
 
