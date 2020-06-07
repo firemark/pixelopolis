@@ -30,8 +30,8 @@ project = 'Pixelopolis'
 copyright = '2020, Firemark'
 author = 'Firemark'
 
-version = '0.2'
-release = '0.2'
+version = '0.1.0'
+release = '0.1.0'
 
 language = 'en'
 
