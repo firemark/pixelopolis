@@ -7,6 +7,10 @@ Site with examples: https://pixelopolis.herokuapp.com
 
 **WARNING** - this code is 'very beta' - please dont be angry when something doesnt work `;_;`
 
+## Documentation
+
+http://firemark.github.io/pixelopolis/
+
 ## Howto install
 ```bash
 make all
@@ -26,172 +30,6 @@ docker run -it --rm -p 8000:80 pixelopolis
 ./pixelopolis [CSS_IN_FILE] [PNG_OUT_FILE]
 ```
 
-### Body
-
-The main element, required if you need run a program
-```css
-body {
-    body: DRAW-OBJ-SELECTOR;
-    width: NUMBER; /* width of output image */
-    height: NUMBER; /* height of output image */
-}
-```
-
-### DrawObj
-
-The 3D objects like cube, pyramid, row/column of objects.
-Each drawObj has width/height/depth properties
-
-```css
-draw-obj {
-    width: NUMBER | PERCENT; /* default: 0 */
-    height: NUMBER | PERCENT; /* default: 0 */
-    depth: NUMBER | PERCENT; /* default: 0 */
-}
-```
-
-This are 2 ways to make CSS rule for drawObj:
-
-```css
-/* first way */ draw-obj { /* ... */ }
-/* second way */ customize-element-name { display: draw-obj; /* ... */ }
-/* display has bigger priority than element name */
-```
-
-#### Basic
-
-##### Void
-
-Just empty cube. Nice to shift another element
-
-```css
-void {
-    child: SELECTOR-TO-DRAW-OBJ;
-    width: NUMBER | PERCENT;
-    height: NUMBER | PERCENT;
-    depth: NUMBER | PERCENT;
-}
-```
-
-##### Cube
-
-```css
-cube {
-    wall: SELECTOR-TO-WALL-OBJ;
-    roof: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER | PERCENT;
-    height: NUMBER | PERCENT;
-    depth: NUMBER | PERCENT;
-}
-```
-
-##### Triangle
-
-```css
-triangle {
-    wall: SELECTOR-TO-WALL-OBJ;
-    roof: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER | PERCENT;
-    height: NUMBER | PERCENT;
-    depth: NUMBER | PERCENT;
-}
-```
-
-##### Pyramid
-
-```css
-pyramid {
-    wall: SELECTOR-TO-WALL-OBJ;
-    width: NUMBER | PERCENT;
-    height: NUMBER | PERCENT;
-    depth: NUMBER | PERCENT;
-}
-```
-
-#### Containers
-
-Basic Shapes are not enough, we need to show many objects.
-
-##### Series
-
-Is a CSS rule with list of another draw-obj selectors in given axis.
-We have a tree types of series obj:
-
-* `v-series` - vertical (on x-axis)
-* `d-series` - depth (on y-axis)
-* `h-series` - height (on z-axis)
-
-```css
-v-series { /* or d-series or h-series */
-    body: SELECTOR1, SELECTOR2, ...;
-    padding: NUMBER; /* optional */
-    width: NUMBER | PERCENT; /* optional */
-    height: NUMBER | PERCENT; /* optional */
-    depth: NUMBER | PERCENT; /* optional */
-    align: start | end | center | stretch; /* default is start */
-}
-```
-
-##### Filler
-
-Instead of series, Filler fills whole specific space (if can)
-We have a tree types of fillers obj:
-
-* `v-filler` - vertical (on x-axis)
-* `d-filler` - depth (on y-axis)
-* `h-filler` - height (on z-axis)
-
-```css
-v-filler {
-    body: SELECTOR;
-    padding: NUMBER; /* optional */
-    width: NUMBER | PERCENT; /* optional */
-    height: NUMBER | PERCENT; /* optional */
-    depth: NUMBER | PERCENT; /* optional */
-    align: start | end | center | stretch; /* default is start */
-}
-```
-
-### Wall
-
-Rule to draw texture and specified floors on the wall. Used in objects.
-
-```css
-wall {
-    texture: SELECTOR-TO-TEX-OBJ;
-    top: SELECTOR-TO-FLOOR-OBJ; /* optional */
-    middle: SELECTOR-TO-FLOOR-OBJ; /* optional */
-    bottom: SELECTOR_TO_FLOOR_OBJ; /* optional */
-    padding: NUMBER; /* optional - padding between floors */
-}
-```
-
-### Floor
-
-Rule to draw textures or/and set height on the floor.
-
-```css
-floor {
-    left: SELECTOR-TO-TEX-OBJ;
-    middle: SELECTOR-TO-TEX-OBJ;
-    right: SELECTOR-TO-TEX-OBJ;
-    padding: NUMBER; /* optional - padding between textures, default is 0 */
-    left-padding: NUMBER; /* optional - default is from padding attribute */
-    right-padding: NUMBER; /* optional - default is from padding attribute */
-    middle-padding: NUMBER;  /* optional - default is from padding attribute */
-}
-```
-
-### Texture
-
-Rule to load image from file
-
-```css
-tex {
-    texture: STRING;
-}
-```
-
 ## TODOS
 
 * Rendering System
@@ -206,6 +44,10 @@ tex {
     * [ ] HARD 2.5D Background Mountains and floor
     * [ ] HARD 2.5D Clouds
     * [ ] NO-MERCY Opengl + shaders support
+* Documentation
+    * [x] HARD setup sphinx
+    * [x] HARD describe elements
+    * [ ] HARD write tutorial
 * CSS Parser
     * [x] EASY CSS Comments
     * [ ] EASY Star operator
@@ -232,8 +74,8 @@ tex {
     * [x] MID Series
     * [x] MID Fillers
     * [x] MID Square Fences
-    * [ ] MID Grid
-    * [ ] MID Union
+    * [x] MID Grid
+    * [x] MID Union
     * [x] MID Align for series
     * [x] MID Justify shapes
     * [ ] MID Margin shapes
@@ -242,6 +84,7 @@ tex {
     * [ ] HARD Python support to generate custom shapes
 * Textures
     * [x] EASY Support colors instead of textures
+    * [ ] EASY color names
     * [ ] MID Gradient in textures
     * [ ] MID Point noise
     * [ ] MID Perlin noise
@@ -265,11 +108,28 @@ tex {
     * [ ] HARD Normal shader for textures
     * [ ] HARD Bump map to normal shader
 * Core
-    * [ ] HARD Make sphinx documentation on github pages
     * [ ] HARD garbage collector
     * [ ] IMPOSIBRU Refactoring
 
 ## Changelog
+
+### 0.1.0
+
+* Add dome shape
+* Add cylinder shape
+* Add cone shape
+* Add justify for filler and series containers
+* Add fence square container
+* Add union container
+* Add BSP Tree container
+* Add particles system
+* Add rotate attributes
+* Add more textures (now textures have a few colors)
+* Add more bugs, of course
+* Add nested rules (like in SCSS)
+* Add documenation
+* Splitting code into submodules
+* MORE EXAMPLES
 
 ### 0.0.1
 
