@@ -49,3 +49,34 @@ Properties
     :default: null
 
     Links with floor selector and render only on bottom of wall. Ignores paddings and align
+
+.. css:property:: points-texture
+    :type: TEXTURE-SELECTOR
+    :default: null
+
+    If is set, then draw randomically particles (with this texture) on the wall. This property required *points-density*.
+
+.. css:property:: points-density
+    :type: PERCENTAGE
+    :default: 0%
+
+    How many area should be covered relative to value. This property required *points-texture*.
+
+    .. list-table::
+
+        * - .. figure:: images/wall-points-5.png
+                :figclass: align-center
+
+                points-density: 5%
+
+          - .. figure:: images/wall-points-25.png
+                :figclass: align-center
+
+                points-density: 25%
+
+Examples
+---------
+
+* https://pixelopolis.herokuapp.com/examples/Textures/Textures
+* https://pixelopolis.herokuapp.com/examples/Textures/Floor-Align
+* https://pixelopolis.herokuapp.com/examples/Textures/Points

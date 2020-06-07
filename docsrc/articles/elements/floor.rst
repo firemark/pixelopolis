@@ -10,10 +10,10 @@ Floor Description
 .. image:: images/floor-description.png
 
 * Green - Texture (background) from wall
-* Red - Texture (background) from floor
+* Blue - Texture (background) from floor
 * Grey - Left floor object
 * Yellow - Right floor object
-* Brown - middle floor object
+* Darkred - middle floor object
 
 
 Properties
