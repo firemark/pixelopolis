@@ -57,8 +57,8 @@ struct ShiftTexPair* _make_right_pair(struct Helper* helper, int *end_width, int
     int right_width = right->texture->width;
     if (*shift + right_width > *end_width) goto final;
 
-    pair = _make_shift_pair(*shift, right);
     *end_width -= right_width;
+    pair = _make_shift_pair(*end_width, right);
 final:
     *end_width -= _get_tex_padding_with_name(helper->rule, "right-padding");
     return pair;

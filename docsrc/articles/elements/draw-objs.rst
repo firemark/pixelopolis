@@ -3,12 +3,7 @@ Draw Objs
 
 3D Objects render on the image. Draw Objs can have textures and another draw objects (children). We have two types of draw objects - containers and basic shapes.
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-   basic-shapes/index
-   containers/index
+More info about :ref:`articles/elements/basic-shapes/index:Basic Shapes` and :ref:`articles/elements/containers/index:Containers`.
 
 
 Primal properties
