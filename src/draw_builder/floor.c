@@ -178,7 +178,6 @@ struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_wid
     int* height_ptr = css_find_number_prop(rule, "height");
 
     struct FloorObj* floor = malloc(sizeof(struct FloorObj));
-    floor->height = _get_floor_height(height_ptr, floor);
 
     struct SelectorHelper tex_helper = {
         .program=helper->program,
@@ -194,6 +193,8 @@ struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_wid
         .parent=helper->parent,
     };
     _append_objs_to_floor(&inner_helper, floor, wall_width);
+
+    floor->height = _get_floor_height(height_ptr, floor);
 
     css_free_rule_half(rule);
     return floor;
