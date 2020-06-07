@@ -21,4 +21,6 @@ You can tests it online: https://pixelopolis.herokuapp.com
     articles/installation
     articles/structure
     articles/schema/index
-    articles/draw-objs/index
+    articles/elements/draw-objs
+    articles/elements/basic-shapes/index
+    articles/elements/containers/index

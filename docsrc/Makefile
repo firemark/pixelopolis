@@ -22,3 +22,6 @@ help:
 github:
 	@make html
 	@cp -a _build/html/. ../docs
+
+clear:
+	rm -rf _build/*

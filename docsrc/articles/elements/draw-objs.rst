@@ -16,7 +16,6 @@ Primal properties
 
 Each Draw Obj has a few primal properties:
 
-
 .. css:property:: display
     :type: DISPLAY-TYPE
     :default: element's name
