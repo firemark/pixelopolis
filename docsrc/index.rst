@@ -18,6 +18,7 @@ You can tests it online: https://pixelopolis.herokuapp.com
     :caption: Contents:
 
     articles/installation
+    articles/tutorial/index
     articles/structure
     articles/schema/index
     articles/elements/index
