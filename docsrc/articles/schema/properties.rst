@@ -86,7 +86,7 @@ Or used in containers as array of selector:
 
 .. warning::
 
-     is possible only to send element name and/or classes, is not possible to join with parent operator or another pseudoclasses
+     it is only possible to send element name and/or classes, is not possible to join with parent operator or another pseudoclasses
 
 .. todo::
 
@@ -96,13 +96,13 @@ Or used in containers as array of selector:
 Functions
 ----------
 
-Is possible to use special functions in properties.
+It is possible to use special functions in properties.
 
 
 random
 ^^^^^^^^
 
-Randoms integer between A and B
+Random integer between A and B
 
 Usage:
 
@@ -134,7 +134,7 @@ Example:
 
 .. code-block:: scss
 
-    /* choice only one element from list of arguments */
+    /* select only one element from the list of arguments */
     rule {
         random_obj: choice(obj1, obj2, obj3);
     }

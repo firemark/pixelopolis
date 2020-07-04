@@ -18,7 +18,7 @@ Properties
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of side triangles.
+    Wall of side triangles.
 
 
 Example

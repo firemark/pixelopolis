@@ -19,14 +19,14 @@ Properties
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of side faces.
+    Wall of side faces.
 
 
 .. css:property:: roof
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of top face.
+    Wall of top face.
 
 
 Example

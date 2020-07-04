@@ -19,13 +19,13 @@ Properties
     :type: DRAW-OBJ-SELECTOR
     :default: null
 
-    links subareas with draw-obj
+    Link to subareas with draw-obj
 
 .. css:property:: padding
     :type: INTEGER
     :default: 0
 
-    padding between subareas.
+    Padding between subareas.
 
     .. list-table::
 
@@ -43,7 +43,7 @@ Properties
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start, start
 
-    align of body element
+    Align of body element.
 
     .. list-table::
 
@@ -103,13 +103,13 @@ Properties
     :type: INTEGER
     :default: 0
 
-    If width of subarea (+ padding) is smaller than min-width then splitting will be stopped
+    If width of subarea (+ padding) is smaller than min-width then splitting will be stopped.
 
 .. css:property:: min-height
     :type: INTEGER
     :default: 0
 
-    If height of subarea (+ padding) is smaller than min-height then splitting will be stopped
+    If height of subarea (+ padding) is smaller than min-height then splitting will be stopped.
 
 .. css:property:: max-width
     :type: INTEGER

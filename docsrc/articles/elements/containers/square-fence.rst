@@ -16,7 +16,7 @@ Properties
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ
 
-    Links to draw-obj which be rendered in the center.
+    Link to draw-obj which be rendered in the center.
 
     .. figure:: images/square-fence-body.png
         :alt: Square fence body
@@ -28,7 +28,7 @@ Properties
 .. css:property:: edge
     :type: SELECTOR-TO-DRAW-OBJ
 
-    Links to draw-obj which be rendered in four edges.
+    Link to draw-obj which be rendered in four edges.
 
     .. figure:: images/square-fence-edge.png
         :alt: Square fence edge
@@ -39,7 +39,7 @@ Properties
 .. css:property:: corner
     :type: SELECTOR-TO-DRAW-OBJ
 
-    Links to draw-obj which be rendered in four corners.
+    Link to draw-obj which be rendered in four corners.
 
     .. figure:: images/square-fence-corner.png
         :alt: Square fence corner
@@ -51,7 +51,7 @@ Properties
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start, start
 
-    align of body object.
+    Align of body object.
 
     .. list-table::
 
@@ -89,7 +89,7 @@ Properties
     :type: start | end | center | random
     :default: start
 
-    align of edge object.
+    Align of edge object.
 
     .. list-table::
 
@@ -117,7 +117,7 @@ Properties
     :type: INTEGER
     :default: 0
 
-    depth (to the center of container) size of edge and corner.
+    Depth (to the center of container) size of edge and corner.
 
 Example
 --------

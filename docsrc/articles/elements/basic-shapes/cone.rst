@@ -19,13 +19,13 @@ Properties
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of side faces stretched vertically.
+    Wall of side faces stretched vertically.
 
 .. css:property:: sides
     :type: INTEGER
     :default: 8
 
-    number of cone sides. If have more sides then is more circular:
+    Number of cone sides. If have more sides then is more circular:
 
     .. list-table::
 

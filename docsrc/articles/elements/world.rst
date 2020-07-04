@@ -11,16 +11,16 @@ Properties
     :type: INTEGER
     :required:
 
-    width of image.
+    Width of image.
 
 .. css:property:: height
     :type: INTEGER
     :required:
 
-    height of image.
+    Height of image.
 
 .. css:property:: body
     :type: DRAW-OBJ-SELECTOR
     :required:
 
-    links the first draw obj. Usually is a container with another draw-objs.
+    Link to the first draw obj. Usually is a container with another draw-objs.

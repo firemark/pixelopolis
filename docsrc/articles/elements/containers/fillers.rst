@@ -37,7 +37,7 @@ Properties
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ
 
-    Links to draw-obj to fill the specified space.
+    Link to draw-obj to fill the specified space.
 
 .. css:property:: padding
     :type: INTEGER
@@ -49,7 +49,7 @@ Properties
     :type: start | end | center | stretch
     :default: start
 
-    align of objects in specified axis.
+    Align of objects in specified axis.
 
     For this property is neccessary to set width/depth/height (depends on type)
 
@@ -86,7 +86,7 @@ Properties
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start
 
-    align of objects for the rest axis.
+    Align of objects for the rest axis.
 
     * for v-filler: align of Y (depth) axis
     * for d-filler: align of X (width) axis

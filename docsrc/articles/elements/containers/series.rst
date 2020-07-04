@@ -38,7 +38,7 @@ Properties
     :type: SELECTOR-TO-DRAW-OBJ, SELECTOR-TO-DRAW-OBJ, …
     :default: null
 
-    Links to draw-objs
+    Link to draw-objs.
 
 .. css:property:: padding
     :type: INTEGER
@@ -52,7 +52,7 @@ Properties
 
     Align of objects in specified axis.
 
-    For this property is neccessary to set width/depth/height (depends on type)
+    For this property is neccessary to set width/depth/height (depends on type).
 
     .. list-table::
 
