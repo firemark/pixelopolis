@@ -36,11 +36,21 @@ MENU = [
     ]),
 ]
 
+HIDDEN_FILES = {
+    'Tutorial/Hello-Cube': 'examples/tutorial/hello-cube.scss',
+    'Tutorial/Textures': 'examples/tutorial/textures.scss',
+    'Tutorial/Containers': 'examples/tutorial/containers.scss',
+    'Tutorial/Nested-objects': 'examples/tutorial/nested-objects.scss',
+    'Tutorial/Particles': 'examples/tutorial/particles.scss',
+}
+
 FILES_TO_DICT = {
     f'{category.replace(" ", "-")}/{name}': filepath
     for category, files in MENU
     for name, filepath in files
 }
+
+FILES_TO_DICT.update(HIDDEN_FILES)
 
 
 @app.route('/', methods=['GET'])

@@ -6,3 +6,4 @@ Tutorial
    :caption: Contents:
 
    hello-cube
+   textures
