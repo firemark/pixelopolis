@@ -2,7 +2,7 @@ Textures
 ================
 
 In the previous tutorial (:ref:`articles/tutorial/hello-cube:Hello Cube`) we made a pretty cube.
-But we known, solid colors is not enough. In this step, we try to add windows and doors.
+But we know, solid colors is not enough. In this step, we try to add windows and doors.
 
 Our cube should be like as:
 

@@ -7,3 +7,5 @@ Tutorial
 
    hello-cube
    textures
+   containers
+   nested-objects

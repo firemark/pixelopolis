@@ -96,3 +96,4 @@ The final code should be like this:
 You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Hello-Cube
 
 On the next tutorial, I will describe about floor and textures: (:ref:`articles/tutorial/textures:Textures`)
+

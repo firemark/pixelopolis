@@ -41,7 +41,6 @@ HIDDEN_FILES = {
     'Tutorial/Textures': 'examples/tutorial/textures.scss',
     'Tutorial/Containers': 'examples/tutorial/containers.scss',
     'Tutorial/Nested-objects': 'examples/tutorial/nested-objects.scss',
-    'Tutorial/Particles': 'examples/tutorial/particles.scss',
 }
 
 FILES_TO_DICT = {
