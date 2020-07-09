@@ -1,24 +1,24 @@
 world {
     width: 1800;
     height: 800;
-    body: h-series.city-and-road;
+    body: y-series.city-and-road;
 }
 
-h-series.city-and-road {
-    body: cube.road, d-filler.city;
+y-series.city-and-road {
+    body: cube.road, z-filler.city;
     width: random(800, 1200);
     depth: random(800, 1200);
 }
 
-d-filler.city {
-    body: h-series.district;
+z-filler.city {
+    body: y-series.district;
     width: 100%;
     depth: 100%;
     padding: 100;
 }
 
-h-series.district {
-    body: cube.sidewalk, v-filler.city;
+y-series.district {
+    body: cube.sidewalk, x-filler.city;
     width: 100%;
     depth: random(100, 300);
 }
@@ -30,15 +30,15 @@ cube.road {
     height: 0;
 }
 
-v-filler.city {
-    body: d-filler.row;
+x-filler.city {
+    body: z-filler.row;
     width: 100%;
     depth: 100%;
     padding: 50;
     align: stretch;
 }
 
-d-filler.row {
+z-filler.row {
     body: choice(
       house.brick,
       house.clay,
@@ -64,7 +64,7 @@ house roof.pyramid { display: pyramid; }
 house walls { display: cube; }
 
 house {
-    display: h-series;
+    display: y-series;
     body: walls, choice(roof.triangle, roof.pyramid);
     width: random(50, 120);
     depth: random(50, 120);
@@ -108,11 +108,11 @@ house.wood walls {
 }
 
 house.roman {
-  	display: h-series;
-    body: d-series, roof.triangle;
+  	display: y-series;
+    body: z-series, roof.triangle;
 }
 
-house.roman > d-series {
+house.roman > z-series {
     body: roman-fillars, walls;
     width: 100%;
     depth: 100%;
@@ -120,7 +120,7 @@ house.roman > d-series {
     padding: 20;
 }
 
-house.roman > d-series > walls {
+house.roman > z-series > walls {
     width: 100%;
     depth: 90%;
     height: 100%;
@@ -133,7 +133,7 @@ house.roman > roof {
 }
 
 roman-fillars {
-    display: v-filler;
+    display: x-filler;
     body: roman-fillar;
     width: 100%;
     height: 100%;

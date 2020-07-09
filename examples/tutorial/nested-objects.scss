@@ -1,0 +1,102 @@
+world {
+    width: 500;
+    height: 500;
+    body: city;
+}
+
+city {
+    display: bsp-tree;
+    iterations: 4;
+    width: 400;
+    depth: 400;
+    min-width: 80;
+    min-height: 80;
+    padding: 1;
+    body: choice(
+        building-place.red-roof,
+        building-place.blue-roof);
+}
+
+building-place {
+    display: y-series;
+    width: 100%;
+    depth: 100%;
+    justify: center;
+    body:
+        choice(grass, mud),
+        choice(house, office);
+}
+
+grass, mud {
+    display: cube;
+    width: 100%;
+    depth: 100%;
+    height: 2;
+}
+
+grass { roof: wall.grass; }
+mud { roof: wall.mud; }
+
+house {
+    display: y-series;
+    body: body, roof;
+    width: 60;
+    depth: 60;
+
+    & > body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 50;
+        wall: wall.stone;
+    }
+
+    & > roof {
+        display: pyramid;
+        width: 100%;
+        depth: 100%;
+        height: 20;
+        roof: wall.stone;
+    }
+
+}
+
+office {
+    display: y-series;
+    body: body, roof;
+    width: 50;
+    depth: 80;
+
+    & > body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 80;
+        wall: wall.stone;
+    }
+
+    & > roof {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 5;
+        wall: wall.stone;
+        roof: wall.stone;
+    }
+
+}
+
+building-place.red-roof roof { roof: wall.red-roof; }
+building-place.blue-roof roof { roof: wall.blue-roof; }
+
+wall.grass      { texture: tex.green; }
+wall.mud        { texture: tex.brown; }
+wall.stone      { texture: tex.gray; }
+wall.red-roof   { texture: tex.red; }
+wall.blue-roof  { texture: tex.blue; }
+
+tex.gray        { color: #AAAAAA; }
+tex.red         { color: #9B111E; }
+tex.green       { color: #567D46; }
+tex.blue        { color: #008491; }
+tex.brown       { color: #70543E; }

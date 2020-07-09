@@ -17,7 +17,7 @@ tex.wood  { texture: "textures/nature-wall/wood.png"; }
 /* OBJS */
 
 objs {
-    display: v-series;
+    display: x-series;
     body: forest, cube.example;
     padding: 50;
 }
@@ -26,7 +26,7 @@ objs {
 /* TREES */
 
 forest {
-    display: d-filler;
+    display: z-filler;
     body: tree;
     depth: 500;
     width: 100;
@@ -35,7 +35,7 @@ forest {
 }
 
 tree {
-    display: h-series;
+    display: y-series;
     width: 100;
     depth: 100;
     justify: center;

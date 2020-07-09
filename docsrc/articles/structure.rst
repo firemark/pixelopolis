@@ -34,7 +34,7 @@ Elements
 World
 ^^^^^^^^^^
 
-First element in file, describes width, height and select first draw-obj as root
+First element in file, describes width, height and selects first draw-obj as root
 
 Draw-Obj
 ^^^^^^^^^^
@@ -61,7 +61,7 @@ Simple shape like a Cube or Dome. Basic shape has walls.
 Wall
 ^^^^^
 
-Image put on the side in basic shape. Wall can have floors, background and particles
+Rendered image put on the side in basic shape. Wall can have floors, background and particles
 
 Floor
 ^^^^^^

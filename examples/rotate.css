@@ -12,13 +12,13 @@ world {
 .rotate_200 { rotate: 200; }
 
 objs {
-    display: d-series;
+    display: z-series;
     body: cubes, series;
     padding: 200;
 }
 
 cubes {
-    display: v-series;
+    display: x-series;
     body:
         cube.rotate_0,
         cube.rotate_15,
@@ -30,7 +30,7 @@ cubes {
 }
 
 series {
-    display: v-series;
+    display: x-series;
     body:
         mini-series.rotate_0,
         mini-series.rotate_15,
@@ -40,7 +40,7 @@ series {
 }
 
 mini-series {
-    display: d-series;
+    display: z-series;
     body:
         building.rotate_0.grey,
         building.rotate_0,
@@ -50,7 +50,7 @@ mini-series {
 }
 
 building {
-    display: h-series;
+    display: y-series;
     body: cube, pyramid;
 }
 

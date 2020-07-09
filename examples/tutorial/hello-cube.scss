@@ -1,0 +1,21 @@
+world {
+    width: 400;
+    height: 400;
+    body: my-little-cube;
+}
+
+my-little-cube {
+    display: cube;
+    wall: wall.wall;
+    roof: wall.roof;
+
+    width: 100;
+    depth: 100;
+    height: 100;
+}
+
+wall.wall { texture: tex.salmon; }
+wall.roof { texture: tex.blue; }
+
+tex.salmon { color: #FA8072; }
+tex.blue { color: #3498DB; }

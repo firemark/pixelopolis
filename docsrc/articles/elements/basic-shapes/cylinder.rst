@@ -19,25 +19,24 @@ Properties
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of top disk.
+    Wall of top disk.
 
 .. css:property:: wall
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of side faces stretched vertically.
+    Wall of side faces stretched vertically.
 
 .. css:property:: sides
     :type: INTEGER
     :default: 8
 
-    number of cylinder sides. If have more sides then is more circular:
+    Number of cylinder sides. If have more sides then is more circular:
 
     .. list-table::
 
         * - .. figure:: images/cylinder-6-sides.png
                 :alt: cylinder 6 sides
-
                 sides: 6
 
           - .. figure:: images/cylinder-32-sides.png

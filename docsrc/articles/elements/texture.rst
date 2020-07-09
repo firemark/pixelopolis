@@ -12,7 +12,7 @@ Properties
 .. css:property:: color
     :type: #RGB | #RRGGBB | rgb(red, green, blue)
 
-    Just solid color. Fill whole wall or floor.
+    Just solid color. It fills whole wall or floor.
 
     :type #RRGGBB:
         Color in HEX format. More info: https://www.w3schools.com/css/css_colors_hex.asp

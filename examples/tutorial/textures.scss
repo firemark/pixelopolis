@@ -1,0 +1,44 @@
+world {
+    width: 400;
+    height: 400;
+    body: my-little-cube;
+}
+
+my-little-cube {
+    display: cube;
+    wall: wall.wall;
+    roof: wall.roof;
+
+    width: 100;
+    depth: 100;
+    height: 100;
+}
+
+wall.wall {
+    texture: tex.brick;
+    middle: floor.windows;
+    bottom: floor.doors-and-windows;
+    padding: 10;
+}
+
+wall.roof {
+    texture: tex.roof;
+}
+
+floor.windows {
+    middle: tex.window;
+    align: center;
+    height: 12;
+    padding: 10;
+}
+
+floor.doors-and-windows {
+    texture: tex.roof;
+    middle: choice(tex.window, tex.window, tex.door);
+    padding: 10;
+}
+
+tex.window { texture: "textures/wall-objs/window.png"; }
+tex.door { texture: "textures/wall-objs/door.png"; }
+tex.brick { texture: "textures/wall/brick.png"; }
+tex.roof { texture: "textures/wall/red-tile.png"; }

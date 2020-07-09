@@ -23,13 +23,13 @@ Properties
     :type: TEXTURE-SELECTOR
     :default: null
 
-    Links to texture as background.
+    Link to texture as background.
 
 .. css:property:: height
     :type: INTEGER
     :default: 0
 
-    Height of floor. If is not set, then try to borrow from background's height.
+    Height of floor. If it isn't set, then try to borrow from background's height.
 
 .. css:property:: padding
     :type: INTEGER
@@ -81,19 +81,19 @@ Properties
     :type: TEXTURE-SELECTOR
     :default: null
 
-    Links with texture selector.
+    Link to texture selector.
 
 .. css:property:: top
     :type: TEXTURE-SELECTOR
     :default: null
 
-    Links with texture selector and render only on left of floor. Ignores paddings and align
+    Link to texture selector and render only on left of floor. It ignores paddings and align.
 
 .. css:property:: bottom
     :type: TEXTURE-SELECTOR
     :default: null
 
-    Links with texture selector and render only on right of right. Ignores paddings and align
+    Links with texture selector and render only on right of right. It ignores paddings and align.
 
 Examples
 -------------

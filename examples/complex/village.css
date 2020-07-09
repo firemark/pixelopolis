@@ -5,7 +5,7 @@ world {
 }
 
 village-and-road {
-    display: h-series;
+    display: y-series;
     body: road, village;
     width: random(800, 1200);
     depth: random(800, 1200);
@@ -26,7 +26,7 @@ village {
     max-height: 400;
 
     district {
-        display: h-series;
+        display: y-series;
         body: sidewalk, city;
         width: 100%;
         depth: 100%;
@@ -70,7 +70,7 @@ city {
 }
 
 house {
-    display: h-series;
+    display: y-series;
     body:
         choice(zero-floor, first-floor),
         choice(null, first-floor),
@@ -195,7 +195,7 @@ forest {
 }
 
 tree {
-    display: h-series;
+    display: y-series;
     width: 100;
     depth: 100;
     justify: center;
@@ -241,7 +241,7 @@ market {
     edge: stall-row;
 
     stall-row {
-        display: v-filler;
+        display: x-filler;
         width: 100%;
         depth: 100%;
         body: stall;
@@ -261,7 +261,7 @@ market {
     }
 
     stall {
-        display: h-series;
+        display: y-series;
         body: sidewalk, ceil, body, roof;
         width: random(50, 80);
         depth: 40;

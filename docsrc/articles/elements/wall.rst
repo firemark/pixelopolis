@@ -24,37 +24,37 @@ Properties
     :type: TEXTURE-SELECTOR
     :default: null
 
-    links to texture as background
+    Link to texture as background
 
 .. css:property:: padding
     :type: INTEGER
     :default: 0
 
-    padding between middle floors.
+    Padding between middle floors.
 
 .. css:property:: middle
     :type: FLOOR-SELECTOR
     :default: null
 
-    Links with floor selector.
+    Link to floor selector.
 
 .. css:property:: top
     :type: FLOOR-SELECTOR
     :default: null
 
-    Links with floor selector and render only on top of wall. Ignores paddings and align
+    Link with floor selector and render only on top of wall. It ignores paddings and align.
 
 .. css:property:: bottom
     :type: FLOOR-SELECTOR
     :default: null
 
-    Links with floor selector and render only on bottom of wall. Ignores paddings and align
+    Link with floor selector and render only on bottom of wall. It ignores paddings and align.
 
 .. css:property:: points-texture
     :type: TEXTURE-SELECTOR
     :default: null
 
-    If is set, then draw randomically particles (with this texture) on the wall. This property required *points-density*.
+    If it is set, then draw randomically particles (with this texture) on the wall. This property required *points-density*.
 
 .. css:property:: points-density
     :type: PERCENTAGE

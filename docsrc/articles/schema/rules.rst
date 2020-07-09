@@ -1,10 +1,10 @@
 Rule
 =====
 
-Rules describe elements of scenario like which objects you want in scenario
-or which textures with options are you need.
+The rules describe elements of the scenario, which objects you want in the scenario
+or which textures with options are needed.
 
-Language is very easy - is based mostly on CSS language (we have a little exceptions like math operators or nested rules). In this language, we can link to another rules (in example, cube can link to wall rule who links to texture rule), and is enough to describe city-like scenarios.
+Language is very easy - is based mostly on CSS language (we have a little exceptions like math operators or nested rules). In this language, we can link to another rules (for example, cube can link to the wall rule which links to the texture rule), and is enough to describe city-like scenarios.
 
 The example of rule is below:
 
@@ -50,7 +50,7 @@ Just element name - can be everything - *cube*, *wall*, *texture*, *house*, *dis
 By Class
 ^^^^^^^^^^^^^^
 
-Element can have variations - in example, *house* can cave white or yellow wals, so we can write generic rule for *house* and write two rules for classes *.white* and *.yellow* to describe walls of our house.
+Element can have variations - for example, *house* can have white or yellow walls, so we can write generic rule for *house* and write two rules for classes *.white* and *.yellow* to describe walls of our house.
 
 Class starts with dot (like in CSS syntax).
 
@@ -59,7 +59,7 @@ Class starts with dot (like in CSS syntax).
     .white { /*...properties...*/ }
     .yellow { /*...properties...*/ }
 
-Rule can have many classes (remember about no-space between classes - it's neccesary!)
+Rule can have many classes (remember about no-space between classes - it's neccessary!)
 
 .. code-block:: scss
 
@@ -76,7 +76,7 @@ We can join with element's name:
 Parent operator
 ^^^^^^^^^^^^^^^^
 
-Containers can have a children - in example, we can have a district with N buildings, and we can have a *oldtown* district and *modern* district. So we can change shapes and textures of buldings depends of the parent element.
+Containers can have a children - for example, we can have a district with N buildings, and we can have a *oldtown* district and *modern* district. So we can change shapes and textures of buldings depends of the parent element.
 
 .. code-block:: scss
 
@@ -85,7 +85,7 @@ Containers can have a children - in example, we can have a district with N build
     parent > element.class { /*...properties...*/ }
     parent > el1 > el2 { /*...properties...*/ }
 
-With district example, rule should be as
+With district example, rule should be as:
 
 .. code-block:: scss
 
@@ -125,7 +125,7 @@ And one rule:
 
     parent grandchild { color: red; }
 
-Then grandchild should have red color.
+Then grandchild will have red color.
 
 
 Many Selectors
@@ -162,7 +162,7 @@ It’s equality this same with:
     }
 
 .. warning::
-    order of rules is neccesary, bottom rule overwrite properties from top rule, in example:
+    order of rules is important, bottom rule overwrite properties from top rule, for example:
 
     .. code-block:: scss
 
@@ -170,7 +170,7 @@ It’s equality this same with:
         wall.brick { color: red; }
         wall.grass { color: green; }
 
-    It’s equality this same with:
+    It is equal with:
 
     .. code-block:: scss
 
