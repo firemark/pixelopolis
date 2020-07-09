@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Rule &mdash; Pixelopolis 0.1.0 documentation</title>
+  <title>Rule &mdash; Pixelopolis 0.1.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -88,6 +88,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/index.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Schema</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Rule</a><ul>
@@ -174,9 +175,9 @@
             
   <div class="section" id="rule">
 <h1>Rule<a class="headerlink" href="#rule" title="Permalink to this headline">¶</a></h1>
-<p>Rules describe elements of scenario like which objects you want in scenario
-or which textures with options are you need.</p>
-<p>Language is very easy - is based mostly on CSS language (we have a little exceptions like math operators or nested rules). In this language, we can link to another rules (in example, cube can link to wall rule who links to texture rule), and is enough to describe city-like scenarios.</p>
+<p>The rules describe elements of the scenario, which objects you want in the scenario
+or which textures with options are needed.</p>
+<p>Language is very easy - is based mostly on CSS language (we have a little exceptions like math operators or nested rules). In this language, we can link to another rules (for example, cube can link to the wall rule which links to the texture rule), and is enough to describe city-like scenarios.</p>
 <p>The example of rule is below:</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">SELECTOR</span> <span class="p">{</span>
     <span class="nt">property</span><span class="nd">:</span> <span class="o">&lt;</span><span class="nt">VALUE</span><span class="o">&gt;;</span>
@@ -212,13 +213,13 @@ or which textures with options are you need.</p>
 </div>
 <div class="section" id="by-class">
 <h3>By Class<a class="headerlink" href="#by-class" title="Permalink to this headline">¶</a></h3>
-<p>Element can have variations - in example, <em>house</em> can cave white or yellow wals, so we can write generic rule for <em>house</em> and write two rules for classes <em>.white</em> and <em>.yellow</em> to describe walls of our house.</p>
+<p>Element can have variations - for example, <em>house</em> can have white or yellow walls, so we can write generic rule for <em>house</em> and write two rules for classes <em>.white</em> and <em>.yellow</em> to describe walls of our house.</p>
 <p>Class starts with dot (like in CSS syntax).</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nc">.white</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 <span class="nc">.yellow</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>Rule can have many classes (remember about no-space between classes - it’s neccesary!)</p>
+<p>Rule can have many classes (remember about no-space between classes - it’s neccessary!)</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nc">.class1.class2</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 </pre></div>
 </div>
@@ -230,14 +231,14 @@ or which textures with options are you need.</p>
 </div>
 <div class="section" id="parent-operator">
 <h3>Parent operator<a class="headerlink" href="#parent-operator" title="Permalink to this headline">¶</a></h3>
-<p>Containers can have a children - in example, we can have a district with N buildings, and we can have a <em>oldtown</em> district and <em>modern</em> district. So we can change shapes and textures of buldings depends of the parent element.</p>
+<p>Containers can have a children - for example, we can have a district with N buildings, and we can have a <em>oldtown</em> district and <em>modern</em> district. So we can change shapes and textures of buldings depends of the parent element.</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">element</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 <span class="nt">parent</span> <span class="o">&gt;</span> <span class="nc">.class</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 <span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">element</span><span class="nc">.class</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 <span class="nt">parent</span> <span class="o">&gt;</span> <span class="nt">el1</span> <span class="o">&gt;</span> <span class="nt">el2</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>With district example, rule should be as</p>
+<p>With district example, rule should be as:</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">district</span><span class="nc">.oldtown</span> <span class="o">&gt;</span> <span class="nt">building</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 <span class="nt">district</span><span class="nc">.modern</span> <span class="o">&gt;</span> <span class="nt">building</span> <span class="p">{</span> <span class="cm">/*...properties...*/</span> <span class="p">}</span>
 </pre></div>
@@ -263,7 +264,7 @@ or which textures with options are you need.</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">parent</span> <span class="nt">grandchild</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">red</span><span class="o">;</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>Then grandchild should have red color.</p>
+<p>Then grandchild will have red color.</p>
 </div>
 </div>
 <div class="section" id="many-selectors">
@@ -293,13 +294,13 @@ or which textures with options are you need.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>order of rules is neccesary, bottom rule overwrite properties from top rule, in example:</p>
+<p>order of rules is important, bottom rule overwrite properties from top rule, for example:</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.grass</span><span class="o">;</span> <span class="p">}</span>
 <span class="nt">wall</span><span class="nc">.brick</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">red</span><span class="o">;</span> <span class="p">}</span>
 <span class="nt">wall</span><span class="nc">.grass</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">green</span><span class="o">;</span> <span class="p">}</span>
 </pre></div>
 </div>
-<p>It’s equality this same with:</p>
+<p>It is equal with:</p>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">draw-obj</span> <span class="p">{</span> <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.brick.grass</span><span class="o">;</span> <span class="p">}</span>
 <span class="nt">wall</span><span class="nc">.brick.grass</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nt">green</span><span class="o">;</span> <span class="p">}</span>
 </pre></div>

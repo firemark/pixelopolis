@@ -19,14 +19,14 @@ Properties
     :type: SELECTOR-TO-WALL | null
     :default: null
 
-    wall of side faces stretched vertically.
+    Wall of side faces stretched vertically.
 
 
 .. css:property:: vertical-sides
     :type: INTEGER
     :default: 8
 
-    number of vertical sides:
+    Number of vertical sides:
 
     .. list-table::
 
@@ -42,7 +42,7 @@ Properties
     :type: INTEGER
     :default: 8
 
-    number of horizontal sides:
+    Number of horizontal sides:
 
     .. list-table::
 

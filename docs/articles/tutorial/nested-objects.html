@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Nested objects &mdash; Pixelopolis 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Structure" href="../structure.html" />
+    <link rel="prev" title="Containers" href="containers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hello-cube.html">Hello cube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="textures.html">Textures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers.html">Containers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Nested objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema/index.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../elements/index.html">Elements</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Nested objects</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/articles/tutorial/nested-objects.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="nested-objects">
+<h1>Nested objects<a class="headerlink" href="#nested-objects" title="Permalink to this headline">¶</a></h1>
+<p>In previous tutorials we learnt about containers. In this tutorial we will learn about BSP tree and nested objects. Will be cool, I promise you!</p>
+<p>Today we will create the city:</p>
+<img alt="../../_images/nested.png" src="../../_images/nested.png" />
+<p>Let’s start with first element, <em>city</em>. City has <em>bsp-tree</em> display - this draw-obj try to split area N times.</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>world {
+    width: 500;
+    height: 500;
+    body: city;
+}
+
+city {
+    display: bsp-tree;
+    iterations: 4;
+    width: 400;
+    depth: 400;
+    min-width: 80;
+    min-height: 80;
+    padding: 1;
+    body: choice(
+        building-place.red-roof,
+        building-place.blue-roof);
+}
+</pre></div>
+</div>
+<p>We decided to randomically choose building with red or blue roof in each splitted area.
+Now we need to declare <em>building-place</em>. It’s a <em>series</em> with two objects - plane (grass or mud) and building (house or office).</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">building-place</span> <span class="p">{</span>
+    <span class="k">display</span><span class="p">:</span> <span class="n">y-series</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="n">depth</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="n">justify</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span> <span class="c">/* new attribute - try to align in x-z axis */</span>
+    <span class="n">body</span><span class="p">:</span>
+        <span class="nf">choice</span><span class="p">(</span><span class="n">grass</span><span class="p">,</span> <span class="n">mud</span><span class="p">),</span>
+        <span class="nf">choice</span><span class="p">(</span><span class="n">house</span><span class="p">,</span> <span class="n">office</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ok, the two most neccesary elements are defined (hooray!). Let’s declare <em>grass</em> and <em>mud</em>.</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">grass</span><span class="o">,</span> <span class="nt">mud</span> <span class="p">{</span> <span class="c">/* we can declare more rules using comma */</span>
+    <span class="k">display</span><span class="p">:</span> <span class="n">cube</span><span class="p">;</span>
+    <span class="k">width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="n">depth</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
+    <span class="k">height</span><span class="p">:</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">grass</span> <span class="p">{</span> <span class="n">roof</span><span class="p">:</span> <span class="n">wall</span><span class="o">.</span><span class="n">grass</span><span class="p">;</span> <span class="p">}</span> <span class="c">/* one element can have more rules */</span>
+<span class="nt">mud</span> <span class="p">{</span> <span class="n">roof</span><span class="p">:</span> <span class="n">wall</span><span class="o">.</span><span class="n">mud</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Now we will declare the <em>house</em> with pyramid-shaped roof:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>house { /* very similiar to tower in previous tutorial. */
+    display: y-series;
+    body: body, roof;
+    width: 60;
+    depth: 60;
+
+    /* each rule can have nested rules */
+    /* &amp; is a reference to parent rule, */
+    /* in here `&amp; &gt; body` is equals to `house &gt; body` */
+    &amp; &gt; body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 50;
+        wall: wall.stone;
+    }
+
+    &amp; &gt; roof {
+        display: pyramid;
+        width: 100%;
+        depth: 100%;
+        height: 20;
+        roof: wall.stone;
+    }
+}
+</pre></div>
+</div>
+<p>… and office:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>office { /* very simillar to house, only difference is a roof and dimensions */
+    display: y-series;
+    body: body, roof;
+    width: 50;
+    depth: 80;
+
+    &amp; &gt; body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 80;
+        wall: wall.stone;
+    }
+
+    &amp; &gt; roof {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 5;
+        wall: wall.stone;
+        roof: wall.stone;
+    }
+}
+</pre></div>
+</div>
+<p>But we forget about red and blue roof!</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="c">/* here is a greedy parent - this parent is recurrently */</span>
+<span class="c">/* in here, child&#39;s element roof try to find building-place */</span>
+<span class="c">/* in parent&#39;s element, grandparent, grandgrandparent etc. */</span>
+<span class="nt">building-place</span><span class="p">.</span><span class="nc">red-roof</span> <span class="nt">roof</span> <span class="p">{</span> <span class="n">roof</span><span class="p">:</span> <span class="n">wall</span><span class="o">.</span><span class="kc">red</span><span class="o">-</span><span class="n">roof</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">building-place</span><span class="p">.</span><span class="nc">blue-roof</span> <span class="nt">roof</span> <span class="p">{</span> <span class="n">roof</span><span class="p">:</span> <span class="n">wall</span><span class="o">.</span><span class="kc">blue</span><span class="o">-</span><span class="n">roof</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>And finally we will declare wall and textures:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">wall</span><span class="p">.</span><span class="nc">stone</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="n">tex</span><span class="o">.</span><span class="kc">gray</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="p">.</span><span class="nc">gold</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="n">tex</span><span class="o">.</span><span class="kc">gold</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="nt">tex</span><span class="p">.</span><span class="nc">gray</span> <span class="p">{</span> <span class="k">color</span><span class="p">:</span> <span class="mh">#AAA</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">tex</span><span class="p">.</span><span class="nc">gold</span> <span class="p">{</span> <span class="k">color</span><span class="p">:</span> <span class="mh">#FF2</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>That’s all! The final code:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>world {
+    width: 500;
+    height: 500;
+    body: city;
+}
+
+city {
+    display: bsp-tree;
+    iterations: 4;
+    width: 400;
+    depth: 400;
+    min-width: 80;
+    min-height: 80;
+    padding: 1;
+    body: choice(
+        building-place.red-roof,
+        building-place.blue-roof);
+}
+
+building-place {
+    display: y-series;
+    width: 100%;
+    depth: 100%;
+    justify: center;
+    body:
+        choice(grass, mud),
+        choice(house, office);
+}
+
+grass, mud {
+    display: cube;
+    width: 100%;
+    depth: 100%;
+    height: 2;
+}
+
+grass { roof: wall.grass; }
+mud { roof: wall.mud; }
+
+house {
+    display: y-series;
+    body: body, roof;
+    width: 60;
+    depth: 60;
+
+    &amp; &gt; body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 50;
+        wall: wall.stone;
+    }
+
+    &amp; &gt; roof {
+        display: pyramid;
+        width: 100%;
+        depth: 100%;
+        height: 20;
+        roof: wall.stone;
+    }
+}
+
+office {
+    display: y-series;
+    body: body, roof;
+    width: 50;
+    depth: 80;
+
+    &amp; &gt; body {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 80;
+        wall: wall.stone;
+    }
+
+    &amp; &gt; roof {
+        display: cube;
+        width: 100%;
+        depth: 100%;
+        height: 5;
+        wall: wall.stone;
+        roof: wall.stone;
+    }
+}
+
+building-place.red-roof roof { roof: wall.red-roof; }
+building-place.blue-roof roof { roof: wall.blue-roof; }
+
+wall.grass      { texture: tex.green; }
+wall.mud        { texture: tex.brown; }
+wall.stone      { texture: tex.gray; }
+wall.red-roof   { texture: tex.red; }
+wall.blue-roof  { texture: tex.blue; }
+
+tex.gray        { color: #AAAAAA; }
+tex.red         { color: #9B111E; }
+tex.green       { color: #567D46; }
+tex.blue        { color: #008491; }
+tex.brown       { color: #70543E; }
+</pre></div>
+</div>
+<p>You can try it online: <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects">https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects</a></p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../structure.html" class="btn btn-neutral float-right" title="Structure" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="containers.html" class="btn btn-neutral float-left" title="Containers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Hello cube &mdash; Pixelopolis 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Textures" href="textures.html" />
+    <link rel="prev" title="Tutorial" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hello cube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="textures.html">Textures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers.html">Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nested-objects.html">Nested objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema/index.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../elements/index.html">Elements</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Hello cube</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/articles/tutorial/hello-cube.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="hello-cube">
+<h1>Hello cube<a class="headerlink" href="#hello-cube" title="Permalink to this headline">¶</a></h1>
+<p>In first time, It would be great to create own cube. Cubes have a ideal shape and are very friendly for environment and your friends!</p>
+<p>Our cube should be like as:</p>
+<img alt="../../_images/hello-cube.png" src="../../_images/hello-cube.png" />
+<p>The code is very simillar to CSS code - if don’t know about website styles, we have a super-shorcut syntax: (<a class="reference internal" href="../schema/index.html#schema"><span class="std std-ref">Schema</span></a>)</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">rule</span> <span class="p">{</span>
+    <span class="nt">param</span><span class="nd">:</span> <span class="nt">value</span><span class="o">;</span> <span class="o">/*</span> <span class="nt">comment</span> <span class="o">*/</span>
+<span class="p">}</span>
+
+<span class="nt">another-rule</span><span class="nc">.class-name</span> <span class="p">{</span>
+    <span class="nt">param</span><span class="nd">:</span> <span class="nt">value</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>So, at first we need to create <em>the world</em>, it’s a main rule who describe sizes and first rendered object:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span> <span class="p">{</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">400</span><span class="o">;</span>           <span class="o">/*</span> <span class="nt">width</span> <span class="nt">of</span> <span class="nt">image</span> <span class="nt">in</span> <span class="nt">pixels</span> <span class="o">*/</span>
+    <span class="nt">height</span><span class="nd">:</span> <span class="nt">400</span><span class="o">;</span>          <span class="o">/*</span> <span class="nt">height</span> <span class="nt">of</span> <span class="nt">image</span> <span class="nt">in</span> <span class="nt">pixels</span> <span class="o">*/</span>
+    <span class="nt">body</span><span class="nd">:</span> <span class="nt">my-little-cube</span><span class="o">;</span> <span class="o">/*</span> <span class="nt">first</span> <span class="nt">element</span> <span class="nt">to</span> <span class="nt">rendered</span> <span class="nt">at</span> <span class="nt">position</span> <span class="o">(</span><span class="nt">0</span><span class="o">,</span> <span class="nt">0</span><span class="o">,</span> <span class="nt">0</span><span class="o">)</span> <span class="o">*/</span>
+    <span class="o">/*</span> <span class="nt">yep</span> <span class="nt">-</span> <span class="nt">our</span> <span class="nt">world</span> <span class="nt">is</span> <span class="nt">3d</span> <span class="nt">rendered</span> <span class="nt">in</span> <span class="nt">Cavalier</span> <span class="nt">projection</span><span class="nc">.</span> <span class="o">*/</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When we have the world, then we can describe our cube:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">my-little-cube</span> <span class="p">{</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">cube</span><span class="o">;</span>   <span class="o">/*</span> <span class="nt">we</span> <span class="nt">need</span> <span class="nt">to</span> <span class="nt">write</span> <span class="nt">a</span> <span class="nt">type</span> <span class="nt">of</span> <span class="nt">draw-object</span><span class="nc">.</span> <span class="o">*/</span>
+    <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.wall</span><span class="o">;</span> <span class="o">/*</span> <span class="nt">link</span> <span class="nt">to</span> <span class="nt">another</span> <span class="nt">element</span> <span class="nt">which</span> <span class="nt">describes</span> <span class="nt">color</span> <span class="nt">of</span> <span class="nt">wall</span> <span class="o">*/</span>
+    <span class="nt">roof</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.roof</span><span class="o">;</span> <span class="o">/*</span> <span class="nt">this</span> <span class="nt">same</span> <span class="nt">like</span> <span class="nt">above</span><span class="o">,</span> <span class="nt">but</span> <span class="nt">describes</span> <span class="nt">color</span> <span class="nt">of</span> <span class="nt">roof</span> <span class="o">*/</span>
+
+    <span class="o">/*</span> <span class="nt">Size</span> <span class="nt">of</span> <span class="nt">cube</span> <span class="o">*/</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">depth</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">height</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Now, we need to describe wall-objects for walls and roof.</p>
+<p>Each wall can have texture (as background) and floor-objects (It will be about this in next step).</p>
+<p>For now, wall and roof will have named textures:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">wall</span><span class="nc">.wall</span> <span class="p">{</span> <span class="nt">texture</span><span class="nd">:</span> <span class="nt">tex</span><span class="nc">.salmon</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.roof</span> <span class="p">{</span> <span class="nt">texture</span><span class="nd">:</span> <span class="nt">tex</span><span class="nc">.blue</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>And we need textures of solid colors for wall-objects:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="cm">/* you can generate colors in hexs here:</span>
+<span class="cm">   ttps://htmlcolorcodes.com */</span>
+<span class="nt">tex</span><span class="nc">.salmon</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nn">#FA8072</span><span class="o">;</span> <span class="p">}</span> <span class="cm">/* nice salmon color */</span>
+<span class="nt">tex</span><span class="nc">.blue</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nn">#3498DB</span><span class="o">;</span> <span class="p">}</span>   <span class="cm">/* BLUE COLOR OMG! */</span>
+</pre></div>
+</div>
+<p>And done! Of course, it’s a your cube - you can change colors, and size. If you don’t like the cube (how could you?!), you can change shape (<a class="reference internal" href="../elements/basic-shapes/index.html#basic-shapes"><span class="std std-ref">Basic Shapes</span></a>)</p>
+<p>The final code should be like this:</p>
+<div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">world</span> <span class="p">{</span>
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">400</span><span class="o">;</span>
+    <span class="nt">height</span><span class="nd">:</span> <span class="nt">400</span><span class="o">;</span>
+    <span class="nt">body</span><span class="nd">:</span> <span class="nt">my-little-cube</span><span class="o">;</span>
+<span class="p">}</span>
+
+<span class="nt">my-little-cube</span> <span class="p">{</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">cube</span><span class="o">;</span>
+    <span class="nt">wall</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.wall</span><span class="o">;</span>
+    <span class="nt">roof</span><span class="nd">:</span> <span class="nt">wall</span><span class="nc">.roof</span><span class="o">;</span>
+
+    <span class="nt">width</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">depth</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+    <span class="nt">height</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
+<span class="p">}</span>
+
+<span class="nt">wall</span><span class="nc">.wall</span> <span class="p">{</span> <span class="nt">texture</span><span class="nd">:</span> <span class="nt">tex</span><span class="nc">.salmon</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">wall</span><span class="nc">.roof</span> <span class="p">{</span> <span class="nt">texture</span><span class="nd">:</span> <span class="nt">tex</span><span class="nc">.blue</span><span class="o">;</span> <span class="p">}</span>
+
+<span class="nt">tex</span><span class="nc">.salmon</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nn">#FA8072</span><span class="o">;</span> <span class="p">}</span>
+<span class="nt">tex</span><span class="nc">.blue</span> <span class="p">{</span> <span class="nt">color</span><span class="nd">:</span> <span class="nn">#3498DB</span><span class="o">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>You can try it online: <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Tutorial/Hello-Cube">https://pixelopolis.herokuapp.com/examples/Tutorial/Hello-Cube</a></p>
+<p>On the next tutorial, I will describe about floor and textures: (<a class="reference internal" href="textures.html#textures"><span class="std std-ref">Textures</span></a>)</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="textures.html" class="btn btn-neutral float-right" title="Textures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

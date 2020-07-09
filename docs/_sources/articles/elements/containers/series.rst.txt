@@ -10,35 +10,35 @@ Properties
 -----------
 
 .. css:property:: display
-    :type: v-series | d-series | h-series
+    :type: x-series | z-series | y-series
     :required:
 
-    :type v-series: series on X (width) axis
-    :type d-series: series on Y (depth) axis
-    :type h-series: series on Z (height) axis
+    :type x-series: series on X (width) axis
+    :type z-series: series on Y (depth) axis
+    :type y-series: series on Z (height) axis
 
     .. list-table::
 
         * - .. figure:: images/v-direction.png
                 :figclass: align-center
 
-                v-series
+                x-series
 
           - .. figure:: images/d-direction.png
                 :figclass: align-center
 
-                d-series
+                z-series
 
           - .. figure:: images/h-direction.png
                 :figclass: align-center
 
-                h-series
+                y-series
 
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ, SELECTOR-TO-DRAW-OBJ, …
     :default: null
 
-    Links to draw-objs
+    Link to draw-objs.
 
 .. css:property:: padding
     :type: INTEGER
@@ -52,7 +52,7 @@ Properties
 
     Align of objects in specified axis.
 
-    For this property is neccessary to set width/depth/height (depends on type)
+    For this property is neccessary to set width/depth/height (depends on type).
 
     .. list-table::
 
@@ -77,21 +77,21 @@ Properties
                 align: stretch
 
 
-.. css:property:: (v-series) justify
+.. css:property:: (x-series) justify
     :type: start | end | center | random
 
-.. css:property:: (d-series) justify
+.. css:property:: (z-series) justify
     :type: start | end | center | random
 
-.. css:property:: (h-series) justify
+.. css:property:: (y-series) justify
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start
 
     align of objects for the rest axis.
 
-    * for v-series: align of Y (depth) axis
-    * for d-series: align of X (width) axis
-    * for h-series: align of Y and X axis (with two arguments)
+    * for x-series: align of Y (depth) axis
+    * for z-series: align of X (width) axis
+    * for y-series: align of Y and X axis (with two arguments)
 
     .. list-table::
 
@@ -131,7 +131,7 @@ Example
 .. code-block:: scss
 
     row {
-        display: v-series;
+        display: x-series;
         depth: 100;
         align: center;
 

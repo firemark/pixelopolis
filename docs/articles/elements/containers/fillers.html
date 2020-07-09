@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Fillers &mdash; Pixelopolis 0.1.0 documentation</title>
+  <title>Fillers &mdash; Pixelopolis 0.1.2 documentation</title>
   
 
   
@@ -61,7 +61,7 @@
             
             
               <div class="version">
-                0.1.0
+                0.1.2
               </div>
             
           
@@ -88,6 +88,7 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/index.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../structure.html">Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../schema/index.html">Schema</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../index.html">Elements</a><ul class="current">
@@ -187,7 +188,7 @@
 <h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
 <dl class="css property">
 <dt>
-<em class="property">property </em><code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">v-filler | d-filler | h-filler;</code></dt>
+<em class="property">property </em><code class="sig-name descname">display</code><code class="sig-name descname">: </code><code class="sig-name descname">x-filler | z-filler | y-filler;</code></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 50%" />
@@ -200,13 +201,13 @@
 </tbody>
 </table>
 <dl class="field-list simple">
-<dt class="field-odd">Type v-filler</dt>
+<dt class="field-odd">Type x-filler</dt>
 <dd class="field-odd"><p>filler on X (width) axis</p>
 </dd>
-<dt class="field-even">Type d-filler</dt>
+<dt class="field-even">Type z-filler</dt>
 <dd class="field-even"><p>filler on Y (depth) axis</p>
 </dd>
-<dt class="field-odd">Type h-filler</dt>
+<dt class="field-odd">Type y-filler</dt>
 <dd class="field-odd"><p>filler on Z (height) axis</p>
 </dd>
 </dl>
@@ -219,17 +220,17 @@
 <tbody>
 <tr class="row-odd"><td><div class="align-center figure align-default" id="id1">
 <img alt="../../../_images/v-direction.png" src="../../../_images/v-direction.png" />
-<p class="caption"><span class="caption-text">v-series</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">x-series</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="align-center figure align-default" id="id2">
 <img alt="../../../_images/d-direction.png" src="../../../_images/d-direction.png" />
-<p class="caption"><span class="caption-text">d-series</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">z-series</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 <td><div class="align-center figure align-default" id="id3">
 <img alt="../../../_images/h-direction.png" src="../../../_images/h-direction.png" />
-<p class="caption"><span class="caption-text">h-series</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
+<p class="caption"><span class="caption-text">y-series</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 </td>
 </tr>
@@ -240,7 +241,7 @@
 <dl class="css property">
 <dt>
 <em class="property">property </em><code class="sig-name descname">body</code><code class="sig-name descname">: </code><code class="sig-name descname">SELECTOR-TO-DRAW-OBJ;</code></dt>
-<dd><p>Links to draw-obj to fill the specified space.</p>
+<dd><p>Link to draw-obj to fill the specified space.</p>
 </dd></dl>
 
 <dl class="css property">
@@ -274,7 +275,7 @@
 </tr>
 </tbody>
 </table>
-<p>align of objects in specified axis.</p>
+<p>Align of objects in specified axis.</p>
 <p>For this property is neccessary to set width/depth/height (depends on type)</p>
 <table class="docutils align-default">
 <colgroup>
@@ -310,17 +311,17 @@
 
 <dl class="css property">
 <dt>
-<em class="property">property </em><code class="sig-name descname">(v-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
+<em class="property">property </em><code class="sig-name descname">(x-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
 <dd></dd></dl>
 
 <dl class="css property">
 <dt>
-<em class="property">property </em><code class="sig-name descname">(d-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
+<em class="property">property </em><code class="sig-name descname">(z-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">start | end | center | random;</code></dt>
 <dd></dd></dl>
 
 <dl class="css property">
 <dt>
-<em class="property">property </em><code class="sig-name descname">(h-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">JUSTIFY-X, JUSTIFY-Y | center | random;</code></dt>
+<em class="property">property </em><code class="sig-name descname">(y-filler) justify</code><code class="sig-name descname">: </code><code class="sig-name descname">JUSTIFY-X, JUSTIFY-Y | center | random;</code></dt>
 <dd><table class="docutils align-default">
 <colgroup>
 <col style="width: 50%" />
@@ -332,11 +333,11 @@
 </tr>
 </tbody>
 </table>
-<p>align of objects for the rest axis.</p>
+<p>Align of objects for the rest axis.</p>
 <ul class="simple">
-<li><p>for v-filler: align of Y (depth) axis</p></li>
-<li><p>for d-filler: align of X (width) axis</p></li>
-<li><p>for h-filler: align of Y and X axis (with two arguments)</p></li>
+<li><p>for x-filler: align of Y (depth) axis</p></li>
+<li><p>for z-filler: align of X (width) axis</p></li>
+<li><p>for y-filler: align of Y and X axis (with two arguments)</p></li>
 </ul>
 <table class="docutils align-default">
 <colgroup>
@@ -385,7 +386,7 @@
 <div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-scss notranslate"><div class="highlight"><pre><span></span><span class="nt">row</span> <span class="p">{</span>
-    <span class="nt">display</span><span class="nd">:</span> <span class="nt">v-filler</span><span class="o">;</span>
+    <span class="nt">display</span><span class="nd">:</span> <span class="nt">x-filler</span><span class="o">;</span>
     <span class="nt">width</span><span class="nd">:</span> <span class="nt">300</span><span class="o">;</span>
     <span class="nt">depth</span><span class="nd">:</span> <span class="nt">100</span><span class="o">;</span>
     <span class="nt">align</span><span class="nd">:</span> <span class="nt">stretch</span><span class="o">;</span>

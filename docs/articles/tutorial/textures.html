@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Textures &mdash; Pixelopolis 0.1.2 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Containers" href="containers.html" />
+    <link rel="prev" title="Hello cube" href="hello-cube.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Pixelopolis
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.1.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="hello-cube.html">Hello cube</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Textures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="containers.html">Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nested-objects.html">Nested objects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../structure.html">Structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../schema/index.html">Schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../elements/index.html">Elements</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Pixelopolis</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+        
+      <li>Textures</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/articles/tutorial/textures.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="textures">
+<h1>Textures<a class="headerlink" href="#textures" title="Permalink to this headline">¶</a></h1>
+<p>In the previous tutorial (<a class="reference internal" href="hello-cube.html#hello-cube"><span class="std std-ref">Hello cube</span></a>) we made a pretty cube.
+But we know, solid colors is not enough. In this step, we try to add windows and doors.</p>
+<p>Our cube should be like as:</p>
+<img alt="../../_images/textures.png" src="../../_images/textures.png" />
+<p>In this step, we need code from previous tutorial (<a class="reference internal" href="hello-cube.html#hello-cube"><span class="std std-ref">Hello cube</span></a>), but instead solid colors, we need to change walls.</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">wall</span><span class="p">.</span><span class="nc">wall</span> <span class="p">{</span>
+    <span class="n">texture</span><span class="p">:</span> <span class="n">tex</span><span class="o">.</span><span class="n">brick</span><span class="p">;</span> <span class="c">/* background of wall will be brick */</span>
+    <span class="n">middle</span><span class="p">:</span> <span class="n">floor</span><span class="o">.</span><span class="n">windows</span><span class="p">;</span> <span class="c">/* floors will have windows */</span>
+    <span class="k">bottom</span><span class="p">:</span> <span class="n">floor</span><span class="o">.</span><span class="n">doors-and-windows</span><span class="p">;</span> <span class="c">/* zero floor will have doors and windows */</span>
+    <span class="k">padding</span><span class="p">:</span> <span class="mi">10</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nt">wall</span><span class="p">.</span><span class="nc">roof</span> <span class="p">{</span>
+    <span class="n">texture</span><span class="p">:</span> <span class="n">tex</span><span class="o">.</span><span class="n">roof</span><span class="p">;</span> <span class="c">/* just only roof texture */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ok, so we add floor-objects, so we need to add rules with floors:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>floor.windows {
+    middle: tex.window; /* texture of object */
+    align: center; /* all windows will be aligned to center */
+    height: 12; /* height of the floor */
+    padding: 10; /* padding between windows */
+}
+
+floor.doors-and-windows {
+    texture: tex.roof; /* floor can have a background too */
+    middle: choice(tex.window, tex.window, tex.door); /* this function randomly chooses window, window or door. */
+    padding: 10; /* padding between objects on the floor */
+}
+</pre></div>
+</div>
+<p>And we need to describe textures:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">tex</span><span class="p">.</span><span class="nc">window</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="s2">&quot;textures/wall-objs/window.png&quot;</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">tex</span><span class="p">.</span><span class="nc">door</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="s2">&quot;textures/wall-objs/door.png&quot;</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">tex</span><span class="p">.</span><span class="nc">brick</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="s2">&quot;textures/wall/brick.png&quot;</span><span class="p">;</span> <span class="p">}</span>
+<span class="nt">tex</span><span class="p">.</span><span class="nc">roof</span> <span class="p">{</span> <span class="n">texture</span><span class="p">:</span> <span class="s2">&quot;textures/wall/red-tile.png&quot;</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>And is enough to show better cube. The final code should be like this:</p>
+<div class="highlight-css notranslate"><div class="highlight"><pre><span></span>world {
+    width: 400;
+    height: 400;
+    body: my-little-cube;
+}
+
+my-little-cube {
+    display: cube;
+    wall: wall.wall;
+    roof: wall.roof;
+
+    width: 100;
+    depth: 100;
+    height: 100;
+}
+
+wall.wall {
+    texture: tex.brick;
+    middle: floor.windows;
+    bottom: floor.doors-and-windows;
+    padding: 10;
+}
+
+wall.roof {
+    texture: tex.roof;
+}
+
+floor.windows {
+    middle: tex.window;
+    align: center;
+    height: 12;
+    padding: 10;
+}
+
+floor.doors-and-windows {
+    texture: tex.roof;
+    middle: choice(tex.window, tex.window, tex.door);
+    padding: 10;
+}
+
+tex.window { texture: &quot;textures/wall-objs/window.png&quot;; }
+tex.door { texture: &quot;textures/wall-objs/door.png&quot;; }
+tex.brick { texture: &quot;textures/wall/brick.png&quot;; }
+tex.roof { texture: &quot;textures/wall/red-tile.png&quot;; }
+</pre></div>
+</div>
+<p>You can try it online: <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Tutorial/Textures">https://pixelopolis.herokuapp.com/examples/Tutorial/Textures</a></p>
+<p>On the next tutorial, I will describe about containers: (<a class="reference internal" href="containers.html#containers"><span class="std std-ref">Containers</span></a>)</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="containers.html" class="btn btn-neutral float-right" title="Containers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hello-cube.html" class="btn btn-neutral float-left" title="Hello cube" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Firemark
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

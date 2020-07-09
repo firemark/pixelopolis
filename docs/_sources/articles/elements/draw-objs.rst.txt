@@ -15,7 +15,7 @@ Each Draw Obj has a few primal properties:
     :type: DISPLAY-TYPE
     :default: element's name
 
-    type of draw-obj to howto display draw-obj (in ex. cube, triangle, dome, etc). Each display's type has another properties and another shape.
+    Type of draw-obj to howto display draw-obj (in ex. cube, triangle, dome, etc). Each display's type has another properties and another shape.
 
     If display is incorrect then draw-obj will not be rendered.
 
@@ -24,7 +24,7 @@ Each Draw Obj has a few primal properties:
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on X axis.
+    Size on X axis.
 
     :type INTEGER: width in pixels
     :type PERCENTAGE: relative width to the parent object
@@ -34,7 +34,7 @@ Each Draw Obj has a few primal properties:
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on Y axis.
+    Size on Y axis.
 
     :type INTEGER: depth in pixels
     :type PERCENTAGE: relative depth to the parent object
@@ -43,7 +43,7 @@ Each Draw Obj has a few primal properties:
     :type: INTEGER | PERCENTAGE
     :default: 0
 
-    size on Z axis.
+    Size on Z axis.
 
     :type INTEGER: height in pixels
     :type PERCENTAGE: relative height to the parent object
@@ -52,7 +52,7 @@ Each Draw Obj has a few primal properties:
     :type: INTEGER
     :default: 0
 
-    rotation values on X-Y axis
+    Rotation value on X-Y axis.
 
 
 Examples
