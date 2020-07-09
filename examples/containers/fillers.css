@@ -6,10 +6,10 @@ world {
 
 /* STRUCT */
 
-city { display: h-series; body: road, houses; }
-houses { display: d-filler; body: house; }
-house { display: h-series; body: columns, triangle.grey; }
-columns { display: v-filler; body: column; }
+city { display: y-series; body: road, houses; }
+houses { display: z-filler; body: house; }
+house { display: y-series; body: columns, triangle.grey; }
+columns { display: x-filler; body: column; }
 
 /* STYLES */
 

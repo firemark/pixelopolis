@@ -10,29 +10,29 @@ Properties
 -----------
 
 .. css:property:: display
-    :type: v-filler | d-filler | h-filler
+    :type: x-filler | z-filler | y-filler
     :required:
 
-    :type v-filler: filler on X (width) axis
-    :type d-filler: filler on Y (depth) axis
-    :type h-filler: filler on Z (height) axis
+    :type x-filler: filler on X (width) axis
+    :type z-filler: filler on Y (depth) axis
+    :type y-filler: filler on Z (height) axis
 
     .. list-table::
 
         * - .. figure:: images/v-direction.png
                 :figclass: align-center
 
-                v-series
+                x-series
 
           - .. figure:: images/d-direction.png
                 :figclass: align-center
 
-                d-series
+                z-series
 
           - .. figure:: images/h-direction.png
                 :figclass: align-center
 
-                h-series
+                y-series
 
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ
@@ -76,21 +76,21 @@ Properties
                 align: stretch
 
 
-.. css:property:: (v-filler) justify
+.. css:property:: (x-filler) justify
     :type: start | end | center | random
 
-.. css:property:: (d-filler) justify
+.. css:property:: (z-filler) justify
     :type: start | end | center | random
 
-.. css:property:: (h-filler) justify
+.. css:property:: (y-filler) justify
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start
 
     Align of objects for the rest axis.
 
-    * for v-filler: align of Y (depth) axis
-    * for d-filler: align of X (width) axis
-    * for h-filler: align of Y and X axis (with two arguments)
+    * for x-filler: align of Y (depth) axis
+    * for z-filler: align of X (width) axis
+    * for y-filler: align of Y and X axis (with two arguments)
 
     .. list-table::
 
@@ -130,7 +130,7 @@ Example
 .. code-block:: scss
 
     row {
-        display: v-filler;
+        display: x-filler;
         width: 300;
         depth: 100;
         align: stretch;

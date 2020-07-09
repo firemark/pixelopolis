@@ -77,7 +77,7 @@ Or used in containers as array of selector:
 
 .. code-block:: scss
 
-    v-series {
+    x-series {
         body:
             house.modern,
             house.old,

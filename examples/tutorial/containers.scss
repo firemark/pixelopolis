@@ -5,7 +5,7 @@ world {
 }
 
 city-wall {
-    display: v-series;
+    display: x-series;
     depth: 50;
     body:
       tower,
@@ -16,7 +16,7 @@ city-wall {
 }
 
 tower {
-    display: h-series;
+    display: y-series;
     body: body, roof;
     width: 50;
     depth: 100%;
@@ -39,7 +39,7 @@ tower > roof {
 }
 
 columns {
-    display: v-filler;
+    display: x-filler;
     body: column;
     width: random(50, 100);
     depth: 100%;
