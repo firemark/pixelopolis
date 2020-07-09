@@ -66,7 +66,7 @@ Ok, that's it! Now we need the columns. We will use `filler` here - this contain
 is very simillar to series, but try to fill all *width/depth/height*
 (depends on type of filler, *x*, *y* or *z*):
 
-.. code-block:: scss
+.. code-block:: css
 
     columns {
         display: x-filler;
@@ -169,3 +169,5 @@ That's all! The final code:
     tex.gold { color: #FF2; }
 
 You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Containers
+
+On the next tutorial, I will describe about nested objects: (:ref:`articles/tutorial/nested-objects:Nested Objects`)

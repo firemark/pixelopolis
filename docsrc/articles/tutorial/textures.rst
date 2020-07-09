@@ -11,7 +11,7 @@ Our cube should be like as:
 In this step, we need code from previous tutorial (:ref:`articles/tutorial/hello-cube:Hello Cube`), but instead solid colors, we need to change walls.
 
 
-.. code-block:: scss
+.. code-block:: css
 
     wall.wall {
         texture: tex.brick; /* background of wall will be brick */
@@ -26,7 +26,7 @@ In this step, we need code from previous tutorial (:ref:`articles/tutorial/hello
 
 Ok, so we add floor-objects, so we need to add rules with floors:
 
-.. code-block:: scss
+.. code-block:: css
 
     floor.windows {
         middle: tex.window; /* texture of object */
@@ -43,7 +43,7 @@ Ok, so we add floor-objects, so we need to add rules with floors:
 
 And we need to describe textures:
 
-.. code-block:: scss
+.. code-block:: css
 
     tex.window { texture: "textures/wall-objs/window.png"; }
     tex.door { texture: "textures/wall-objs/door.png"; }
@@ -52,7 +52,7 @@ And we need to describe textures:
 
 And is enough to show better cube. The final code should be like this:
 
-.. code-block:: scss
+.. code-block:: css
 
     world {
         width: 400;
@@ -100,3 +100,5 @@ And is enough to show better cube. The final code should be like this:
     tex.roof { texture: "textures/wall/red-tile.png"; }
 
 You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Textures
+
+On the next tutorial, I will describe about containers: (:ref:`articles/tutorial/containers:Containers`)
