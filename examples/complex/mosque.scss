@@ -5,7 +5,7 @@ world {
 }
 
 mosques-road {
-    display: y-series;
+    display: z-series;
     body: road, mosques;
     width: 600;
     depth: 600;
@@ -36,7 +36,7 @@ mosque-pack {
 }
 
 mosque {
-    display: y-series;
+    display: z-series;
     body: cube.base.deco, fence;
     justify: center;
     width: 200;
@@ -54,7 +54,7 @@ mosque > fence {
     corner: mini-tower;
 
     & > body {
-        display: y-series;
+        display: z-series;
         width: 80%;
         depth: 80%;
         body: cylinder.windows.full, dome.full, cylinder.windows.small, dome.small;
@@ -76,7 +76,7 @@ mosque > fence {
     }
 
     & > mini-tower {
-        display: y-series;
+        display: z-series;
         body: cube, pyramid;
         width: 100%;
         depth: 100%;
@@ -101,7 +101,7 @@ mosque > fence {
 }
 
 tower {
-    display: y-series;
+    display: z-series;
     body: cylinder.base.deco, cylinder.windows.full, dome.full;
     width: 50;
     depth: 50;

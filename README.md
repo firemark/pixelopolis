@@ -117,6 +117,7 @@ docker run -it --rm -p 8000:80 pixelopolis
 
 * Fixes in documentation
 * Fix README link in webapp
+* Rename fillers and series (again)
 
 ### 0.1.2
 

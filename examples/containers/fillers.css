@@ -6,9 +6,9 @@ world {
 
 /* STRUCT */
 
-city { display: y-series; body: road, houses; }
-houses { display: z-filler; body: house; }
-house { display: y-series; body: columns, triangle.grey; }
+city { display: z-series; body: road, houses; }
+houses { display: y-filler; body: house; }
+house { display: z-series; body: columns, triangle.grey; }
 columns { display: x-filler; body: column; }
 
 /* STYLES */
