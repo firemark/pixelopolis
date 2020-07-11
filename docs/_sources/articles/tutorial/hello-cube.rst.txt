@@ -1,7 +1,12 @@
 Hello cube
 ================
 
-In first time, It would be great to create own cube. Cubes have a ideal shape and are very friendly for environment and your friends!
+.. note::
+    Probably first step with pixeopolis could be hard without knownledge about structure.
+
+    To understand structure of pixelopolis, please read this document: :ref:`articles/structure:Structure`
+
+In first time, It would be great to create own cube. Cubes have an ideal shape and are very friendly for environment and your friends!
 
 Our cube should be like as:
 
@@ -19,7 +24,7 @@ The code is very simillar to CSS code - if don't know about website styles, we h
         param: value;
     }
 
-So, at first we need to create *the world*, it's a main rule who describe sizes and first rendered object:
+First, you need to create *the world*, the main rule describing sizes and the first rendered object:
 
 .. code-block:: scss
 
@@ -95,4 +100,4 @@ The final code should be like this:
 
 You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Hello-Cube
 
-On the next tutorial, I will describe about floor and textures: (:ref:`articles/tutorial/textures:Textures`)
+On the next tutorial, I will describe floor and textures: (:ref:`articles/tutorial/textures:Textures`)
