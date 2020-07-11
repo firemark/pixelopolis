@@ -9,7 +9,7 @@ Site with examples: https://pixelopolis.herokuapp.com
 
 ## Documentation
 
-http://firemark.github.io/pixelopolis/
+https://firemark.github.io/pixelopolis/
 
 ## Howto install
 ```bash
@@ -116,6 +116,7 @@ docker run -it --rm -p 8000:80 pixelopolis
 ### 0.1.3
 
 * Fixes in documentation
+* Fix README link in webapp
 
 ### 0.1.2
 
