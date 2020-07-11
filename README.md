@@ -113,10 +113,19 @@ docker run -it --rm -p 8000:80 pixelopolis
 
 ## Changelog
 
+### 0.1.3
+
+* Fixes in documentation
+
+### 0.1.2
+
+* Add tutorial
+* Rename fillers and series
+
 ### 0.1.1
 
 * Upgrade documentation
-* fixes in floor rendering
+* Fixes in floor rendering
 
 ### 0.1.0
 

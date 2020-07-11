@@ -3,9 +3,9 @@ Containers
 
 In previous tutorials we used only one cube. It's boring, because reality have more cubes.
 
-To add more Cubes (or any shapes) we are using containers. In this tutorial we use two containers: filler and series. So let's start!
+To add more Cubes (or any shapes), we need to use containers. In this tutorial we use two containers: filler and series. So let's start!
 
-Our goal is make a city walls with simple towers:
+Our goal is to create city walls with simple towers:
 
 .. image:: images/containers.png
 
