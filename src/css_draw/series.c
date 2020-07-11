@@ -10,12 +10,12 @@ static inline void _update_shift(
     struct SeriesObj *obj = draw_obj->obj;
 
     switch(obj->fill_direction) {
-        case VERTICAL_FILL:
+        case X_AXIS_FILL:
             vox[0] += shift * draw_obj->basic.cos_th;
             vox[1] += shift * draw_obj->basic.sin_th;
             _justify_d(vox, &child_obj->basic, &draw_obj->basic);
             break;
-        case DEPTH_FILL:
+        case Y_AXIS_FILL:
             // rotate 90°, reduced trygonometry functions
             vox[0] += shift * -draw_obj->basic.sin_th;
             vox[1] += shift * draw_obj->basic.cos_th;

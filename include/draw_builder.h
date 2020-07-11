@@ -14,7 +14,7 @@ enum DrawObjType {
     DRAW_OBJ_BOARD,
 };
 
-enum FillDirection { VERTICAL_FILL = 0, HORIZONTAL_FILL = 2, DEPTH_FILL = 1 };
+enum FillDirection { X_AXIS_FILL = 0, HORIZONTAL_FILL = 2, Y_AXIS_FILL = 1 };
 enum Justify { JUSTIFY_START, JUSTIFY_CENTER, JUSTIFY_END, JUSTIFY_RANDOM };
 
 struct BasicObj {

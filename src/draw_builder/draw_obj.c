@@ -34,12 +34,12 @@ struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper) {
     IF_NAME("union")            obj = builder_build_union(&inner_helper);
     IF_NAME("bsp-tree")         obj = builder_build_bsp_tree(&inner_helper);
     IF_NAME("square-fence")     obj = builder_build_square_fence(&inner_helper);
-    IF_NAME("x-series")         obj = builder_build_series(&inner_helper, VERTICAL_FILL);
-    IF_NAME("z-series")         obj = builder_build_series(&inner_helper, DEPTH_FILL);
-    IF_NAME("y-series")         obj = builder_build_series(&inner_helper, HORIZONTAL_FILL);
-    IF_NAME("x-filler")         obj = builder_build_filler(&inner_helper, VERTICAL_FILL);
-    IF_NAME("z-filler")         obj = builder_build_filler(&inner_helper, DEPTH_FILL);
-    IF_NAME("y-filler")         obj = builder_build_filler(&inner_helper, HORIZONTAL_FILL);
+    IF_NAME("x-series")         obj = builder_build_series(&inner_helper, X_AXIS_FILL);
+    IF_NAME("y-series")         obj = builder_build_series(&inner_helper, Y_AXIS_FILL);
+    IF_NAME("z-series")         obj = builder_build_series(&inner_helper, HORIZONTAL_FILL);
+    IF_NAME("x-filler")         obj = builder_build_filler(&inner_helper, X_AXIS_FILL);
+    IF_NAME("y-filler")         obj = builder_build_filler(&inner_helper, Y_AXIS_FILL);
+    IF_NAME("z-filler")         obj = builder_build_filler(&inner_helper, HORIZONTAL_FILL);
     else obj = NULL;
 #undef IF_NAME
 

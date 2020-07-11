@@ -40,7 +40,7 @@ Rule ``parent > child`` will be invoked when *child* element will be in *parent*
 .. code-block:: css
 
     tower {
-        display: y-series; /* series on Y axis */
+        display: z-series; /* series on Z (height) axis */
         body: body, roof; /* two elements */
         width: 50;
         depth: 100%;
@@ -120,7 +120,7 @@ That's all! The final code:
     }
 
     tower {
-        display: y-series;
+        display: z-series;
         body: body, roof;
         width: 50;
         depth: 100%;

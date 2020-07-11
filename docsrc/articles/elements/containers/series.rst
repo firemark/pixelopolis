@@ -10,12 +10,12 @@ Properties
 -----------
 
 .. css:property:: display
-    :type: x-series | z-series | y-series
+    :type: x-series | y-series | z-series
     :required:
 
     :type x-series: series on X (width) axis
-    :type z-series: series on Y (depth) axis
-    :type y-series: series on Z (height) axis
+    :type y-series: series on Y (depth) axis
+    :type z-series: series on Z (height) axis
 
     .. list-table::
 
@@ -27,12 +27,12 @@ Properties
           - .. figure:: images/d-direction.png
                 :figclass: align-center
 
-                z-series
+                y-series
 
           - .. figure:: images/h-direction.png
                 :figclass: align-center
 
-                y-series
+                z-series
 
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ, SELECTOR-TO-DRAW-OBJ, …
@@ -80,18 +80,18 @@ Properties
 .. css:property:: (x-series) justify
     :type: start | end | center | random
 
-.. css:property:: (z-series) justify
+.. css:property:: (y-series) justify
     :type: start | end | center | random
 
-.. css:property:: (y-series) justify
+.. css:property:: (z-series) justify
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start
 
     align of objects for the rest axis.
 
     * for x-series: align of Y (depth) axis
-    * for z-series: align of X (width) axis
-    * for y-series: align of Y and X axis (with two arguments)
+    * for y-series: align of X (width) axis
+    * for z-series: align of Y and X axis (with two arguments)
 
     .. list-table::
 

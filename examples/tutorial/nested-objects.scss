@@ -18,7 +18,7 @@ city {
 }
 
 building-place {
-    display: y-series;
+    display: z-series;
     width: 100%;
     depth: 100%;
     justify: center;
@@ -38,7 +38,7 @@ grass { roof: wall.grass; }
 mud { roof: wall.mud; }
 
 house {
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 60;
     depth: 60;
@@ -62,7 +62,7 @@ house {
 }
 
 office {
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 50;
     depth: 80;

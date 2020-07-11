@@ -4,11 +4,11 @@ $max-width: 1200;
 world {
     width: 1800;
     height: 800;
-    body: y-series.city-and-road;
+    body: z-series.city-and-road;
 }
 
-y-series.city-and-road {
-    body: cube.road | z-filler.city;
+z-series.city-and-road {
+    body: cube.road | y-filler.city;
     width: random($min-width, $max-width);
     depth: random($min-width, $max-width);
 }
@@ -18,13 +18,13 @@ y-series.city-and-road {
     depth: 100%;
 }
 
-z-filler.city {
+y-filler.city {
     @extend %full-rect;
-    body: y-series.district;
+    body: z-series.district;
     padding: 100;
 }
 
-y-series.district {
+z-series.district {
     body: cube.sidewalk | x-filler.city;
     width: 100%;
     depth: random(100, 300);
@@ -38,11 +38,11 @@ cube.road {
 
 x-filler.city {
     @extend %full-rect;
-    body: z-filler.row;
+    body: y-filler.row;
     padding: 50;
 }
 
-z-filler.row {
+y-filler.row {
     body: choice(
       house.brick,
       house.clay,
@@ -62,7 +62,7 @@ cube.sidewalk {
 }
 
 house {
-    display: y-series;
+    display: z-series;
     body: walls | choice(roof.triangle, roof.pyramid);
     width: random(50, 120);
     height: random(50, 120);
@@ -110,10 +110,10 @@ house {
     }
 
     &.roman {
-        display: y-series;
-        body: z-series | roof.triangle;
+        display: z-series;
+        body: y-series | roof.triangle;
 
-        &> z-series {
+        &> y-series {
             body: roman-fillars | walls;
             width: 100%;
             depth: 100%;

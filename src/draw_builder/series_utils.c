@@ -7,24 +7,24 @@
 
 void series_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x) {
     switch(fill_direction) {
-        case VERTICAL_FILL: basic->width += x; break;
+        case X_AXIS_FILL: basic->width += x; break;
         case HORIZONTAL_FILL: basic->height += x; break;
-        case DEPTH_FILL: basic->depth += x; break;
+        case Y_AXIS_FILL: basic->depth += x; break;
     }
 }
 
 int series_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction) {
     switch(fill_direction) {
-        case VERTICAL_FILL: return basic->width;
+        case X_AXIS_FILL: return basic->width;
         case HORIZONTAL_FILL: return basic->height;
-        case DEPTH_FILL: return basic->depth;
+        case Y_AXIS_FILL: return basic->depth;
         default: return 0;
     }
 }
 
 void series_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj *b, enum FillDirection fill_direction) {
     switch(fill_direction) {
-        case VERTICAL_FILL:
+        case X_AXIS_FILL:
             a->width += b->width;
             SET_GREATER(height);
             SET_GREATER(depth);
@@ -34,7 +34,7 @@ void series_add_max_basic_by_fill_direction(struct BasicObj *a, struct BasicObj 
             SET_GREATER(width);
             SET_GREATER(depth);
             break;
-        case DEPTH_FILL:
+        case Y_AXIS_FILL:
             a->depth += b->depth;
             SET_GREATER(width);
             SET_GREATER(height);

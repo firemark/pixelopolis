@@ -10,12 +10,12 @@ Properties
 -----------
 
 .. css:property:: display
-    :type: x-filler | z-filler | y-filler
+    :type: x-filler | y-filler | z-filler
     :required:
 
     :type x-filler: filler on X (width) axis
-    :type z-filler: filler on Y (depth) axis
-    :type y-filler: filler on Z (height) axis
+    :type y-filler: filler on Y (depth) axis
+    :type z-filler: filler on Z (height) axis
 
     .. list-table::
 
@@ -27,12 +27,12 @@ Properties
           - .. figure:: images/d-direction.png
                 :figclass: align-center
 
-                z-series
+                y-series
 
           - .. figure:: images/h-direction.png
                 :figclass: align-center
 
-                y-series
+                z-series
 
 .. css:property:: body
     :type: SELECTOR-TO-DRAW-OBJ
@@ -79,18 +79,18 @@ Properties
 .. css:property:: (x-filler) justify
     :type: start | end | center | random
 
-.. css:property:: (z-filler) justify
+.. css:property:: (y-filler) justify
     :type: start | end | center | random
 
-.. css:property:: (y-filler) justify
+.. css:property:: (z-filler) justify
     :type: JUSTIFY-X, JUSTIFY-Y | center | random
     :default: start
 
     Align of objects for the rest axis.
 
     * for x-filler: align of Y (depth) axis
-    * for z-filler: align of X (width) axis
-    * for y-filler: align of Y and X axis (with two arguments)
+    * for y-filler: align of X (width) axis
+    * for z-filler: align of Y and X axis (with two arguments)
 
     .. list-table::
 
