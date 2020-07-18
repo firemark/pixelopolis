@@ -242,4 +242,4 @@ That's all! The final code:
     tex.blue        { color: #008491; }
     tex.brown       { color: #70543E; }
 
-You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects
+You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-objects
