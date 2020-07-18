@@ -36,7 +36,7 @@ Now we need to declare *building-place*. It's a *series* with two objects - plan
 .. code-block:: css
 
     building-place {
-        display: y-series;
+        display: z-series;
         width: 100%;
         depth: 100%;
         justify: center; /* new attribute - try to align in x-z axis */
@@ -64,7 +64,7 @@ Now we will declare the *house* with pyramid-shaped roof:
 .. code-block:: css
 
     house { /* very similiar to tower in previous tutorial. */
-        display: y-series;
+        display: z-series;
         body: body, roof;
         width: 60;
         depth: 60;
@@ -94,7 +94,7 @@ Now we will declare the *house* with pyramid-shaped roof:
 .. code-block:: css
 
     office { /* very simillar to house, only difference is a roof and dimensions */
-        display: y-series;
+        display: z-series;
         body: body, roof;
         width: 50;
         depth: 80;
@@ -161,7 +161,7 @@ That's all! The final code:
     }
 
     building-place {
-        display: y-series;
+        display: z-series;
         width: 100%;
         depth: 100%;
         justify: center;
@@ -181,7 +181,7 @@ That's all! The final code:
     mud { roof: wall.mud; }
 
     house {
-        display: y-series;
+        display: z-series;
         body: body, roof;
         width: 60;
         depth: 60;
@@ -204,7 +204,7 @@ That's all! The final code:
     }
 
     office {
-        display: y-series;
+        display: z-series;
         body: body, roof;
         width: 50;
         depth: 80;
@@ -242,4 +242,4 @@ That's all! The final code:
     tex.blue        { color: #008491; }
     tex.brown       { color: #70543E; }
 
-You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects
+You can try it online: https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-objects

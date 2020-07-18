@@ -193,7 +193,7 @@ city {
 <p>We decided to randomically choose building with red or blue roof in each splitted area.
 Now we need to declare <em>building-place</em>. It’s a <em>series</em> with two objects - plane (grass or mud) and building (house or office).</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span><span class="nt">building-place</span> <span class="p">{</span>
-    <span class="k">display</span><span class="p">:</span> <span class="n">y-series</span><span class="p">;</span>
+    <span class="k">display</span><span class="p">:</span> <span class="n">z-series</span><span class="p">;</span>
     <span class="k">width</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
     <span class="n">depth</span><span class="p">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
     <span class="n">justify</span><span class="p">:</span> <span class="kc">center</span><span class="p">;</span> <span class="c">/* new attribute - try to align in x-z axis */</span>
@@ -217,7 +217,7 @@ Now we need to declare <em>building-place</em>. It’s a <em>series</em> with tw
 </div>
 <p>Now we will declare the <em>house</em> with pyramid-shaped roof:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span>house { /* very similiar to tower in previous tutorial. */
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 60;
     depth: 60;
@@ -245,7 +245,7 @@ Now we need to declare <em>building-place</em>. It’s a <em>series</em> with tw
 </div>
 <p>… and office:</p>
 <div class="highlight-css notranslate"><div class="highlight"><pre><span></span>office { /* very simillar to house, only difference is a roof and dimensions */
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 50;
     depth: 80;
@@ -306,7 +306,7 @@ city {
 }
 
 building-place {
-    display: y-series;
+    display: z-series;
     width: 100%;
     depth: 100%;
     justify: center;
@@ -326,7 +326,7 @@ grass { roof: wall.grass; }
 mud { roof: wall.mud; }
 
 house {
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 60;
     depth: 60;
@@ -349,7 +349,7 @@ house {
 }
 
 office {
-    display: y-series;
+    display: z-series;
     body: body, roof;
     width: 50;
     depth: 80;
@@ -388,7 +388,7 @@ tex.blue        { color: #008491; }
 tex.brown       { color: #70543E; }
 </pre></div>
 </div>
-<p>You can try it online: <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects">https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-Objects</a></p>
+<p>You can try it online: <a class="reference external" href="https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-objects">https://pixelopolis.herokuapp.com/examples/Tutorial/Nested-objects</a></p>
 </div>
 
 
