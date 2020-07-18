@@ -1,4 +1,7 @@
 # Pixelopolis
+
+[![Gitter](https://badges.gitter.im/pixelopolis-dev/community.svg)](https://gitter.im/pixelopolis-dev/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 ![oblique](./docsrc/images/oblique.png)
 
 Transform CSS-like into pixelart city in oblique (yet) projection.
@@ -10,6 +13,10 @@ Site with examples: https://pixelopolis.herokuapp.com
 ## Documentation
 
 https://firemark.github.io/pixelopolis/
+
+## Gitter chat
+
+https://gitter.im/pixelopolis-dev/community
 
 ## Howto install
 ```bash
