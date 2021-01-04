@@ -82,3 +82,131 @@ struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width
 
     return img;
 }
+
+static inline void _scale_fill_pixel(
+        struct FlatImage* img, struct rgb* color,
+        const int x, const int y, const size_t n) {
+    int i, j;
+    int width = img->width;
+    for (i = 0; i < n; i++) {
+        size_t coord = (y * n + i) * width + x * n;
+        for(j = 0; j < n; j++) {
+            img->buffer[coord + j] = *color;
+        }
+    }
+}
+
+static inline struct FlatImage* _scaleN(struct FlatImage* img, const size_t n) {
+    int old_width = img->width;
+    int old_height = img->height;
+    int width = old_width * n;
+    int height = old_height * n;
+    struct FlatImage* new_img = flat_image_create(width, height);
+    int x, y;
+    for(y = 0; y < old_height; y++) {
+        for (x = 0; x < old_width; x++) {
+            size_t old_coord = y * old_width + x;
+            struct rgb* color = &img->buffer[old_coord];
+            _scale_fill_pixel(new_img, color, x, y, n);
+        }
+    }
+    return new_img;
+}
+
+static inline struct FlatImage* _scale_mame2(struct FlatImage* img) {
+    int old_width = img->width;
+    int old_height = img->height;
+    int width = old_width * 2;
+    int height = old_height * 2;
+    struct FlatImage* new_img = flat_image_create(width, height);
+    int x, y;
+    // each pixel except border
+    for(y = 1; y < old_height - 1; y++) {
+        for (x = 1; x < old_width - 1; x++) {
+            // https://en.wikipedia.org/wiki/Pixel-art_scaling_algorithms#2×SaI
+            struct rgb pp = img->buffer[(y + 0) * old_width + x + 0];
+            struct rgb pa = img->buffer[(y + 1) * old_width + x + 0];
+            struct rgb pb = img->buffer[(y + 0) * old_width + x + 1];
+            struct rgb pc = img->buffer[(y + 0) * old_width + x - 1];
+            struct rgb pd = img->buffer[(y - 1) * old_width + x + 0];
+#define CMP_COLOR(pa, pb) (pa.r == pb.r && pa.g == pb.g && pa.b == pb.b)
+            char ab_eq = CMP_COLOR(pa, pb);
+            char ac_eq = CMP_COLOR(pa, pc);
+            char cd_eq = CMP_COLOR(pc, pd);
+            char bd_eq = CMP_COLOR(pb, pd);
+#undef CMP_COLOR
+            struct rgb p1 = ac_eq && !cd_eq && !ab_eq ? pa : pp;
+            struct rgb p2 = ab_eq && !ac_eq && !bd_eq ? pb : pp;
+            struct rgb p3 = cd_eq && !bd_eq && !ac_eq ? pc : pp;
+            struct rgb p4 = bd_eq && !ab_eq && !cd_eq ? pd : pp;
+
+            int yy = y * 2;
+            int xx = x * 2;
+
+            new_img->buffer[(yy + 0) * width + xx + 0] = p1;
+            new_img->buffer[(yy + 1) * width + xx + 0] = p2;
+            new_img->buffer[(yy + 0) * width + xx + 1] = p3;
+            new_img->buffer[(yy + 1) * width + xx + 1] = p4;
+        }
+    }
+
+    // bottom border
+    for(x = 0; x < old_width ; x++) {
+        size_t old_coord = x;
+        struct rgb* color = &img->buffer[old_coord];
+        _scale_fill_pixel(new_img, color, x, 0, 2);
+    }
+
+    // top border
+    for(x = 0; x < old_width; x++) {
+        size_t old_coord = (old_height - 1) * old_width + x;
+        struct rgb* color = &img->buffer[old_coord];
+        _scale_fill_pixel(new_img, color, x, old_height - 1, 2);
+    }
+
+    // left border
+    for(y = 0; y < old_height; y++) {
+        size_t old_coord = y * old_width;
+        struct rgb* color = &img->buffer[old_coord];
+        _scale_fill_pixel(new_img, color, 0, y, 2);
+    }
+
+    // right border
+    for(y = 0; y < old_height; y++) {
+        size_t old_coord = y * old_width + old_width - 1;
+        struct rgb* color = &img->buffer[old_coord];
+        _scale_fill_pixel(new_img, color, old_width - 1, y, 2);
+    }
+
+    return new_img;
+}
+
+static inline struct FlatImage* _scale_mame4(struct FlatImage* img) {
+    struct FlatImage* mame2 = _scale_mame2(img);
+    struct FlatImage* mame4 = _scale_mame2(mame2);
+    flat_image_destroy(mame2);
+    return mame4;
+}
+
+
+struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgorithm filter) {
+    if (!img) return NULL;
+    switch (filter) {
+        case FILTER_ALGORITHM_SCALE2: return _scaleN(img, 2);
+        case FILTER_ALGORITHM_SCALE3: return _scaleN(img, 3);
+        case FILTER_ALGORITHM_MAME2: return _scale_mame2(img);
+        case FILTER_ALGORITHM_MAME4: return _scale_mame4(img);
+        default: return NULL; // don't filter
+    }
+}
+
+struct FlatImage* css_draw_tex(struct DrawTexInfo* info) {
+    struct FlatImage* img = css_draw_make_texture_from_wall(
+        info->wall,
+        info->size[0],
+        info->size[1]);
+    struct FlatImage* filtered_img = css_draw_scale_image(img, info->filter);
+    if (!filtered_img) return img;
+    flat_image_destroy(img);
+    return filtered_img;
+}

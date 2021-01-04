@@ -1,5 +1,4 @@
 #include "_css_draw.h"
-#include "css_draw.h"
 
 static inline void _update_shift(
         int vox[3],
@@ -42,6 +41,7 @@ void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info)
         struct DrawInfo draw_info = {
             .img=inner_info->img,
             .vox=vox,
+            .filter=inner_info->filter,
         };
         draw_component(pair->obj, &draw_info, NULL);
     }

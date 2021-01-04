@@ -18,7 +18,12 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     const int wh = width / 2;
     const int dh = depth / 2;
 
-    struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, roof->width, roof->height);
+    struct DrawTexInfo tex_info = {
+        .wall=roof,
+        .size={roof->width, roof->height},
+        .filter=inner_info->filter,
+    };
+    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
 
     const int total_length = roof->width;
     int iter_length = 0;
@@ -47,7 +52,7 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
 
         iter_length = next_length;
     }
-    free(img_to_draw);
+    flat_image_destroy(img_to_draw);
 }
 
 

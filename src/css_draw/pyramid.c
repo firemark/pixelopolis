@@ -16,8 +16,13 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
 
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(south_wall_obj, south_wall_obj->width, south_wall_obj->height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(south_wall_obj, south_wall_obj->width, south_wall_obj->height);
+        struct DrawTexInfo tex_info = {
+            .wall=south_wall_obj,
+            .size={south_wall_obj->width, south_wall_obj->height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw_first = css_draw_tex(&tex_info);
+        struct FlatImage* img_to_draw_second = css_draw_tex(&tex_info);
 
         int voxes_first[9] = {
             0 , 0 , 0,
@@ -36,14 +41,19 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first, south_wall_obj);
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second, south_wall_obj);
 
-        free(img_to_draw_first);
-        free(img_to_draw_second);
+        flat_image_destroy(img_to_draw_first);
+        flat_image_destroy(img_to_draw_second);
     }
 
     struct WallObj *east_wall_obj = obj->east_wall;
     if (east_wall_obj && width > 0 && height > 0) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(east_wall_obj, east_wall_obj->width, east_wall_obj->height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(east_wall_obj, east_wall_obj->width, east_wall_obj->height);
+        struct DrawTexInfo tex_info = {
+            .wall=east_wall_obj,
+            .size={east_wall_obj->width, east_wall_obj->height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw_first = css_draw_tex(&tex_info);
+        struct FlatImage* img_to_draw_second = css_draw_tex(&tex_info);
 
         int voxes_first[9] = {
             0 , 0 , 0,
@@ -62,8 +72,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_second, voxes_second, east_wall_obj);
         css_base_draw_wide_triangle(inner_info->img, img_to_draw_first, voxes_first, east_wall_obj);
 
-        free(img_to_draw_first);
-        free(img_to_draw_second);
+        flat_image_destroy(img_to_draw_first);
+        flat_image_destroy(img_to_draw_second);
     }
 
     int *out_vox = inner_info->out_vox;

@@ -3,18 +3,27 @@
 
 #include "img.h"
 #include "draw_builder.h"
+#include "css_draw.h"
 
 struct DrawInnerInfo {
     struct image *img;
     int *vox;
     int *out_vox;
+    enum TexFilterAlgorithm filter;
+};
+
+struct DrawTexInfo {
+    struct WallObj *wall;
+    int size[2];
+    enum TexFilterAlgorithm filter;
 };
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
 
-
 // texture
 struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width, int height);
+struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgorithm filter);
+struct FlatImage* css_draw_tex(struct DrawTexInfo* info);
 
 // base
 void css_base_draw_plane(

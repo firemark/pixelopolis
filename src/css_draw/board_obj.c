@@ -21,6 +21,7 @@ void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
         struct DrawInfo draw_info = {
             .img=inner_info->img,
             .vox=vox,
+            .filter=inner_info->filter,
         };
 
         draw_component(child->obj, &draw_info, NULL);

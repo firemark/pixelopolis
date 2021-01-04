@@ -28,10 +28,15 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         };
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
-        struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(east_wall_obj, depth, height);
+        struct DrawTexInfo tex_info = {
+            .wall=east_wall_obj,
+            .size={depth, height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes_first, east_wall_obj);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes_second, east_wall_obj);
-        free(img_to_draw);
+        flat_image_destroy(img_to_draw);
     }
 
     struct WallObj *south_wall_obj = obj->south_wall;
@@ -50,10 +55,15 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         };
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
-        struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(south_wall_obj, width, height);
+        struct DrawTexInfo tex_info = {
+            .wall=south_wall_obj,
+            .size={width, height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes_first, south_wall_obj);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes_second, south_wall_obj);
-        free(img_to_draw);
+        flat_image_destroy(img_to_draw);
     }
 
     struct WallObj *roof_obj = obj->roof;
@@ -65,10 +75,14 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             w, d, h,
         };
         _transform(voxes, vox, &draw_obj->basic, 4);
-
-        struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof_obj, width, depth);
+        struct DrawTexInfo tex_info = {
+            .wall=roof_obj,
+            .size={width, depth},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
         css_base_draw_plane(inner_info->img, img_to_draw, voxes, roof_obj);
-        free(img_to_draw);
+        flat_image_destroy(img_to_draw);
     }
 
     int *out_vox = inner_info->out_vox;

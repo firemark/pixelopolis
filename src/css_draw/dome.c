@@ -20,7 +20,12 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     const int dh = depth / 2;
     const int h2 = height * 2;
 
-    struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(roof, roof->width, roof->height);
+    struct DrawTexInfo tex_info = {
+        .wall=roof,
+        .size={roof->width, roof->height},
+        .filter=inner_info->filter,
+    };
+    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
 
     int w_length = 0;
     struct AngleIter angle_iter;
@@ -66,7 +71,7 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         }
         w_length = nw_length;
     }
-    free(img_to_draw);
+    flat_image_destroy(img_to_draw);
 }
 
 

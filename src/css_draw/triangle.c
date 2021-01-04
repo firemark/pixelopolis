@@ -21,15 +21,25 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
             wh, 0, h,
         };
         _transform(voxes, vox, &draw_obj->basic, 3);
-        struct FlatImage* img_to_draw = css_draw_make_texture_from_wall(wall_obj, width, height);
+        struct DrawTexInfo tex_info = {
+            .wall=wall_obj,
+            .size={width, height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
         css_base_draw_wide_triangle(inner_info->img, img_to_draw, voxes, wall_obj);
-        free(img_to_draw);
+        flat_image_destroy(img_to_draw);
     }
 
     struct WallObj *roof_obj = obj->roof;
     if (roof_obj) {
-        struct FlatImage* img_to_draw_first = css_draw_make_texture_from_wall(roof_obj, roof_obj->width, roof_obj->height);
-        struct FlatImage* img_to_draw_second = css_draw_make_texture_from_wall(roof_obj, roof_obj->width, roof_obj->height);
+        struct DrawTexInfo tex_info = {
+            .wall=roof_obj,
+            .size={roof_obj->width, roof_obj->height},
+            .filter=inner_info->filter,
+        };
+        struct FlatImage* img_to_draw_first = css_draw_tex(&tex_info);
+        struct FlatImage* img_to_draw_second = css_draw_tex(&tex_info);
 
         int voxes_first[12] = {
             w , 0, 0,
@@ -50,8 +60,8 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
         css_base_draw_plane(inner_info->img, img_to_draw_first, voxes_first, roof_obj);
         css_base_draw_plane(inner_info->img, img_to_draw_second, voxes_second, roof_obj);
 
-        free(img_to_draw_first);
-        free(img_to_draw_second);
+        flat_image_destroy(img_to_draw_first);
+        flat_image_destroy(img_to_draw_second);
     }
 
     int *out_vox = inner_info->out_vox;

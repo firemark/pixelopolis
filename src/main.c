@@ -19,12 +19,27 @@ struct Rule* find_world(struct Program *program) {
 }
 
 struct image* make_img(struct Rule *world) {
-    int *width_ptr = css_find_number_prop(world, "width");
-    int *height_ptr = css_find_number_prop(world, "height");
+    int* width_ptr = css_find_number_prop(world, "width");
+    int* height_ptr = css_find_number_prop(world, "height");
     int width = width_ptr ? *width_ptr : 400;
     int height = height_ptr ? *height_ptr : 400;
 
     return create_black_image(width, height);
+}
+
+enum TexFilterAlgorithm get_filter_algorithm(struct Rule *world) {
+    char* name = css_find_selector_element_prop(world, "texture-filter");
+    enum TexFilterAlgorithm filter = FILTER_ALGORITHM_NONE;
+    if (!name) return filter;
+#define IFMATCH(s) else if (!strcmp(name, s))
+    IFMATCH("none") filter = FILTER_ALGORITHM_NONE;
+    IFMATCH("scale2") filter = FILTER_ALGORITHM_SCALE2;
+    IFMATCH("scale3") filter = FILTER_ALGORITHM_SCALE3;
+    IFMATCH("mame2") filter = FILTER_ALGORITHM_MAME2;
+    IFMATCH("mame4") filter = FILTER_ALGORITHM_MAME4;
+#undef IFMATCH
+    free(name);
+    return filter;
 }
 
 void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
@@ -32,6 +47,7 @@ void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
     struct DrawInfo draw_info = {
         .img=img,
         .vox=vox,
+        .filter=get_filter_algorithm(world),
     };
     draw_component(draw_obj, &draw_info, NULL);
 }

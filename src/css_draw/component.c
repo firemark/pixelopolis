@@ -1,11 +1,11 @@
 #include "_css_draw.h"
-#include "css_draw.h"
 
 void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vox) {
     struct DrawInnerInfo inner_info = {
         .img=info->img,
         .vox=info->vox,
         .out_vox=out_vox,
+        .filter=info->filter,
     };
 
     switch(draw_obj->type) {
