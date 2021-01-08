@@ -31,10 +31,8 @@ endif
 all: make_dirs yacc pixelopolis
 
 make_dirs:
-	mkdir out -p
-	mkdir out/draw_builder/ -p
-	mkdir out/css_draw/ -p
-	mkdir tests_out -p
+	mkdir -p out/{draw_builder,css_draw}/
+	mkdir -p tests_out
 
 yacc: src/css.y src/css.l
 	$(YACC) src/css.y --defines=include/css.y.h --output=src/css.y.c -v

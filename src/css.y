@@ -491,7 +491,7 @@ args:
         | args COMMA sp obj { append_to_array($1, OBJS_SIZE, $4); $$ = $1; }
         ;
 
-sp: SPACE | sp SPACE | %empty;
+sp: SPACE | sp SPACE | /* empty */;
 %%
 
 struct Program* css_parse_file(char* filename) {
