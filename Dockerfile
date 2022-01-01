@@ -7,18 +7,26 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     bison \
     flex \
+    cmake \
     python3-pip
 
 RUN pip3 install flask
 
 RUN mkdir /code
-ADD Makefile /code/Makefile
-ADD src /code/src
-ADD include /code/include
-
 WORKDIR /code
-ARG VERSION=PROD
-RUN make all
+
+ADD CMakeLists.txt CMakeLists.txt
+ADD src src
+ADD include include
+
+RUN mkdir out \
+    && cd out \
+    && cmake -DCMAKE_BUILD_TYPE=Release .. \
+    && make \
+    && make install \
+    && mv pixelopolis .. \
+    && cd .. \
+    && rm -rf out
 
 ADD textures /code/textures
 ADD examples /code/examples

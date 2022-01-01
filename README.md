@@ -20,8 +20,8 @@ https://gitter.im/pixelopolis-dev/community
 
 ## Howto install
 ```bash
-make all
-./pixelopolis
+./build.sh
+./out/pixelopolis
 ```
 
 ### Docker version (with web panel)
