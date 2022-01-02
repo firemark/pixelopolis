@@ -1,46 +1,60 @@
 cmake_minimum_required(VERSION 3.0)
-project(Pixelopolis C)
+project(Pixelopolis VERSION 0.1.4 LANGUAGES C)
 
 find_package(PNG REQUIRED)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 
-file(GLOB_RECURSE SRC_FILES src/*.c)
+function(main)
+    file(GLOB_RECURSE SRC_FILES src/*.c)
+    compile_parser(PARSER_FILES)
+    add_lib(SRC_FILES ${SRC_FILES} ${PARSER_FILES})
+    add_exec(Pixelopolis pixelopolis)
+endfunction()
 
-set(
-    LIBS
-    ${PNG_LIBRARY}
-    ${FLEX_LIBRARIES}
-    m
-)
-set(
-    INCLUDE_DIRS
-    include
-    ${PNG_INCLUDE_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+function(add_lib)
+    cmake_parse_arguments(
+        PARSE_ARGV 0 ARGS "" "" "SRC_FILES")
+    add_library(PixelopolisLib SHARED ${ARGS_SRC_FILES})
+    set_target_properties(PixelopolisLib PROPERTIES
+        OUTPUT_NAME pixelopolis
+        VERSION ${PROJECT_VERSION}
+    )
+    target_compile_definitions(PixelopolisLib PUBLIC pixelopolis)
+    target_include_directories(PixelopolisLib
+        PUBLIC include
+        PRIVATE lib_include
+        ${PNG_INCLUDE_DIR}
+        ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    target_link_libraries(PixelopolisLib
+        ${PNG_LIBRARY}
+        ${FLEX_LIBRARIES}
+        m
+    )
+    install(TARGETS PixelopolisLib)
+endfunction()
 
-bison_target(
-    PixelopolisParser
-    src/css.y
-    ${CMAKE_CURRENT_BINARY_DIR}/css_parser.c
-    DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/css.y.h
-)
-flex_target(
-    PixelopolisScanner
-    src/css.l
-    ${CMAKE_CURRENT_BINARY_DIR}/css_scanner.c
-)
-add_flex_bison_dependency(PixelopolisScanner PixelopolisParser)
+function(add_exec TARGET NAME)
+    add_executable(${TARGET} main/${NAME}.c)
+    target_include_directories(${TARGET} PUBLIC include)
+    target_link_libraries(${TARGET} PUBLIC PixelopolisLib)
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${NAME})
+    install(TARGETS ${TARGET} DESTINATION bin)
+endfunction()
 
-add_executable(
-    Pixelopolis
-    ${SRC_FILES}
-    ${BISON_PixelopolisParser_OUTPUTS}
-    ${FLEX_PixelopolisScanner_OUTPUTS}
-)
-target_include_directories(Pixelopolis PUBLIC ${INCLUDE_DIRS})
-target_link_libraries(Pixelopolis ${LIBS})
-set_target_properties(Pixelopolis PROPERTIES OUTPUT_NAME pixelopolis)
+function(compile_parser SRC_FILES)
+    bison_target(PixelopolisParser
+        src/css.y
+        ${CMAKE_CURRENT_BINARY_DIR}/css_parser.c
+        DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/css.y.h
+    )
+    flex_target(PixelopolisScanner
+        src/css.l
+        ${CMAKE_CURRENT_BINARY_DIR}/css_scanner.c
+    )
+    add_flex_bison_dependency(PixelopolisScanner PixelopolisParser)
+    set(${SRC_FILES} ${BISON_PixelopolisParser_OUTPUTS} ${FLEX_PixelopolisScanner_OUTPUTS} PARENT_SCOPE)
+endfunction()
 
-install(TARGETS Pixelopolis DESTINATION bin)
+main()
