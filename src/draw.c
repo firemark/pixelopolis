@@ -2,32 +2,33 @@
 #include <draw.h>
 #include <math.h>
 
-
-static inline int _get_index(const struct image* img, const int cor[2]) {
-    const int x = cor[0];
-    const int y = img->height - 1 - cor[1];
-    return y * img->width + x;
-}
-
-static inline int _flat_image_get_index(const struct FlatImage* img, const int cor[2]) {
-    const int x = cor[0];
-    const int y = img->height - 1 - cor[1];
-    return y * img->width + x;
+#define _GET_INDEX(img, cor) ((img->height - 1 - cor[1]) * img->width + cor[0])
+#define _GUARD_INDEX(index, img) \
+    if (index < 0 || index >= img->width * img->height) {\
+        index = 0; \
+    }
+#define _GUARD_COR(cor, img) {\
+    if (cor[0] < 0) return; \
+    if (cor[0] >= img->width) return; \
+    if (cor[1] < 0) return; \
+    if (cor[1] >= img->height) return; \
 }
 
 struct RoyalPixel get_pixel(const struct image* img, const int cor[2]) {
-    int index = _get_index(img, cor);
-    if (index < 0 || index >= img->width * img->height) {
-        index = 0;
-    }
+    int index = _GET_INDEX(img, cor);
+    _GUARD_INDEX(index, img);
     return img->buffer[index];
 }
 
 struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]) {
-    int index = _flat_image_get_index(img, cor);
-    if (index < 0 || index >= img->width * img->height) {
-        index = 0;
-    }
+    int index = _GET_INDEX(img, cor);
+    _GUARD_INDEX(index, img);
+    return img->buffer[index];
+}
+
+unsigned char one_chan_image_get_pixel(const struct OneChanImage* img, const int cor[2]) {
+    int index = _GET_INDEX(img, cor);
+    _GUARD_INDEX(index, img);
     return img->buffer[index];
 }
 
@@ -73,20 +74,23 @@ struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor
 }
 
 static void _set_pixel(struct image* img, const int cor[2], const struct RoyalPixel color) {
-    const int index = _get_index(img, cor);
+    const int index = _GET_INDEX(img, cor);
     img->buffer[index] = color;
 }
 
 void set_pixel(struct image* img, const int cor[2], const struct RoyalPixel color) {
-    if (cor[0] < 0) return;
-    if (cor[0] >= img->width) return;
-    if (cor[1] < 0) return;
-    if (cor[1] >= img->height) return;
-    const int index = _get_index(img, cor);
+    _GUARD_COR(cor, img);
+    const int index = _GET_INDEX(img, cor);
     const struct RoyalPixel old_color = img->buffer[index];
     if (old_color.zindex >= color.zindex) {
         img->buffer[index] = color;
     }
+}
+
+void flat_image_set_pixel(const struct FlatImage* img, const int cor[2], const struct rgb color) {
+    _GUARD_COR(cor, img);
+    const int index = _GET_INDEX(img, cor);
+    img->buffer[index] = color;
 }
 
 static inline struct RoyalPixel _mix_color(const struct RoyalPixel a, const struct RoyalPixel b, const double ratio) {

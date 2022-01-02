@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Problem with creating file %s\n", out_filename);
         return -1;
     }
-    write_png_file(fp, img);
+    write_png_file_from_image(fp, img);
     fclose(fp);
     builder_stop();
     css_eval_stop();

@@ -19,3 +19,9 @@ struct FlatImage {
     int width;
     int height;
 };
+
+struct OneChanImage {
+    unsigned char* buffer;
+    int width;
+    int height;
+};
