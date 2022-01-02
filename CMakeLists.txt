@@ -10,6 +10,7 @@ function(main)
     compile_parser(PARSER_FILES)
     add_lib(SRC_FILES ${SRC_FILES} ${PARSER_FILES})
     add_exec(Pixelopolis pixelopolis)
+    add_exec(PixelopolisNormalMap pixelopolis-normal-map)
 endfunction()
 
 function(add_lib)
