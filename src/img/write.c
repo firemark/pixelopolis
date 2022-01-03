@@ -47,17 +47,16 @@ static int _png_write_init(FILE* fp, png_structp* png_ptr_ptr, png_infop* info_p
     }
     png_init_io(png_ptr, fp);
 
-    /* write header */
     if (setjmp(png_jmpbuf(png_ptr))) {
         fprintf(stderr, "Problem with creating PNG Header\n");
         return 1;
     }
-
     png_set_IHDR(png_ptr, info_ptr, width, height,
                  8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
                  PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
-    /* write bytes */
+    png_write_info(png_ptr, info_ptr);
+
     if (setjmp(png_jmpbuf(png_ptr))) {
         fprintf(stderr, "Problem with writing file\n");
         return 1;
@@ -72,7 +71,6 @@ static int _png_write_end(png_structp png_ptr, png_infop info_ptr) {
         code = 1;
         goto finalize;
     }
-
     png_write_end(png_ptr, NULL);
 
     finalize:
