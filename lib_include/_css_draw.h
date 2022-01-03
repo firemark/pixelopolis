@@ -4,6 +4,7 @@
 #include "img.h"
 #include "draw_builder.h"
 #include "css_draw.h"
+#include "draw_poly.h"
 
 struct DrawInnerInfo {
     struct image *img;
@@ -27,19 +28,16 @@ struct FlatImage* css_draw_tex(struct DrawTexInfo* info);
 
 // base
 void css_base_draw_plane(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo *info,
         const int voxes[12],
         const struct WallObj* wall);
 void css_base_draw_plane_with_uv(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo *info,
         const int voxes[12],
         const int uv[4],
         const struct WallObj* wall);
 void css_base_draw_wide_triangle(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo *info,
         const int voxes[9],
         const struct WallObj* wall);
 void css_base_draw_poly_random(

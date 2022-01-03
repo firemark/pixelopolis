@@ -34,9 +34,13 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawI
             .size={wall->width, height},
             .filter=inner_info->filter,
         };
-        struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
-        css_base_draw_plane(inner_info->img, img_to_draw, voxes, wall);
-        flat_image_destroy(img_to_draw);
+        struct PolyInfo poly_info = {
+            .img=inner_info->img,
+            .img_to_draw=css_draw_tex(&tex_info),
+            .normal_map=NULL,
+        };
+        css_base_draw_plane(&poly_info, voxes, wall);
+        poly_info_clear(&poly_info);
     }
 }
 
@@ -56,7 +60,11 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct Draw
         .size={total_length, height},
         .filter=inner_info->filter,
     };
-    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
+    struct PolyInfo poly_info = {
+        .img=inner_info->img,
+        .img_to_draw=css_draw_tex(&tex_info),
+        .normal_map=NULL,
+    };
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
@@ -72,11 +80,11 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct Draw
             next_length, height,
         };
 
-        css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv, wall);
+        css_base_draw_plane_with_uv(&poly_info, voxes, uv, wall);
         iter_length = next_length;
     }
 
-    flat_image_destroy(img_to_draw);
+    poly_info_clear(&poly_info);
 }
 
 static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
@@ -95,7 +103,11 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
         .size={roof->width, roof->height},
         .filter=inner_info->filter,
     };
-    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
+    struct PolyInfo poly_info = {
+        .img=inner_info->img,
+        .img_to_draw=css_draw_tex(&tex_info),
+        .normal_map=NULL,
+    };
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
@@ -113,10 +125,10 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
             wh, dh,
         };
 
-        draw_poly(inner_info->img, img_to_draw, voxes, uv);
+        draw_poly(&poly_info, voxes, uv);
         css_base_draw_poly_random(inner_info->img, voxes, roof);
     }
-    flat_image_destroy(img_to_draw);
+    poly_info_clear(&poly_info);
 }
 
 

@@ -3,6 +3,7 @@
 
 #include "draw_poly.h"
 #include "draw.h"
+#include "img/destroy.h"
 
 #define SIN_PROJECTION 0.7071067811865476
 #define COS_PROJECTION 0.7071067811865476
@@ -28,11 +29,15 @@ struct h_poly_diffx {
 };
 
 struct h_fill_space {
-    struct image *img;
+    struct PolyInfo *info;
     double *normal;
-    struct FlatImage *img_to_draw;
     struct h_poly *left, *right;
 };
+
+void poly_info_clear(struct PolyInfo* info) {
+    if (info->img_to_draw) flat_image_destroy(info->img_to_draw);
+    if (info->normal_map) float_image_destroy(info->normal_map);
+}
 
 static inline void _compute_normal(double normal[3], const int voxes[9]) {
     int vox_a[3] = {
@@ -111,17 +116,23 @@ static inline void _diff_h_poly_with_x(
 }
 
 static inline void _putpixel(
-        struct image *img,
-        const struct FlatImage *img_to_draw,
+        struct PolyInfo* info,
         const int img_cor[2],
         const int uv_cor[2],
         const int zindex,
-        const double normal[3]) {
-    struct rgb color = flat_image_get_pixel(img_to_draw, uv_cor);
+        double normal[3]) {
+    struct rgb color = flat_image_get_pixel(info->img_to_draw, uv_cor);
 
     if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
         // 0xFF00FF color reversed for transparency color
         return;
+    }
+
+    if (info->normal_map) {
+        struct xyz current_normal = float_image_get_pixel(info->normal_map, uv_cor);
+        normal[0] *= current_normal.x;
+        normal[1] *= current_normal.y;
+        normal[2] *= current_normal.z;
     }
 
     // primitive shading
@@ -130,21 +141,22 @@ static inline void _putpixel(
     color.b *= fmin(1.0, 1.0 - normal[0] * 0.35);
 
     struct RoyalPixel royal_color = {
-        .r=color.r, .g=color.g, .b=color.b,
+        .r=color.r,
+        .g=color.g,
+        .b=color.b,
         .zindex=zindex,
     };
 
-    set_pixel(img, img_cor, royal_color);
+    set_pixel(info->img, img_cor, royal_color);
 }
 
 static inline void _putpixel_with_h_poly(
-        struct h_fill_space *helper,
-        struct h_poly *point) {
+        struct h_fill_space* helper,
+        struct h_poly* point) {
     const int uv_cor[2] = { round(point->u), round(point->v) };
     const int img_cor[2] = { round(point->x), round(point->y) };
     _putpixel(
-        helper->img,
-        helper->img_to_draw,
+        helper->info,
         img_cor,
         uv_cor,
         (int)point->zindex,
@@ -215,14 +227,13 @@ void _projection_poly_oblique(const int *vox, const int *uv, struct h_poly *vec)
 void (*_projection_poly)(const int*, const int*, struct h_poly*) = _projection_poly_oblique;
 
 void draw_poly(
-        struct image *img, 
-        const struct FlatImage *img_to_draw,
-        const int voxes[9], 
+        struct PolyInfo* info,
+        const int voxes[9],
         const int uv[6]) {
     struct h_poly at, bt, ct;
     struct h_poly *a, *b, *c;
 
-    a = &at; // fuck malloc, use stock!
+    a = &at; // fuck malloc, use stack!
     b = &bt;
     c = &ct;
 
@@ -254,9 +265,8 @@ void draw_poly(
     _compute_normal(normal, voxes);
 
     struct h_fill_space helper = {
-        .img=img,
+        .info=info,
         .normal=normal,
-        .img_to_draw=img_to_draw,
         .left=&left,
         .right=&right,
     };
@@ -289,13 +299,19 @@ void draw_sprite(
     const int x = vec.x;
     const int y = vec.y;
 
+    struct PolyInfo info = {
+        .img=img,
+        .img_to_draw=img_to_draw,
+        .normal_map=NULL,
+    };
+
     for(uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
         for(uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
             const int img_cor[2] = {
                 uv_cor[0] + x + x_offset,
                 uv_cor[1] + y + y_offset,
             };
-            _putpixel(img, img_to_draw, img_cor, uv_cor, zindex, normal);
+            _putpixel(&info, img_cor, uv_cor, zindex, normal);
         }
     }
 }

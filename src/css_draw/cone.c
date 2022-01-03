@@ -23,7 +23,12 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         .size={roof->width, roof->height},
         .filter=inner_info->filter,
     };
-    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
+
+    struct PolyInfo poly_info = {
+        .img=inner_info->img,
+        .img_to_draw=css_draw_tex(&tex_info),
+        .normal_map=NULL,
+    };
 
     const int total_length = roof->width;
     int iter_length = 0;
@@ -47,12 +52,12 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
             (iter_length + next_length) / 2, roof->height,
         };
 
-        draw_poly(inner_info->img, img_to_draw, voxes, uv);
+        draw_poly(&poly_info, voxes, uv);
         css_base_draw_poly_random(inner_info->img, voxes, roof);
 
         iter_length = next_length;
     }
-    flat_image_destroy(img_to_draw);
+    poly_info_clear(&poly_info);
 }
 
 

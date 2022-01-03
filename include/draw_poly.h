@@ -1,9 +1,14 @@
 #pragma once
 #include <basic.h>
 
+struct PolyInfo {
+    struct image *img;
+    struct FlatImage *img_to_draw;
+    struct FloatImage *normal_map;
+};
+
 void draw_poly(
-        struct image *img,
-        const struct FlatImage *img_to_draw,
+        struct PolyInfo* info,
         const int voxes[9],
         const int uv[6]);
 
@@ -18,3 +23,5 @@ void draw_sprites_in_random_position_in_poly(
         const struct FlatImage *img_to_draw,
         const int voxes[3],
         const int density);
+
+void poly_info_clear(struct PolyInfo* info);

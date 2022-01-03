@@ -12,8 +12,7 @@ void css_base_draw_poly_random(struct image* img, const int voxes[9], const stru
 }
 
 void css_base_draw_plane(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo* info,
         const int voxes[12],
         const struct WallObj* wall) {
     /* 2---3
@@ -22,19 +21,18 @@ void css_base_draw_plane(
      * |/ A|
      * 0---1
      */
-    const int w = img_to_draw->width;
-    const int h = img_to_draw->height;
+    const int w = info->img_to_draw->width;
+    const int h = info->img_to_draw->height;
     const int uv[4] = {
         0, 0,
         w, h,
     };
 
-    css_base_draw_plane_with_uv(img, img_to_draw, voxes, uv, wall);
+    css_base_draw_plane_with_uv(info, voxes, uv, wall);
 }
 
 void css_base_draw_plane_with_uv(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo* info,
         const int voxes[12],
         const int uv[4],
         const struct WallObj* wall) {
@@ -68,16 +66,15 @@ void css_base_draw_plane_with_uv(
         sx, sy, // 0
     };
 
-    draw_poly(img, img_to_draw, voxes_a, uv_a);
-    draw_poly(img, img_to_draw, voxes_b, uv_b);
+    draw_poly(info, voxes_a, uv_a);
+    draw_poly(info, voxes_b, uv_b);
 
-    css_base_draw_poly_random(img, voxes_a, wall);
-    css_base_draw_poly_random(img, voxes_b, wall);
+    css_base_draw_poly_random(info->img, voxes_a, wall);
+    css_base_draw_poly_random(info->img, voxes_b, wall);
 }
 
 void css_base_draw_wide_triangle(
-        struct image* img,
-        const struct FlatImage* img_to_draw,
+        struct PolyInfo* info,
         const int voxes[9],
         const struct WallObj* wall) {
     /*     2
@@ -86,14 +83,14 @@ void css_base_draw_wide_triangle(
      *  /     \
      * 0-------1
      */
-    const int h = img_to_draw->height;
-    const int w = img_to_draw->width;
+    const int h = info->img_to_draw->height;
+    const int w = info->img_to_draw->width;
     const int wh = w / 2;
     const int uv[6] = {
         0, 0, // 0
         w, 0, // 1
         wh, h // 2
     };
-    draw_poly(img, img_to_draw, voxes, uv);
-    css_base_draw_poly_random(img, voxes, wall);
+    draw_poly(info, voxes, uv);
+    css_base_draw_poly_random(info->img, voxes, wall);
 }

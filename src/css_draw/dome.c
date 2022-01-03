@@ -25,7 +25,11 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         .size={roof->width, roof->height},
         .filter=inner_info->filter,
     };
-    struct FlatImage* img_to_draw = css_draw_tex(&tex_info);
+    struct PolyInfo poly_info = {
+        .img=inner_info->img,
+        .img_to_draw=css_draw_tex(&tex_info),
+        .normal_map=NULL,
+    };
 
     int w_length = 0;
     struct AngleIter angle_iter;
@@ -66,12 +70,12 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
                 nw_length, nh_length,
             };
 
-            css_base_draw_plane_with_uv(inner_info->img, img_to_draw, voxes, uv, roof);
+            css_base_draw_plane_with_uv(&poly_info, voxes, uv, roof);
             h_length = nh_length;
         }
         w_length = nw_length;
     }
-    flat_image_destroy(img_to_draw);
+    poly_info_clear(&poly_info);
 }
 
 
