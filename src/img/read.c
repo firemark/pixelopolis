@@ -12,18 +12,18 @@ struct PngReadMeta {
     int pixel_size;
 };
 
-#define _FROM_PNG(png_ptr, img, meta, img_type, pixel_type, ...) {\
+#define _FROM_PNG(png_ptr, img, meta, type, ...) {\
     int x, y; \
-    img = malloc(sizeof(img_type)); \
+    img = malloc(sizeof(IMG_TYPE_##type)); \
     img->width = meta.width; \
     img->height = meta.height; \
-    img->buffer = malloc(meta.width * meta.height * sizeof(struct FlatImage)); \
-    png_bytep row = malloc(meta.pixel_size * img->width * sizeof(png_byte)); \
+    img->buffer = malloc(meta.width * meta.height * sizeof(PIXEL_TYPE_##type)); \
+    png_bytep row = malloc(meta.pixel_size * meta.width * sizeof(png_byte)); \
     for (y=0; y < meta.height; y++) { \
         png_bytep png_pixel = row; \
         png_read_row(png_ptr, png_pixel, NULL); \
         for(x=0; x < meta.width; x++) { \
-            const pixel_type pixel = __VA_ARGS__; \
+            const PIXEL_TYPE_##type pixel = __VA_ARGS__; \
             png_pixel += meta.pixel_size; \
             img->buffer[y * meta.width + x] = pixel; \
         } \
@@ -111,22 +111,22 @@ static void _read_png_end(FILE* fp, png_structp png_ptr, png_infop info_ptr) {
     }
 }
 
-#define _READ_PNG(filename, img_type, pixel_type, ...) {\
+#define _READ_PNG(filename, type, ...) {\
     png_structp png_ptr; \
     png_infop info_ptr; \
     struct PngReadMeta meta; \
     FILE* fp = NULL; \
-    img_type* img = NULL; \
+    IMG_TYPE_##type* img = NULL; \
     int code = _read_png_init(filename, &fp, &png_ptr, &info_ptr, &meta); \
     if (code == 0) { \
-        _FROM_PNG(png_ptr, img, meta, img_type, pixel_type, __VA_ARGS__); \
+        _FROM_PNG(png_ptr, img, meta, type, __VA_ARGS__); \
     } \
     _read_png_end(fp, png_ptr, info_ptr); \
     return img; \
 }
 
 struct FlatImage* flat_image_read_png_file(const char* filename) {
-    _READ_PNG(filename, struct FlatImage, struct rgb, {
+    _READ_PNG(filename, FLAT_IMAGE, {
         .r=png_pixel[0],
         .g=png_pixel[1],
         .b=png_pixel[2],
@@ -134,5 +134,5 @@ struct FlatImage* flat_image_read_png_file(const char* filename) {
 }
 
 struct OneChanImage* one_chan_image_read_png_file(const char* filename) {
-    _READ_PNG(filename, struct OneChanImage, unsigned char, png_pixel[0]);
+    _READ_PNG(filename, ONE_CHAN_IMAGE, png_pixel[0]);
 }

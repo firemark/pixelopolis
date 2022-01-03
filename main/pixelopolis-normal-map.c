@@ -16,8 +16,14 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    struct FlatImage* normal_map = transform_bump_to_normal_map(bump_map);
+    struct FloatImage* normal_map = transform_bump_to_normal_map(bump_map);
     if (!normal_map) {
+        fprintf(stderr, "Problem with transforming normal map.\n");
+        return -1;
+    }
+
+    struct FlatImage* rgb_normal_map = tranform_normal_map_to_rgb_map(normal_map);
+    if (!rgb_normal_map) {
         fprintf(stderr, "Problem with transforming normal map.\n");
         return -1;
     }
@@ -28,8 +34,9 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    write_png_file_from_flat_image(fp, normal_map);
-    flat_image_destroy(normal_map);
+    write_png_file_from_flat_image(fp, rgb_normal_map);
+    flat_image_destroy(rgb_normal_map);
+    float_image_destroy(normal_map);
     one_chan_image_destroy(bump_map);
 
     return 0;

@@ -3,25 +3,33 @@
 #define COPY_VOX(vox) {vox[0], vox[1], vox[2]}
 #define ZERO_VOX {0, 0, 0}
 
+#define IMG_TYPE_IMAGE struct image
+#define PIXEL_TYPE_IMAGE struct RoyalPixel
+
+#define IMG_TYPE_FLAT_IMAGE struct FlatImage
+#define PIXEL_TYPE_FLAT_IMAGE struct rgb
+
+#define IMG_TYPE_ONE_CHAN_IMAGE struct OneChanImage
+#define PIXEL_TYPE_ONE_CHAN_IMAGE unsigned char
+
+#define IMG_TYPE_FLOAT_IMAGE struct FloatImage
+#define PIXEL_TYPE_FLOAT_IMAGE struct xyz
+
 struct rgb {unsigned char r, g, b;};
 struct RoyalPixel {unsigned char r, g, b; int zindex;};
 struct hsv {unsigned char h, s, v;};
+struct xyz {float x, y, z;};
 enum direction {DIRECTION_UP, DIRECTION_EAST, DIRECTION_SOUTH};
 
-struct image {
-    struct RoyalPixel* buffer;
-    int width;
-    int height;
-};
+#define _DEFINE_IMAGE(image_type) IMG_TYPE_##image_type {\
+    PIXEL_TYPE_##image_type* buffer; \
+    int width; \
+    int height; \
+}
 
-struct FlatImage {
-    struct rgb* buffer;
-    int width;
-    int height;
-};
+_DEFINE_IMAGE(IMAGE);
+_DEFINE_IMAGE(FLAT_IMAGE);
+_DEFINE_IMAGE(FLOAT_IMAGE);
+_DEFINE_IMAGE(ONE_CHAN_IMAGE);
 
-struct OneChanImage {
-    unsigned char* buffer;
-    int width;
-    int height;
-};
+#undef _DEFINE_IMAGE

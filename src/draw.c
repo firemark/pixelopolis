@@ -32,6 +32,12 @@ unsigned char one_chan_image_get_pixel(const struct OneChanImage* img, const int
     return img->buffer[index];
 }
 
+struct xyz float_image_get_pixel(const struct FloatImage* img, const int cor[2]) {
+    int index = _GET_INDEX(img, cor);
+    _GUARD_INDEX(index, img);
+    return img->buffer[index];
+}
+
 struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor[2]) {
     // lu - left up; ld - left down
     // ru - right up; rd - right down
@@ -88,6 +94,12 @@ void set_pixel(struct image* img, const int cor[2], const struct RoyalPixel colo
 }
 
 void flat_image_set_pixel(const struct FlatImage* img, const int cor[2], const struct rgb color) {
+    _GUARD_COR(cor, img);
+    const int index = _GET_INDEX(img, cor);
+    img->buffer[index] = color;
+}
+
+void float_image_set_pixel(const struct FloatImage* img, const int cor[2], const struct xyz color) {
     _GUARD_COR(cor, img);
     const int index = _GET_INDEX(img, cor);
     img->buffer[index] = color;

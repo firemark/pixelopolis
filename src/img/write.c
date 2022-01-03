@@ -6,13 +6,13 @@
 
 #include <img/write.h>
 
-#define _TO_PNG(img, png_ptr, pixel_type) \
+#define _TO_PNG(img, png_ptr, type) \
     int x, y; \
     png_bytep row = malloc(3 * img->width * sizeof(png_byte)); \
     for (y=0; y < img->height; y++) { \
         png_bytep ptr = row; \
         for(x=0; x < img->width; x++) { \
-            const pixel_type* pixel = &img->buffer[y * img->width + x]; \
+            const PIXEL_TYPE_##type* pixel = &img->buffer[y * img->width + x]; \
             ptr[0] = pixel->r; \
             ptr[1] = pixel->g; \
             ptr[2] = pixel->b; \
@@ -20,7 +20,7 @@
         } \
         png_write_row(png_ptr, row); \
     } \
-    free(row);
+    free(row)
 
 static int _png_write_init(FILE* fp, png_structp* png_ptr_ptr, png_infop* info_ptr_ptr, int width, int height) {
     *png_ptr_ptr = NULL;
@@ -79,19 +79,19 @@ static int _png_write_end(png_structp png_ptr, png_infop info_ptr) {
     return code;
 }
 
-#define _WRITE_PNG_FILE(fp, img, pixel_type) \
+#define _WRITE_PNG_FILE(fp, img, type) \
     png_structp png_ptr; \
     png_infop info_ptr; \
     int code = _png_write_init(fp, &png_ptr, &info_ptr, img->width, img->height); \
     if (code == 0) { \
-        _TO_PNG(img, png_ptr, pixel_type); \
+        _TO_PNG(img, png_ptr, type); \
     } \
     return _png_write_end(png_ptr, info_ptr) || code;
 
 int write_png_file_from_image(FILE *fp, const struct image* img) {
-    _WRITE_PNG_FILE(fp, img, struct RoyalPixel);
+    _WRITE_PNG_FILE(fp, img, IMAGE);
 }
 
 int write_png_file_from_flat_image(FILE *fp, const struct FlatImage* img) {
-    _WRITE_PNG_FILE(fp, img, struct rgb);
+    _WRITE_PNG_FILE(fp, img, FLAT_IMAGE);
 }
