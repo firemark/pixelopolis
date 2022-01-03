@@ -11,6 +11,19 @@ void css_base_draw_poly_random(struct image* img, const int voxes[9], const stru
     draw_sprites_in_random_position_in_poly(img, sprite, voxes, density);
 }
 
+struct PolyInfo poly_info_create(
+        struct DrawTexInfo* tex_info,
+        struct DrawInnerInfo* inner_info) {
+    struct DrawTextureOutput output;
+    css_draw_texture(&output, tex_info);
+    struct PolyInfo poly_info = {
+        .img=inner_info->img,
+        .img_to_draw=output.texture,
+        .normal_map=output.normal_map,
+    };
+    return poly_info;
+}
+
 void css_base_draw_plane(
         struct PolyInfo* info,
         const int voxes[12],

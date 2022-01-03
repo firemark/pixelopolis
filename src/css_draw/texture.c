@@ -1,6 +1,7 @@
 #include "_css_draw.h"
 
 struct rgb PURPLE = { .r=0xFF, .g=0x00, .b=0xFF };
+struct xyz FORWARD = { .x=0.0f, .y=0.0f, .z=1.0f };
 
 int _get_height_of_floor(struct FloorObj* obj) {
     int height = obj->height;
@@ -13,7 +14,7 @@ int _get_height_of_floor(struct FloorObj* obj) {
     return height ? height : texture->height;
 }
 
-void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int height, enum Valign valign) {
+void _draw_floor_on_texture(struct DrawTextureOutput* output, struct FloorObj* obj, int height, enum Valign valign) {
     if (valign == VALIGN_TOP) {
         height -= _get_height_of_floor(obj);
     }
@@ -21,12 +22,16 @@ void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int hei
     struct TexObj* tex_obj = obj->tex;
     if (tex_obj) {
         if (tex_obj->texture) {
-            flat_image_fill_column(img, tex_obj->texture, height);
+            flat_image_fill_column(output->texture, tex_obj->texture, height);
+        }
+
+        if (tex_obj->normal_map) {
+            float_image_fill_column(output->normal_map, tex_obj->normal_map, height);
         }
 
         if (tex_obj->color && obj->height > 0) {
-            struct FlatImage* texture = flat_image_create_with_color(img->width, obj->height, tex_obj->color);
-            flat_image_copy(img, texture, 0, height);
+            struct FlatImage* texture = flat_image_create_with_color(output->texture->width, obj->height, tex_obj->color);
+            flat_image_copy(output->texture, texture, 0, height);
             flat_image_destroy(texture);
         }
     }
@@ -36,21 +41,31 @@ void _draw_floor_on_texture(struct FlatImage *img, struct FloorObj *obj, int hei
         struct ShiftTexPair* pair = obj->objs[obj_index];
         struct TexObj* tex = pair->obj;
         int shift = pair->shift;
-        if (!tex || !tex->texture) continue;
-        flat_image_copy(img, tex->texture, shift, height);
+        if (!tex) continue;
+        if (tex->texture) {
+            flat_image_copy(output->texture, tex->texture, shift, height);
+        }
+        if (tex->normal_map) {
+            float_image_copy(output->normal_map, tex->normal_map, shift, height);
+        }
+
     }
 }
 
-struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width, int height) {
-    struct FlatImage *img = flat_image_create_with_color(width, height, &PURPLE);
+void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct WallObj *obj, int width, int height) {
+    output->texture = flat_image_create_with_color(width, height, &PURPLE);
+    output->normal_map = float_image_create_with_color(width, height, &FORWARD);
     struct TexObj *tex_obj = obj->tex;
     if (tex_obj) {
         if (tex_obj->texture) {
-            flat_image_fill(img, tex_obj->texture);
+            flat_image_fill(output->texture, tex_obj->texture);
+        }
+        if (tex_obj->normal_map) {
+            float_image_fill(output->normal_map, tex_obj->normal_map);
         }
         if (tex_obj->color) {
             struct FlatImage* texture = flat_image_create_with_color(width, height, tex_obj->color);
-            flat_image_fill(img, texture);
+            flat_image_fill(output->texture, texture);
             flat_image_destroy(texture);
         }
     }
@@ -60,13 +75,13 @@ struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width
 
     struct FloorObj *bottom = obj->bottom;
     if (bottom) {
-        _draw_floor_on_texture(img, bottom, start_height, VALIGN_BOTTOM);
+        _draw_floor_on_texture(output, bottom, start_height, VALIGN_BOTTOM);
         start_height += _get_height_of_floor(bottom) + obj->padding;
     }
 
     struct FloorObj *top = obj->top;
     if (top) {
-        _draw_floor_on_texture(img, top, max_height, VALIGN_TOP);
+        _draw_floor_on_texture(output, top, max_height, VALIGN_TOP);
     }
 
     int floor_index;
@@ -74,13 +89,11 @@ struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width
         struct FloorObj *middle = obj->floors[floor_index];
         int tex_height = 0;
         if (middle) {
-            _draw_floor_on_texture(img, middle, start_height, VALIGN_BOTTOM);
+            _draw_floor_on_texture(output, middle, start_height, VALIGN_BOTTOM);
             tex_height = _get_height_of_floor(middle);
         }
         start_height += tex_height + obj->padding;
     }
-
-    return img;
 }
 
 static inline void _scale_fill_pixel(
@@ -200,13 +213,13 @@ struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgo
     }
 }
 
-struct FlatImage* css_draw_tex(struct DrawTexInfo* info) {
-    struct FlatImage* img = css_draw_make_texture_from_wall(
+void css_draw_texture(struct DrawTextureOutput* output, struct DrawTexInfo* info) {
+    css_draw_make_texture_from_wall(
+        output,
         info->wall,
         info->size[0],
         info->size[1]);
-    struct FlatImage* filtered_img = css_draw_scale_image(img, info->filter);
-    if (!filtered_img) return img;
-    flat_image_destroy(img);
-    return filtered_img;
+    //struct FlatImage* filtered_img = css_draw_scale_image(img, info->filter);
+    //if (!filtered_img) return img;
+    //flat_image_destroy(img);
 }

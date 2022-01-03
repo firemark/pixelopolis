@@ -26,11 +26,7 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
             .size={width, height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
         css_base_draw_wide_triangle(&poly_info, voxes, wall_obj);
         poly_info_clear(&poly_info);
     }
@@ -42,16 +38,8 @@ void css_draw_triangle(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_inf
             .size={roof_obj->width, roof_obj->height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info_first = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
-        struct PolyInfo poly_info_second = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info_first = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info_second = poly_info_create(&tex_info, inner_info);
 
         int voxes_first[12] = {
             w , 0, 0,

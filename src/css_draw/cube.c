@@ -33,11 +33,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             .size={depth, height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
         css_base_draw_plane(&poly_info, voxes_first, east_wall_obj);
         css_base_draw_plane(&poly_info, voxes_second, east_wall_obj);
         poly_info_clear(&poly_info);
@@ -64,11 +60,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             .size={width, height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
         css_base_draw_plane(&poly_info, voxes_first, south_wall_obj);
         css_base_draw_plane(&poly_info, voxes_second, south_wall_obj);
         poly_info_clear(&poly_info);
@@ -88,11 +80,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             .size={width, depth},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
         css_base_draw_plane(&poly_info, voxes, roof_obj);
         poly_info_clear(&poly_info);
     }

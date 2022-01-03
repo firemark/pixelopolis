@@ -19,14 +19,22 @@ struct DrawTexInfo {
     enum TexFilterAlgorithm filter;
 };
 
+struct DrawTextureOutput {
+    struct FlatImage* texture;
+    struct FloatImage* normal_map;
+};
+
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
 
 // texture
-struct FlatImage* css_draw_make_texture_from_wall(struct WallObj *obj, int width, int height);
+void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct WallObj *obj, int width, int height);
 struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgorithm filter);
-struct FlatImage* css_draw_tex(struct DrawTexInfo* info);
+void css_draw_texture(struct DrawTextureOutput* output, struct DrawTexInfo* info);
 
 // base
+struct PolyInfo poly_info_create(
+        struct DrawTexInfo* tex_info,
+        struct DrawInnerInfo* inner_info);
 void css_base_draw_plane(
         struct PolyInfo *info,
         const int voxes[12],

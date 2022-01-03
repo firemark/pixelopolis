@@ -42,7 +42,8 @@ struct ShiftDrawPair {
 };
 
 struct TexObj {
-    struct FlatImage *texture;
+    struct FlatImage* texture;
+    struct FloatImage* normal_map;
     struct rgb* color;
 };
 

@@ -21,16 +21,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
             .size={south_wall_obj->width, south_wall_obj->height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info_first = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
-        struct PolyInfo poly_info_second = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info_first = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info_second = poly_info_create(&tex_info, inner_info);
 
         int voxes_first[9] = {
             0 , 0 , 0,
@@ -60,16 +52,8 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
             .size={east_wall_obj->width, east_wall_obj->height},
             .filter=inner_info->filter,
         };
-        struct PolyInfo poly_info_first = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
-        struct PolyInfo poly_info_second = {
-            .img=inner_info->img,
-            .img_to_draw=css_draw_tex(&tex_info),
-            .normal_map=NULL,
-        };
+        struct PolyInfo poly_info_first = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info_second = poly_info_create(&tex_info, inner_info);
 
         int voxes_first[9] = {
             0 , 0 , 0,

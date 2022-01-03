@@ -24,12 +24,7 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         .filter=inner_info->filter,
     };
 
-    struct PolyInfo poly_info = {
-        .img=inner_info->img,
-        .img_to_draw=css_draw_tex(&tex_info),
-        .normal_map=NULL,
-    };
-
+    struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
     const int total_length = roof->width;
     int iter_length = 0;
 
