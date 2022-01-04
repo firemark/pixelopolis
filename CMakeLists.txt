@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(Pixelopolis VERSION 0.1.4 LANGUAGES C)
+project(Pixelopolis VERSION 0.1.5 LANGUAGES C)
 
 find_package(PNG REQUIRED)
 find_package(BISON REQUIRED)
@@ -33,7 +33,7 @@ function(add_lib)
         ${FLEX_LIBRARIES}
         m
     )
-    install(TARGETS PixelopolisLib)
+    install(TARGETS PixelopolisLib LIBRARY DESTINATION lib)
 endfunction()
 
 function(add_exec TARGET NAME)

@@ -16,6 +16,8 @@ RUN mkdir /code
 WORKDIR /code
 
 ADD CMakeLists.txt CMakeLists.txt
+ADD main main
+ADD lib_include lib_include
 ADD src src
 ADD include include
 
@@ -25,6 +27,7 @@ RUN mkdir out \
     && make \
     && make install \
     && mv pixelopolis .. \
+    && mv libpixelopolis* .. \
     && cd .. \
     && rm -rf out
 
