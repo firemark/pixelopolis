@@ -2,5 +2,5 @@
 set -e
 mkdir -p out
 cd out
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
 make

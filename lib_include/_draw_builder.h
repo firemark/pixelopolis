@@ -82,6 +82,8 @@ void series_align_objs(
 
 //caches
 extern struct HashMap* css_builder_cache_textures;
+extern struct HashMap* css_builder_cache_bump_maps;
+extern struct HashMap* css_builder_cache_normal_maps;
 
 //inlines
 static inline const double builder_make_theta(const int rotate) {

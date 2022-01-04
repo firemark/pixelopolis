@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "draw_poly.h"
 #include "draw.h"
@@ -130,9 +131,9 @@ static inline void _putpixel(
 
     if (info->normal_map) {
         struct xyz current_normal = float_image_get_pixel(info->normal_map, uv_cor);
-        normal[0] *= current_normal.x;
-        normal[1] *= current_normal.y;
-        normal[2] *= current_normal.z;
+        normal[0] = current_normal.x;
+        normal[1] = current_normal.y;
+        normal[2] = current_normal.z;
     }
 
     // primitive shading
@@ -140,6 +141,9 @@ static inline void _putpixel(
     color.g *= fmin(1.0, 1.0 - normal[0] * 0.35);
     color.b *= fmin(1.0, 1.0 - normal[0] * 0.35);
 
+    color.r = 255.0 * (normal[0] * 0.5 + 0.5);
+    color.g = 255.0 * (normal[1] * 0.5 + 0.5);
+    color.b = 255.0 * (normal[2] * 0.5 + 0.5);
     struct RoyalPixel royal_color = {
         .r=color.r,
         .g=color.g,

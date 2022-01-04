@@ -351,7 +351,7 @@ floor.top {
 }
 
 tex.bar { texture: "textures/bar.png"; }
-tex.brick { texture: "textures/wall/brick.png"; }
+tex.brick { texture: "textures/wall/brick.png"; bump-map: "textures/wall/brick_bump.png"; }
 tex.clay { texture: "textures/nature-wall/clay.png"; }
 tex.clay-wood { texture: choice(
     "textures/nature-wall/clay-wood.png",

@@ -4,9 +4,9 @@
 #include "normal_map.h"
 #include "img.h"
 
-#define _READ_TEXTURE(texture, filename, type, func_read) \
+#define _READ_TEXTURE(texture, filename, cache, type, func_read) \
     IMG_TYPE_##type* texture; { \
-    texture = hash_get(css_builder_cache_textures, filename); \
+    texture = hash_get(cache, filename); \
     if (!texture) { \
         texture = func_read(filename); \
         if (texture) { \
@@ -15,30 +15,12 @@
     } \
 }
 
-static struct FlatImage* _builder_get_texture(char *filename) {
-    struct FlatImage* texture;
-
-    texture = hash_get(css_builder_cache_textures, filename);
-    if (texture) {
-        return texture;
-    }
-
-    texture = flat_image_read_png_file(filename);
-    if (!texture) {
-        return NULL;
-    }
-
-    hash_set(css_builder_cache_textures, filename, texture, NULL);
-    return texture;
-}
-
-
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule) {
     char* filename = css_find_string_prop(rule, "texture");
     if (!filename) {
         return NULL;
     }
-    _READ_TEXTURE(texture, filename, FLAT_IMAGE, flat_image_read_png_file);
+    _READ_TEXTURE(texture, filename, css_builder_cache_textures, FLAT_IMAGE, flat_image_read_png_file);
     return texture;
 }
 
@@ -47,9 +29,11 @@ static struct FloatImage* _find_bump_map_in_rule(struct Rule* rule) {
     if (!filename) {
         return NULL;
     }
-    _READ_TEXTURE(bump_map, filename, ONE_CHAN_IMAGE, one_chan_image_read_png_file);
+    _READ_TEXTURE(bump_map, filename, css_builder_cache_bump_maps, ONE_CHAN_IMAGE, one_chan_image_read_png_file);
+    if (!bump_map) {
+        return NULL;
+    }
     struct FloatImage* normal_map = transform_bump_to_normal_map(bump_map);
-    one_chan_image_destroy(bump_map);
     return normal_map;
 }
 
@@ -75,7 +59,7 @@ struct TexObj* builder_build_texture(struct SelectorHelper* helper) {
 
     struct TexObj* obj = malloc(sizeof(struct TexObj));
     obj->texture = _find_texture_in_rule(rule);
-    obj->normal_map = _find_bump_map_in_rule(rule) || _find_normal_map_in_rule(rule);
+    obj->normal_map = _find_bump_map_in_rule(rule); // || _find_normal_map_in_rule(rule);
     obj->color = _find_color_in_rule(rule);
 
     css_free_rule_half(rule);
