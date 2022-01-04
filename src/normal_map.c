@@ -31,7 +31,7 @@ static inline uint8_t _abs(int value) {
 }
 
 static inline float _sgn(int value) {
-    return value > 0 ? 1.0 : -1.0;
+    return value > 0 ? -1.0 : 1.0;
 }
 
 static inline struct xyz _compute_normal(int diff_x, int diff_y) {

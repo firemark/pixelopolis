@@ -351,24 +351,41 @@ floor.top {
 }
 
 tex.bar { texture: "textures/bar.png"; }
-tex.brick { texture: "textures/wall/brick.png"; bump-map: "textures/wall/brick_bump.png"; }
+tex.brick {
+    texture: "textures/wall/brick.png";
+    bump-map: "textures/wall/brick_bump.png";
+}
 tex.clay { texture: "textures/nature-wall/clay.png"; }
-tex.clay-wood { texture: choice(
-    "textures/nature-wall/clay-wood.png",
-    "textures/nature-wall/clay-wood-x.png",
-    "textures/nature-wall/clay-wood-v.png");
+tex.clay-wood {
+    texture: "textures/nature-wall/clay-wood.png";
+    bump-map: "textures/nature-wall/clay-wood_bump.png";
 }
 tex.stall { texture: choice(
     "textures/wall/stall-red.png",
     "textures/wall/stall-blue.png",
     "textures/wall/stall-green.png");
 }
-tex.door { texture: "textures/wall-objs/door.png"; }
-tex.window { texture: "textures/wall-objs/wooden-window.png"; }
+tex.door {
+    texture: "textures/wall-objs/door.png";
+    bump-map: "textures/wall-objs/door_bump.png";
+}
+tex.window {
+    texture: "textures/wall-objs/wooden-window.png";
+    bump-map: "textures/wall-objs/wooden-window_bump.png";
+}
 tex.bottom { texture: "textures/bottom.png"; }
 tex.road { texture: "textures/nature-wall/clay-sand.png"; }
-tex.grey-brick { texture: "textures/wall/grey-brick.png"; }
-tex.wood { texture:  "textures/nature-wall/wood.png"; }
-tex.red-tile { texture:  "textures/wall/red-tile.png"; }
+tex.grey-brick {
+    texture: "textures/wall/grey-brick.png";
+    bump-map: "textures/wall/brick_bump.png";
+}
+tex.wood {
+    texture: "textures/nature-wall/wood.png";
+    bump-map: "textures/wall/tile_bump.png";
+}
+tex.red-tile {
+    texture:  "textures/wall/red-tile.png";
+    bump-map: "textures/wall/tile_bump.png";
+}
 tex.grass { texture: "textures/sprites/grass.png"; }
 tex.leaf  { texture: "textures/sprites/leaf.png"; }

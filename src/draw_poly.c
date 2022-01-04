@@ -121,7 +121,7 @@ static inline void _putpixel(
         const int img_cor[2],
         const int uv_cor[2],
         const int zindex,
-        double normal[3]) {
+        const double old_normal[3]) {
     struct rgb color = flat_image_get_pixel(info->img_to_draw, uv_cor);
 
     if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
@@ -129,21 +129,32 @@ static inline void _putpixel(
         return;
     }
 
+    double new_normal[3];
     if (info->normal_map) {
         struct xyz current_normal = float_image_get_pixel(info->normal_map, uv_cor);
-        normal[0] = current_normal.x;
-        normal[1] = current_normal.y;
-        normal[2] = current_normal.z;
+#define PARTIAL_CROSS(ax1, attr1, ax2, attr2) (old_normal[ax1] * current_normal. attr1 - old_normal[ax2] * current_normal. attr2)
+        new_normal[0] = PARTIAL_CROSS(0, z, 2, x);
+        new_normal[1] = PARTIAL_CROSS(1, z, 2, y);
+        new_normal[2] = PARTIAL_CROSS(2, z, 2, z);
+#undef PARTIAL_CROSS
+    } else {
+        new_normal[0] = old_normal[0];
+        new_normal[1] = old_normal[1];
+        new_normal[2] = old_normal[2];
     }
 
     // primitive shading
-    color.r *= fmin(1.0, 1.0 - normal[0] * 0.35);
-    color.g *= fmin(1.0, 1.0 - normal[0] * 0.35);
-    color.b *= fmin(1.0, 1.0 - normal[0] * 0.35);
+    double shadow = fmax(0.5, fmin(1.0, 1.0 - new_normal[0] * 0.55));
+    color.r *= shadow;
+    color.g *= shadow;
+    color.b *= shadow;
 
-    color.r = 255.0 * (normal[0] * 0.5 + 0.5);
-    color.g = 255.0 * (normal[1] * 0.5 + 0.5);
-    color.b = 255.0 * (normal[2] * 0.5 + 0.5);
+    /*
+    // DEBUG NORMAL
+    color.r = 255.0 * (new_normal[0] * 0.5 + 0.5);
+    color.g = 255.0 * (new_normal[1] * 0.5 + 0.5);
+    color.b = 255.0 * (new_normal[2] * 0.5 + 0.5);
+    */
     struct RoyalPixel royal_color = {
         .r=color.r,
         .g=color.g,

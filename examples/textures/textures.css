@@ -6,27 +6,29 @@ world {
 
 cubes {
     display: x-series;
-    body: 
-        cube.texture, 
+    body:
+        cube.texture,
         cube.transparent,
-        cube.hex, 
-        cube.small_hex, 
-        cube.rgb, 
+        cube.hex,
+        cube.small_hex,
+        cube.rgb,
+        cube.bump,
         cube.name;
-    padding: 20;
+    padding: 30;
 }
 
-cube.texture     tex { texture: "textures/nature-wall/wood.png"; }
+cube.texture     tex { texture: "textures/wall/brick.png"; bump-map: "textures/wall/brick_bump.png";}
 cube.transparent tex { texture: "textures/trans.png"; }
 cube.hex         tex { color: #FF2233; }
 cube.small_hex   tex { color: #2F3; }
 cube.rgb         tex { color: rgb(34, 51, 255); }
+cube.bump        tex { color: #FF2233; bump-map: "textures/wall/brick_bump.png"; }
 cube.name        tex { color: yellow; }
 
 cube {
     wall: wall;
     roof: wall;
-    width: 100;
+    width: 80;
     depth: 300;
     height: 100;
 }
