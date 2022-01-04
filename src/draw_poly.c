@@ -31,7 +31,7 @@ struct h_poly_diffx {
 
 struct h_fill_space {
     struct PolyInfo *info;
-    double *normal;
+    double* tbn;
     struct h_poly *left, *right;
 };
 
@@ -50,18 +50,80 @@ static inline void _compute_normal(double normal[3], const int voxes[9]) {
         voxes[6 + 1] - voxes[0 + 1],
         voxes[6 + 2] - voxes[0 + 2]};
 
-    normal[0] = vox_a[1] * vox_b[2] - vox_a[2] * vox_b[1];
-    normal[1] = vox_a[0] * vox_b[2] - vox_a[2] * vox_b[0];
-    normal[2] = vox_a[0] * vox_b[1] - vox_a[1] * vox_b[0];
+#define PARTIAL_CROSS(ax1, ax2) (vox_a[ax1] * vox_b[ax2] - vox_a[ax2] * vox_b[ax1])
+    normal[0] = PARTIAL_CROSS(1, 2);
+    normal[1] = PARTIAL_CROSS(0, 2);
+    normal[2] = PARTIAL_CROSS(0, 1);
+#undef PARTIAL_CROSS
 
-    double _max = normal[0] > normal[1] ? normal[0] : normal[1];
-    double max = _max > normal[2] ? _max : normal[2];
+    {
+        double _max = normal[0] > normal[1] ? normal[0] : normal[1];
+        double max = _max > normal[2] ? _max : normal[2];
 
-    if (max != 0.0) {
-        normal[0] /= max;
-        normal[1] /= max;
-        normal[2] /= max;
+        if (max != 0.0) {
+            normal[0] /= max;
+            normal[1] /= max;
+            normal[2] /= max;
+        }
     }
+}
+
+static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[6]) {
+    double tangen[3];
+    double bitangen[3];
+    double normal[3];
+
+    int vox_a[3] = {
+        voxes[3 + 0] - voxes[0 + 0],
+        voxes[3 + 1] - voxes[0 + 1],
+        voxes[3 + 2] - voxes[0 + 2]};
+    int vox_b[3] = {
+        voxes[6 + 0] - voxes[0 + 0],
+        voxes[6 + 1] - voxes[0 + 1],
+        voxes[6 + 2] - voxes[0 + 2]};
+    int uv_a[2] = {
+        uv[2 + 0] - uv[0 + 0],
+        uv[2 + 1] - uv[0 + 1]};
+    int uv_b[2] = {
+        uv[4 + 0] - uv[0 + 0],
+        uv[4 + 1] - uv[0 + 1]};
+
+#define PARTIAL_CROSS(a, b, ax1, ax2) (a[ax1] * b[ax2] - a[ax2] * b[ax1])
+#define PARTIAL_TANGEN(ax1, ax2) (vox_a[ax1] * uv_b[ax2] - vox_b[ax1] * uv_a[ax2])
+    normal[0] = PARTIAL_CROSS(vox_a, vox_b, 1, 2);
+    normal[1] = PARTIAL_CROSS(vox_a, vox_b, 0, 2);
+    normal[2] = PARTIAL_CROSS(vox_a, vox_b, 0, 1);
+
+    double f = 1.0 / PARTIAL_CROSS(uv_a, uv_b, 0, 1);
+    tangen[0] = f * PARTIAL_TANGEN(0, 1);
+    tangen[1] = f * PARTIAL_TANGEN(1, 1);
+    tangen[2] = f * PARTIAL_TANGEN(2, 1);
+    bitangen[0] = f * -PARTIAL_TANGEN(0, 0);
+    bitangen[1] = f * -PARTIAL_TANGEN(1, 0);
+    bitangen[2] = f * -PARTIAL_TANGEN(2, 0);
+#undef PARTIAL_TANGEN
+#undef PARTIAL_CROSS
+
+    {
+        double _max = normal[0] > normal[1] ? normal[0] : normal[1];
+        double max = _max > normal[2] ? _max : normal[2];
+
+        if (max != 0.0) {
+            normal[0] /= max;
+            normal[1] /= max;
+            normal[2] /= max;
+        }
+    }
+
+    tbn[0 + 0] = tangen[0];
+    tbn[0 + 1] = tangen[1];
+    tbn[0 + 2] = tangen[2];
+    tbn[3 + 0] = bitangen[0];
+    tbn[3 + 1] = bitangen[1];
+    tbn[3 + 2] = bitangen[2];
+    tbn[6 + 0] = normal[0];
+    tbn[6 + 1] = normal[1];
+    tbn[6 + 2] = normal[2];
 }
 
 static inline void _cpy_h_poly(struct h_poly *a, const struct h_poly *b) {
@@ -121,7 +183,7 @@ static inline void _putpixel(
         const int img_cor[2],
         const int uv_cor[2],
         const int zindex,
-        const double old_normal[3]) {
+        const double tbn[9]) {
     struct rgb color = flat_image_get_pixel(info->img_to_draw, uv_cor);
 
     if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
@@ -129,31 +191,33 @@ static inline void _putpixel(
         return;
     }
 
-    double new_normal[3];
+    double normal[3];
     if (info->normal_map) {
-        struct xyz current_normal = float_image_get_pixel(info->normal_map, uv_cor);
-#define PARTIAL_CROSS(ax1, attr1, ax2, attr2) (old_normal[ax1] * current_normal. attr1 - old_normal[ax2] * current_normal. attr2)
-        new_normal[0] = PARTIAL_CROSS(0, z, 2, x);
-        new_normal[1] = PARTIAL_CROSS(1, z, 2, y);
-        new_normal[2] = PARTIAL_CROSS(2, z, 2, z);
-#undef PARTIAL_CROSS
+        struct xyz normal_px = float_image_get_pixel(info->normal_map, uv_cor);
+        normal[0] = normal_px.x * tbn[0 + 0] + normal_px.y * tbn[3 + 0] + normal_px.z * tbn[6 + 0];
+        normal[1] = normal_px.x * tbn[0 + 1] + normal_px.y * tbn[3 + 1] + normal_px.z * tbn[6 + 1];
+        normal[2] = normal_px.x * tbn[0 + 2] + normal_px.y * tbn[3 + 2] + normal_px.z * tbn[6 + 2];
     } else {
-        new_normal[0] = old_normal[0];
-        new_normal[1] = old_normal[1];
-        new_normal[2] = old_normal[2];
+        normal[0] = tbn[6 + 0];
+        normal[1] = tbn[6 + 1];
+        normal[2] = tbn[6 + 2];
     }
 
     // primitive shading
-    double shadow = fmax(0.5, fmin(1.0, 1.0 - new_normal[0] * 0.55));
+    double shadow = fmax(0.5,
+            fmin(1.0, 1.0
+                - normal[0] * 0.35
+                - normal[1] * 0.10
+                - normal[2] * 0.10));
     color.r *= shadow;
     color.g *= shadow;
     color.b *= shadow;
 
     /*
     // DEBUG NORMAL
-    color.r = 255.0 * (new_normal[0] * 0.5 + 0.5);
-    color.g = 255.0 * (new_normal[1] * 0.5 + 0.5);
-    color.b = 255.0 * (new_normal[2] * 0.5 + 0.5);
+    color.r = 255.0 * (normal[0] * 0.5 + 0.5);
+    color.g = 255.0 * (normal[1] * 0.5 + 0.5);
+    color.b = 255.0 * (normal[2] * 0.5 + 0.5);
     */
     struct RoyalPixel royal_color = {
         .r=color.r,
@@ -175,7 +239,7 @@ static inline void _putpixel_with_h_poly(
         img_cor,
         uv_cor,
         (int)point->zindex,
-        helper->normal);
+        helper->tbn);
 }
 
 static void _fill_space(
@@ -276,12 +340,12 @@ void draw_poly(
     _cpy_h_poly(&left, a);
     _cpy_h_poly(&right, a);
 
-    double normal[3];
-    _compute_normal(normal, voxes);
+    double tbn[9];
+    _compute_tbn(tbn, voxes, uv);
 
     struct h_fill_space helper = {
         .info=info,
-        .normal=normal,
+        .tbn=tbn,
         .left=&left,
         .right=&right,
     };
@@ -320,13 +384,18 @@ void draw_sprite(
         .normal_map=NULL,
     };
 
+    double tbn[9]; // TODO using TBN instead of normal only
+    tbn[6] = normal[0];
+    tbn[7] = normal[1];
+    tbn[8] = normal[2];
+
     for(uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
         for(uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
             const int img_cor[2] = {
                 uv_cor[0] + x + x_offset,
                 uv_cor[1] + y + y_offset,
             };
-            _putpixel(&info, img_cor, uv_cor, zindex, normal);
+            _putpixel(&info, img_cor, uv_cor, zindex, tbn);
         }
     }
 }
