@@ -1,11 +1,10 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "pixelopolis/_css_draw.h"
 #include "pixelopolis/angle_iter.h"
 #include "pixelopolis/draw_poly.h"
-
 
 static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     const struct ConeObj *obj = draw_obj->obj;
@@ -19,9 +18,9 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     const int dh = depth / 2;
 
     struct DrawTexInfo tex_info = {
-        .wall=roof,
-        .size={roof->width, roof->height},
-        .filter=inner_info->filter,
+        .wall = roof,
+        .size = {roof->width, roof->height},
+        .filter = inner_info->filter,
     };
 
     struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
@@ -30,11 +29,17 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
-    while(angle_iter_iterate(&angle_iter)) {
+    while (angle_iter_iterate(&angle_iter)) {
         int voxes[9] = {
-            angle_iter.x  + wh, angle_iter.y  + dh, 0,
-            angle_iter.nx + wh, angle_iter.ny + dh, 0,
-            wh, dh, height,
+            angle_iter.x + wh,
+            angle_iter.y + dh,
+            0,  //
+            angle_iter.nx + wh,
+            angle_iter.ny + dh,
+            0,  //
+            wh,
+            dh,
+            height,  //
         };
         _transform(voxes, vox, &draw_obj->basic, 3);
 
@@ -42,9 +47,12 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
         if (next_length > total_length) next_length = total_length;
 
         int uv[6] = {
-            iter_length, 0,
-            next_length, 0,
-            (iter_length + next_length) / 2, roof->height,
+            iter_length,
+            0,  //
+            next_length,
+            0,  //
+            (iter_length + next_length) / 2,
+            roof->height,  //
         };
 
         draw_poly(&poly_info, voxes, uv);
@@ -54,7 +62,6 @@ static void _css_draw_cone_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     }
     poly_info_clear(&poly_info);
 }
-
 
 void css_draw_cone(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct ConeObj *obj = draw_obj->obj;

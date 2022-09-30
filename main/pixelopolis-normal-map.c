@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "pixelopolis/basic.h"
@@ -7,8 +7,8 @@
 #include "pixelopolis/normal_map.h"
 
 int main(int argc, char** argv) {
-    char *in_filename = argc > 1 ? argv[1] : "in.png";
-    char *out_filename = argc > 2 ? argv[2] : "out.png";
+    char* in_filename = argc > 1 ? argv[1] : "in.png";
+    char* out_filename = argc > 2 ? argv[2] : "out.png";
 
     struct OneChanImage* bump_map = one_chan_image_read_png_file(in_filename);
     if (!bump_map) {

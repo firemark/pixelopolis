@@ -1,4 +1,5 @@
 #include <stdlib.h>
+
 #include "pixelopolis/_css_draw.h"
 #include "pixelopolis/css_draw.h"
 
@@ -10,7 +11,7 @@ void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
     struct BasicObj *basic = &draw_obj->basic;
 
     struct BoardChild *child;
-    while((child = *children++)) {
+    while ((child = *children++)) {
         if (!child->obj) {
             continue;
         }
@@ -19,9 +20,9 @@ void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
         vox[1] += _y_rotate(child->x, child->y, basic);
 
         struct DrawInfo draw_info = {
-            .img=inner_info->img,
-            .vox=vox,
-            .filter=inner_info->filter,
+            .img = inner_info->img,
+            .vox = vox,
+            .filter = inner_info->filter,
         };
 
         draw_component(child->obj, &draw_info, NULL);

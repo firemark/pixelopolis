@@ -1,20 +1,21 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "pixelopolis/_css_draw.h"
 #include "pixelopolis/angle_iter.h"
 #include "pixelopolis/draw_poly.h"
 
-#define CREATE_VOXES(angle_iter, basic) { \
-    basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , 0, \
-    basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, 0, \
-    basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , basic.height, \
-    basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, basic.height, \
-}
+#define CREATE_VOXES(angle_iter, basic)                                                     \
+    {                                                                                       \
+        basic.width / 2 + angle_iter.x, basic.depth / 2 + angle_iter.y, 0,                  \
+            basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, 0,            \
+            basic.width / 2 + angle_iter.x, basic.depth / 2 + angle_iter.y, basic.height,   \
+            basic.width / 2 + angle_iter.nx, basic.depth / 2 + angle_iter.ny, basic.height, \
+    }
 
-
-static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj,
+                                          struct DrawInnerInfo *inner_info) {
     const struct CylinderObj *obj = draw_obj->obj;
     const int width = draw_obj->basic.width;
     const int height = draw_obj->basic.height;
@@ -24,15 +25,15 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawI
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
-    while(angle_iter_iterate(&angle_iter)) {
+    while (angle_iter_iterate(&angle_iter)) {
         int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
         _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
         struct WallObj *wall = walls[angle_iter.i];
 
         struct DrawTexInfo tex_info = {
-            .wall=wall,
-            .size={wall->width, height},
-            .filter=inner_info->filter,
+            .wall = wall,
+            .size = {wall->width, height},
+            .filter = inner_info->filter,
         };
         struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
         css_base_draw_plane(&poly_info, voxes, wall);
@@ -40,7 +41,8 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj, struct DrawI
     }
 }
 
-static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
+static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj,
+                                           struct DrawInnerInfo *inner_info) {
     const struct CylinderObj *obj = draw_obj->obj;
     const int width = draw_obj->basic.width;
     const int height = draw_obj->basic.height;
@@ -52,15 +54,15 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct Draw
     int iter_length = 0;
 
     struct DrawTexInfo tex_info = {
-        .wall=wall,
-        .size={total_length, height},
-        .filter=inner_info->filter,
+        .wall = wall,
+        .size = {total_length, height},
+        .filter = inner_info->filter,
     };
     struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
-    while(angle_iter_iterate(&angle_iter)) {
+    while (angle_iter_iterate(&angle_iter)) {
         int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
         _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
 
@@ -68,8 +70,8 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj, struct Draw
         if (next_length > total_length) next_length = total_length;
 
         int uv[4] = {
-            iter_length, 0,
-            next_length, height,
+            iter_length, 0,       //
+            next_length, height,  //
         };
 
         css_base_draw_plane_with_uv(&poly_info, voxes, uv, wall);
@@ -91,26 +93,35 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
     const int dh = depth / 2;
 
     struct DrawTexInfo tex_info = {
-        .wall=roof,
-        .size={roof->width, roof->height},
-        .filter=inner_info->filter,
+        .wall = roof,
+        .size = {roof->width, roof->height},
+        .filter = inner_info->filter,
     };
     struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
-    while(angle_iter_iterate(&angle_iter)) {
+    while (angle_iter_iterate(&angle_iter)) {
         int voxes[9] = {
-            angle_iter.x + wh, angle_iter.y + dh, height,
-            angle_iter.nx + wh, angle_iter.ny + dh, height,
-            wh, dh, height,
+            angle_iter.x + wh,
+            angle_iter.y + dh,
+            height,  //
+            angle_iter.nx + wh,
+            angle_iter.ny + dh,
+            height,  //
+            wh,
+            dh,
+            height,  //
         };
         _transform(voxes, vox, &draw_obj->basic, 3);
 
         int uv[6] = {
-            angle_iter.x + wh, angle_iter.y + dh,
-            angle_iter.nx + wh, angle_iter.ny + dh,
-            wh, dh,
+            angle_iter.x + wh,
+            angle_iter.y + dh,  //
+            angle_iter.nx + wh,
+            angle_iter.ny + dh,  //
+            wh,
+            dh,  //
         };
 
         draw_poly(&poly_info, voxes, uv);
@@ -118,7 +129,6 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
     }
     poly_info_clear(&poly_info);
 }
-
 
 void css_draw_cylinder(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct CylinderObj *obj = draw_obj->obj;

@@ -11,8 +11,8 @@ struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper) {
     return css_make_rule_from_selector(helper->program, selector);
 }
 
-
-struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj) {
+struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic,
+                                      enum DrawObjType type, void* obj) {
     struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
     draw_obj->basic = basic;
     draw_obj->type = type;
@@ -32,9 +32,7 @@ int builder_get_percent(struct Rule* rule, char* key, const int default_value) {
     return ptr ? *ptr : default_value;
 }
 
-int builder_get_padding(struct Rule* rule) {
-    return builder_get_int(rule, "padding", 0);
-}
+int builder_get_padding(struct Rule* rule) { return builder_get_int(rule, "padding", 0); }
 
 int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic) {
     int parent_rotate = parent_basic ? parent_basic->rotate : 0;
@@ -44,7 +42,8 @@ int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic
 static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
-    css_iter(obj, prop_objs) size++; // counter
+    css_iter (obj, prop_objs)
+        size++;  // counter
     return size;
 }
 

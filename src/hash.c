@@ -1,30 +1,29 @@
 #include "pixelopolis/hash.h"
 
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
-unsigned long djb2(char *str) {
+unsigned long djb2(char* str) {
     // http://www.cse.yorku.ca/~oz/hash.html
     unsigned long hash = 5381;
     int c;
 
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+    while ((c = *str++)) hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
 
     return hash;
 }
 
-void _fill_null(struct HashStrItem **items, int new_size) {
+void _fill_null(struct HashStrItem** items, int new_size) {
     int i;
-    for(i = 0; i < new_size; i++) {
+    for (i = 0; i < new_size; i++) {
         items[i] = NULL;
     }
 }
 
 struct HashMap* hash_make(void) {
-    struct HashMap* map = malloc(sizeof (struct HashMap));
+    struct HashMap* map = malloc(sizeof(struct HashMap));
     int max_size = 32;
-    map->items = malloc(sizeof (struct HashStrItem*) * max_size);
+    map->items = malloc(sizeof(struct HashStrItem*) * max_size);
     map->size = 0;
     map->max_size = max_size;
     _fill_null(map->items, max_size);
@@ -40,7 +39,7 @@ void* _remove(struct HashMap* map, int index) {
 }
 
 int _insert(struct HashMap* map, char* key, void* value, int index) {
-    struct HashStrItem *item = malloc(sizeof (struct HashStrItem));
+    struct HashStrItem* item = malloc(sizeof(struct HashStrItem));
     if (!item) return -1;
 
     map->items[index] = item;
@@ -55,17 +54,17 @@ unsigned long _probing(unsigned long hash, unsigned long shift) {
 
 struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     // make new table because index has changed
-    struct HashStrItem **new_items = malloc(sizeof (struct HashStrItem*) * new_size);
+    struct HashStrItem** new_items = malloc(sizeof(struct HashStrItem*) * new_size);
     _fill_null(new_items, new_size);
 
     unsigned long hash;
     unsigned long shift;
     int index;
-    struct HashStrItem *item;
-    hash_iter(item, map) {
+    struct HashStrItem* item;
+    hash_iter (item, map) {
         hash = djb2(item->key);
         shift = 0;
-        for(;;) {
+        for (;;) {
             index = _probing(hash, shift++) % new_size;
             if (!new_items[index]) {
                 new_items[index] = item;
@@ -91,9 +90,7 @@ int _resize_if_need(struct HashMap* map) {
     return -1;
 }
 
-int if_key_eq(struct HashStrItem* item, char* key) {
-    return !strcmp(item->key, key);
-}
+int if_key_eq(struct HashStrItem* item, char* key) { return !strcmp(item->key, key); }
 
 int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) {
     unsigned long hash = djb2(key);
@@ -101,7 +98,7 @@ int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) 
     struct HashStrItem* item;
 
     int index;
-    for(;;) {
+    for (;;) {
         index = _probing(hash, shift) % map->max_size;
         item = map->items[index];
         if (!item) {
@@ -123,10 +120,10 @@ int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) 
 void* hash_get(struct HashMap* map, char* key) {
     unsigned long hash = djb2(key);
     unsigned long shift = 0;
-    struct HashStrItem *item;
+    struct HashStrItem* item;
 
     int index;
-    for(;;) {
+    for (;;) {
         index = _probing(hash, shift) % map->max_size;
         item = map->items[index];
         if (!item) {
@@ -141,7 +138,7 @@ void* hash_get(struct HashMap* map, char* key) {
 
 void hash_destroy(struct HashMap* map) {
     int i;
-    for(i = 0; i < map->max_size; i++) {
+    for (i = 0; i < map->max_size; i++) {
         free(map->items[i]);
     }
     free(map->items);
@@ -150,7 +147,5 @@ void hash_destroy(struct HashMap* map) {
 
 void hash_update(struct HashMap* map, struct HashMap* other) {
     struct HashStrItem* item;
-    hash_iter(item, other) {
-        hash_set(map, item->key, item->value, NULL);
-    }
+    hash_iter (item, other) { hash_set(map, item->key, item->value, NULL); }
 }

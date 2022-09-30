@@ -1,7 +1,7 @@
 #include "pixelopolis/_css_draw.h"
 
-struct rgb PURPLE = { .r=0xFF, .g=0x00, .b=0xFF };
-struct xyz FORWARD = { .x=0.0f, .y=0.0f, .z=1.0f };
+struct rgb PURPLE = {.r = 0xFF, .g = 0x00, .b = 0xFF};
+struct xyz FORWARD = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
 
 int _get_height_of_floor(struct FloorObj* obj) {
     int height = obj->height;
@@ -14,7 +14,8 @@ int _get_height_of_floor(struct FloorObj* obj) {
     return height ? height : texture->height;
 }
 
-void _draw_floor_on_texture(struct DrawTextureOutput* output, struct FloorObj* obj, int height, enum Valign valign) {
+void _draw_floor_on_texture(struct DrawTextureOutput* output, struct FloorObj* obj, int height,
+                            enum Valign valign) {
     if (valign == VALIGN_TOP) {
         height -= _get_height_of_floor(obj);
     }
@@ -30,14 +31,15 @@ void _draw_floor_on_texture(struct DrawTextureOutput* output, struct FloorObj* o
         }
 
         if (tex_obj->color && obj->height > 0) {
-            struct FlatImage* texture = flat_image_create_with_color(output->texture->width, obj->height, tex_obj->color);
+            struct FlatImage* texture =
+                flat_image_create_with_color(output->texture->width, obj->height, tex_obj->color);
             flat_image_copy(output->texture, texture, 0, height);
             flat_image_destroy(texture);
         }
     }
 
     size_t obj_index;
-    for(obj_index = 0; obj_index < obj->objs_size; obj_index++) {
+    for (obj_index = 0; obj_index < obj->objs_size; obj_index++) {
         struct ShiftTexPair* pair = obj->objs[obj_index];
         struct TexObj* tex = pair->obj;
         int shift = pair->shift;
@@ -48,14 +50,14 @@ void _draw_floor_on_texture(struct DrawTextureOutput* output, struct FloorObj* o
         if (tex->normal_map) {
             float_image_copy(output->normal_map, tex->normal_map, shift, height);
         }
-
     }
 }
 
-void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct WallObj *obj, int width, int height) {
+void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct WallObj* obj,
+                                     int width, int height) {
     output->texture = flat_image_create_with_color(width, height, &PURPLE);
     output->normal_map = float_image_create_with_color(width, height, &FORWARD);
-    struct TexObj *tex_obj = obj->tex;
+    struct TexObj* tex_obj = obj->tex;
     if (tex_obj) {
         if (tex_obj->texture) {
             flat_image_fill(output->texture, tex_obj->texture);
@@ -73,20 +75,20 @@ void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct Wa
     int max_height = height;
     int start_height = 0;
 
-    struct FloorObj *bottom = obj->bottom;
+    struct FloorObj* bottom = obj->bottom;
     if (bottom) {
         _draw_floor_on_texture(output, bottom, start_height, VALIGN_BOTTOM);
         start_height += _get_height_of_floor(bottom) + obj->padding;
     }
 
-    struct FloorObj *top = obj->top;
+    struct FloorObj* top = obj->top;
     if (top) {
         _draw_floor_on_texture(output, top, max_height, VALIGN_TOP);
     }
 
     int floor_index;
-    for(floor_index = 0; floor_index < obj->floors_size; floor_index++) {
-        struct FloorObj *middle = obj->floors[floor_index];
+    for (floor_index = 0; floor_index < obj->floors_size; floor_index++) {
+        struct FloorObj* middle = obj->floors[floor_index];
         int tex_height = 0;
         if (middle) {
             _draw_floor_on_texture(output, middle, start_height, VALIGN_BOTTOM);
@@ -96,14 +98,13 @@ void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct Wa
     }
 }
 
-static inline void _scale_fill_pixel(
-        struct FlatImage* img, struct rgb* color,
-        const int x, const int y, const size_t n) {
+static inline void _scale_fill_pixel(struct FlatImage* img, struct rgb* color, const int x,
+                                     const int y, const size_t n) {
     int i, j;
     int width = img->width;
     for (i = 0; i < n; i++) {
         size_t coord = (y * n + i) * width + x * n;
-        for(j = 0; j < n; j++) {
+        for (j = 0; j < n; j++) {
             img->buffer[coord + j] = *color;
         }
     }
@@ -116,7 +117,7 @@ static inline struct FlatImage* _scaleN(struct FlatImage* img, const size_t n) {
     int height = old_height * n;
     struct FlatImage* new_img = flat_image_create(width, height);
     int x, y;
-    for(y = 0; y < old_height; y++) {
+    for (y = 0; y < old_height; y++) {
         for (x = 0; x < old_width; x++) {
             size_t old_coord = y * old_width + x;
             struct rgb* color = &img->buffer[old_coord];
@@ -134,7 +135,7 @@ static inline struct FlatImage* _scale_mame2(struct FlatImage* img) {
     struct FlatImage* new_img = flat_image_create(width, height);
     int x, y;
     // each pixel except border
-    for(y = 1; y < old_height - 1; y++) {
+    for (y = 1; y < old_height - 1; y++) {
         for (x = 1; x < old_width - 1; x++) {
             // https://en.wikipedia.org/wiki/Pixel-art_scaling_algorithms#2×SaI
             struct rgb pp = img->buffer[(y + 0) * old_width + x + 0];
@@ -164,28 +165,28 @@ static inline struct FlatImage* _scale_mame2(struct FlatImage* img) {
     }
 
     // bottom border
-    for(x = 0; x < old_width ; x++) {
+    for (x = 0; x < old_width; x++) {
         size_t old_coord = x;
         struct rgb* color = &img->buffer[old_coord];
         _scale_fill_pixel(new_img, color, x, 0, 2);
     }
 
     // top border
-    for(x = 0; x < old_width; x++) {
+    for (x = 0; x < old_width; x++) {
         size_t old_coord = (old_height - 1) * old_width + x;
         struct rgb* color = &img->buffer[old_coord];
         _scale_fill_pixel(new_img, color, x, old_height - 1, 2);
     }
 
     // left border
-    for(y = 0; y < old_height; y++) {
+    for (y = 0; y < old_height; y++) {
         size_t old_coord = y * old_width;
         struct rgb* color = &img->buffer[old_coord];
         _scale_fill_pixel(new_img, color, 0, y, 2);
     }
 
     // right border
-    for(y = 0; y < old_height; y++) {
+    for (y = 0; y < old_height; y++) {
         size_t old_coord = y * old_width + old_width - 1;
         struct rgb* color = &img->buffer[old_coord];
         _scale_fill_pixel(new_img, color, old_width - 1, y, 2);
@@ -201,25 +202,25 @@ static inline struct FlatImage* _scale_mame4(struct FlatImage* img) {
     return mame4;
 }
 
-
 struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgorithm filter) {
     if (!img) return NULL;
     switch (filter) {
-        case FILTER_ALGORITHM_SCALE2: return _scaleN(img, 2);
-        case FILTER_ALGORITHM_SCALE3: return _scaleN(img, 3);
-        case FILTER_ALGORITHM_MAME2: return _scale_mame2(img);
-        case FILTER_ALGORITHM_MAME4: return _scale_mame4(img);
-        default: return NULL; // don't filter
+        case FILTER_ALGORITHM_SCALE2:
+            return _scaleN(img, 2);
+        case FILTER_ALGORITHM_SCALE3:
+            return _scaleN(img, 3);
+        case FILTER_ALGORITHM_MAME2:
+            return _scale_mame2(img);
+        case FILTER_ALGORITHM_MAME4:
+            return _scale_mame4(img);
+        default:
+            return NULL;  // don't filter
     }
 }
 
 void css_draw_texture(struct DrawTextureOutput* output, struct DrawTexInfo* info) {
-    css_draw_make_texture_from_wall(
-        output,
-        info->wall,
-        info->size[0],
-        info->size[1]);
-    //struct FlatImage* filtered_img = css_draw_scale_image(img, info->filter);
-    //if (!filtered_img) return img;
-    //flat_image_destroy(img);
+    css_draw_make_texture_from_wall(output, info->wall, info->size[0], info->size[1]);
+    // struct FlatImage* filtered_img = css_draw_scale_image(img, info->filter);
+    // if (!filtered_img) return img;
+    // flat_image_destroy(img);
 }

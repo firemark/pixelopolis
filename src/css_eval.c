@@ -1,10 +1,11 @@
+#include "pixelopolis/css_eval.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
 #include "pixelopolis/css_func.h"
-#include "pixelopolis/css_eval.h"
 
 #define STACK_MAX_SIZE 512
 
@@ -13,12 +14,12 @@ struct Stack {
     size_t size;
 };
 
-struct Stack global_stack = { .size=0 };
+struct Stack global_stack = {.size = 0};
 struct Obj* _eval(struct Obj* obj);
 
 void _free_stack() {
     size_t i;
-    for(i=0; i < global_stack.size; i++) {
+    for (i = 0; i < global_stack.size; i++) {
         css_free_obj(global_stack.objs[i]);
     }
     global_stack.size = 0;
@@ -36,25 +37,15 @@ void css_eval_start() {
     srand(grain);
 }
 
-void css_eval_stop() {
-    _free_stack();
-}
+void css_eval_stop() { _free_stack(); }
 
-int _is_number(struct Obj* obj) {
-    return obj && obj->type == OBJ_NUMBER;
-}
+int _is_number(struct Obj* obj) { return obj && obj->type == OBJ_NUMBER; }
 
-int _is_percent(struct Obj* obj) {
-    return obj && obj->type == OBJ_PERCENT;
-}
+int _is_percent(struct Obj* obj) { return obj && obj->type == OBJ_PERCENT; }
 
-int _is_string(struct Obj* obj) {
-    return obj && obj->type == OBJ_STRING;
-}
+int _is_string(struct Obj* obj) { return obj && obj->type == OBJ_STRING; }
 
-int _is_rule(struct Obj* obj) {
-    return obj && obj->type == OBJ_RULE;
-}
+int _is_rule(struct Obj* obj) { return obj && obj->type == OBJ_RULE; }
 
 struct Obj* _eval_binary_op(struct Obj* obj) {
     struct PairObj* pair = (struct PairObj*)obj->value;
@@ -69,13 +60,22 @@ struct Obj* _eval_binary_op(struct Obj* obj) {
     int* result = malloc(sizeof(int));
 
     switch (obj->type) {
-        case OBJ_ADD: *result = left + right; break;
-        case OBJ_SUB: *result = left - right; break;
-        case OBJ_MUL: *result = left * right; break;
-        case OBJ_DIV: *result = left / right; break;
-        default: *result = 0; break;
+        case OBJ_ADD:
+            *result = left + right;
+            break;
+        case OBJ_SUB:
+            *result = left - right;
+            break;
+        case OBJ_MUL:
+            *result = left * right;
+            break;
+        case OBJ_DIV:
+            *result = left / right;
+            break;
+        default:
+            *result = 0;
+            break;
     }
-    
 
     struct Obj* result_obj = _make_obj_in_stack();
     result_obj->type = OBJ_NUMBER;
@@ -131,7 +131,7 @@ struct Obj* _do_rgb(struct FuncObj* func) {
     color->g = *(unsigned char*)g_obj->value;
     color->b = *(unsigned char*)b_obj->value;
 
-    struct Obj* result_obj = malloc(sizeof(struct Obj)); //_make_obj_in_stack();
+    struct Obj* result_obj = malloc(sizeof(struct Obj));  //_make_obj_in_stack();
     result_obj->type = OBJ_COLOR;
     result_obj->value = color;
 
@@ -142,7 +142,7 @@ struct Obj* _do_to_percent(struct FuncObj* func) {
     if (func->args_size == 0) return NULL;
     struct Obj* arg = func->args[0];
     struct Obj* result_obj = _eval(arg);
-    if (_is_percent(result_obj)) return result_obj; 
+    if (_is_percent(result_obj)) return result_obj;
     if (!_is_number(result_obj)) return NULL;
 
     result_obj->type = OBJ_PERCENT;

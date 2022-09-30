@@ -1,16 +1,18 @@
 #include <stdlib.h>
+
 #include "pixelopolis/_draw_builder.h"
-#include "pixelopolis/css_func.h"
 #include "pixelopolis/css_eval.h"
+#include "pixelopolis/css_func.h"
 
 static inline const size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
-    css_iter(obj, prop_objs) size++; // counter
+    css_iter (obj, prop_objs)
+        size++;  // counter
     return size;
 }
 
-struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper* helper) {
+struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper* helper) {
     struct Rule* rule = helper->rule;
     enum FillDirection fill_direction = series->fill_direction;
     struct Obj** prop_objs = css_find_objs(rule, "body");
@@ -25,7 +27,7 @@ struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper*
 
     size_t index = 0;
     struct Obj* obj = NULL;
-    css_iter(obj, prop_objs) {
+    css_iter (obj, prop_objs) {
         struct RuleSelector* selector = css_eval_rule(obj);
         struct DrawObj* child = series_make_draw_obj(helper, selector);
         if (!child) continue;
@@ -45,26 +47,27 @@ struct ShiftDrawPair **_build_many_objs(struct SeriesObj* series, struct Helper*
     pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (index + 1));
     pairs[index] = NULL;
 
-    series_max_basic(&helper->parent->basic, &basic_temp); // resize parent
+    series_max_basic(&helper->parent->basic, &basic_temp);  // resize parent
 
-    int end_width = series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
+    int end_width =
+        series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
     series_align_objs(helper, pairs, fill_direction, size, end_width);
 
     return pairs;
 }
 
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction) {
-    struct Rule *rule = helper->rule;
+    struct Rule* rule = helper->rule;
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
     obj->fill_direction = fill_direction;
 
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
-    struct DrawObj *draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_SERIES, obj);
+    struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_SERIES, obj);
     struct Helper inner_helper = {
-        .program=helper->program,
-        .rule=helper->rule,
-        .parent=draw_obj,
+        .program = helper->program,
+        .rule = helper->rule,
+        .parent = draw_obj,
     };
     obj->pairs = _build_many_objs(obj, &inner_helper);
 

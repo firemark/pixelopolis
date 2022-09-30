@@ -1,5 +1,4 @@
 #include <math.h>
-
 #include <pixelopolis/angle_iter.h>
 
 void _angle_iter_update_ncords(struct AngleIter *iter) {
@@ -7,7 +6,8 @@ void _angle_iter_update_ncords(struct AngleIter *iter) {
     iter->ny = sin(iter->theta) * iter->h;
 }
 
-void angle_iter_start_with_range(struct AngleIter *iter, int w, int h, int sides, int start_sides, int end_sides) {
+void angle_iter_start_with_range(struct AngleIter *iter, int w, int h, int sides, int start_sides,
+                                 int end_sides) {
     iter->theta_iter = 2.0 * M_PI / (double)sides;
     iter->end_sides = end_sides;
     iter->i = start_sides - 1;

@@ -1,18 +1,21 @@
-#include <math.h>
-#include "pixelopolis/basic.h"
 #include "pixelopolis/draw.h"
 
+#include <math.h>
+
+#include "pixelopolis/basic.h"
+
 #define _GET_INDEX(img, cor) ((img->height - 1 - cor[1]) * img->width + cor[0])
-#define _GUARD_INDEX(index, img) \
-    if (index < 0 || index >= img->width * img->height) {\
-        index = 0; \
+#define _GUARD_INDEX(index, img)                          \
+    if (index < 0 || index >= img->width * img->height) { \
+        index = 0;                                        \
     }
-#define _GUARD_COR(cor, img) {\
-    if (cor[0] < 0) return; \
-    if (cor[0] >= img->width) return; \
-    if (cor[1] < 0) return; \
-    if (cor[1] >= img->height) return; \
-}
+#define _GUARD_COR(cor, img)               \
+    {                                      \
+        if (cor[0] < 0) return;            \
+        if (cor[0] >= img->width) return;  \
+        if (cor[1] < 0) return;            \
+        if (cor[1] >= img->height) return; \
+    }
 
 struct RoyalPixel get_pixel(const struct image* img, const int cor[2]) {
     int index = _GET_INDEX(img, cor);
@@ -64,13 +67,14 @@ struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor
     struct rgb pru = flat_image_get_pixel(img, ru);
     struct rgb prd = flat_image_get_pixel(img, rd);
 
-#define M(c, x, y) c * x * y
-#define MIX(x) M(plu. x, dx, dy) + M(pld. x, dx, inv_dy) + M(pru. x, inv_dx, dy) + M(prd. x, inv_dx, inv_dy)
+#define M(c, x, y) c* x* y
+#define MIX(x) \
+    M(plu.x, dx, dy) + M(pld.x, dx, inv_dy) + M(pru.x, inv_dx, dy) + M(prd.x, inv_dx, inv_dy)
 
     struct rgb p = {
-        .r=MIX(r),
-        .g=MIX(g),
-        .b=MIX(b),
+        .r = MIX(r),
+        .g = MIX(g),
+        .b = MIX(b),
     };
 
 #undef MIX
@@ -105,7 +109,8 @@ void float_image_set_pixel(const struct FloatImage* img, const int cor[2], const
     img->buffer[index] = color;
 }
 
-static inline struct RoyalPixel _mix_color(const struct RoyalPixel a, const struct RoyalPixel b, const double ratio) {
+static inline struct RoyalPixel _mix_color(const struct RoyalPixel a, const struct RoyalPixel b,
+                                           const double ratio) {
     const float inv_ratio = 1 - ratio;
     struct RoyalPixel c;
 

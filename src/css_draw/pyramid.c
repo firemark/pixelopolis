@@ -1,4 +1,5 @@
 #include <stdlib.h>
+
 #include "pixelopolis/_css_draw.h"
 
 void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
@@ -17,22 +18,22 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
         struct DrawTexInfo tex_info = {
-            .wall=south_wall_obj,
-            .size={south_wall_obj->width, south_wall_obj->height},
-            .filter=inner_info->filter,
+            .wall = south_wall_obj,
+            .size = {south_wall_obj->width, south_wall_obj->height},
+            .filter = inner_info->filter,
         };
         struct PolyInfo poly_info_first = poly_info_create(&tex_info, inner_info);
         struct PolyInfo poly_info_second = poly_info_create(&tex_info, inner_info);
 
         int voxes_first[9] = {
-            0 , 0 , 0,
-            w , 0 , 0,
-            wh, dh, h,
+            0,  0,  0,  //
+            w,  0,  0,  //
+            wh, dh, h,  //
         };
         int voxes_second[9] = {
-            0 , d , 0,
-            w , d , 0,
-            wh, dh, h,
+            0,  d,  0,  //
+            w,  d,  0,  //
+            wh, dh, h,  //
         };
 
         _transform(voxes_first, vox, &draw_obj->basic, 3);
@@ -48,22 +49,22 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
     struct WallObj *east_wall_obj = obj->east_wall;
     if (east_wall_obj && width > 0 && height > 0) {
         struct DrawTexInfo tex_info = {
-            .wall=east_wall_obj,
-            .size={east_wall_obj->width, east_wall_obj->height},
-            .filter=inner_info->filter,
+            .wall = east_wall_obj,
+            .size = {east_wall_obj->width, east_wall_obj->height},
+            .filter = inner_info->filter,
         };
         struct PolyInfo poly_info_first = poly_info_create(&tex_info, inner_info);
         struct PolyInfo poly_info_second = poly_info_create(&tex_info, inner_info);
 
         int voxes_first[9] = {
-            0 , 0 , 0,
-            0 , d , 0,
-            wh, dh, h,
+            0,  0,  0,  //
+            0,  d,  0,  //
+            wh, dh, h,  //
         };
         int voxes_second[9] = {
-            w , 0 , 0,
-            w , d , 0,
-            wh, dh, h,
+            w,  0,  0,  //
+            w,  d,  0,  //
+            wh, dh, h,  //
         };
 
         _transform(voxes_first, vox, &draw_obj->basic, 3);

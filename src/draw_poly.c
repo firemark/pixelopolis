@@ -1,8 +1,9 @@
-#include <stdlib.h>
+#include "pixelopolis/draw_poly.h"
+
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-#include "pixelopolis/draw_poly.h"
 #include "pixelopolis/draw.h"
 #include "pixelopolis/img/destroy.h"
 
@@ -10,7 +11,7 @@
 #define COS_PROJECTION 0.7071067811865476
 #define SCALE_PROJECTION 0.6666666666666666
 
-#define SUB(a, b, val) ((a) -> val - (b) -> val)
+#define SUB(a, b, val) ((a)->val - (b)->val)
 
 struct h_poly {
     double x, y;
@@ -31,24 +32,20 @@ struct h_poly_diffx {
 
 struct h_fill_space {
     struct PolyInfo *info;
-    double* tbn;
+    double *tbn;
     struct h_poly *left, *right;
 };
 
-void poly_info_clear(struct PolyInfo* info) {
+void poly_info_clear(struct PolyInfo *info) {
     if (info->img_to_draw) flat_image_destroy(info->img_to_draw);
     if (info->normal_map) float_image_destroy(info->normal_map);
 }
 
 static inline void _compute_normal(double normal[3], const int voxes[9]) {
-    int vox_a[3] = {
-        voxes[3 + 0] - voxes[0 + 0],
-        voxes[3 + 1] - voxes[0 + 1],
-        voxes[3 + 2] - voxes[0 + 2]};
-    int vox_b[3] = {
-        voxes[6 + 0] - voxes[0 + 0],
-        voxes[6 + 1] - voxes[0 + 1],
-        voxes[6 + 2] - voxes[0 + 2]};
+    int vox_a[3] = {voxes[3 + 0] - voxes[0 + 0], voxes[3 + 1] - voxes[0 + 1],
+                    voxes[3 + 2] - voxes[0 + 2]};
+    int vox_b[3] = {voxes[6 + 0] - voxes[0 + 0], voxes[6 + 1] - voxes[0 + 1],
+                    voxes[6 + 2] - voxes[0 + 2]};
 
 #define PARTIAL_CROSS(ax1, ax2) (vox_a[ax1] * vox_b[ax2] - vox_a[ax2] * vox_b[ax1])
     normal[0] = PARTIAL_CROSS(1, 2);
@@ -73,20 +70,12 @@ static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[
     double bitangen[3];
     double normal[3];
 
-    int vox_a[3] = {
-        voxes[3 + 0] - voxes[0 + 0],
-        voxes[3 + 1] - voxes[0 + 1],
-        voxes[3 + 2] - voxes[0 + 2]};
-    int vox_b[3] = {
-        voxes[6 + 0] - voxes[0 + 0],
-        voxes[6 + 1] - voxes[0 + 1],
-        voxes[6 + 2] - voxes[0 + 2]};
-    int uv_a[2] = {
-        uv[2 + 0] - uv[0 + 0],
-        uv[2 + 1] - uv[0 + 1]};
-    int uv_b[2] = {
-        uv[4 + 0] - uv[0 + 0],
-        uv[4 + 1] - uv[0 + 1]};
+    int vox_a[3] = {voxes[3 + 0] - voxes[0 + 0], voxes[3 + 1] - voxes[0 + 1],
+                    voxes[3 + 2] - voxes[0 + 2]};
+    int vox_b[3] = {voxes[6 + 0] - voxes[0 + 0], voxes[6 + 1] - voxes[0 + 1],
+                    voxes[6 + 2] - voxes[0 + 2]};
+    int uv_a[2] = {uv[2 + 0] - uv[0 + 0], uv[2 + 1] - uv[0 + 1]};
+    int uv_b[2] = {uv[4 + 0] - uv[0 + 0], uv[4 + 1] - uv[0 + 1]};
 
 #define PARTIAL_CROSS(a, b, ax1, ax2) (a[ax1] * b[ax2] - a[ax2] * b[ax1])
 #define PARTIAL_TANGEN(ax1, ax2) (vox_a[ax1] * uv_b[ax2] - vox_b[ax1] * uv_a[ax2])
@@ -149,10 +138,8 @@ static inline void _add_h_poly_diffx(struct h_poly *a, const struct h_poly_diffx
     a->zindex += b->zindex;
 }
 
-static inline void _diff_h_poly_with_y(
-        struct h_poly_diffy *diff,
-        const struct h_poly *a,
-        const struct h_poly *b) {
+static inline void _diff_h_poly_with_y(struct h_poly_diffy *diff, const struct h_poly *a,
+                                       const struct h_poly *b) {
     const double diff_y = SUB(a, b, y);
     if (diff_y <= 0.0) {
         diff->x = diff->u = diff->v = diff->zindex = 0;
@@ -164,10 +151,8 @@ static inline void _diff_h_poly_with_y(
     diff->zindex = SUB(a, b, zindex) / diff_y;
 }
 
-static inline void _diff_h_poly_with_x(
-        struct h_poly_diffx *diff,
-        const struct h_poly *a,
-        const struct h_poly *b) {
+static inline void _diff_h_poly_with_x(struct h_poly_diffx *diff, const struct h_poly *a,
+                                       const struct h_poly *b) {
     const double diff_x = SUB(a, b, x);
     if (diff_x <= 0.0) {
         diff->u = diff->v = diff->zindex = 0;
@@ -178,12 +163,8 @@ static inline void _diff_h_poly_with_x(
     diff->zindex = SUB(a, b, zindex) / diff_x;
 }
 
-static inline void _putpixel(
-        struct PolyInfo* info,
-        const int img_cor[2],
-        const int uv_cor[2],
-        const int zindex,
-        const double tbn[9]) {
+static inline void _putpixel(struct PolyInfo *info, const int img_cor[2], const int uv_cor[2],
+                             const int zindex, const double tbn[9]) {
     struct rgb color = flat_image_get_pixel(info->img_to_draw, uv_cor);
 
     if (color.r == 0xFF && color.g == 0x00 && color.b == 0xFF) {
@@ -204,11 +185,8 @@ static inline void _putpixel(
     }
 
     // primitive shading
-    double shadow = fmax(0.5,
-            fmin(1.0, 1.0
-                - normal[0] * 0.35
-                - normal[1] * 0.10
-                - normal[2] * 0.10));
+    double shadow =
+        fmax(0.5, fmin(1.0, 1.0 - normal[0] * 0.35 - normal[1] * 0.10 - normal[2] * 0.10));
     color.r *= shadow;
     color.g *= shadow;
     color.b *= shadow;
@@ -220,40 +198,30 @@ static inline void _putpixel(
     color.b = 255.0 * (normal[2] * 0.5 + 0.5);
     */
     struct RoyalPixel royal_color = {
-        .r=color.r,
-        .g=color.g,
-        .b=color.b,
-        .zindex=zindex,
+        .r = color.r,
+        .g = color.g,
+        .b = color.b,
+        .zindex = zindex,
     };
 
     set_pixel(info->img, img_cor, royal_color);
 }
 
-static inline void _putpixel_with_h_poly(
-        struct h_fill_space* helper,
-        struct h_poly* point) {
-    const int uv_cor[2] = { round(point->u), round(point->v) };
-    const int img_cor[2] = { round(point->x), round(point->y) };
-    _putpixel(
-        helper->info,
-        img_cor,
-        uv_cor,
-        (int)point->zindex,
-        helper->tbn);
+static inline void _putpixel_with_h_poly(struct h_fill_space *helper, struct h_poly *point) {
+    const int uv_cor[2] = {round(point->u), round(point->v)};
+    const int img_cor[2] = {round(point->x), round(point->y)};
+    _putpixel(helper->info, img_cor, uv_cor, (int)point->zindex, helper->tbn);
 }
 
-static void _fill_space(
-        struct h_fill_space *helper,
-        struct h_poly_diffy *diff_left,
-        struct h_poly_diffy *diff_right,
-        double y_end) {
+static void _fill_space(struct h_fill_space *helper, struct h_poly_diffy *diff_left,
+                        struct h_poly_diffy *diff_right, double y_end) {
     double y_start, x_start, x_end;
     struct h_poly pointer;
     struct h_poly_diffx pointer_diff;
     struct h_poly *left = helper->left;
     struct h_poly *right = helper->right;
 
-    if (left->x > right->x) { // swap right with left if need
+    if (left->x > right->x) {  // swap right with left if need
         struct h_poly *temp;
         struct h_poly_diffy *diff_temp;
         temp = left;
@@ -265,13 +233,13 @@ static void _fill_space(
         diff_right = diff_temp;
     }
 
-    for(y_start = left->y; y_start < y_end; y_start += 1.0) {
+    for (y_start = left->y; y_start < y_end; y_start += 1.0) {
         _cpy_h_poly(&pointer, left);
         _diff_h_poly_with_x(&pointer_diff, right, left);
 
         x_start = left->x;
         x_end = right->x;
-        for(; x_start < x_end; x_start += 1.0) {
+        for (; x_start < x_end; x_start += 1.0) {
             _putpixel_with_h_poly(helper, &pointer);
             _add_h_poly_diffx(&pointer, &pointer_diff);
         }
@@ -303,16 +271,13 @@ void _projection_poly_oblique(const int *vox, const int *uv, struct h_poly *vec)
     vec->v = uv[1];
 }
 
-void (*_projection_poly)(const int*, const int*, struct h_poly*) = _projection_poly_oblique;
+void (*_projection_poly)(const int *, const int *, struct h_poly *) = _projection_poly_oblique;
 
-void draw_poly(
-        struct PolyInfo* info,
-        const int voxes[9],
-        const int uv[6]) {
+void draw_poly(struct PolyInfo *info, const int voxes[9], const int uv[6]) {
     struct h_poly at, bt, ct;
     struct h_poly *a, *b, *c;
 
-    a = &at; // fuck malloc, use stack!
+    a = &at;  // fuck malloc, use stack!
     b = &bt;
     c = &ct;
 
@@ -322,7 +287,12 @@ void draw_poly(
     _projection_poly(&voxes[6], &uv[4], c);
 
     // sorting
-#define SWAP(a, b) { temp = a; a = b; b = temp; }
+#define SWAP(a, b) \
+    {              \
+        temp = a;  \
+        a = b;     \
+        b = temp;  \
+    }
     struct h_poly *temp;
     if (a->y > b->y) SWAP(a, b);
     if (a->y > c->y) SWAP(a, c);
@@ -344,10 +314,10 @@ void draw_poly(
     _compute_tbn(tbn, voxes, uv);
 
     struct h_fill_space helper = {
-        .info=info,
-        .tbn=tbn,
-        .left=&left,
-        .right=&right,
+        .info = info,
+        .tbn = tbn,
+        .left = &left,
+        .right = &right,
     };
 
     if (diff_ba.x > diff_ca.x) {
@@ -361,36 +331,34 @@ void draw_poly(
     }
 };
 
-void draw_sprite(
-        struct image *img,
-        const struct FlatImage *img_to_draw,
-        const int vox[3],
-        const double normal[3]) {
+void draw_sprite(struct image *img, const struct FlatImage *img_to_draw, const int vox[3],
+                 const double normal[3]) {
     int uv_cor[2];
     struct h_poly vec;
-    _projection_poly(vox, uv_cor, &vec); // TODO - how to avoid uv? new structure, new function?
+    _projection_poly(vox, uv_cor,
+                     &vec);  // TODO - how to avoid uv? new structure, new function?
 
     const int w = img_to_draw->width;
     const int h = img_to_draw->height;
-    const int x_offset = 0; //-w / 2; - TODO better offset
-    const int y_offset = 0; //-h / 2;
+    const int x_offset = 0;  //-w / 2; - TODO better offset
+    const int y_offset = 0;  //-h / 2;
     const int zindex = vec.zindex;
     const int x = vec.x;
     const int y = vec.y;
 
     struct PolyInfo info = {
-        .img=img,
-        .img_to_draw=img_to_draw,
-        .normal_map=NULL,
+        .img = img,
+        .img_to_draw = img_to_draw,
+        .normal_map = NULL,
     };
 
-    double tbn[9]; // TODO using TBN instead of normal only
+    double tbn[9];  // TODO using TBN instead of normal only
     tbn[6] = normal[0];
     tbn[7] = normal[1];
     tbn[8] = normal[2];
 
-    for(uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
-        for(uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
+    for (uv_cor[0] = 0; uv_cor[0] < w; uv_cor[0]++) {
+        for (uv_cor[1] = 0; uv_cor[1] < h; uv_cor[1]++) {
             const int img_cor[2] = {
                 uv_cor[0] + x + x_offset,
                 uv_cor[1] + y + y_offset,
@@ -409,11 +377,9 @@ static inline void _get_random_vox_in_poly(int vox[3], const int voxes[9]) {
         rand_b = 1.0 - rand_b;
     }
 
-#define COMP_RAND(axis) (\
-        (double)voxes[axis + 0] \
-        + rand_a * (voxes[axis + 3] - voxes[axis + 0]) \
-        + rand_b * (voxes[axis + 6] - voxes[axis + 0]) \
-    )
+#define COMP_RAND(axis)                                                       \
+    ((double)voxes[axis + 0] + rand_a * (voxes[axis + 3] - voxes[axis + 0]) + \
+     rand_b * (voxes[axis + 6] - voxes[axis + 0]))
     vox[0] = COMP_RAND(0);
     vox[1] = COMP_RAND(1);
     vox[2] = COMP_RAND(2);
@@ -446,11 +412,8 @@ static inline double _get_area_of_poly(const int voxes[9]) {
 #undef Z
 }
 
-void draw_sprites_in_random_position_in_poly(
-        struct image *img,
-        const struct FlatImage *img_to_draw,
-        const int voxes[3],
-        const int density) {
+void draw_sprites_in_random_position_in_poly(struct image *img, const struct FlatImage *img_to_draw,
+                                             const int voxes[3], const int density) {
     if (density == 0) return;
 
     int vox[3];
@@ -459,10 +422,10 @@ void draw_sprites_in_random_position_in_poly(
 
     const double area = _get_area_of_poly(voxes);
     const double sprite_area = img_to_draw->width * img_to_draw->height;
-    const int count = (area * (double)density) / (25.0 * sprite_area); // IDK - 25 is fine for eyes
+    const int count = (area * (double)density) / (25.0 * sprite_area);  // IDK - 25 is fine for eyes
 
     int i;
-    for(i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         _get_random_vox_in_poly(vox, voxes);
         draw_sprite(img, img_to_draw, vox, normal);
     }

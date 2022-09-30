@@ -1,9 +1,10 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include "pixelopolis/hash.h"
-#include "pixelopolis/css_func.h"
+
 #include "pixelopolis/css_debug.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/hash.h"
 
 int _match(struct RuleSelector* query, struct RuleSelector* iter_query);
 
@@ -12,13 +13,13 @@ int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
     if (!query->klasses) return 0;
 
     char* iter_klass;
-    css_iter(iter_klass, iter_query->klasses) {
+    css_iter (iter_klass, iter_query->klasses) {
         char* klass;
-        css_iter(klass, query->klasses) { // greedy search
-            if (!strcmp(iter_klass, klass)) goto found; // match
+        css_iter (klass, query->klasses) {               // greedy search
+            if (!strcmp(iter_klass, klass)) goto found;  // match
         }
-        return 0; // not found = not match
-        found:;
+        return 0;  // not found = not match
+    found:;
     }
     return 1;
 }
@@ -43,8 +44,7 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
     char* pseudo_klass = query->pseudo_klass;
 
     if (iter_query->element) {
-        if (!element || strcmp(element, iter_query->element) != 0)
-            return 0;
+        if (!element || strcmp(element, iter_query->element) != 0) return 0;
     }
 
     if (!_match_klass(query, iter_query)) {
@@ -52,8 +52,7 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
     }
 
     if (iter_query->pseudo_klass) {
-        if (!pseudo_klass || strcmp(pseudo_klass, iter_query->pseudo_klass))
-            return 0;
+        if (!pseudo_klass || strcmp(pseudo_klass, iter_query->pseudo_klass)) return 0;
     }
 
     if (!_match_parent(query->parent, iter_query->parent)) {
@@ -68,19 +67,19 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
 }
 
 struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSelector* query) {
-    struct Rule *rule = malloc(sizeof(struct Rule));
+    struct Rule* rule = malloc(sizeof(struct Rule));
     rule->selector = query;
     rule->props = hash_make();
 
-    struct Rule *iter_rule;
-    css_iter(iter_rule, program->rules) {
+    struct Rule* iter_rule;
+    css_iter (iter_rule, program->rules) {
         struct RuleSelector* iter_query = iter_rule->selector;
         if (!_match(query, iter_query)) continue;
         // DEBUG
-        //css_debug_rule_selector(stderr, query);
-        //fprintf(stderr, " VS ");
-        //css_debug_rule(stderr, iter_rule);
-        //fprintf(stderr, "\n");
+        // css_debug_rule_selector(stderr, query);
+        // fprintf(stderr, " VS ");
+        // css_debug_rule(stderr, iter_rule);
+        // fprintf(stderr, "\n");
 
         // filtering done - this is time to copy props
         hash_update(rule->props, iter_rule->props);

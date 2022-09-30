@@ -1,4 +1,5 @@
 #include <stdlib.h>
+
 #include "pixelopolis/_draw_builder.h"
 #include "pixelopolis/css_func.h"
 
@@ -12,7 +13,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     int shift = 0;
     int padding = 0;
     size_t size = 0;
-    for(;;) {
+    for (;;) {
         struct RuleSelector* selector = css_find_selector_prop(rule, "body");
         struct DrawObj* child = series_make_draw_obj(helper, selector);
         if (!child) continue;
@@ -32,9 +33,10 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         shift += child_width + padding;
     }
 
-    series_max_basic(&helper->parent->basic, &basic_temp); // resize parent
+    series_max_basic(&helper->parent->basic, &basic_temp);  // resize parent
 
-    int end_width = series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
+    int end_width =
+        series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
     series_align_objs(helper, pairs, fill_direction, size, end_width);
 
     pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (size + 1));
@@ -43,17 +45,17 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
 }
 
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction) {
-    struct Rule *rule = helper->rule;
+    struct Rule* rule = helper->rule;
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
     obj->fill_direction = fill_direction;
 
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
-    struct DrawObj *draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_SERIES, obj);
+    struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_SERIES, obj);
 
     struct Helper inner_helper = {
-        .program=helper->program,
-        .rule=rule,
-        .parent=draw_obj,
+        .program = helper->program,
+        .rule = rule,
+        .parent = draw_obj,
     };
 
     int width = series_get_basic_metric_by_fill_direction(&draw_obj->basic, fill_direction);

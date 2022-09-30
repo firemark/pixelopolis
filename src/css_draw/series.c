@@ -1,14 +1,12 @@
 #include "pixelopolis/_css_draw.h"
 
-static inline void _update_shift(
-        int vox[3],
-        const struct DrawObj *draw_obj,
-        const struct ShiftDrawPair *pair) {
+static inline void _update_shift(int vox[3], const struct DrawObj *draw_obj,
+                                 const struct ShiftDrawPair *pair) {
     const int shift = pair->shift;
     const struct DrawObj *child_obj = pair->obj;
     struct SeriesObj *obj = draw_obj->obj;
 
-    switch(obj->fill_direction) {
+    switch (obj->fill_direction) {
         case X_AXIS_FILL:
             vox[0] += shift * draw_obj->basic.cos_th;
             vox[1] += shift * draw_obj->basic.sin_th;
@@ -33,15 +31,15 @@ void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info)
     struct ShiftDrawPair **pairs = obj->pairs;
     if (!pairs) return;
 
-    struct ShiftDrawPair* pair = NULL;
+    struct ShiftDrawPair *pair = NULL;
     size_t index = 0;
-    while((pair = pairs[index++])) {
+    while ((pair = pairs[index++])) {
         int vox[3] = COPY_VOX(inner_info->vox);
         _update_shift(vox, draw_obj, pair);
         struct DrawInfo draw_info = {
-            .img=inner_info->img,
-            .vox=vox,
-            .filter=inner_info->filter,
+            .img = inner_info->img,
+            .vox = vox,
+            .filter = inner_info->filter,
         };
         draw_component(pair->obj, &draw_info, NULL);
     }

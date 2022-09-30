@@ -1,30 +1,27 @@
+#include "pixelopolis/css_func.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "pixelopolis/basic.h"
 #include "pixelopolis/css_debug.h"
-#include "pixelopolis/css_func.h"
 #include "pixelopolis/css_eval.h"
 
 struct RuleSelector default_selector = {
-    .element=NULL,
-    .klasses=NULL,
-    .pseudo_klass=NULL,
+    .element = NULL,
+    .klasses = NULL,
+    .pseudo_klass = NULL,
 };
 
-struct Rule* css_find_rule_by_query(
-        struct Program* program,
-        struct RuleSelector* query) {
+struct Rule* css_find_rule_by_query(struct Program* program, struct RuleSelector* query) {
     struct Rule* rule;
     struct RuleSelector* selector;
-    css_iter(rule, program->rules) {
+    css_iter (rule, program->rules) {
         selector = rule->selector;
-        if (
-            (!query->element || !selector->element || !strcmp(selector->element, query->element))
+        if ((!query->element || !selector->element || !strcmp(selector->element, query->element))
             //&& (!query->klass || !strcmp(selector->klass, query->klass))
-            && (!query->pseudo_klass || !strcmp(selector->pseudo_klass, query->pseudo_klass))
-           ) {
+            && (!query->pseudo_klass || !strcmp(selector->pseudo_klass, query->pseudo_klass))) {
             return rule;
         }
     }
@@ -103,7 +100,7 @@ struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
     if (old->klasses) {
         size_t i;
         selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
-        for(i = 0; i < KLASSES_SIZE; i++) { // cpy klasses
+        for (i = 0; i < KLASSES_SIZE; i++) {  // cpy klasses
             selector->klasses[i] = css_cpy_str(old->klasses[i]);
         }
     } else {
@@ -120,4 +117,3 @@ struct RuleSelector* css_find_last_parent_selector(struct RuleSelector* selector
     if (selector->greedy_parent) return css_find_last_parent_selector(selector->greedy_parent);
     return selector;
 }
-

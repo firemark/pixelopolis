@@ -50,7 +50,7 @@ BreakConstructorInitializersBeforeComma: false
 BreakConstructorInitializers: BeforeColon
 BreakAfterJavaFieldAnnotations: false
 BreakStringLiterals: true
-ColumnLimit:     80
+ColumnLimit:     100
 CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
@@ -66,6 +66,8 @@ ForEachMacros:
   - foreach
   - Q_FOREACH
   - BOOST_FOREACH
+  - css_iter
+  - hash_iter
 IncludeBlocks:   Regroup
 IncludeCategories:
   - Regex:           '^<ext/.*\.h>'
@@ -85,7 +87,7 @@ IncludeIsMainSourceRegex: ''
 IndentCaseLabels: true
 IndentGotoLabels: true
 IndentPPDirectives: None
-IndentWidth:     2
+IndentWidth:     4
 IndentWrappedFunctionNames: false
 JavaScriptQuotes: Leave
 JavaScriptWrapImports: true
