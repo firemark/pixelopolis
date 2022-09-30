@@ -4,7 +4,7 @@
 #include <png.h>
 #include <limits.h>
 
-#include <img/read.h>
+#include "pixelopolis/img/read.h"
 
 struct PngReadMeta {
     int width;

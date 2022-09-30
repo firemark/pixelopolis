@@ -4,7 +4,7 @@
 #include <png.h>
 #include <limits.h>
 
-#include <img/ops.h>
+#include "pixelopolis/img/ops.h"
 
 #define _GET_INDEX(img, x, y) ( \
     (img->height - 1 - y) * img->width + x \

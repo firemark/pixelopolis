@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 void _append_floors_to_wall(struct Helper* helper, struct WallObj* wall, int wall_width, int wall_height) {
     int y = 0;

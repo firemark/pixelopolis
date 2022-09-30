@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <check.h>
 
-#include "css_eval.h"
-#include "css_func.h"
+#include "pixelopolis/css_eval.h"
+#include "pixelopolis/css_func.h"
 
 struct Program* _make_program(char* buffer) {
     FILE *stream = fmemopen(buffer, strlen(buffer), "r");

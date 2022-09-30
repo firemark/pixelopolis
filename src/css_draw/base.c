@@ -1,5 +1,5 @@
-#include "_css_draw.h"
-#include "draw_poly.h"
+#include "pixelopolis/_css_draw.h"
+#include "pixelopolis/draw_poly.h"
 
 
 void css_base_draw_poly_random(struct image* img, const int voxes[9], const struct WallObj* wall) {

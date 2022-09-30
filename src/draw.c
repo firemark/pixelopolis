@@ -1,6 +1,6 @@
-#include <basic.h>
-#include <draw.h>
 #include <math.h>
+#include "pixelopolis/basic.h"
+#include "pixelopolis/draw.h"
 
 #define _GET_INDEX(img, cor) ((img->height - 1 - cor[1]) * img->width + cor[0])
 #define _GUARD_INDEX(index, img) \

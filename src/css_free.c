@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "hash.h"
-#include "css_func.h"
+#include "pixelopolis/hash.h"
+#include "pixelopolis/css_func.h"
 
 void css_free_obj(struct Obj* obj) {
     if (obj->type & OBJ_BINARY_OP) {

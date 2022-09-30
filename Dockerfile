@@ -21,15 +21,15 @@ ADD lib_include lib_include
 ADD src src
 ADD include include
 
-RUN mkdir out \
-    && cd out \
+RUN mkdir build \
+    && cd build \
     && cmake -DCMAKE_BUILD_TYPE=Release .. \
     && make \
     && make install \
     && mv pixelopolis .. \
     && mv libpixelopolis* .. \
     && cd .. \
-    && rm -rf out
+    && rm -rf build
 
 ADD textures /code/textures
 ADD examples /code/examples

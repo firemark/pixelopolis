@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
-#include "css_func.h"
-#include "_draw_builder.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/_draw_builder.h"
 
 #define DEFAULT_WIDTH 12
 

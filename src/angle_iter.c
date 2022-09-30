@@ -1,6 +1,6 @@
 #include <math.h>
 
-#include "angle_iter.h"
+#include <pixelopolis/angle_iter.h>
 
 void _angle_iter_update_ncords(struct AngleIter *iter) {
     iter->nx = cos(iter->theta) * iter->w;

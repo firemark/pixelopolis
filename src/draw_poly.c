@@ -2,9 +2,9 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "draw_poly.h"
-#include "draw.h"
-#include "img/destroy.h"
+#include "pixelopolis/draw_poly.h"
+#include "pixelopolis/draw.h"
+#include "pixelopolis/img/destroy.h"
 
 #define SIN_PROJECTION 0.7071067811865476
 #define COS_PROJECTION 0.7071067811865476

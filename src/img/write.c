@@ -4,7 +4,7 @@
 #include <png.h>
 #include <limits.h>
 
-#include <img/write.h>
+#include "pixelopolis/img/write.h"
 
 #define _TO_PNG(img, png_ptr, type) \
     int x, y; \

@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "_draw_builder.h"
-#include "css_func.h"
-#include "normal_map.h"
-#include "img.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/normal_map.h"
+#include "pixelopolis/img.h"
 
 #define _READ_TEXTURE(texture, filename, cache, type, func_read) \
     IMG_TYPE_##type* texture; { \

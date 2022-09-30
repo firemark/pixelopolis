@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "basic.h"
-#include "img.h"
-#include "normal_map.h"
+#include "pixelopolis/basic.h"
+#include "pixelopolis/img.h"
+#include "pixelopolis/normal_map.h"
 
 int main(int argc, char** argv) {
     char *in_filename = argc > 1 ? argv[1] : "in.png";

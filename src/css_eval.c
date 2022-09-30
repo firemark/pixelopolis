@@ -3,8 +3,8 @@
 #include <string.h>
 #include <time.h>
 
-#include "css_func.h"
-#include "css_eval.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_eval.h"
 
 #define STACK_MAX_SIZE 512
 

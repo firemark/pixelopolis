@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "_css_draw.h"
-#include "css_draw.h"
+#include "pixelopolis/_css_draw.h"
+#include "pixelopolis/css_draw.h"
 
 void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct BoardObj *obj = draw_obj->obj;

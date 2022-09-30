@@ -1,10 +1,10 @@
 #pragma once
 #include <stdlib.h>
 
-#include "img.h"
-#include "draw_builder.h"
-#include "css_draw.h"
-#include "draw_poly.h"
+#include "pixelopolis/img.h"
+#include "pixelopolis/draw_builder.h"
+#include "pixelopolis/css_draw.h"
+#include "pixelopolis/draw_poly.h"
 
 struct DrawInnerInfo {
     struct image *img;

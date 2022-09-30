@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "_css_draw.h"
-#include "angle_iter.h"
-#include "draw_poly.h"
+#include "pixelopolis/_css_draw.h"
+#include "pixelopolis/angle_iter.h"
+#include "pixelopolis/draw_poly.h"
 
 #define CREATE_VOXES(angle_iter, basic) { \
     basic.width / 2 + angle_iter.x , basic.depth / 2 + angle_iter.y , 0, \

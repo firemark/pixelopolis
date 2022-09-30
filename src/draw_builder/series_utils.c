@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 #define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr
 

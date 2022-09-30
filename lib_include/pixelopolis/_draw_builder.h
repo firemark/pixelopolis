@@ -1,7 +1,8 @@
 #pragma once
-#include "draw_builder.h"
-#include "hash.h"
 #include <math.h>
+
+#include "pixelopolis/draw_builder.h"
+#include "pixelopolis/hash.h"
 
 #define BUILDER_MAX_ELEMENTS 128
 

@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "css.h"
-#include "css_func.h"
-#include "basic.h"
+#include "pixelopolis/css.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/basic.h"
 #define YYDEBUG 1
 
 FILE *yyin;

@@ -1,5 +1,5 @@
 #pragma once
-#include <basic.h>
+#include "basic.h"
 
 struct RoyalPixel get_pixel(const struct image* img, const int cor[2]);
 struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]);

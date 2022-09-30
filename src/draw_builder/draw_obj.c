@@ -1,6 +1,6 @@
 #include <string.h>
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper) {
     struct RuleSelector *query = helper->selector;

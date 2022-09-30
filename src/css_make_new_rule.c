@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "hash.h"
-#include "css_func.h"
-#include "css_debug.h"
+#include "pixelopolis/hash.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_debug.h"
 
 int _match(struct RuleSelector* query, struct RuleSelector* iter_query);
 

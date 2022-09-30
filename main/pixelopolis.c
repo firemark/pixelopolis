@@ -2,15 +2,15 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "basic.h"
-#include "img.h"
-#include "draw.h"
-#include "css_func.h"
-#include "css_draw.h"
-#include "draw_builder.h"
+#include "pixelopolis/basic.h"
+#include "pixelopolis/img.h"
+#include "pixelopolis/draw.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_draw.h"
+#include "pixelopolis/draw_builder.h"
 
-#include "css_debug.h"
-#include "css_eval.h"
+#include "pixelopolis/css_debug.h"
+#include "pixelopolis/css_eval.h"
 
 struct Rule* find_world(struct Program *program) {
     struct RuleSelector query = default_selector;

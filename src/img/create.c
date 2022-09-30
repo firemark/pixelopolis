@@ -4,7 +4,7 @@
 #include <png.h>
 #include <limits.h>
 
-#include <img/create.h>
+#include "pixelopolis/img/create.h"
 
 #define _CREATE(img, width, height, image_type) \
     IMG_TYPE_##image_type* img = malloc(sizeof(IMG_TYPE_##image_type)); \

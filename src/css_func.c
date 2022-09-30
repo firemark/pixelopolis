@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "basic.h"
-#include "css_debug.h"
-#include "css_func.h"
-#include "css_eval.h"
+#include "pixelopolis/basic.h"
+#include "pixelopolis/css_debug.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_eval.h"
 
 struct RuleSelector default_selector = {
     .element=NULL,

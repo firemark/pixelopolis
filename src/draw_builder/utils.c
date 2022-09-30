@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper) {
     if (!helper->selector) return NULL;

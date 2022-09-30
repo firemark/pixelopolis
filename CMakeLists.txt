@@ -7,16 +7,17 @@ find_package(FLEX REQUIRED)
 
 function(main)
     file(GLOB_RECURSE SRC_FILES src/*.c)
+    file(GLOB_RECURSE HEADER_FILES include/*.h)
     compile_parser(PARSER_FILES)
-    add_lib(SRC_FILES ${SRC_FILES} ${PARSER_FILES})
+    add_lib(SRC_FILES ${SRC_FILES} ${PARSER_FILES} HEADER_FILES ${HEADER_FILES})
     add_exec(Pixelopolis pixelopolis)
     add_exec(PixelopolisNormalMap pixelopolis-normal-map)
 endfunction()
 
 function(add_lib)
     cmake_parse_arguments(
-        PARSE_ARGV 0 ARGS "" "" "SRC_FILES")
-    add_library(PixelopolisLib SHARED ${ARGS_SRC_FILES})
+        PARSE_ARGV 0 ARGS "" "" "SRC_FILES;HEADER_FILES")
+    add_library(PixelopolisLib SHARED ${ARGS_SRC_FILES} ${ARGS_HEADER_FILES})
     set_target_properties(PixelopolisLib PROPERTIES
         OUTPUT_NAME pixelopolis
         VERSION ${PROJECT_VERSION}
@@ -33,7 +34,13 @@ function(add_lib)
         ${FLEX_LIBRARIES}
         m
     )
-    install(TARGETS PixelopolisLib LIBRARY DESTINATION lib)
+    install(
+        TARGETS PixelopolisLib
+        PUBLIC_HEADER
+        LIBRARY DESTINATION lib
+        INCLUDES DESTINATION include
+    )
+
 endfunction()
 
 function(add_exec TARGET NAME)

@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include "css.y.h"
-#include "basic.h"
+#include "pixelopolis/basic.h"
 
 #define push_string \
     out = malloc(sizeof(char*) * (yyleng + 1)); \

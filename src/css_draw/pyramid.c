@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "_css_draw.h"
+#include "pixelopolis/_css_draw.h"
 
 void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct PyramidObj *obj = draw_obj->obj;

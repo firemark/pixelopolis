@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "_css_draw.h"
-#include "angle_iter.h"
-#include "draw_poly.h"
+#include "pixelopolis/_css_draw.h"
+#include "pixelopolis/angle_iter.h"
+#include "pixelopolis/draw_poly.h"
 
 #define NORMALIZE_VAL 200
 

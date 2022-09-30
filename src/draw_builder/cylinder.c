@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "_draw_builder.h"
-#include "css_func.h"
-#include "angle_iter.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/angle_iter.h"
 
 static void _cylinder_build_many_walls(struct SelectorHelper* wall_helper, struct CylinderObj* obj, struct BasicObj* basic) {
     int width = basic->width;

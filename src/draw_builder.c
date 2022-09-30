@@ -1,9 +1,9 @@
 #include <string.h>
 
-#include "_draw_builder.h"
+#include "pixelopolis/_draw_builder.h"
 
-#include "img.h"
-#include "css_func.h"
+#include "pixelopolis/img.h"
+#include "pixelopolis/css_func.h"
 
 struct HashMap* css_builder_cache_textures;
 struct HashMap* css_builder_cache_bump_maps;

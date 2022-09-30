@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include <img/create.h>
-#include <draw.h>
-#include "_cos_sin_atan.h"
+#include "pixelopolis/img/create.h"
+#include "pixelopolis/draw.h"
+#include "pixelopolis/_cos_sin_atan.h"
 
 
 static inline uint8_t _normalize(float value) {

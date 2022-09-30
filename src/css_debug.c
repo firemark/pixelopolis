@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "css.h"
-#include "css_debug.h"
+#include "pixelopolis/css.h"
+#include "pixelopolis/css_debug.h"
 
 void css_debug_program(FILE* fp, struct Program* program) {
     fprintf(fp, "/* PROGRAM %s */\n", program->name);

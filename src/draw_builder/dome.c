@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_dome(struct Helper* helper) {
     struct Rule *rule = helper->rule;

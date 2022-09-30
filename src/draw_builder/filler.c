@@ -1,6 +1,6 @@
 #include <stdlib.h>
-#include "_draw_builder.h"
-#include "css_func.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
 
 void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int width) {
     struct Rule* rule = helper->rule;

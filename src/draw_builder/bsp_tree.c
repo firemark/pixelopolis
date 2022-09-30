@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <time.h>
-#include "_draw_builder.h"
-#include "css_func.h"
-#include "css_eval.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_eval.h"
 
 #define RATIO_START 0.3
 #define RATIO_END 0.7

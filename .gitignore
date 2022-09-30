@@ -1,13 +1,9 @@
-*.o
-*.swp
-*.swo
-*.output
+.clangd
 out.png
-pixelopolis
 src/css.l.c
 src/css.y.c
 include/css.y.h
 __pycache__
 venv
 tests_out/
-out/
+build/

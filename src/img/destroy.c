@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include <img/destroy.h>
+#include "pixelopolis/img/destroy.h"
 
 #define _DESTROY(img) { \
     free(img->buffer); \

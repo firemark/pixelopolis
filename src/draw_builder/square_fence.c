@@ -1,7 +1,7 @@
 #include <stdlib.h>
-#include "_draw_builder.h"
-#include "css_func.h"
-#include "css_eval.h"
+#include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/css_func.h"
+#include "pixelopolis/css_eval.h"
 
 #define EDGES_COUNT 4
 #define BODY_INDEX (0)

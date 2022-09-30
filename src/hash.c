@@ -1,4 +1,4 @@
-#include "hash.h"
+#include "pixelopolis/hash.h"
 
 #include <string.h>
 #include <stdlib.h>
