@@ -1,4 +1,6 @@
 #pragma once
+#include <stdbool.h>
+
 #include "basic.h"
 #include "css.h"
 
@@ -20,7 +22,8 @@ enum Justify { JUSTIFY_START, JUSTIFY_CENTER, JUSTIFY_END, JUSTIFY_RANDOM };
 struct BasicObj {
     int width, height, depth;
     int rotate;
-    enum Justify v_justify, d_justify;
+    enum Justify v_justify;
+    enum Justify d_justify;
     double sin_th, cos_th;
 };
 
@@ -45,6 +48,8 @@ struct TexObj {
     struct FlatImage* texture;
     struct FloatImage* normal_map;
     struct rgb* color;
+    bool texture_cache;
+    bool normal_map_cache; 
 };
 
 struct FloorObj {

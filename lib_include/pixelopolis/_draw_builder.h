@@ -81,12 +81,12 @@ void series_align_objs(
         enum FillDirection fill_direction,
         size_t size, int end_width);
 
-//caches
-extern struct HashMap* css_builder_cache_textures;
-extern struct HashMap* css_builder_cache_bump_maps;
-extern struct HashMap* css_builder_cache_normal_maps;
-
 //inlines
 static inline const double builder_make_theta(const int rotate) {
     return rotate * M_PI / 180.0;
 }
+
+// Caches
+extern struct HashMap* css_builder_cache_textures;
+extern struct HashMap* css_builder_cache_bump_maps;
+extern struct HashMap* css_builder_cache_normal_maps;

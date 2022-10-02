@@ -4,19 +4,18 @@
 #include "pixelopolis/css_func.h"
 
 struct DrawObj *builder_build_draw_obj(struct SelectorHelper *helper) {
-    struct RuleSelector *query = helper->selector;
-    if (!query) return NULL;
     struct Rule *rule = builder_make_rule_from_helper(helper);
     if (!rule) return NULL;
+
+    struct RuleSelector *query = helper->selector;
+    struct RuleSelector *display_selector = css_find_selector_prop(rule, "display");
+    char *element = display_selector ? display_selector->element : query->element;
 
     struct Helper inner_helper = {
         .program = helper->program,
         .rule = rule,
         .parent = helper->parent,
     };
-
-    struct RuleSelector *display_selector = css_find_selector_prop(rule, "display");
-    char *element = display_selector ? display_selector->element : query->element;
     struct DrawObj *obj;
 #define IF_NAME(str) else if (!strcmp(element, str))
     if (!element) obj = NULL;
