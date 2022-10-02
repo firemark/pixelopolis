@@ -3,9 +3,9 @@
 
 void css_base_draw_poly_random(struct image* img, const int voxes[9], const struct WallObj* wall) {
     const int density = wall->points_density;
-    const struct TexObj* tex = wall->points_tex;
+    struct TexObj* tex = wall->points_tex;
     if (!tex || density <= 0) return;
-    const struct FlatImage* sprite = tex->texture;
+    struct FlatImage* sprite = tex->texture;
     if (!sprite) return;
     draw_sprites_in_random_position_in_poly(img, sprite, voxes, density);
 }
