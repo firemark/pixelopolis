@@ -4,29 +4,9 @@
 #include "pixelopolis/draw_builder.h"
 #include "pixelopolis/hash.h"
 
+#include "pixelopolis/_draw_builder_utils.h"
+
 #define BUILDER_MAX_ELEMENTS 128
-
-struct Helper {
-    struct Program* program;
-    struct Rule* rule;
-    struct DrawObj* parent;
-};
-
-struct SelectorHelper {
-    struct Program* program;
-    struct Rule* parent_rule;
-    struct RuleSelector* selector;
-    struct DrawObj* parent;
-};
-
-enum JustifyIndex { V_JUSTIFY = 0, D_JUSTIFY = 1 };
-
-#define make_selector_helper(helper, prop) { \
-    .program=helper->program, \
-    .parent_rule=helper->rule, \
-    .selector=css_find_selector_prop(helper->rule, prop), \
-    .parent=helper->parent, \
-}
 
 //builders
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper);
@@ -59,14 +39,7 @@ struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_wid
 struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 
 //utils
-struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper);
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
-int builder_get_int(struct Rule* rule, char* key, const int default_value);
-int builder_get_percent(struct Rule* rule, char* key, const int default_value);
-
-int builder_get_padding(struct Rule* rule);
-int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic);
-enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index);
 
 //series utils
 struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);
@@ -80,11 +53,6 @@ void series_align_objs(
         struct ShiftDrawPair** pairs,
         enum FillDirection fill_direction,
         size_t size, int end_width);
-
-//caches
-extern struct HashMap* css_builder_cache_textures;
-extern struct HashMap* css_builder_cache_bump_maps;
-extern struct HashMap* css_builder_cache_normal_maps;
 
 //inlines
 static inline const double builder_make_theta(const int rotate) {
