@@ -8,6 +8,21 @@
 
 #define BUILDER_MAX_ELEMENTS 128
 
+struct Helper {
+    struct Program* program;
+    struct Rule* rule;
+    struct DrawObj* parent;
+};
+
+struct SelectorHelper {
+    struct Program* program;
+    struct Rule* parent_rule;
+    struct RuleSelector* selector;
+    struct DrawObj* parent;
+};
+
+struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper);
+
 //builders
 struct DrawObj* builder_build_draw_obj(struct SelectorHelper* helper);
 struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent);
@@ -40,6 +55,7 @@ struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 
 //utils
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
+struct TexObj* builder_make_texture(struct SelectorHelper* helper, int width, int height);
 
 //series utils
 struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);

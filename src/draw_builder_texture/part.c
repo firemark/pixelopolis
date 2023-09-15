@@ -3,64 +3,52 @@
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/css_func.h"
+#include "pixelopolis/draw_builder_common.h"
+#include "pixelopolis/draw_builder_texture.h"
 
-static void _append_children(struct Helper* helper, struct TexPartObj* obj, int width, int height);
+#define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr
 
-struct TexObj* builder_texture_build_texture_part(struct Helper* helper, enum TexObjType type,
+static void _append_children(struct Helper* helper, struct TexPartObj* obj,
+                             struct BasicTexObj* basic, enum TexPartDirection direction);
+static int _get_metric(struct BasicTexObj* basic, enum TexPartDirection direction);
+static void _add_max(struct BasicTexObj* a, struct BasicTexObj* b, enum TexPartDirection direction);
+
+struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
                                                   enum TexPartDirection direction) {
-    struct Rule* rule = helper->rule;
+    struct BasicTexObj basic;
     struct TexPartObj* obj = malloc(sizeof(struct TexPartObj));
     obj->direction = direction;
-    obj->padding = builder_get_padding(rule);
+    obj->padding = builder_get_padding(helper->rule);
 
     {
-        struct SelectorHelper background_helper = {
-            .program = helper->program,
-            .parent_rule = rule,
-            .selector = css_find_selector_prop(rule, "background"),
-            .parent = helper->parent,
-        };
+        struct SelectorHelper background_helper = MAKE_SELECTOR_HELPER(helper, "background");
         obj->background = builder_texture_build_tex_obj(&background_helper);
     }
-    {
-        struct Helper inner_helper = {
-            .program = helper->program,
-            .rule = rule,
-            .parent = helper->parent,
-        };
-        _append_children(&inner_helper, obj, 0, 0);
-    }
+    _append_children(helper, obj, &basic, direction);
 
-    struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
-    tex_obj->type = type;
-    tex_obj->obj = obj;
-
-    return tex_obj;
+    return builder_texture_make_tex_obj(helper, basic, TEX_OBJ_SECTION, obj);
 }
 
-static void _append_children(struct Helper* helper, struct TexPartObj* obj, int length) {
+static void _append_children(struct Helper* helper, struct TexPartObj* obj,
+                             struct BasicTexObj* basic, enum TexPartDirection direction) {
+    int length = _get_metric(&helper->parent->basic, direction);
     int shift = 0;
     int size = 0;
 
     obj->objs = malloc(sizeof(struct TexObj*) * BUILDER_TEXTURE_MAX_ELEMENTS);
-    struct Rule* rule = helper->rule;
-    struct Program* program = helper->program;
 
     {
-        struct SelectorHelper begin_obj_helper = {
-            .program = program,
-            .parent_rule = rule,
-            .selector = css_find_selector_prop(rule, "begin"),
-            .parent = helper->parent,
-        };
+        struct SelectorHelper begin_obj_helper = MAKE_SELECTOR_HELPER(helper, "begin");
         struct TexObj* begin_obj = builder_texture_build_tex_obj(&begin_obj_helper);
         if (begin_obj) {
-            if (begin_obj->length < length) {
+            int obj_length = _get_metric(&begin_obj->basic, direction);
+            if (obj_length < length) {
+                _add_max(basic, &begin_obj->basic, direction);
                 struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
                 pair->shift = shift;
                 pair->obj = begin_obj;
                 obj->objs[size++] = pair;
-                shift += begin_obj->length + obj->padding;
+                shift += obj_length + obj->padding;
             } else {
                 goto final;
             }
@@ -68,20 +56,17 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj, int 
     }
 
     {
-        struct SelectorHelper end_obj_helper = {
-            .program = program,
-            .parent_rule = rule,
-            .selector = css_find_selector_prop(rule, "end"),
-            .parent = helper->parent,
-        };
+        struct SelectorHelper end_obj_helper = MAKE_SELECTOR_HELPER(helper, "end");
         struct TexObj* end_obj = builder_texture_build_tex_obj(&end_obj_helper);
         if (end_obj) {
-            if (shift + end_obj->length < length) {
+            int obj_length = _get_metric(&end_obj->basic, direction);
+            if (shift + obj_length < length) {
+                _add_max(basic, &end_obj->basic, direction);
                 struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
                 pair->shift = shift;
                 pair->obj = end_obj;
                 obj->objs[size++] = pair;
-                length -= end_obj->length; 
+                length -= obj_length;
             } else {
                 goto final;
             }
@@ -89,24 +74,47 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj, int 
     }
 
     for (;;) {
-        struct SelectorHelper center_helper = {
-            .program = program,
-            .parent_rule = rule,
-            .selector = css_find_selector_prop(rule, "center"),
-            .parent = helper->parent,
-        };
+        struct SelectorHelper center_helper = MAKE_SELECTOR_HELPER(helper, "center");
         struct TexObj* center_obj = builder_texture_build_tex_obj(&center_helper);
-        int center_length = center_obj ? center_length : 12;
-        if (shift + center_length >= length) { break; }
+        int obj_length = center_obj ? _get_metric(&center_obj->basic, direction) : 12;
+        if (shift + obj_length >= length) {
+            break;
+        }
 
+        _add_max(basic, &center_obj->basic, direction);
         struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
         pair->shift = shift;
         pair->obj = center_obj;
         obj->objs[size++] = pair;
-        shift += center_length + obj->padding;
+        shift += obj_length + obj->padding;
     }
 
 final:
     obj->objs[size] = NULL;
     obj->objs_size = size;
+}
+
+static int _get_metric(struct BasicTexObj* basic, enum TexPartDirection direction) {
+    switch (direction) {
+        case TEX_PART_VERTICAL:
+            return basic->width;
+        case TEX_PART_HORIZONTAL:
+            return basic->height;
+        default:
+            return 0;
+    }
+}
+
+static void _add_max(struct BasicTexObj* a, struct BasicTexObj* b,
+                     enum TexPartDirection direction) {
+    switch (direction) {
+        case TEX_PART_VERTICAL:
+            a->width += b->width;
+            SET_GREATER(height);
+            break;
+        case TEX_PART_HORIZONTAL:
+            a->height += b->height;
+            SET_GREATER(width);
+            break;
+    }
 }

@@ -15,11 +15,11 @@ enum DrawObjType {
 };
 
 enum TexObjType {
-    DRAW_OBJ_DEFAULT,
-    DRAW_OBJ_FLOOR,
-    DRAW_OBJ_SECTION,
-    DRAW_OBJ_RECT_TILES,
-    DRAW_OBJ_TILES,
+    TEX_OBJ_VOID,
+    TEX_OBJ_DEFAULT,
+    TEX_OBJ_SECTION,
+    TEX_OBJ_RECT_TILES,
+    TEX_OBJ_TILES,
 };
 
 struct BasicObj {
@@ -37,7 +37,13 @@ struct DrawObj {
     struct DrawObj *parent;
 };
 
+struct BasicTexObj {
+    int width, height;
+};
+
 struct TexObj {
+    struct BasicTexObj basic;
     enum TexObjType type;
     void* obj;
+    struct TexObj *parent;
 };

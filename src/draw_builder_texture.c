@@ -1,7 +1,11 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
+#include "pixelopolis/css.h"
 #include "pixelopolis/css_func.h"
+#include "pixelopolis/draw_builder_common.h"
+#include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/img.h"
 
 struct HashMap* css_builder_cache_textures;
@@ -38,13 +42,23 @@ void builder_texture_stop(void) {
     }
 }
 
-struct TexObj* builder_texture_make(struct Program* program, struct Rule* world) {
-    struct RuleSelector* query = css_find_selector_prop(world, "body");  // ?
+struct TexObj* builder_texture_make(struct Program* program, struct Rule* parent, struct RuleSelector* query, int width, int height) {
+    struct TexVoidObj* obj = malloc(sizeof(struct TexVoidObj));
+    struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
+
+    tex_obj->basic.width = width;
+    tex_obj->basic.height = height;
+    tex_obj->type = TEX_OBJ_VOID;
+    tex_obj->obj = obj;
+    tex_obj->parent = NULL;
+
     struct SelectorHelper helper = {
         .program = program,
-        .parent_rule = NULL,
+        .parent_rule = parent,
         .selector = query,
-        .parent = NULL,
+        .parent = tex_obj,
     };
-    return builder_build_tex_obj(&helper);
+
+    obj->child = builder_texture_build_tex_obj(&helper);
+    return tex_obj;
 }

@@ -38,7 +38,7 @@ struct DrawObj* builder_build_cylinder(struct Helper* helper) {
     obj->has_many_walls = builder_get_int(rule, "has-many-walls", 0);
     obj->sides = builder_get_int(rule, "sides", 8);
 
-    struct SelectorHelper wall_helper = make_selector_helper(helper, "wall");
+    struct SelectorHelper wall_helper = MAKE_SELECTOR_HELPER(helper, "wall");
     if (!wall_helper.selector) {
         obj->walls = NULL;
     } else {
@@ -49,7 +49,7 @@ struct DrawObj* builder_build_cylinder(struct Helper* helper) {
         }
     }
 
-    struct SelectorHelper roof_helper = make_selector_helper(helper, "roof");
+    struct SelectorHelper roof_helper = MAKE_SELECTOR_HELPER(helper, "roof");
     obj->roof = builder_build_wall(&roof_helper, basic.width, basic.depth);
 
     return builder_make_draw_obj(helper, basic, DRAW_OBJ_CYLINDER, obj);

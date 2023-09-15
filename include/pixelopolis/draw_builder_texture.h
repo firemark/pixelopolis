@@ -5,10 +5,30 @@
 #include "css.h"
 #include "draw_builder_common.h"
 
+enum TexPartDirection { TEX_PART_VERTICAL = 0, TEX_PART_HORIZONTAL = 2 };
+
 struct TexDefaultObj {
     struct FlatImage* texture;
     struct FloatImage* normal_map;
     struct rgb* color;
+};
+
+struct TexVoidObj {
+    struct TexObj* child;
+};
+
+struct ShiftTexPair {
+    int shift;
+    struct TexObj* obj;
+};
+
+struct TexPartObj {
+    enum TexPartDirection direction;
+    struct TexObj* background;
+    struct ShiftTexPair** objs;
+    uint32_t objs_size;
+    uint32_t padding;
+    uint32_t length;
 };
 
 struct TileInfo {
@@ -27,22 +47,7 @@ struct TexTileObj {
     uint32_t shift_seed;
 };
 
-struct ShiftTexPair {
-    int shift;
-    struct TexObj* obj;
-};
-
-enum TexPartDirection { TEX_PART_VERTICAL = 0, TEX_PART_HORIZONTAL = 2 };
-
-struct TexPartObj {
-    enum TexPartDirection direction;
-    struct TexObj* background;
-    struct ShiftTexPair** objs;
-    uint32_t objs_size;
-    uint32_t padding;
-    uint32_t length;
-};
-
 void builder_texture_init(void);
 void builder_texture_stop(void);
-struct TexObj* builder_texture_make(struct Program* program, struct Rule* world);
+
+struct TexObj* builder_texture_make(struct Program* program, struct Rule* parent, struct RuleSelector* query, int width, int height);
