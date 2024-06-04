@@ -21,7 +21,7 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     // TODO - points texture
 
     struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
-    tex_obj->type = DRAW_OBJ_DEFAULT;
+    tex_obj->type = TEX_OBJ_DEFAULT;
     tex_obj->obj = obj;
 
     return tex_obj;

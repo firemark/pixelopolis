@@ -1,64 +1,15 @@
 #pragma once
-#include "basic.h"
-#include "css.h"
-
-enum DrawObjType {
-    DRAW_OBJ_VOID,
-    DRAW_OBJ_CUBE,
-    DRAW_OBJ_CONE,
-    DRAW_OBJ_DOME,
-    DRAW_OBJ_CYLINDER,
-    DRAW_OBJ_TRIANGLE,
-    DRAW_OBJ_PYRAMID,
-    DRAW_OBJ_SERIES,
-    DRAW_OBJ_BOARD,
-};
-
-enum FillDirection { X_AXIS_FILL = 0, HORIZONTAL_FILL = 2, Y_AXIS_FILL = 1 };
-enum Justify { JUSTIFY_START, JUSTIFY_CENTER, JUSTIFY_END, JUSTIFY_RANDOM };
-
-struct BasicObj {
-    int width, height, depth;
-    int rotate;
-    enum Justify v_justify, d_justify;
-    double sin_th, cos_th;
-};
-
-struct DrawObj {
-    struct BasicObj basic;
-    enum DrawObjType type;
-    void* obj;
-    struct DrawObj *parent;
-};
-
-struct ShiftTexPair {
-    int shift;
-    struct TexObj* obj;
-};
+#include "pixelopolis/basic.h"
+#include "pixelopolis/css.h"
+#include "pixelopolis/draw_builder_common.h"
 
 struct ShiftDrawPair {
     int shift;
     struct DrawObj* obj;
 };
 
-struct TexObj {
-    struct FlatImage* texture;
-    struct FloatImage* normal_map;
-    struct rgb* color;
-};
-
-struct FloorObj {
-    struct TexObj *tex;
-    struct ShiftTexPair **objs;
-    int objs_size;
-    int height;
-};
-
 struct WallObj {
     struct TexObj *tex, *points_tex;
-    struct FloorObj **floors;
-    struct FloorObj *bottom;
-    struct FloorObj *top;
     int floors_size;
     int padding;
     int points_density;

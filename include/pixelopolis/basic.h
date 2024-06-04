@@ -21,6 +21,9 @@ struct hsv {unsigned char h, s, v;};
 struct xyz {float x, y, z;};
 enum direction {DIRECTION_UP, DIRECTION_EAST, DIRECTION_SOUTH};
 
+static const struct rgb PURPLE = {.r = 0xFF, .g = 0x00, .b = 0xFF};
+static const struct xyz FORWARD = {.x = 0.0f, .y = 0.0f, .z = 1.0f};
+
 #define _DEFINE_IMAGE(image_type) IMG_TYPE_##image_type {\
     PIXEL_TYPE_##image_type* buffer; \
     int width; \

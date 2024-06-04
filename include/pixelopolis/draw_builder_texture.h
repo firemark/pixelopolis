@@ -33,7 +33,7 @@ struct TexPartObj {
 
 struct TileInfo {
     struct TexObj* obj;
-    uint8_t depth;
+    uint32_t depth;
     uint32_t width;
 };
 

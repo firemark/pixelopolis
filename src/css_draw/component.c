@@ -5,7 +5,6 @@ void draw_component(struct DrawObj *draw_obj, struct DrawInfo *info, int *out_vo
         .img = info->img,
         .vox = info->vox,
         .out_vox = out_vox,
-        .filter = info->filter,
     };
 
     switch (draw_obj->type) {

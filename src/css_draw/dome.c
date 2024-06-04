@@ -18,13 +18,7 @@ static void _css_draw_dome_roof(struct DrawObj *draw_obj, struct DrawInnerInfo *
     const int wh = width / 2;
     const int dh = depth / 2;
     const int h2 = height * 2;
-
-    struct DrawTexInfo tex_info = {
-        .wall = roof,
-        .size = {roof->width, roof->height},
-        .filter = inner_info->filter,
-    };
-    struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+    struct PolyInfo poly_info = poly_info_create(roof, roof->width, roof->height, inner_info);
 
     int w_length = 0;
     struct AngleIter angle_iter;

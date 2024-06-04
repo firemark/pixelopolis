@@ -29,13 +29,7 @@ static void _css_draw_cylinder_many_walls(struct DrawObj *draw_obj,
         int voxes[12] = CREATE_VOXES(angle_iter, draw_obj->basic);
         _transform(voxes, inner_info->vox, &draw_obj->basic, 4);
         struct WallObj *wall = walls[angle_iter.i];
-
-        struct DrawTexInfo tex_info = {
-            .wall = wall,
-            .size = {wall->width, height},
-            .filter = inner_info->filter,
-        };
-        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info = poly_info_create(wall, wall->width, height, inner_info);
         css_base_draw_plane(&poly_info, voxes, wall);
         poly_info_clear(&poly_info);
     }
@@ -53,12 +47,7 @@ static void _css_draw_cylinder_single_wall(struct DrawObj *draw_obj,
     int total_length = wall->width;
     int iter_length = 0;
 
-    struct DrawTexInfo tex_info = {
-        .wall = wall,
-        .size = {total_length, height},
-        .filter = inner_info->filter,
-    };
-    struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+    struct PolyInfo poly_info = poly_info_create(wall, total_length, height, inner_info);
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
@@ -92,12 +81,7 @@ static void _css_draw_cylinder_roof(struct DrawObj *draw_obj, struct DrawInnerIn
     const int wh = width / 2;
     const int dh = depth / 2;
 
-    struct DrawTexInfo tex_info = {
-        .wall = roof,
-        .size = {roof->width, roof->height},
-        .filter = inner_info->filter,
-    };
-    struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+    struct PolyInfo poly_info = poly_info_create(roof, roof->width, roof->height, inner_info);
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);

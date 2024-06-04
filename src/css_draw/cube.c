@@ -29,12 +29,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         };
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
-        struct DrawTexInfo tex_info = {
-            .wall = east_wall_obj,
-            .size = {depth, height},
-            .filter = inner_info->filter,
-        };
-        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info = poly_info_create(east_wall_obj, depth, height, inner_info);
         css_base_draw_plane(&poly_info, voxes_first, east_wall_obj);
         css_base_draw_plane(&poly_info, voxes_second, east_wall_obj);
         poly_info_clear(&poly_info);
@@ -56,12 +51,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
         };
         _transform(voxes_first, vox, &draw_obj->basic, 4);
         _transform(voxes_second, vox, &draw_obj->basic, 4);
-        struct DrawTexInfo tex_info = {
-            .wall = south_wall_obj,
-            .size = {width, height},
-            .filter = inner_info->filter,
-        };
-        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info = poly_info_create(south_wall_obj, width, height, inner_info);
         css_base_draw_plane(&poly_info, voxes_first, south_wall_obj);
         css_base_draw_plane(&poly_info, voxes_second, south_wall_obj);
         poly_info_clear(&poly_info);
@@ -76,12 +66,7 @@ void css_draw_cube(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
             w, d, h,  //
         };
         _transform(voxes, vox, &draw_obj->basic, 4);
-        struct DrawTexInfo tex_info = {
-            .wall = roof_obj,
-            .size = {width, depth},
-            .filter = inner_info->filter,
-        };
-        struct PolyInfo poly_info = poly_info_create(&tex_info, inner_info);
+        struct PolyInfo poly_info = poly_info_create(roof_obj, width, depth, inner_info);
         css_base_draw_plane(&poly_info, voxes, roof_obj);
         poly_info_clear(&poly_info);
     }

@@ -15,7 +15,7 @@ void css_draw_void(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) {
     struct DrawInfo draw_info = {
         .img = inner_info->img,
         .vox = vox,
-        .filter = inner_info->filter,
+        // .filter = inner_info->filter,
     };
     draw_component(child, &draw_info, out_vox);
 

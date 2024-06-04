@@ -1,18 +1,29 @@
 #include "pixelopolis/_css_draw.h"
+#include "pixelopolis/basic.h"
+#include "pixelopolis/css_texture_draw.h"
+#include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/draw_poly.h"
 
 void css_base_draw_poly_random(struct image* img, const int voxes[9], const struct WallObj* wall) {
     const int density = wall->points_density;
     struct TexObj* tex = wall->points_tex;
     if (!tex || density <= 0) return;
-    struct FlatImage* sprite = tex->texture;
-    if (!sprite) return;
-    draw_sprites_in_random_position_in_poly(img, sprite, voxes, density);
+    // struct FlatImage* sprite = tex->texture;
+    // if (!sprite) return;
+    // draw_sprites_in_random_position_in_poly(img, sprite, voxes, density);
 }
 
-struct PolyInfo poly_info_create(struct DrawTexInfo* tex_info, struct DrawInnerInfo* inner_info) {
-    struct DrawTextureOutput output;
-    css_draw_texture(&output, tex_info);
+struct PolyInfo poly_info_create(struct WallObj* wall, int width, int height,
+                                 struct DrawInnerInfo* inner_info) {
+    struct DrawTextureOutput output = {
+        .texture = flat_image_create_with_color(width, height, &PURPLE),
+        .normal_map = float_image_create_with_color(width, height, &FORWARD),
+    };
+    struct DrawTexInfo tex_info = {
+        .output = &output,
+    };
+
+    css_texture_draw_component(wall->tex, &tex_info);
     struct PolyInfo poly_info = {
         .img = inner_info->img,
         .img_to_draw = output.texture,

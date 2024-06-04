@@ -26,7 +26,7 @@ struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
     }
     _append_children(helper, obj, &basic, direction);
 
-    return builder_texture_make_tex_obj(helper, basic, TEX_OBJ_SECTION, obj);
+    return builder_texture_make_tex_obj(helper, basic, TEX_OBJ_PART, obj);
 }
 
 static void _append_children(struct Helper* helper, struct TexPartObj* obj,

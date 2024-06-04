@@ -4,36 +4,21 @@
 #include "pixelopolis/img.h"
 #include "pixelopolis/draw_builder.h"
 #include "pixelopolis/css_draw.h"
+#include "pixelopolis/css_texture_draw.h"
 #include "pixelopolis/draw_poly.h"
 
 struct DrawInnerInfo {
     struct image *img;
     int *vox;
     int *out_vox;
-    enum TexFilterAlgorithm filter;
-};
-
-struct DrawTexInfo {
-    struct WallObj *wall;
-    int size[2];
-    enum TexFilterAlgorithm filter;
-};
-
-struct DrawTextureOutput {
-    struct FlatImage* texture;
-    struct FloatImage* normal_map;
 };
 
 enum Valign { VALIGN_TOP, VALIGN_BOTTOM };
 
-// texture
-void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct WallObj *obj, int width, int height);
-struct FlatImage* css_draw_scale_image(struct FlatImage* img, enum TexFilterAlgorithm filter);
-void css_draw_texture(struct DrawTextureOutput* output, struct DrawTexInfo* info);
-
 // base
 struct PolyInfo poly_info_create(
-        struct DrawTexInfo* tex_info,
+        struct WallObj* wall,
+        int width, int height,
         struct DrawInnerInfo* inner_info);
 void css_base_draw_plane(
         struct PolyInfo *info,
