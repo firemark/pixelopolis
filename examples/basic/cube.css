@@ -12,18 +12,20 @@ cube.example {
     height: 150;
 }
 
-wall.grey-brick {
-    texture: tex.grey-brick;
-    middle: floor.windows;
+wall.grey-brick { texture: h-tex.grey-brick; }
+wall.top { texture: tex.wood; }
+
+h-tex.grey-brick {
+    background: tex.grey-brick;
+    center: v-tex.windows;
     padding: 4;
 }
 
-wall.top { texture: tex.wood; }
-
-floor.windows {
-    middle: tex.window;
-    height: 12;
-    padding: 12;
+v-tex.windows {
+    begin: tex.wood;
+    center: tex.window;
+    end: tex.wood;
+    padding: 20;
 }
 
 tex.wood        { texture: "textures/nature-wall/wood.png"; }

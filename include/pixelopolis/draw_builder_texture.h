@@ -5,7 +5,7 @@
 #include "css.h"
 #include "draw_builder_common.h"
 
-enum TexPartDirection { TEX_PART_VERTICAL = 0, TEX_PART_HORIZONTAL = 2 };
+enum TexPartDirection { TEX_PART_VERTICAL = 'V', TEX_PART_HORIZONTAL = 'H' };
 
 struct TexDefaultObj {
     struct FlatImage* texture;

@@ -50,8 +50,8 @@ struct DrawObj* builder_build_union(struct Helper* helper);
 
 //builder textures
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height);
-struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_width);
-struct TexObj* builder_build_texture(struct SelectorHelper* helper);
+// struct FloorObj* builder_build_floor(struct SelectorHelper* helper, int wall_width);
+// struct TexObj* builder_build_texture(struct SelectorHelper* helper);
 
 //utils
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic, enum DrawObjType type, void* obj);
@@ -71,6 +71,11 @@ void series_align_objs(
         size_t size, int end_width);
 
 //inlines
-static inline const double builder_make_theta(const int rotate) {
+static inline double builder_make_theta(const int rotate) {
     return rotate * M_PI / 180.0;
+}
+
+static inline int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic) {
+    int parent_rotate = parent_basic ? parent_basic->rotate : 0;
+    return (child_rotate + parent_rotate) % 360;
 }

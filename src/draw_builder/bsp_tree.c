@@ -2,6 +2,7 @@
 #include <time.h>
 
 #include "pixelopolis/_draw_builder.h"
+#include "pixelopolis/_draw_builder_utils.h"
 #include "pixelopolis/css_eval.h"
 #include "pixelopolis/css_func.h"
 

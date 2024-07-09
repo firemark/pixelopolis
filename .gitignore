@@ -7,3 +7,4 @@ __pycache__
 venv
 tests_out/
 build/
+.vscode/

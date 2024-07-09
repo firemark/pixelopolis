@@ -1,11 +1,11 @@
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/css_func.h"
+#include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img.h"
 #include "pixelopolis/normal_map.h"
-
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
 static struct FloatImage* _find_bump_map_in_rule(struct Rule* rule);
@@ -23,6 +23,17 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
     tex_obj->type = TEX_OBJ_DEFAULT;
     tex_obj->obj = obj;
+
+    if (obj->texture) {
+        tex_obj->basic.width = obj->texture->width;
+        tex_obj->basic.height = obj->texture->height;
+    } else if (obj->normal_map) {
+        tex_obj->basic.width = obj->normal_map->width;
+        tex_obj->basic.height = obj->normal_map->height;
+    } else {
+        tex_obj->basic.width = 1;
+        tex_obj->basic.height = 1;
+    }
 
     return tex_obj;
 }

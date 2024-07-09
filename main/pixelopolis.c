@@ -9,6 +9,7 @@
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/draw.h"
 #include "pixelopolis/draw_builder.h"
+#include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/img.h"
 
 struct Rule *find_world(struct Program *program) {
@@ -26,27 +27,27 @@ struct image *make_img(struct Rule *world) {
     return create_black_image(width, height);
 }
 
-enum TexFilterAlgorithm get_filter_algorithm(struct Rule *world) {
-    char *name = css_find_selector_element_prop(world, "texture-filter");
-    enum TexFilterAlgorithm filter = FILTER_ALGORITHM_NONE;
-    if (!name) return filter;
-#define IFMATCH(s) else if (!strcmp(name, s))
-    IFMATCH("none") filter = FILTER_ALGORITHM_NONE;
-    IFMATCH("scale2") filter = FILTER_ALGORITHM_SCALE2;
-    IFMATCH("scale3") filter = FILTER_ALGORITHM_SCALE3;
-    IFMATCH("mame2") filter = FILTER_ALGORITHM_MAME2;
-    IFMATCH("mame4") filter = FILTER_ALGORITHM_MAME4;
-#undef IFMATCH
-    free(name);
-    return filter;
-}
+// enum TexFilterAlgorithm get_filter_algorithm(struct Rule *world) {
+//     char *name = css_find_selector_element_prop(world, "texture-filter");
+//     enum TexFilterAlgorithm filter = FILTER_ALGORITHM_NONE;
+//     if (!name) return filter;
+// #define IFMATCH(s) else if (!strcmp(name, s))
+//     IFMATCH("none") filter = FILTER_ALGORITHM_NONE;
+//     IFMATCH("scale2") filter = FILTER_ALGORITHM_SCALE2;
+//     IFMATCH("scale3") filter = FILTER_ALGORITHM_SCALE3;
+//     IFMATCH("mame2") filter = FILTER_ALGORITHM_MAME2;
+//     IFMATCH("mame4") filter = FILTER_ALGORITHM_MAME4;
+// #undef IFMATCH
+//     free(name);
+//     return filter;
+// }
 
 void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
     int vox[3] = {0, 0, 0};
     struct DrawInfo draw_info = {
         .img = img,
         .vox = vox,
-        .filter = get_filter_algorithm(world),
+        // .filter = get_filter_algorithm(world),
     };
     draw_component(draw_obj, &draw_info, NULL);
 }
@@ -56,6 +57,7 @@ int main(int argc, char **argv) {
     char *out_filename = argc > 2 ? argv[2] : "out.png";
 
     builder_init();
+    builder_texture_init();
     css_eval_start();
     struct Program *program;
     if (!strcmp(in_filename, "-")) {
@@ -80,6 +82,7 @@ int main(int argc, char **argv) {
     write_png_file_from_image(fp, img);
     fclose(fp);
     builder_stop();
+    builder_texture_stop();
     css_eval_stop();
     css_free_program(program);
     destroy_image(img);

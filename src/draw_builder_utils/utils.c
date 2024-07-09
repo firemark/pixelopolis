@@ -1,4 +1,3 @@
-#pragma once
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_utils.h"
@@ -16,11 +15,6 @@ int builder_get_percent(struct Rule* rule, char* key, const int default_value) {
 }
 
 int builder_get_padding(struct Rule* rule) { return builder_get_int(rule, "padding", 0); }
-
-int builder_compute_rotate(const int child_rotate, struct BasicObj* parent_basic) {
-    int parent_rotate = parent_basic ? parent_basic->rotate : 0;
-    return (child_rotate + parent_rotate) % 360;
-}
 
 static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
