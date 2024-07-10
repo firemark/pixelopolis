@@ -22,7 +22,7 @@ h-tex.grey-brick {
 }
 
 v-tex.windows {
-    begin: tex.wood;
+    start: tex.wood;
     center: tex.window;
     end: tex.wood;
     padding: 20;

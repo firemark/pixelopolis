@@ -10,10 +10,10 @@ cubes {
     padding: 150;
 }
 
-cube.left    floor.windows { align: left; }
-cube.right   floor.windows { align: right; }
-cube.middle  floor.windows { align: middle; }
-cube.justify floor.windows { align: justify; }
+cube.left    v-tex.windows { align: start; }
+cube.right   v-tex.windows { align: end; }
+cube.middle  v-tex.windows { align: center; }
+cube.justify v-tex.windows { align: justify; }
 
 cube {
     width: 450;
@@ -23,16 +23,18 @@ cube {
     roof: wall.top;
 }
 
-wall.grey-brick {
-    texture: tex.grey-brick;
-    middle: floor.windows;
+wall.grey-brick { texture: h-tex.grey-brick; }
+
+h-tex.grey-brick {
+    background: tex.grey-brick;
+    center: v-tex.windows;
+    align: end;
     padding: 4;
 }
 
-floor.windows {
-    middle: tex.window;
-    height: 12;
-    middle-padding: 140;
+v-tex.windows {
+    center: tex.window;
+    padding: 140;
 }
 
 wall.top { texture: tex.wood; }

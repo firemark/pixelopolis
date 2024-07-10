@@ -18,7 +18,7 @@ struct TexVoidObj {
 };
 
 struct ShiftTexPair {
-    int shift;
+    int shift[2];
     struct TexObj* obj;
 };
 
