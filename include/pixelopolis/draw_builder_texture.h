@@ -23,12 +23,8 @@ struct ShiftTexPair {
 };
 
 struct TexPartObj {
-    enum TexPartDirection direction;
     struct TexObj* background;
     struct ShiftTexPair** objs;
-    uint32_t objs_size;
-    uint32_t padding;
-    uint32_t length;
 };
 
 struct TileInfo {
