@@ -2,6 +2,7 @@
 
 #include <limits.h>
 #include <png.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -42,6 +43,22 @@ struct FlatImage* flat_image_create_with_color(const int width, const int height
     for (y = 0; y < img->height; y++) {
         for (x = 0; x < img->width; x++) {
             img->buffer[y * width + x] = c;
+        }
+    }
+    return img;
+}
+
+struct OneChanImage* one_chan_image_create(const int width, const int height) {
+    _CREATE(img, width, height, ONE_CHAN_IMAGE);
+    return img;
+}
+
+struct OneChanImage* one_chan_image_create_with_color(const int width, const int height, uint8_t color) {
+    struct OneChanImage* img = one_chan_image_create(width, height);
+    int x, y;
+    for (y = 0; y < img->height; y++) {
+        for (x = 0; x < img->width; x++) {
+            img->buffer[y * width + x] = color;
         }
     }
     return img;

@@ -6,24 +6,37 @@ world {
 
 cube.example {
 	wall: wall.wall;
-    roof: wall.top;
+    roof: wall.wall;
     width: 350;
     depth: 350;
     height: 150;
 }
 
-wall.wall { texture: tex.tiles; }
-wall.top { texture: tex.background; }
+wall.wall { texture: tiles; }
 
-tex.tiles { 
+tiles { 
     display: tile;
-    background: tex.background;
-    body: tex.color.r, tex.color.g, tex.color.b;
-    padding: 2;
+    background: tex.cement;
+    body: tex.tiles.green, tex.tiles.yellow, tex.tiles.blue;
+    padding: 4;
+
+    & > tex.tiles      { 
+        width: 12; 
+        height: 12; 
+        bevel: 255; 
+        bump-noise: 10%;
+        bump-noise-level: 128; 
+
+        &.green  { color: rgb(4, 97, 81); }
+        &.yellow { color: rgb(199, 157, 21); }
+        &.blue   { color: rgb(57, 73, 211); }
+    }
 }
 
-tex.background { color: #888; }
-tex.color      { width: 8; height: 8; }
-tex.color.r    { color: rgb(170, 35, 35); }
-tex.color.g    { color: rgb(29, 165, 29); }
-tex.color.b    { color: rgb(65, 65, 190); }
+tex.cement { 
+    color: #cecece; 
+    bump-noise: 20%; 
+    bump-noise-level: 32;
+    width: 100;
+    height: 100;
+}

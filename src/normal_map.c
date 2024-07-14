@@ -45,6 +45,9 @@ static inline struct xyz _compute_normal(int diff_x, int diff_y) {
 }
 
 struct FloatImage* transform_bump_to_normal_map(struct OneChanImage* bump_map) {
+    if (!bump_map) {
+        return NULL;
+    }
     uint8_t* last_y = _make_last_y(bump_map);
     int width = bump_map->width;
     int height = bump_map->height;
