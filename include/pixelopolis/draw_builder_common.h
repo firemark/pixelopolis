@@ -16,10 +16,9 @@ enum DrawObjType {
 
 enum TexObjType {
     TEX_OBJ_VOID,
+    TEX_OBJ_FILL,
     TEX_OBJ_DEFAULT,
     TEX_OBJ_PART,
-    TEX_OBJ_RECT_TILES,
-    TEX_OBJ_TILES,
 };
 
 struct BasicObj {

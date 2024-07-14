@@ -21,8 +21,8 @@ struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
 #define IF_NAME(str) else if (!strcmp(element, str))
     if (!element) obj = NULL;
     // basic
-    // IF_NAME("tile") obj = builder_texture_build_tile(&inner_helper);
     // containers
+    IF_NAME("tile") obj = builder_texture_build_tile(&inner_helper);
     IF_NAME("v-tex") obj = builder_texture_build_texture_part(&inner_helper, TEX_PART_VERTICAL);
     IF_NAME("h-tex") obj = builder_texture_build_texture_part(&inner_helper, TEX_PART_HORIZONTAL);
     IF_NAME("v-series-tex") obj = builder_texture_build_texture_series(&inner_helper, TEX_PART_VERTICAL);

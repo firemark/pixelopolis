@@ -1,0 +1,29 @@
+world {
+    width: 800;
+    height: 800;
+    body: cube.example;
+}
+
+cube.example {
+	wall: wall.wall;
+    roof: wall.top;
+    width: 350;
+    depth: 350;
+    height: 150;
+}
+
+wall.wall { texture: tex.tiles; }
+wall.top { texture: tex.background; }
+
+tex.tiles { 
+    display: tile;
+    background: tex.background;
+    body: tex.color.r, tex.color.g, tex.color.b;
+    padding: 2;
+}
+
+tex.background { color: #888; }
+tex.color      { width: 8; height: 8; }
+tex.color.r    { color: rgb(170, 35, 35); }
+tex.color.g    { color: rgb(29, 165, 29); }
+tex.color.b    { color: rgb(65, 65, 190); }

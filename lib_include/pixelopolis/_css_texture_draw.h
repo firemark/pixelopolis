@@ -10,6 +10,7 @@ void css_texture_draw_default(struct TexObj *tex_obj, struct DrawTexInfo *info);
 // Containers
 void css_texture_draw_part(struct TexObj *tex_obj, struct DrawTexInfo *info);
 void css_texture_draw_void(struct TexObj *tex_obj, struct DrawTexInfo *info);
+void css_texture_draw_fill(struct TexObj *tex_obj, struct DrawTexInfo *info);
 
 #define TEX_OBJ_BASIC_TUPLE(tex_obj) tex_obj->basic.width, tex_obj->basic.height
 
@@ -22,4 +23,9 @@ void css_texture_draw_void(struct TexObj *tex_obj, struct DrawTexInfo *info);
 static inline void _output_copy(struct DrawTextureOutput *dst, struct DrawTextureOutput *src, int *pos) {
     flat_image_copy_transparent(dst->texture, src->texture, src->texture, pos[0], pos[1]);
     float_image_copy_transparent(dst->normal_map, src->normal_map, src->texture, pos[0], pos[1]);
+}
+
+static inline void _output_fill(struct DrawTextureOutput *dst, struct DrawTextureOutput *src) {
+    flat_image_fill_transparent(dst->texture, src->texture, src->texture);
+    float_image_fill_transparent(dst->normal_map, src->normal_map, src->texture);
 }

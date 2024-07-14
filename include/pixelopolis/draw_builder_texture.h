@@ -27,22 +27,6 @@ struct TexPartObj {
     struct ShiftTexPair** objs;
 };
 
-struct TileInfo {
-    struct TexObj* obj;
-    uint32_t depth;
-    uint32_t width;
-};
-
-struct TexTileObj {
-    struct TileInfo** infos;
-    struct rgb* inner_border_color;
-    struct rgb* outer_border_color;
-    uint32_t info_size;
-    uint32_t height;
-    uint32_t shift;
-    uint32_t shift_seed;
-};
-
 void builder_texture_init(void);
 void builder_texture_stop(void);
 

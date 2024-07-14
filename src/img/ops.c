@@ -6,7 +6,7 @@
 #define _GET_INDEX(img, x, y) ((img->height - 1 - y) * img->width + x)
 #define _LIMIT(val, filler_dim, dim) (val + filler_dim < dim ? filler_dim : dim - val)
 
-#define _FILL(img, filler)                                                     \
+#define _FILL_COND(img, filler, __cond__)                                      \
     {                                                                          \
         int x, y;                                                              \
         for (y = 0; y < img->height; y++) {                                    \
@@ -14,24 +14,21 @@
                 const size_t filler_index =                                    \
                     _GET_INDEX(filler, x % filler->width, y % filler->height); \
                 const size_t img_index = _GET_INDEX(img, x, y);                \
+                __cond__;                                                      \
                 img->buffer[img_index] = filler->buffer[filler_index];         \
             }                                                                  \
         }                                                                      \
     }
 
-#define _FILL_COLUMN(img, filler, img_y)                                              \
-    {                                                                                 \
-        const int limit_height = _LIMIT(img_y, filler->height, img->height);          \
-        int x, y;                                                                     \
-        for (y = 0; y < limit_height; y++) {                                          \
-            for (x = 0; x < img->width; x++) {                                        \
-                const size_t filler_index = _GET_INDEX(filler, x % filler->width, y); \
-                const size_t img_index = _GET_INDEX(img, x, img_y);                   \
-                img->buffer[img_index] = filler->buffer[filler_index];                \
-            }                                                                         \
-            img_y++;                                                                  \
-        }                                                                             \
-    }
+#define _FILL(img, filler) _FILL_COND(img, filler, {})
+
+#define _FILL_TRANSPARENT(img, filler, mask)                                                    \
+    _FILL_COND(img, filler, {                                                                   \
+        const struct rgb* mask_byte = &mask->buffer[filler_index];                              \
+        if (mask_byte->r == PURPLE.r && mask_byte->g == PURPLE.g && mask_byte->b == PURPLE.b) { \
+            continue;                                                                           \
+        }                                                                                       \
+    })
 
 #define _COPY_COND(img, filler, img_x, img_y, __cond__)                      \
     {                                                                        \
@@ -64,8 +61,9 @@
 
 void flat_image_fill(struct FlatImage* img, const struct FlatImage* filler) { _FILL(img, filler); }
 
-void flat_image_fill_column(struct FlatImage* img, const struct FlatImage* filler, int img_y) {
-    _FILL_COLUMN(img, filler, img_y);
+void flat_image_fill_transparent(struct FlatImage* img, const struct FlatImage* filler,
+                                 const struct FlatImage* mask) {
+    _FILL_TRANSPARENT(img, filler, mask);
 }
 
 void flat_image_copy(struct FlatImage* img, const struct FlatImage* filler, int img_x, int img_y) {
@@ -81,8 +79,9 @@ void float_image_fill(struct FloatImage* img, const struct FloatImage* filler) {
     _FILL(img, filler);
 }
 
-void float_image_fill_column(struct FloatImage* img, const struct FloatImage* filler, int img_y) {
-    _FILL_COLUMN(img, filler, img_y);
+void float_image_fill_transparent(struct FloatImage* img, const struct FloatImage* filler,
+                                  const struct FlatImage* mask) {
+    _FILL_TRANSPARENT(img, filler, mask);
 }
 
 void float_image_copy(struct FloatImage* img, const struct FloatImage* filler, int img_x,

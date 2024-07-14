@@ -29,9 +29,9 @@ struct Rule* builder_texture_make_rule_from_helper(struct SelectorHelper* helper
 // Builders.
 struct TexObj* builder_texture_build_tex_obj(struct SelectorHelper* helper);
 struct TexObj* builder_texture_build_default(struct Helper* helper);
-struct TexObj* builder_texture_build_tile(struct Helper* helper);
 
 // Builder containers.
+struct TexObj* builder_texture_build_tile(struct Helper* helper);
 struct TexObj* builder_texture_build_texture_part(struct Helper* helper, enum TexPartDirection);
 struct TexObj* builder_texture_build_texture_series(struct Helper* helper, enum TexPartDirection);
 
