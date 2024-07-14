@@ -1,15 +1,16 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
+#include "pixelopolis/_draw_builder_texture_part.h"
 #include "pixelopolis/css_func.h"
 
 #define SHIFT(pair, direction) pair->shift[builder_texture_get_pair_axis_by_direction(direction)]
 
-static inline void _add_margin_to_tex_objs(struct TexPartObj* obj, const struct IntPair index,
+static inline void _add_margin_to_tex_objs(struct ShiftTexPair** pairs, const struct IntPair index,
                                            int margin, enum TexPartDirection direction) {
     int _index;
     for (_index = index.start; _index <= index.end; _index++) {
-        struct ShiftTexPair* pair = obj->objs[_index];
+        struct ShiftTexPair* pair = pairs[_index];
         SHIFT(pair, direction) += margin;
     }
 }
@@ -21,17 +22,16 @@ static inline int _get_margin_to_align(struct ShiftTexPair* pair, int end,
     return end - shift - length;
 }
 
-
 #define IF_NAME(name) else if (!strcmp(align, name))
-void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct BasicTexObj* basic,
-                           struct IntPair length, struct IntPair index,
+void builder_texture_align(struct Helper* helper, struct ShiftTexPair** pairs,
+                           struct BasicTexObj* basic, struct IntPair length, struct IntPair index,
                            enum TexPartDirection direction) {
     if (index.start > index.end) {
         return;
     }
     int diff = length.end - length.start;
     char* align = css_find_selector_element_prop(helper->rule, "align");
-    struct ShiftTexPair* last_pair = obj->objs[index.end];
+    struct ShiftTexPair* last_pair = pairs[index.end];
 
     if (!align) return;
     IF_NAME("start") {
@@ -43,7 +43,7 @@ void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct
         // find distance between last texture and end of wall
         // and add to shifts
         int margin = _get_margin_to_align(last_pair, diff, direction);
-        _add_margin_to_tex_objs(obj, index, margin, direction);
+        _add_margin_to_tex_objs(pairs, index, margin, direction);
         builder_texture_resize_axis_by_direction(basic, length.end, direction);
     }
     IF_NAME("center") {
@@ -52,7 +52,7 @@ void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct
         // div by 2
         // and add to shifts
         int margin = _get_margin_to_align(last_pair, diff, direction) / 2;
-        _add_margin_to_tex_objs(obj, index, margin, direction);
+        _add_margin_to_tex_objs(pairs, index, margin, direction);
         builder_texture_resize_axis_by_direction(basic, length.end, direction);
     }
     IF_NAME("justify") {
@@ -67,7 +67,7 @@ void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct
         // rescale margins (except last item)
         int _index;
         for (_index = index.start; _index < index.end; _index++) {
-            struct ShiftTexPair* next_pair = obj->objs[_index + 1];
+            struct ShiftTexPair* next_pair = pairs[_index + 1];
             // move next element to increase margin
             SHIFT(next_pair, direction) *= ratio;
         }

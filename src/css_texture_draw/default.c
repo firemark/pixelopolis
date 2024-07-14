@@ -10,9 +10,7 @@ void css_texture_draw_default(struct TexObj *tex_obj, struct DrawTexInfo *info) 
         float_image_fill(info->output->normal_map, obj->normal_map);
     }
     if (obj->color) {
-        int width = info->output->texture->width;
-        int height = info->output->texture->height;
-        struct FlatImage *texture = flat_image_create_with_color(width, height, obj->color);
+        struct FlatImage *texture = flat_image_create_with_color(1, 1, obj->color);
         flat_image_fill(info->output->texture, texture);
         flat_image_destroy(texture);
     }

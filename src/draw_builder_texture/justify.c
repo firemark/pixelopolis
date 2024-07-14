@@ -2,10 +2,12 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
+#include "pixelopolis/_draw_builder_texture_part.h"
 #include "pixelopolis/css_func.h"
 
 #define COSHIFT(pair, direction) \
     pair->shift[builder_texture_get_pair_coaxis_by_direction(direction)]
+#define COMETRIC(basic, direction) builder_texture_get_cometric_by_direction(basic, direction)
 
 // TODO - move to utils, remove doubled code
 static inline enum Justify _get_justify(const char* name) {
@@ -37,16 +39,16 @@ static inline void _do_justify(struct ShiftTexPair* pair, const enum Justify jus
     }
 }
 
-void builder_texture_justify(struct Helper* helper, struct TexPartObj* obj,
+void builder_texture_justify(struct Helper* helper, struct ShiftTexPair** pairs,
                              struct BasicTexObj* basic, enum TexPartDirection direction) {
     char* justify_selector = css_find_selector_element_prop(helper->rule, "justify");
     enum Justify justify = _get_justify(justify_selector);
-    if (!obj->objs) return;
+    if (!pairs) return;
     struct ShiftTexPair* pair = NULL;
     size_t index = 0;
-    int height = builder_texture_get_cometric_by_direction(basic, direction);
-    while ((pair = obj->objs[index++])) {
-        int obj_height = builder_texture_get_cometric_by_direction(&pair->obj->basic, direction);
+    int height = COMETRIC(basic, direction);
+    while ((pair = pairs[index++])) {
+        int obj_height = COMETRIC(&pair->obj->basic, direction);
         int margin = height - obj_height - COSHIFT(pair, direction);
         _do_justify(pair, justify, margin, direction);
     }

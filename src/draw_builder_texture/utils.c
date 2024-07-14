@@ -14,7 +14,7 @@ struct Rule* builder_texture_make_rule_from_helper(struct SelectorHelper* helper
 static inline int _get_basic_width(struct Helper* helper) {
     int* percent = css_find_percent_prop(helper->rule, "width");
     if (percent) {
-        return *percent * helper->parent->basic.width;
+        return *percent * helper->parent->basic.width / 100;
     }
     int* number = css_find_number_prop(helper->rule, "width");
     if (number) {
@@ -26,7 +26,7 @@ static inline int _get_basic_width(struct Helper* helper) {
 static inline int _get_basic_height(struct Helper* helper) {
     int* percent = css_find_percent_prop(helper->rule, "height");
     if (percent) {
-        return *percent * helper->parent->basic.height;
+        return *percent * helper->parent->basic.height / 100;
     }
     int* number = css_find_number_prop(helper->rule, "height");
     if (number) {

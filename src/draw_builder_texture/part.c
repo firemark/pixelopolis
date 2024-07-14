@@ -2,19 +2,13 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
+#include "pixelopolis/_draw_builder_texture_part.h"
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/draw_builder_texture.h"
 
-static void _append_children(struct Helper* helper, struct TexPartObj* obj,
-                             struct BasicTexObj* basic, enum TexPartDirection direction);
-static void _coalign(struct Helper* helper, struct TexPartObj* obj, struct BasicTexObj* basic,
-                     int start, int end, int start_index, int end_index,
-                     enum TexPartDirection direction);
-
-static void _resize_coaxis(struct BasicTexObj* a, struct BasicTexObj* b,
-                           enum TexPartDirection direction);
-static void _fill_shift(struct ShiftTexPair* pair, int shift, enum TexPartDirection direction);
+static struct ShiftTexPair** _append_children(struct Helper* helper, struct BasicTexObj* basic,
+                                              enum TexPartDirection direction);
 
 struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
                                                   enum TexPartDirection direction) {
@@ -25,7 +19,7 @@ struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
         struct SelectorHelper background_helper = MAKE_SELECTOR_HELPER(helper, "background");
         obj->background = builder_texture_build_tex_obj(&background_helper);
     }
-    _append_children(helper, obj, &basic, direction);
+    obj->objs = _append_children(helper, &basic, direction);
 
     return builder_texture_make_tex_obj(helper, basic, TEX_OBJ_PART, obj);
 }
@@ -35,17 +29,19 @@ struct Center {
     struct IntPair index;
 };
 
-static void _append_children(struct Helper* helper, struct TexPartObj* obj,
-                             struct BasicTexObj* basic, enum TexPartDirection direction) {
-    int length = builder_texture_get_metric_by_direction(&helper->parent->basic, direction);
+static struct ShiftTexPair** _append_children(struct Helper* helper, struct BasicTexObj* basic,
+                                              enum TexPartDirection direction) {
     int shift = 0;
     int size = 0;
     struct Center center = {
-        .length = {.start = 0, .end = 0},
+        .length = {.start = 0,
+                   .end =
+                       builder_texture_get_metric_by_direction(&helper->parent->basic, direction)},
         .index = {.start = 0, .end = -1},
     };
 
-    obj->objs = malloc(sizeof(struct TexObj*) * BUILDER_TEXTURE_MAX_ELEMENTS);
+    struct ShiftTexPair** pairs =
+        malloc(sizeof(struct ShiftTexPair*) * BUILDER_TEXTURE_MAX_ELEMENTS);
 
     struct SelectorHelper start_obj_helper = MAKE_SELECTOR_HELPER(helper, "start");
     struct TexObj* start_obj = builder_texture_build_tex_obj(&start_obj_helper);
@@ -55,15 +51,15 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
 
     if (start_obj) {
         int obj_length = builder_texture_get_metric_by_direction(&start_obj->basic, direction);
-        if (obj_length >= length) {
+        if (obj_length >= center.length.end) {
             goto final;
         }
         struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
         builder_texture_resize_axis_by_direction(basic, obj_length, direction);
-        _resize_coaxis(basic, &start_obj->basic, direction);
-        _fill_shift(pair, 0, direction);
+        builder_texture_resize_coaxis(basic, &start_obj->basic, direction);
+        builder_texture_fill_shift(pair, 0, direction);
         pair->obj = start_obj;
-        obj->objs[size++] = pair;
+        pairs[size++] = pair;
         shift = obj_length + builder_get_padding(helper->rule);
         center.length.start = obj_length;
         center.index.start += 1;
@@ -72,10 +68,10 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
 
     if (end_obj) {
         int obj_length = builder_texture_get_metric_by_direction(&end_obj->basic, direction);
-        if (shift + obj_length >= length) {
+        if (shift + obj_length >= center.length.end) {
             goto final;
         }
-        length -= obj_length;
+        center.length.end -= obj_length;
     }
 
     for (;;) {
@@ -86,16 +82,16 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
         }
         int obj_length = builder_texture_get_metric_by_direction(&center_obj->basic, direction);
         int end_shift = shift + obj_length;
-        if (end_shift >= length) {
+        if (end_shift >= center.length.end) {
             break;
         }
         if (center_obj) {
             struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
             builder_texture_resize_axis_by_direction(basic, end_shift, direction);
-            _resize_coaxis(basic, &center_obj->basic, direction);
-            _fill_shift(pair, shift, direction);
+            builder_texture_resize_coaxis(basic, &center_obj->basic, direction);
+            builder_texture_fill_shift(pair, shift, direction);
             pair->obj = center_obj;
-            obj->objs[size++] = pair;
+            pairs[size++] = pair;
         }
         shift = end_shift + builder_get_padding(helper->rule);
         center.index.end += 1;
@@ -106,16 +102,17 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
         int end_shift = shift + obj_length;
         struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
         builder_texture_resize_axis_by_direction(basic, end_shift, direction);
-        _resize_coaxis(basic, &end_obj->basic, direction);
-        _fill_shift(pair, shift, direction);
+        builder_texture_resize_coaxis(basic, &end_obj->basic, direction);
+        builder_texture_fill_shift(pair, shift, direction);
         pair->obj = end_obj;
-        obj->objs[size++] = pair;
+        pairs[size++] = pair;
     }
 
 final:
-    obj->objs[size] = NULL;
-    builder_texture_align(helper, obj, basic, center.length, center.index, direction);
-    builder_texture_justify(helper, obj, basic, direction);
+    pairs[size] = NULL;
+    builder_texture_align(helper, pairs, basic, center.length, center.index, direction);
+    builder_texture_justify(helper, pairs, basic, direction);
+    return pairs;
 }
 
 #define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr

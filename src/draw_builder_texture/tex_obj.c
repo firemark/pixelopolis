@@ -25,6 +25,8 @@ struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
     // containers
     IF_NAME("v-tex") obj = builder_texture_build_texture_part(&inner_helper, TEX_PART_VERTICAL);
     IF_NAME("h-tex") obj = builder_texture_build_texture_part(&inner_helper, TEX_PART_HORIZONTAL);
+    IF_NAME("v-series-tex") obj = builder_texture_build_texture_series(&inner_helper, TEX_PART_VERTICAL);
+    IF_NAME("h-series-tex") obj = builder_texture_build_texture_series(&inner_helper, TEX_PART_HORIZONTAL);
     else obj = builder_texture_build_default(&inner_helper);
 #undef IF_NAME
     css_free_rule_half(rule);

@@ -12,6 +12,9 @@ static struct FloatImage* _find_bump_map_in_rule(struct Rule* rule);
 static struct FloatImage* _find_normal_map_in_rule(struct Rule* rule);
 static struct rgb* _find_color_in_rule(struct Rule* rule);
 
+#define SET_GREATER(basic, value, attr) basic.attr = basic.attr >= value ? basic.attr : value
+
+
 struct TexObj* builder_texture_build_default(struct Helper* helper) {
     struct Rule* rule = helper->rule;
     struct TexDefaultObj* obj = malloc(sizeof(struct TexDefaultObj));
@@ -23,16 +26,17 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
     tex_obj->type = TEX_OBJ_DEFAULT;
     tex_obj->obj = obj;
+    tex_obj->basic = builder_texture_prepare_basic(helper);
 
     if (obj->texture) {
-        tex_obj->basic.width = obj->texture->width;
-        tex_obj->basic.height = obj->texture->height;
+        SET_GREATER(tex_obj->basic, obj->texture->width, width); 
+        SET_GREATER(tex_obj->basic, obj->texture->height, height); 
     } else if (obj->normal_map) {
-        tex_obj->basic.width = obj->normal_map->width;
-        tex_obj->basic.height = obj->normal_map->height;
+        SET_GREATER(tex_obj->basic, obj->normal_map->width, width); 
+        SET_GREATER(tex_obj->basic, obj->normal_map->height, height); 
     } else {
-        tex_obj->basic.width = 1;
-        tex_obj->basic.height = 1;
+        SET_GREATER(tex_obj->basic, 1, width); 
+        SET_GREATER(tex_obj->basic, 1, height); 
     }
 
     return tex_obj;
