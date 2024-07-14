@@ -30,14 +30,20 @@ struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
     return builder_texture_make_tex_obj(helper, basic, TEX_OBJ_PART, obj);
 }
 
+struct Center {
+    struct IntPair length;
+    struct IntPair index;
+};
+
 static void _append_children(struct Helper* helper, struct TexPartObj* obj,
                              struct BasicTexObj* basic, enum TexPartDirection direction) {
     int length = builder_texture_get_metric_by_direction(&helper->parent->basic, direction);
     int shift = 0;
     int size = 0;
-    int start_center_index = 0;
-    int end_center_index = -1;
-    int start = 0;
+    struct Center center = {
+        .length = {.start = 0, .end = 0},
+        .index = {.start = 0, .end = -1},
+    };
 
     obj->objs = malloc(sizeof(struct TexObj*) * BUILDER_TEXTURE_MAX_ELEMENTS);
 
@@ -59,9 +65,9 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
         pair->obj = start_obj;
         obj->objs[size++] = pair;
         shift = obj_length + builder_get_padding(helper->rule);
-        start = obj_length;
-        start_center_index += 1;
-        end_center_index += 1;
+        center.length.start = obj_length;
+        center.index.start += 1;
+        center.index.end += 1;
     }
 
     if (end_obj) {
@@ -92,7 +98,7 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
             obj->objs[size++] = pair;
         }
         shift = end_shift + builder_get_padding(helper->rule);
-        end_center_index += 1;
+        center.index.end += 1;
     }
 
     if (end_obj) {
@@ -108,8 +114,8 @@ static void _append_children(struct Helper* helper, struct TexPartObj* obj,
 
 final:
     obj->objs[size] = NULL;
-    builder_texture_align(helper, obj, basic, start, length, start_center_index, end_center_index,
-                          direction);
+    builder_texture_align(helper, obj, basic, center.length, center.index, direction);
+    builder_texture_justify(helper, obj, basic, direction);
 }
 
 #define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr

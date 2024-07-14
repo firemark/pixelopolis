@@ -41,6 +41,7 @@ struct BasicTexObj builder_texture_prepare_basic(struct Helper* helper)
         .width = _get_basic_width(helper),
         .height = _get_basic_height(helper),
     };
+    return basic;
 }
 
 struct TexObj* builder_texture_make_tex_obj(struct Helper* helper, struct BasicTexObj basic,

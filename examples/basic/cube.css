@@ -18,14 +18,13 @@ wall.top { texture: tex.wood; }
 h-tex.grey-brick {
     background: tex.grey-brick;
     center: v-tex.windows;
-    padding: 4;
 }
 
 v-tex.windows {
-    start: tex.wood;
     center: tex.window;
-    end: tex.wood;
+    justify: end;
     padding: 20;
+    height: 40;
 }
 
 tex.wood        { texture: "textures/nature-wall/wood.png"; }

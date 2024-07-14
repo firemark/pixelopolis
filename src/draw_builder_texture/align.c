@@ -1,35 +1,37 @@
-#include <stdlib.h>
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/css_func.h"
-#include "pixelopolis/draw_builder_common.h"
-#include "pixelopolis/draw_builder_texture.h"
 
-static inline void _add_margin_to_tex_objs(struct TexPartObj* obj, int index, int end_index,
+#define SHIFT(pair, direction) pair->shift[builder_texture_get_pair_axis_by_direction(direction)]
+
+static inline void _add_margin_to_tex_objs(struct TexPartObj* obj, const struct IntPair index,
                                            int margin, enum TexPartDirection direction) {
-    for (; index <= end_index; index++) {
-        struct ShiftTexPair* pair = obj->objs[index];
-        pair->shift[builder_texture_get_pair_axis_by_direction(direction)] += margin;
+    int _index;
+    for (_index = index.start; _index <= index.end; _index++) {
+        struct ShiftTexPair* pair = obj->objs[_index];
+        SHIFT(pair, direction) += margin;
     }
 }
 
 static inline int _get_margin_to_align(struct ShiftTexPair* pair, int end,
                                        enum TexPartDirection direction) {
-    int shift = pair->shift[builder_texture_get_pair_axis_by_direction(direction)];
+    int shift = SHIFT(pair, direction);
     int length = builder_texture_get_metric_by_direction(&pair->obj->basic, direction);
     return end - shift - length;
 }
 
+
 #define IF_NAME(name) else if (!strcmp(align, name))
 void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct BasicTexObj* basic,
-                           int start, int end, int start_index, int end_index,
+                           struct IntPair length, struct IntPair index,
                            enum TexPartDirection direction) {
-    if (start_index > end_index) {
+    if (index.start > index.end) {
         return;
     }
+    int diff = length.end - length.start;
     char* align = css_find_selector_element_prop(helper->rule, "align");
-    struct ShiftTexPair* last_pair = obj->objs[end_index];
+    struct ShiftTexPair* last_pair = obj->objs[index.end];
 
     if (!align) return;
     IF_NAME("start") {
@@ -40,36 +42,36 @@ void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct
         // default is start aligned so we need to
         // find distance between last texture and end of wall
         // and add to shifts
-        int margin = _get_margin_to_align(last_pair, end - start, direction);
-        _add_margin_to_tex_objs(obj, start_index, end_index, margin, direction);
-        builder_texture_resize_axis_by_direction(basic, end, direction);
+        int margin = _get_margin_to_align(last_pair, diff, direction);
+        _add_margin_to_tex_objs(obj, index, margin, direction);
+        builder_texture_resize_axis_by_direction(basic, length.end, direction);
     }
     IF_NAME("center") {
         // default is start aligned so we need to
         // find distance between last texture and end of wall
         // div by 2
         // and add to shifts
-        int margin = _get_margin_to_align(last_pair, end - start, direction) / 2;
-        _add_margin_to_tex_objs(obj, start_index, end_index, margin, direction);
-        builder_texture_resize_axis_by_direction(basic, end, direction);
+        int margin = _get_margin_to_align(last_pair, diff, direction) / 2;
+        _add_margin_to_tex_objs(obj, index, margin, direction);
+        builder_texture_resize_axis_by_direction(basic, length.end, direction);
     }
     IF_NAME("justify") {
         // we need to find a last margin and rescale other margins
         // and shift last element to the end
-        int end_margin = _get_margin_to_align(last_pair, end - start, direction);
+        int end_margin = _get_margin_to_align(last_pair, diff, direction);
 
         // find a scale of last margin
-        int shift = last_pair->shift[builder_texture_get_pair_axis_by_direction(direction)];
+        int shift = SHIFT(last_pair, direction);
         float ratio = (float)(shift + end_margin) / (float)shift;
 
         // rescale margins (except last item)
-        size_t index;
-        for (index = start_index; index < end_index; index++) {
-            struct ShiftTexPair* next_pair = obj->objs[index + 1];
+        int _index;
+        for (_index = index.start; _index < index.end; _index++) {
+            struct ShiftTexPair* next_pair = obj->objs[_index + 1];
             // move next element to increase margin
-            next_pair->shift[builder_texture_get_pair_axis_by_direction(direction)] *= ratio;
+            SHIFT(next_pair, direction) *= ratio;
         }
-        builder_texture_resize_axis_by_direction(basic, end, direction);
+        builder_texture_resize_axis_by_direction(basic, length.end, direction);
     }
 }
 #undef IF_NAME

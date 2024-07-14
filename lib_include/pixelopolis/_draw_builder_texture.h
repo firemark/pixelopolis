@@ -20,6 +20,11 @@ struct SelectorHelper {
     struct TexObj* parent;
 };
 
+struct IntPair {
+    int start;
+    int end;
+};
+
 struct Rule* builder_texture_make_rule_from_helper(struct SelectorHelper* helper);
 
 // Builders.
@@ -32,8 +37,10 @@ struct TexObj* builder_texture_build_texture_part(struct Helper* helper, enum Te
 
 // Part utils.
 void builder_texture_align(struct Helper* helper, struct TexPartObj* obj, struct BasicTexObj* basic,
-                           int start, int end, int start_index, int end_index,
+                           struct IntPair length, struct IntPair index,
                            enum TexPartDirection direction);
+void builder_texture_justify(struct Helper* helper, struct TexPartObj* obj,struct BasicTexObj* basic,
+                             enum TexPartDirection direction);
 
 // Utils.
 struct BasicTexObj builder_texture_prepare_basic(struct Helper* helper);
@@ -52,12 +59,35 @@ static inline int builder_texture_get_metric_by_direction(struct BasicTexObj* ba
     }
 }
 
+static inline int builder_texture_get_cometric_by_direction(struct BasicTexObj* basic,
+                                                            enum TexPartDirection direction) {
+    switch (direction) {
+        case TEX_PART_VERTICAL:
+            return basic->height;
+        case TEX_PART_HORIZONTAL:
+            return basic->width;
+        default:
+            return 0;
+    }
+}
+
 static inline int builder_texture_get_pair_axis_by_direction(enum TexPartDirection direction) {
     switch (direction) {
         case TEX_PART_VERTICAL:
             return 0;
         case TEX_PART_HORIZONTAL:
             return 1;
+        default:
+            return 0;
+    }
+}
+
+static inline int builder_texture_get_pair_coaxis_by_direction(enum TexPartDirection direction) {
+    switch (direction) {
+        case TEX_PART_VERTICAL:
+            return 1;
+        case TEX_PART_HORIZONTAL:
+            return 0;
         default:
             return 0;
     }

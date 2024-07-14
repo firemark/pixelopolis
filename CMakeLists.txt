@@ -4,6 +4,7 @@ project(Pixelopolis VERSION 0.1.5 LANGUAGES C)
 find_package(PNG REQUIRED)
 find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 function(main)
     file(GLOB_RECURSE SRC_FILES src/*.c)
