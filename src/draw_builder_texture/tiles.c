@@ -41,7 +41,7 @@ struct Center {
 
 static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) {
     int size = 0;
-    *grid_size = 0;
+    int non_repeat_grid_size = 0;
 
     struct Rule* rule = helper->rule;
     struct Obj** prop_objs = css_find_objs(rule, "body");
@@ -52,9 +52,12 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) 
     {
         struct Obj* css_obj = NULL;
         css_iter (css_obj, prop_objs) {
-            *grid_size += 1;  // Count
+            non_repeat_grid_size += 1;  // Count
         }
     }
+
+    int repeat = builder_get_int(rule, "repeat", 1);
+    *grid_size = non_repeat_grid_size * repeat;
 
     struct ShiftTexPair** pairs = malloc(sizeof(struct ShiftTexPair*) * *grid_size * *grid_size);
     struct SelectorHelper child_helper = {
@@ -62,24 +65,27 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) 
         .parent_rule = helper->rule,
         .parent = helper->parent,
     };
-    struct Obj* css_obj = NULL;
-    size_t y_index = 0;
-    css_iter (css_obj, prop_objs) {
-        for (int x_index = 0; x_index < *grid_size; x_index++) {
-            child_helper.selector = css_eval_rule(css_obj);
-            struct TexObj* child = builder_texture_build_tex_obj(&child_helper);
-            size_t index = ((y_index + x_index) % *grid_size) * *grid_size +
-                           ((x_index + x_index) % *grid_size);
-            if (child) {
-                struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
-                pair->obj = child;
-                pairs[index] = pair;
-            } else {
-                pairs[index] = NULL;
+
+    for (int repeat_index = 0; repeat_index < repeat; repeat_index++) {
+        struct Obj* css_obj = NULL;
+        int y_index = repeat_index * non_repeat_grid_size;
+        css_iter (css_obj, prop_objs) {
+            for (int x_index = 0; x_index < *grid_size; x_index++) {
+                child_helper.selector = css_eval_rule(css_obj);
+                struct TexObj* child = builder_texture_build_tex_obj(&child_helper);
+                size_t index = ((y_index + x_index) % *grid_size) * *grid_size +
+                               (x_index % *grid_size);
+                if (child) {
+                    struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
+                    pair->obj = child;
+                    pairs[index] = pair;
+                } else {
+                    pairs[index] = NULL;
+                }
+                size++;
             }
-            size++;
+            y_index++;
         }
-        y_index++;
     }
 
     pairs[size] = NULL;

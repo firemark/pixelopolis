@@ -19,6 +19,7 @@ tiles {
     background: tex.cement;
     body: tex.tiles.green, tex.tiles.yellow, tex.tiles.blue;
     padding: 4;
+    repeat: 2;
 
     & > tex.tiles      { 
         width: 12; 
@@ -36,7 +37,7 @@ tiles {
 tex.cement { 
     color: #cecece; 
     bump-noise: 20%; 
-    bump-noise-level: 32;
+    bump-noise-level: 128;
     width: 100;
     height: 100;
 }

@@ -38,7 +38,7 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     }
 
     if (!bump_map) {
-        bump_map = one_chan_image_create_with_color(basic.width, basic.height, 0);
+        bump_map = one_chan_image_create_with_color(basic.width, basic.height, 0xFF);
     }
     _bump_noise(rule, bump_map);
     _bevel(rule, bump_map);
@@ -89,7 +89,7 @@ static void _bevel(struct Rule* rule, struct OneChanImage* bump_map) {
     if (!bevel || *bevel == 0) {
         return;
     }
-    const uint8_t _bevel = (uint8_t)*bevel;
+    const uint8_t _bevel = 0xFF - (uint8_t)*bevel;
     const int y0 = 0;
     const int y1 = bump_map->height - 1;
     const int x0 = 0;
@@ -112,7 +112,7 @@ static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map) {
     if (!noise || *noise == 0) {
         return;
     }
-    const uint8_t c_level = level ? (uint8_t)*level : 255;
+    const uint8_t c_level = level ? (uint8_t)*level : 0xFF;
     if (c_level == 0) {
         return;
     }
@@ -121,7 +121,7 @@ static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map) {
         const int x = rand() % bump_map->width;
         const int y = rand() % bump_map->width;
         const uint8_t c = rand() % c_level;
-        bump_map->buffer[y * bump_map->width + x] = c;
+        bump_map->buffer[y * bump_map->width + x] = 0xFF - c;
     }
 }
 
