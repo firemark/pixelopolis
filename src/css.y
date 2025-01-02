@@ -8,11 +8,11 @@
 #include "pixelopolis/basic.h"
 #define YYDEBUG 1
 
-FILE *yyin;
-struct Program* global_program;
-int lines;
-int chars;
-int old_chars;
+static struct Program* global_program;
+extern FILE *yyin;
+extern int lines;
+extern int chars;
+extern int old_chars;
 int yylex(void);
 
 enum RuleAttrType {
@@ -502,6 +502,9 @@ struct Program* css_parse_file(char* filename) {
 }
 
 struct Program* css_parse_file_as_stream(FILE* stream) {
+    lines = 1;
+    old_chars = 1;
+    chars = 1;
     yyin = stream;
     yyparse();
     return global_program;
