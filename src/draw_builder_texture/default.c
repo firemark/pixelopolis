@@ -6,6 +6,7 @@
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img/create.h"
+#include "pixelopolis/img/read.h"
 #include "pixelopolis/normal_map.h"
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
