@@ -4,7 +4,7 @@
 #include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/hash.h"
 
-#define BUILDER_TEXTURE_MAX_ELEMENTS 128
+#define BUILDER_TEXTURE_MAX_ELEMENTS 512
 
 struct Helper {
     struct Program* program;
