@@ -34,10 +34,14 @@
     {                                                                        \
         const int limit_width = _LIMIT(img_x, filler->width, img->width);    \
         const int limit_height = _LIMIT(img_y, filler->height, img->height); \
+        const int x_start = img_x > 0 ? 0 : -img_x;                          \
+        const int y_start = img_y > 0 ? 0 : -img_y;                          \
+        img_x += x_start;                                                    \
+        img_y += y_start;                                                    \
         int old_img_x = img_x;                                               \
         int x, y;                                                            \
-        for (y = 0; y < limit_height; y++) {                                 \
-            for (x = 0; x < limit_width; x++) {                              \
+        for (y = y_start; y < limit_height; y++) {                           \
+            for (x = x_start; x < limit_width; x++) {                        \
                 size_t filler_index = _GET_INDEX(filler, x, y);              \
                 size_t img_index = _GET_INDEX(img, img_x, img_y);            \
                 img_x++;                                                     \
