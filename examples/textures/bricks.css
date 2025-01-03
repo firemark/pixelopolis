@@ -1,0 +1,43 @@
+world {
+    width: 800;
+    height: 800;
+    body: cube.example;
+}
+
+cube.example {
+    wall: wall.wall;
+    roof: wall.wall;
+    width: 350;
+    depth: 350;
+    height: 150;
+}
+
+wall.wall {
+    texture: bricks;
+}
+
+bricks {
+    display: tile;
+    background: tex.cement;
+    body: tex.brick;
+    padding: 1;
+    repeat: 5;
+    shift: 4;
+}
+
+tex.brick {
+    width: 8;
+    height: 12;
+    bevel: 255;
+    bump-noise: 10%;
+    bump-noise-level: 128;
+    color: choice(#BC4A3C, #B7410E, #CC1A17);
+}
+
+tex.cement {
+    color: #9c9c9c;
+    bump-noise: 50%;
+    bump-noise-level: 32;
+    width: 100;
+    height: 100;
+}

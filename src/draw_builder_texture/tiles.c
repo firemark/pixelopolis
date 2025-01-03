@@ -10,9 +10,10 @@
 #include "pixelopolis/draw_builder_texture.h"
 
 static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size);
-static void _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
+static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
                           struct BasicTexObj* basic, int grid_size);
 static struct ShiftTexPair** _drop_nulls(struct ShiftTexPair** tiles, int grid_size);
+static struct ShiftTexPair** _concat(struct ShiftTexPair** a, struct ShiftTexPair** b);
 
 struct TexObj* builder_texture_build_tile(struct Helper* helper) {
     struct TexPartObj* obj = malloc(sizeof(struct TexPartObj));
@@ -24,9 +25,11 @@ struct TexObj* builder_texture_build_tile(struct Helper* helper) {
     }
     int grid_size;
     struct ShiftTexPair** tiles = _make_tiles(helper, &grid_size);
-    _arange_tiles(helper, tiles, &basic, grid_size);
-    obj->objs = _drop_nulls(tiles, grid_size);
-    free(tiles);
+    struct ShiftTexPair** additional_tiles = _arange_tiles(helper, tiles, &basic, grid_size);
+
+    tiles = _drop_nulls(tiles, grid_size);
+    additional_tiles = _drop_nulls(additional_tiles, grid_size);
+    obj->objs = _concat(tiles, additional_tiles);
 
     struct TexVoidObj* fill_obj = malloc(sizeof(struct TexVoidObj));
     fill_obj->child = builder_texture_make_tex_obj(helper, basic, TEX_OBJ_PART, obj);
@@ -39,8 +42,7 @@ struct Center {
     struct IntPair index;
 };
 
-static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) {
-    int size = 0;
+static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size_out) {
     int non_repeat_grid_size = 0;
 
     struct Rule* rule = helper->rule;
@@ -57,9 +59,10 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) 
     }
 
     int repeat = builder_get_int(rule, "repeat", 1);
-    *grid_size = non_repeat_grid_size * repeat;
+    int grid_size = non_repeat_grid_size * repeat;
+    *grid_size_out = grid_size;
 
-    struct ShiftTexPair** pairs = malloc(sizeof(struct ShiftTexPair*) * *grid_size * *grid_size);
+    struct ShiftTexPair** pairs = malloc(sizeof(struct ShiftTexPair*) * (grid_size * grid_size));
     struct SelectorHelper child_helper = {
         .program = helper->program,
         .parent_rule = helper->rule,
@@ -70,11 +73,10 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) 
         struct Obj* css_obj = NULL;
         int y_index = repeat_index * non_repeat_grid_size;
         css_iter (css_obj, prop_objs) {
-            for (int x_index = 0; x_index < *grid_size; x_index++) {
+            for (int x_index = 0; x_index < grid_size; x_index++) {
                 child_helper.selector = css_eval_rule(css_obj);
                 struct TexObj* child = builder_texture_build_tex_obj(&child_helper);
-                size_t index = ((y_index + x_index) % *grid_size) * *grid_size +
-                               (x_index % *grid_size);
+                size_t index = ((y_index + x_index) % grid_size) * grid_size + (x_index % grid_size);
                 if (child) {
                     struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
                     pair->obj = child;
@@ -82,24 +84,31 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size) 
                 } else {
                     pairs[index] = NULL;
                 }
-                size++;
             }
             y_index++;
         }
     }
 
-    pairs[size] = NULL;
     return pairs;
 }
 
-static void _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
+static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
                           struct BasicTexObj* basic, int grid_size) {
     int width = 0;
     int height = 0;
     int padding = builder_get_padding(helper->rule);
+    int x_shift = builder_get_int(helper->rule, "shift", 0);
+    // TODO: support y_shift
+
+    size_t size = grid_size * grid_size;
+
+    // Add array with additional tiles
+    struct ShiftTexPair** additional_tiles = malloc(sizeof(struct ShiftTexPair*) * size);
+    for (size_t index = 0; index < size; index++) {
+        additional_tiles[index] = NULL;
+    }
 
     // First, find max width and height.
-    size_t size = grid_size * grid_size;
     for (size_t index = 0; index < grid_size; index++) {
         struct ShiftTexPair* tile = tiles[index];
         if (!tile) continue;
@@ -111,6 +120,10 @@ static void _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
     width += padding;
     height += padding;
 
+    // Set size of tileset
+    basic->width = width * grid_size;
+    basic->height = height * grid_size;
+
     // Shift tiles
     int shift[2] = {0, 0};
     for (size_t y_index = 0; y_index < grid_size; y_index++) {
@@ -118,25 +131,52 @@ static void _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
             size_t index = y_index * grid_size + x_index;
             struct ShiftTexPair* tile = tiles[index];
             if (!tile) continue;
-            tile->shift[0] = x_index * width;
+            tile->shift[0] = x_index * width + y_index * x_shift;
             tile->shift[1] = y_index * height;
+            if (tile->shift[0] + tile->obj->basic.width > basic->width) {
+                // Warping 
+                struct ShiftTexPair* additional_tile = malloc(sizeof(struct ShiftTexPair));
+                additional_tile->obj = tile->obj;
+                additional_tile->shift[0] = tile->shift[0] - basic->width;
+                additional_tile->shift[1] = tile->shift[1];
+                additional_tiles[index] = additional_tile;
+            }
         }
     }
 
-    basic->width = width * grid_size;
-    basic->height = height * grid_size;
+    return additional_tiles;
 }
 
 static struct ShiftTexPair** _drop_nulls(struct ShiftTexPair** tiles, int grid_size) {
     size_t new_index = 0;
-    struct ShiftTexPair** new_tiles =
-        malloc(sizeof(struct ShiftTexPair*) * BUILDER_TEXTURE_MAX_ELEMENTS);
-    size_t size = grid_size * grid_size;
+    int size = grid_size * grid_size;
+    struct ShiftTexPair** new_tiles = malloc(sizeof(struct ShiftTexPair*) * (size + 1));
+
     for (size_t index = 0; index < size; index++) {
         struct ShiftTexPair* tile = tiles[index];
         if (!tile) continue;
         new_tiles[new_index++] = tile;
     }
     new_tiles[new_index] = NULL;
+    free(tiles);
+    return new_tiles;
+}
+
+static struct ShiftTexPair** _concat(struct ShiftTexPair** a, struct ShiftTexPair** b) {
+    size_t size = 0;
+    struct ShiftTexPair** it;
+
+    for(it = a; *it != NULL; it++) size++;
+    for(it = b; *it != NULL; it++) size++;
+
+    struct ShiftTexPair** new_tiles = malloc(sizeof(struct ShiftTexPair*) * (size + 1));
+
+    size_t index = 0;
+    for(it = a; *it != NULL; it++) new_tiles[index++] = *it;
+    for(it = b; *it != NULL; it++) new_tiles[index++] = *it;
+
+    new_tiles[index] = NULL;
+    free(a);
+    free(b);
     return new_tiles;
 }
