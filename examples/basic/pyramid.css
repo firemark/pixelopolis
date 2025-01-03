@@ -11,5 +11,5 @@ pyramid.example {
     height: 150;
 }
 
-wall.wood { texture: tex.wood; padding: 4; }
+wall.wood { texture: tex.wood; }
 tex.wood { texture: "textures/nature-wall/wood.png"; }

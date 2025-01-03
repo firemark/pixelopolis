@@ -64,18 +64,20 @@ wall.grey-brick { texture: tex.grey-brick; }
 wall.red-brick { texture: tex.red-brick; }
 wall.wood { texture: tex.wood; }
 wall.sand { texture: tex.sand; }
+wall.windows { texture: h-tex.windows; }
 
-wall.windows {
-    middle: floor.windows;
-    bottom: floor.windows;
-    padding: 4;
+h-tex.windows {
+    background: tex.grey-brick;
+    center: v-tex.windows;
+    width: 100%;
 }
 
-floor.windows {
-    middle: tex.window;
-    align: middle;
-    height: 12;
+v-tex.windows {
+    center: tex.window;
+    align: center;
+    justify: end;
     padding: 12;
+    height: 18;
 }
 
 tex.sand        { texture: "textures/nature-wall/clay-sand.png"; }

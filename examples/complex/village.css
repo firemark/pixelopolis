@@ -113,7 +113,7 @@ house {
 
     first-floor {
         display: cube;
-        wall: wall.clay-wood.with-windows;
+        wall: wall.house.clay-wood.with-windows;
     }
 
     zero-floor {
@@ -125,7 +125,7 @@ house {
 
         & > body {
             display: cube;
-            wall: wall.clay.with-windows.with-doors;
+            wall: wall.house.clay.with-windows.with-doors;
             width: 95%;
             depth: 95%;
             height: 100%;
@@ -153,11 +153,11 @@ house.brick {
     }
 
     zero-floor > body {
-        wall: wall.brick.with-windows.with-doors;
+        wall: wall.house.brick.with-windows.with-doors;
     }
 
     first-floor {
-     	wall: wall.brick.with-windows;
+     	wall: wall.house.brick.with-windows;
     }
 }
 
@@ -181,7 +181,7 @@ house.wood {
     }
 
     first-floor {
-        wall: wall.wood.with-windows;
+        wall: wall.house.wood.with-windows;
     }
 }
 
@@ -307,17 +307,6 @@ market {
 
 }
 
-
-wall.with-windows {
-    middle: floor.windows;
-    top: floor.top;
-    padding: 4;
-}
-
-wall.with-doors {
-    bottom: floor.door-and-windows;
-}
-
 wall.top { texture: tex.bar; }
 wall.wood { texture: tex.wood; }
 wall.tile.red { texture: tex.red-tile; }
@@ -330,22 +319,39 @@ wall.grass { points-texture: tex.grass; points-density: 50%; }
 wall.leafs { points-texture: tex.leaf;  points-density: 50%; }
 wall.stall { texture: tex.stall; }
 
+wall.house { texture: h-tex.house; }
+wall.wood > h-tex.house { background: tex.wood; }
+wall.clay > h-tex.house { background: tex.clay; }
+wall.clay-wood > h-tex.house { background: tex.clay-wood; }
+wall.brick > h-tex.house { background: tex.brick; }
+wall.with-doors > h-tex.house { 
+    start: v-tex.door-and-windows; 
+    width: 100%;
+}
+wall.with-windows > h-tex.house {
+    center: v-tex.windows;
+    end: v-tex.top;
+    padding: 4;
+    width: 100%;
+    justify: end;
+}
 
-floor.door-and-windows {
-    middle: choice(null, null, tex.door, tex.window);
+
+v-tex.door-and-windows {
+    center: choice(null, null, tex.door, tex.window);
     height: 24;
     padding: 12;
     align: random(center, justify);
 }
 
-floor.windows {
-    middle: choice(null, tex.window);
+v-tex.windows {
+    center: choice(null, tex.window);
     height: 12;
     padding: 12;
     align: random(center, justify);
 }
 
-floor.top {
+v-tex.top {
     texture: tex.wood;
     height: 8;
 }

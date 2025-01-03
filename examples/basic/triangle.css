@@ -12,22 +12,20 @@ triangle.example {
     height: 150;
 }
 
-wall.grey-brick {
-    texture: tex.grey-brick;
-    bottom: floor.windows;
-    padding: 4;
+wall.grey-brick { texture: h-tex.grey-brick; }
+wall.top { texture: tex.wood; }
+
+h-tex.grey-brick {
+    background: tex.grey-brick;
+    center: v-tex.windows;
+    width: 100%;
 }
 
-wall.top { 
-    texture: tex.wood; 
-    top: floor.windows;
-    padding: 4;
-}
-
-floor.windows {
-    middle: tex.window;
-    height: 12;
-    padding: 12;
+v-tex.windows {
+    center: tex.window;
+    justify: end;
+    padding: 20;
+    height: 40;
 }
 
 tex.wood        { texture: "textures/nature-wall/wood.png"; }

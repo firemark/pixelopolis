@@ -27,19 +27,20 @@ cylinder.example {
     height: 150;
 }
 
-wall.grey-brick {
-    texture: tex.grey-brick;
-    middle: floor.windows;
-    padding: 4;
-}
-
+wall.grey-brick { texture: h-tex.grey-brick; }
 wall.top { texture: tex.wood; }
 
-floor.windows {
-    middle: tex.window;
-    height: 12;
-    padding: 32;
-    align: middle;
+h-tex.grey-brick {
+    background: tex.grey-brick;
+    center: v-tex.windows;
+    width: 100%;
+}
+
+v-tex.windows {
+    center: tex.window;
+    justify: end;
+    padding: 20;
+    height: 40;
 }
 
 .first floor.windows { align: justify; }

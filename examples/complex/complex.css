@@ -153,31 +153,39 @@ roman-fillar {
 wall.grey-brick { texture: tex.grey-brick; }
 wall.clay { texture: tex.clay; }
 wall.brick { texture: tex.brick; }
-
-wall.with-windows {
-    bottom: floor.door-and-windows;
-    middle: floor.windows;
-    top: floor.top;
-    padding: 4;
-}
-
 wall.top { texture: tex.bar; }
 wall.wood { texture: tex.wood; }
 wall.road { texture: tex.road; }
+wall.with-windows { texture: h-tex.with-windows; }
 
-floor.door-and-windows {
-    middle: choice(null, null, tex.door, tex.window);
+h-tex.with-windows {
+    start: v-tex.door-and-windows;
+    center: v-tex.windows;
+    end: v-tex.top;
+    padding: 4;
+    width: 100%;
+
+    wall.grey-brick > & { background: tex.grey-brick; }
+    wall.brick > & { background: tex.brick; }
+    wall.wood > & { background: tex.wood; }
+    wall.clay > & { background: tex.clay; }
+}
+
+v-tex.door-and-windows {
+    center: choice(null, null, tex.door, tex.window);
+    justify: end;
     height: 24;
     padding: 12;
 }
 
-floor.windows {
-    middle: choice(null, tex.window);
+v-tex.windows {
+    center: choice(null, tex.window);
+    justify: end;
     height: 12;
     padding: 12;
 }
 
-floor.top {
+v-tex.top {
     texture: tex.wood;
     height: 8;
 }

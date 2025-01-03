@@ -19,21 +19,24 @@ h-tex.wall {
     background: tex.background;
     center: v-series-tex.windows;
     justify: center;
+    padding: 5;
     width: 100%;
 }
 
 v-series-tex.windows {
+    background: tex.color.c;
     body: 
         tex.color.r, 
         tex.color.g, 
         tex.color.b;
-    justify: end;
+    justify: center;
     padding: 20;
     height: 40;
 }
 
 tex.background { color: #888; }
-tex.color      { width: 8; height: 8; }
+tex.color      { width: 8; height: 20; }
 tex.color.r    { color: #F00;}
 tex.color.g    { color: #0F0; }
 tex.color.b    { color: #00F; }
+tex.color.c    { color: #48F; }

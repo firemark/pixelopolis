@@ -18,6 +18,7 @@ wall.top { texture: tex.wood; }
 h-tex.grey-brick {
     background: tex.grey-brick;
     center: v-tex.windows;
+    width: 100%;
 }
 
 v-tex.windows {
