@@ -49,7 +49,7 @@ void* memory_allocate(struct Memory* memory, size_t size) {
             struct MemoryChunk* new_chunk = _memory_chunk_create(memory->chunk_size);
             chunk->next = new_chunk;
             memory->end = new_chunk;
-            memory_allocate(memory, size);
+            return memory_allocate(memory, size);
         }
 
         storage = malloc(sizeof(struct Storage));
