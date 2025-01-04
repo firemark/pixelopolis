@@ -20,26 +20,45 @@ void _fill_null(struct HashStrItem** items, int new_size) {
     }
 }
 
-struct HashMap* hash_make(void) {
-    struct HashMap* map = malloc(sizeof(struct HashMap));
+struct HashMap* hash_make_with_memory(struct Memory *memory) {
+    struct HashMap* map; 
     int max_size = 32;
-    map->items = malloc(sizeof(struct HashStrItem*) * max_size);
+    if (memory) {
+        map = MEMORY_ALLOCATE(memory, struct HashMap);
+        map->items = MEMORY_ALLOCATE_ARRAY(memory, struct HashStrItem*, max_size);
+    } else {
+        map = malloc(sizeof(struct HashMap));
+        map->items = malloc(sizeof(struct HashStrItem*) * max_size);
+    }
+
     map->size = 0;
+    map->memory = memory;
     map->max_size = max_size;
     _fill_null(map->items, max_size);
     return map;
+}
+
+struct HashMap* hash_make(void) {
+    hash_make_with_memory(NULL);
 }
 
 void* _remove(struct HashMap* map, int index) {
     struct HashStrItem* item = map->items[index];
     void* value = item->value;
     map->items[index] = NULL;
-    free(item);
+    if (!map->memory) {
+        free(item);
+    }
     return value;
 }
 
 int _insert(struct HashMap* map, char* key, void* value, int index) {
-    struct HashStrItem* item = malloc(sizeof(struct HashStrItem));
+    struct HashStrItem* item;
+    if (map->memory) {
+        item = MEMORY_ALLOCATE(map->memory, struct HashStrItem);
+    } else {
+        item = malloc(sizeof(struct HashStrItem));
+    }
     if (!item) return -1;
 
     map->items[index] = item;
@@ -54,7 +73,12 @@ unsigned long _probing(unsigned long hash, unsigned long shift) {
 
 struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     // make new table because index has changed
-    struct HashStrItem** new_items = malloc(sizeof(struct HashStrItem*) * new_size);
+    struct HashStrItem** new_items; 
+    if (map->memory) {
+        new_items = MEMORY_ALLOCATE_ARRAY(map->memory, struct HashStrItem*, new_size);
+    } else {
+        new_items = malloc(sizeof(struct HashStrItem*) * new_size);
+    }
     _fill_null(new_items, new_size);
 
     unsigned long hash;
@@ -84,7 +108,9 @@ int _resize_if_need(struct HashMap* map) {
 
     struct HashStrItem** new_items = _hash_cpy_items(new_size, map);
 
-    free(map->items);
+    if (!map->memory) {
+        free(map->items);
+    }
     map->items = new_items;
     map->max_size = new_size;
     return -1;
@@ -137,6 +163,9 @@ void* hash_get(struct HashMap* map, char* key) {
 }
 
 void hash_destroy(struct HashMap* map) {
+    if (map->memory) {
+        return;
+    }
     int i;
     for (i = 0; i < map->max_size; i++) {
         free(map->items[i]);

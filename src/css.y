@@ -6,9 +6,12 @@
 #include "pixelopolis/css.h"
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/basic.h"
+#include "pixelopolis/memory.h"
 #define YYDEBUG 1
 
 static struct Program* global_program;
+static struct Memory* global_memory;
+
 extern FILE *yyin;
 extern int lines;
 extern int chars;
@@ -39,19 +42,8 @@ int yywrap (void) {
     return 1;
 }
 
-char* concat_and_free(char* a, char* b) {
-    size_t size = strlen(a) + strlen(b);
-    char* out = malloc(sizeof(char) * (size + 1));
-    strcpy(out, a);
-    strcat(out, b);
-    out[size] = 0;
-    free(a);
-    free(b);
-    return out;
-}
-
 #define make_array(type, size, first_obj) \
-    type **arr = malloc(sizeof(type*) * (size + 1)); \
+    type **arr = memory_allocate_array(global_memory, sizeof(type*), size + 1); \
     size_t i; \
     arr[0] = first_obj; \
     for(i=1; i < size; i++) { \
@@ -68,11 +60,12 @@ char* concat_and_free(char* a, char* b) {
 
 struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
-    char top[] = "top";
+    static char top[] = "top";
     char* name = malloc(sizeof(top));
     strcpy(name, top);
     program->name = name;
     program->rules = rules;
+    program->memory = global_memory;
 
     return program;
 }
@@ -82,13 +75,12 @@ struct Rule** concat_rules(struct Rule** a, struct Rule** b) {
     size_t a_count = 0;
     css_iter(rule, a) a_count++; // find last index
     css_iter(rule, b) a[a_count++] = rule; // insert rules from b to end of 'a' array
-    free(b);
     return a;
 }
 
 struct Rule* make_rule(struct RuleSelector* selector, struct RuleAttr **attrs) {
-    struct Rule* rule = malloc(sizeof(struct Rule));
-    struct HashMap* map_props = hash_make();
+    struct Rule* rule = MEMORY_ALLOCATE(global_memory, struct Rule);
+    struct HashMap* map_props = hash_make_with_memory(global_memory);
 
     struct RuleAttr *attr;
     css_iter(attr, attrs) { // transform array to hashmap
@@ -108,7 +100,7 @@ struct Rule* make_rule(struct RuleSelector* selector, struct RuleAttr **attrs) {
 }
 
 struct RuleAttr* make_rule_attr(void* obj, enum RuleAttrType type) {
-    struct RuleAttr* rule_attr = malloc(sizeof(struct RuleAttr));
+    struct RuleAttr* rule_attr = MEMORY_ALLOCATE(global_memory, struct RuleAttr);
     rule_attr->obj = obj;
     rule_attr->type = type;
     return rule_attr;
@@ -163,7 +155,7 @@ void _replace_parent_op(
     }
 
     *selector_pointer = copied_selector;
-    css_free_rule_selector(selector);
+    // css_free_rule_selector(selector);
 }
 
 char find_and_replace_parent_op_with_parent_rule(
@@ -197,7 +189,7 @@ char find_and_replace_parent_op_with_parent_rule(
 
 struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attrs) {
     size_t rule_iter = 0;
-    struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
+    struct Rule** rules = MEMORY_ALLOCATE_ARRAY(global_memory, struct Rule*, RULE_SELECTORS_SIZE + 1);
     rules[rule_iter++] = make_rule(selector, attrs);
 
     struct RuleAttr *attr;
@@ -223,7 +215,7 @@ struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attr
 
 struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attrs) {
     size_t rule_iter = 0;
-    struct Rule** rules = malloc(sizeof(struct Rule*) * (RULE_SELECTORS_SIZE + 1));
+    struct Rule** rules = MEMORY_ALLOCATE_ARRAY(global_memory, struct Rule*, RULE_SELECTORS_SIZE + 1);
     struct RuleSelector* selector;
     css_iter(selector, selectors) {
         struct Rule** nested_rules = unpack_rules(selector, attrs);
@@ -231,13 +223,14 @@ struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attr
         css_iter(nested_rule, nested_rules) { // concat rules
             rules[rule_iter++] = nested_rule;
         }
-        free(nested_rules);
+        // free(nested_rules);
     }
 
     while(rule_iter <= RULE_SELECTORS_SIZE) {
         rules[rule_iter++] = NULL;
     }
 
+    /*
     struct RuleAttr *attr;
     css_iter(attr, attrs) { // cleaning
         switch (attr->type) {
@@ -247,19 +240,20 @@ struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attr
         free(attr);
     }
     free(attrs);
+    */
 
     return rules;
 }
 
 struct Prop* make_prop(char *name, struct Obj **objs) {
-    struct Prop *prop = malloc(sizeof(struct Prop));
+    struct Prop *prop = MEMORY_ALLOCATE(global_memory, struct Prop);
     prop->name = name;
     prop->objs = objs;
     return prop;
 }
 
 struct RuleSelector* make_rule_selector(char* element, char** klasses) {
-    struct RuleSelector *rule_selector = malloc(sizeof(struct RuleSelector));
+    struct RuleSelector *rule_selector = MEMORY_ALLOCATE(global_memory, struct RuleSelector);
     rule_selector->element = element;
     rule_selector->klasses = klasses;
     rule_selector->pseudo_klass = NULL;
@@ -269,8 +263,8 @@ struct RuleSelector* make_rule_selector(char* element, char** klasses) {
 }
 
 struct Obj* make_obj_as_number(int value) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
-    int *ptr = malloc(sizeof(int));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
+    int *ptr = MEMORY_ALLOCATE(global_memory, int);
     *ptr = value;
     obj->type = OBJ_NUMBER;
     obj->value = (void*)ptr;
@@ -278,8 +272,8 @@ struct Obj* make_obj_as_number(int value) {
 }
 
 struct Obj* make_obj_as_percent(int value) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
-    int *ptr = malloc(sizeof(int));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
+    int *ptr = MEMORY_ALLOCATE(global_memory, int);
     *ptr = value;
     obj->type = OBJ_PERCENT;
     obj->value = (void*)ptr;
@@ -287,39 +281,39 @@ struct Obj* make_obj_as_percent(int value) {
 }
 
 struct Obj* make_obj_as_string(char* string) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = OBJ_STRING;
     obj->value = (void*)string;
     return obj;
 }
 
 struct Obj* make_obj_as_variable(char* variable) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = OBJ_VARIABLE;
     obj->value = (void*)variable;
     return obj;
 }
 
 struct Obj* make_obj_as_color(struct rgb* color) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = OBJ_COLOR;
     obj->value = (void*)color;
     return obj;
 }
 
 struct Obj* make_obj_as_rule(struct RuleSelector* rule_selector) {
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = OBJ_RULE;
     obj->value = (void*)rule_selector;
     return obj;
 }
 
 struct Obj* _make_obj_as_op(enum ObjType type, struct Obj* left, struct Obj* right) {
-    struct PairObj* pair = malloc(sizeof(struct PairObj));
+    struct PairObj* pair = MEMORY_ALLOCATE(global_memory, struct PairObj);
     pair->left = left;
     pair->right = right;
 
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = type;
     obj->value = (void*)pair;
 
@@ -340,19 +334,19 @@ struct Obj* make_obj_as_func(char* name, struct Obj** args) {
     size_t size = 0;
     while(args[size]) size++; // counter
 
-    struct FuncObj* func = malloc(sizeof(struct FuncObj));
+    struct FuncObj* func = MEMORY_ALLOCATE(global_memory, struct FuncObj);
     func->name = name;
     func->args = args;
     func->args_size = size;
 
-    struct Obj* obj = malloc(sizeof(struct Obj));
+    struct Obj* obj = MEMORY_ALLOCATE(global_memory, struct Obj);
     obj->type = OBJ_FUNC;
     obj->value = (void*)func;
     return obj;
 }
 
 struct Obj* make_obj_as_noargs_func(char* name) {
-    struct Obj** args = malloc(sizeof(struct Obj**));
+    struct Obj** args = MEMORY_ALLOCATE(global_memory, struct Obj**);
     args[0] = NULL;
     return make_obj_as_func(name, args);
 }
@@ -441,8 +435,8 @@ rule_selector:
 
 rule_selector_word:
         WORD sp { $$ = $1; }
-        | PARENT_SELECTOR_OP sp { $$ = malloc(sizeof(char) * 2); memcpy($$, "&", 2); }
-        | MUL_OP sp { $$ = malloc(sizeof(char) * 2); memcpy($$, "*", 2); }
+        | PARENT_SELECTOR_OP sp { $$ = MEMORY_ALLOCATE_ARRAY(global_memory, char, 2); memcpy($$, "&", 2); }
+        | MUL_OP sp { $$ = MEMORY_ALLOCATE_ARRAY(global_memory, char, 2); memcpy($$, "*", 2); }
         ;
 
 rules_and_props:
@@ -505,6 +499,7 @@ struct Program* css_parse_file_as_stream(FILE* stream) {
     lines = 1;
     old_chars = 1;
     chars = 1;
+    global_memory = memory_create(32 * 1024 * 1024);
     yyin = stream;
     yyparse();
     return global_program;

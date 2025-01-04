@@ -1,6 +1,7 @@
 #pragma once
 #include <stdio.h>
 #include "hash.h"
+#include "memory.h"
 
 #define REGULES_SIZE 255
 #define KLASSES_SIZE 16
@@ -62,7 +63,8 @@ struct Rule {
 
 struct Program {
     char* name;
-    struct Rule **rules;
+    struct Rule** rules;
+    struct Memory* memory;
 };
 
 struct Program* css_parse_file(char *filename);

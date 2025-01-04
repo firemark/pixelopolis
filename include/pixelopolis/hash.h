@@ -1,4 +1,5 @@
 #pragma once
+#include "pixelopolis/memory.h"
 
 struct HashStrItem {
     char* key;
@@ -6,12 +7,14 @@ struct HashStrItem {
 };
 
 struct HashMap {
+    struct Memory *memory;
     struct HashStrItem **items;
     int max_size;
     int size;
 };
 
 struct HashMap* hash_make();
+struct HashMap* hash_make_with_memory(struct Memory *memory);
 int hash_set(struct HashMap* map, char* key, void* value, void** removed_value);
 void* hash_get(struct HashMap* map, char* key);
 void hash_update(struct HashMap* map, struct HashMap* other);
