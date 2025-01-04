@@ -6,6 +6,7 @@ int main(void) {
     int number_failed;
     SRunner* runner = srunner_create(hash_suite());
     srunner_add_suite(runner, css_eval_suite());
+    srunner_add_suite(runner, memory_suite());
 
     srunner_run_all(runner, CK_NORMAL);
     number_failed = srunner_ntests_failed(runner);
