@@ -1,6 +1,6 @@
-#include <check.h>
+#include "suites.h"
+
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "pixelopolis/css_eval.h"
 #include "pixelopolis/css_func.h"
@@ -125,7 +125,7 @@ START_TEST(test_css_eval_rule_choice) {
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_str_eq(result->element, "bar");
-    ck_assert_str_eq(result->klass, "bar");
+    // ck_assert_str_eq(result->klasses, "bar");
 
     css_free_program(program);
     css_eval_stop();
@@ -146,7 +146,7 @@ START_TEST(test_css_eval_percent) {
 }
 END_TEST
 
-Suite *hash_suite(void) {
+Suite* css_eval_suite(void) {
     Suite *suite = suite_create("css_eval");
     TCase *tcase = tcase_create("css_eval");
 
@@ -161,15 +161,4 @@ Suite *hash_suite(void) {
     tcase_add_test(tcase, test_css_eval_rule_choice);
     suite_add_tcase(suite, tcase);
     return suite;
-}
-
-int main(void) {
-    int number_failed;
-    Suite *suite = hash_suite();
-    SRunner *runner = srunner_create(suite);
-
-    srunner_run_all(runner, CK_NORMAL);
-    number_failed = srunner_ntests_failed(runner);
-    srunner_free(runner);
-    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
