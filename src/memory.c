@@ -1,73 +1,85 @@
 #include "pixelopolis/memory.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 #define ALIGN_SIZE 8
 #define ALIGN(size) (((size) + (ALIGN_SIZE - 1)) & ~(ALIGN_SIZE - 1))
 
-struct MemoryChunk* memory_create(size_t chunk_size) {
+static struct MemoryChunk* _memory_chunk_create(size_t chunk_size) {
     struct MemoryChunk* memory = malloc(sizeof(struct MemoryChunk));
-    chunk_size = ALIGN(chunk_size);
-    memory->chunk = malloc(chunk_size);
-    memory->size = chunk_size;
+    size_t aligned_size = ALIGN(chunk_size);
+    memory->chunk = malloc(aligned_size);
     memory->allocated_size = 0;
     memory->begin = NULL;
     memory->end = NULL;
     return memory;
 }
 
-void* memory_allocate(struct MemoryChunk* memory, size_t size) {
+struct Memory* memory_create(size_t chunk_size) {
+    chunk_size = ALIGN(chunk_size);
+    struct Memory* memory = malloc(sizeof(struct Memory));
+    struct MemoryChunk* chunk = _memory_chunk_create(chunk_size);
+    memory->chunk_size = chunk_size;
+    memory->begin = chunk;
+    memory->end = chunk;
+    return memory;
+}
+
+void* memory_allocate(struct Memory* memory, size_t size) {
     struct Storage* storage;
-    ssize_t size_aligned = ALIGN(size);
+    struct MemoryChunk* chunk = memory->end;
+    size_t size_aligned = ALIGN(size);
 
-    // Find last chunk.
-    while (memory->next) memory = memory->next;
-
-    if (!memory->begin) {
-        assert(size < memory->size);
+    if (!chunk->begin) {
+        assert(size < memory->chunk_size);
 
         storage = malloc(sizeof(struct Storage));
         storage->next = NULL;
         storage->size = size_aligned;
-        storage->ptr = memory->chunk;
+        storage->ptr = chunk->chunk;
 
-        memory->begin = storage;
-        memory->end = storage;
-        memory->allocated_size = size_aligned;
+        chunk->begin = storage;
+        chunk->end = storage;
+        chunk->allocated_size = size_aligned;
     } else {
-        size_t new_allocated_size = memory->allocated_size + size_aligned;
-        if (new_allocated_size > memory->size) {
+        size_t new_allocated_size = chunk->allocated_size + size_aligned;
+        if (new_allocated_size > memory->chunk_size) {
             // Create new memory chunk.
-            memory->next = memory_create(memory->size);
-            memory_allocate(memory->next, size);
+            struct MemoryChunk* new_chunk = _memory_chunk_create(memory->chunk_size);
+            chunk->next = new_chunk;
+            memory->end = new_chunk;
+            memory_allocate(memory, size);
         }
 
         storage = malloc(sizeof(struct Storage));
         storage->next = NULL;
         storage->size = size_aligned;
-        storage->ptr = memory->end->ptr + memory->end->size;
+        storage->ptr = chunk->end->ptr + chunk->end->size;
 
-        memory->end->next = storage;
-        memory->end = storage;
-        memory->allocated_size = new_allocated_size;
+        chunk->end->next = storage;
+        chunk->end = storage;
+        chunk->allocated_size = new_allocated_size;
     }
     return storage->ptr;
 }
 
-void* memory_allocate_array(struct MemoryChunk* memory, size_t size, size_t count) {
+void* memory_allocate_array(struct Memory* memory, size_t size, size_t count) {
     return memory_allocate(memory, size * count);
 }
 
-void memory_free(struct MemoryChunk* memory) {
-    while (memory) {
-        struct Storage* storage = memory->begin;
+void memory_free(struct Memory* memory) {
+    struct MemoryChunk* chunk = memory->begin;
+    while (chunk) {
+        struct Storage* storage = chunk->begin;
         while (storage) {
             struct Storage* temp = storage;
             storage = storage->next;
             free(temp);
         }
-        struct Memory* temp = memory;
-        memory = memory->next;
+        struct MemoryChunk* temp = chunk;
+        chunk = chunk->next;
         free(temp);
     }
+    free(memory);
 }
