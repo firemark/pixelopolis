@@ -92,7 +92,7 @@ char* css_cpy_str(struct Memory* memory, char* old) {
 }
 
 struct RuleSelector* css_cpy_selector(struct Memory* memory, struct RuleSelector* old) {
-    struct RuleSelector* selector = malloc(sizeof(struct RuleSelector));
+    struct RuleSelector* selector = MEMORY_ALLOCATE(memory, struct RuleSelector);
 
     selector->element = css_cpy_str(memory, old->element);
     selector->pseudo_klass = css_cpy_str(memory, old->pseudo_klass);
