@@ -4,11 +4,11 @@
 
 START_TEST(test_memory_create) {
     struct Memory* memory = memory_create(1024);
-
     ck_assert_int_eq(memory->chunk_size, 1024);
     ck_assert_ptr_ne(memory->begin, NULL);
     ck_assert_ptr_ne(memory->end, NULL);
     ck_assert_ptr_eq(memory->begin, memory->end);
+    ck_assert_int_eq(memory_size(memory), 0);
 
     struct MemoryChunk* chunk = memory->begin;
     ck_assert_ptr_eq(chunk->begin, NULL);
@@ -28,6 +28,7 @@ START_TEST(test_memory_allocate_once) {
     ck_assert_ptr_ne(memory->begin, NULL);
     ck_assert_ptr_ne(memory->end, NULL);
     ck_assert_ptr_eq(memory->begin, memory->end);
+    ck_assert_int_eq(memory_size(memory), sizeof(struct Dummy));
 
     struct MemoryChunk* chunk = memory->begin;
     ck_assert_ptr_ne(chunk->begin, NULL);
@@ -50,6 +51,8 @@ START_TEST(test_memory_allocate_twice) {
     struct Memory* memory = memory_create(1024);
     void* ptr_a = MEMORY_ALLOCATE(memory, struct Dummy);
     void* ptr_b = MEMORY_ALLOCATE(memory, struct Dummy);
+
+    ck_assert_int_eq(memory_size(memory), sizeof(struct Dummy) * 2);
 
     struct MemoryChunk* chunk = memory->begin;
     ck_assert_int_eq(chunk->allocated_size, sizeof(struct Dummy) * 2);
@@ -77,6 +80,7 @@ START_TEST(test_memory_allocate_with_new_chunk) {
     void* ptr_b = MEMORY_ALLOCATE(memory, struct Dummy);
     void* ptr_c = MEMORY_ALLOCATE(memory, struct Dummy);
 
+    ck_assert_int_eq(memory_size(memory), sizeof(struct Dummy) * 3);
     ck_assert_ptr_eq(memory->begin->next, memory->end);
 
     struct MemoryChunk* first_chunk = memory->begin;

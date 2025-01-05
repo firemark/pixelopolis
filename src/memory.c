@@ -68,6 +68,15 @@ void* memory_allocate_array(struct Memory* memory, size_t size, size_t count) {
     return memory_allocate(memory, size * count);
 }
 
+size_t memory_size(struct Memory* memory) {
+    size_t size = 0;
+    struct MemoryChunk* chunk;
+    for(chunk = memory->begin; chunk; chunk = chunk->next) {
+        size += chunk->allocated_size;
+    }
+    return size;
+}
+
 void memory_free(struct Memory* memory) {
     struct MemoryChunk* chunk = memory->begin;
     while (chunk) {

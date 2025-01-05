@@ -52,6 +52,17 @@ void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
     draw_component(draw_obj, &draw_info, NULL);
 }
 
+static void print_size(char* prefix, struct Memory* memory) {
+    size_t size = memory_size(memory);
+    if (size < 2 * 1024) {
+        fprintf(stderr, "%s: %ldB\n", prefix, size);
+    } else if (size < 2 * 1024 * 1024) {
+        fprintf(stderr, "%s: %ldkB\n", prefix, size / 1024);
+    } else {
+        fprintf(stderr, "%s: %ldMB\n", prefix, size / 1024 / 1024);
+    }
+}
+
 int main(int argc, char **argv) {
     char *in_filename = argc > 1 ? argv[1] : "-";
     char *out_filename = argc > 2 ? argv[2] : "out.png";
@@ -65,10 +76,19 @@ int main(int argc, char **argv) {
     } else {
         program = css_parse_file(in_filename);
     }
+
+    if (!program) {
+        fprintf(stderr, "parsing file failed :(\n");
+        return -1;
+    }
+
+    print_size("program size", program->memory);
+
     // css_debug_program(stderr, program);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
         fprintf(stderr, "world rule not found! :(\n");
+        return -1;
     }
     struct DrawObj *draw_obj = builder_make(program, world_rule);
     struct image *img = make_img(world_rule);
