@@ -13,6 +13,7 @@ static struct MemoryChunk* _memory_chunk_create(size_t chunk_size) {
     memory->allocated_size = 0;
     memory->begin = NULL;
     memory->end = NULL;
+    memory->next = NULL;
     return memory;
 }
 
@@ -47,7 +48,7 @@ void* memory_allocate(struct Memory* memory, size_t size) {
         if (new_allocated_size > memory->chunk_size) {
             // Create new memory chunk.
             struct MemoryChunk* new_chunk = _memory_chunk_create(memory->chunk_size);
-            chunk->next = new_chunk;
+            memory->end->next = new_chunk;
             memory->end = new_chunk;
             return memory_allocate(memory, size);
         }
@@ -71,7 +72,7 @@ void* memory_allocate_array(struct Memory* memory, size_t size, size_t count) {
 size_t memory_size(struct Memory* memory) {
     size_t size = 0;
     struct MemoryChunk* chunk;
-    for(chunk = memory->begin; chunk; chunk = chunk->next) {
+    for(chunk = memory->begin; chunk != NULL; chunk = chunk->next) {
         size += chunk->allocated_size;
     }
     return size;
@@ -87,6 +88,7 @@ void memory_free(struct Memory* memory) {
             free(temp);
         }
         struct MemoryChunk* temp = chunk;
+        free(temp->chunk);
         chunk = chunk->next;
         free(temp);
     }

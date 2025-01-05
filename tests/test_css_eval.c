@@ -5,144 +5,119 @@
 #include "pixelopolis/css_eval.h"
 #include "pixelopolis/css_func.h"
 
-struct Program *_make_program(char *buffer) {
-    FILE *stream = fmemopen(buffer, strlen(buffer), "r");
-    struct Program *program = css_parse_file_as_stream(stream);
-    fclose(stream);
-    return program;
+static struct Program *program;
+
+void setup(void) {
+    css_eval_start();
+    program = NULL;
+    srand(0);  // set const grain
 }
 
-struct Rule *_find_first_rule(struct Program *program) {
+void teardown(void) {
+    css_eval_stop();
+    if(program) {
+      css_free_program(program);
+    }
+}
+
+static void _make_program(char *buffer) {
+    FILE *stream = fmemopen(buffer, strlen(buffer), "r");
+    program = css_parse_file_as_stream(stream);
+    fclose(stream);
+}
+
+static struct Rule *_find_first_rule() {
     struct Rule *rule;
     css_iter (rule, program->rules) { return rule; }
 }
 
 START_TEST(test_css_eval_number) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: 2; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: 2; }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 2);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_string) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: \"foobar\"; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: \"foobar\"; }");
+    struct Rule *rule = _find_first_rule();
     char *result = css_find_string_prop(rule, "prop");
 
     ck_assert_str_eq(result, "foobar");
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_number_add) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: 2 + 2; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: 2 + 2; }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 4);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_number_mul_with_priority) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: 2 + 2 * 2; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: 2 + 2 * 2; }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 6);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_number_mul_with_braces) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: (2 + 2) * 2; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: (2 + 2) * 2; }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 8);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_number_choice) {
-    css_eval_start();
-    srand(0);  // set const grain
-    struct Program *program = _make_program("rule { prop: choice(1, 2); }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: choice(1, 2); }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 2);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_number_random) {
-    css_eval_start();
-    srand(0);  // set const grain
-    struct Program *program = _make_program("rule { prop: random(1, 10); }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: random(1, 10); }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_number_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 2);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_rule_choice) {
-    css_eval_start();
-    srand(0);  // set const grain
-    struct Program *program = _make_program("rule { prop: choice(foo.foo, bar.bar); }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: choice(foo.foo, bar.bar); }");
+    struct Rule *rule = _find_first_rule();
     struct RuleSelector *result = css_find_selector_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_str_eq(result->element, "bar");
     // ck_assert_str_eq(result->klasses, "bar");
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
 START_TEST(test_css_eval_percent) {
-    css_eval_start();
-    struct Program *program = _make_program("rule { prop: 100%; }");
-    struct Rule *rule = _find_first_rule(program);
+    _make_program("rule { prop: 100%; }");
+    struct Rule *rule = _find_first_rule();
     int *result = css_find_percent_prop(rule, "prop");
 
     ck_assert_ptr_ne(result, NULL);
     ck_assert_int_eq(*result, 100);
-
-    css_free_program(program);
-    css_eval_stop();
 }
 END_TEST
 
@@ -159,6 +134,7 @@ Suite* css_eval_suite(void) {
     tcase_add_test(tcase, test_css_eval_string);
     tcase_add_test(tcase, test_css_eval_percent);
     tcase_add_test(tcase, test_css_eval_rule_choice);
+    tcase_add_checked_fixture(tcase, setup, teardown);
     suite_add_tcase(suite, tcase);
     return suite;
 }
