@@ -67,10 +67,10 @@ static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, s
 }
 
 struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* query, struct RuleWithParent* parent) {
-    struct RuleWithParent* rule_with_parent = MEMORY_ALLOCATE(program->memory, struct RuleWithParent);
-    struct Rule* rule = MEMORY_ALLOCATE(program->memory, struct Rule);
+    struct RuleWithParent* rule_with_parent = MEMORY_ALLOCATE(program->product_memory, struct RuleWithParent);
+    struct Rule* rule = MEMORY_ALLOCATE(program->product_memory, struct Rule);
     rule->selector = query;
-    rule->props = hash_make_with_memory(program->memory);
+    rule->props = hash_make_with_memory(program->product_memory);
     rule_with_parent->rule = rule;
     rule_with_parent->parent = parent;
 

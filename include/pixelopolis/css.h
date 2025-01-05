@@ -69,7 +69,8 @@ struct RuleWithParent {
 struct Program {
     char* name;
     struct Rule** rules;
-    struct Memory* memory;
+    struct Memory* syntax_memory;
+    struct Memory* product_memory;
 };
 
 struct Program* css_parse_file(char *filename);

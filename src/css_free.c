@@ -72,7 +72,8 @@ void css_free_rule_half(struct Rule* rule) {
 void css_free_program(struct Program* program) {
     // struct Rule* rule;
     // css_iter (rule, program->rules) { css_free_rule(rule); }
-    memory_free(program->memory);
+    memory_free(program->syntax_memory);
+    memory_free(program->product_memory);
     free(program->name);
     free(program);
 }

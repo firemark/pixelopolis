@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    print_size("program size", program->memory);
+    print_size("program size", program->syntax_memory);
 
     // css_debug_program(stderr, program);
     struct Rule *world_rule = find_world(program);

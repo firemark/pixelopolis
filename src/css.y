@@ -65,7 +65,8 @@ struct Program* make_program(struct Rule **rules) {
     strcpy(name, top);
     program->name = name;
     program->rules = rules;
-    program->memory = global_memory;
+    program->syntax_memory = global_memory;
+    program->product_memory = memory_create(32 * 1024 * 1024);
 
     return program;
 }
@@ -499,7 +500,7 @@ struct Program* css_parse_file_as_stream(FILE* stream) {
     lines = 1;
     old_chars = 1;
     chars = 1;
-    global_memory = memory_create(32 * 1024 * 1024);
+    global_memory = memory_create(1024 * 1024);
     yyin = stream;
     yyparse();
     return global_program;
