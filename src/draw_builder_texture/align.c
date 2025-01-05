@@ -30,7 +30,7 @@ void builder_texture_align(struct Helper* helper, struct ShiftTexPair** pairs,
         return;
     }
     int diff = length.end - length.start;
-    char* align = css_find_selector_element_prop(helper->rule, "align");
+    char* align = css_find_selector_element_prop(helper->rule->rule, "align");
     struct ShiftTexPair* last_pair = pairs[index.end];
 
     if (!align) return;

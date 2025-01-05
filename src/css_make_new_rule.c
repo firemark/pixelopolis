@@ -6,9 +6,9 @@
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/hash.h"
 
-int _match(struct RuleSelector* query, struct RuleSelector* iter_query);
+static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, struct RuleWithParent* parent);
 
-int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
+static int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
     if (!iter_query->klasses) return 1;
     if (!query->klasses) return 0;
 
@@ -24,22 +24,22 @@ int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
     return 1;
 }
 
-int _match_parent(struct RuleSelector* parent_query, struct RuleSelector* parent_iter_query) {
+static int _match_parent(struct RuleWithParent* parent, struct RuleSelector* parent_iter_query) {
     if (!parent_iter_query) return 1;
-    if (!parent_query) return 0;
-    return _match(parent_query, parent_iter_query);
+    if (!parent) return 0;
+    return _match(parent->rule->selector, parent_iter_query, parent->parent);
 }
 
-int _match_greedy_parent(struct RuleSelector* parent_query, struct RuleSelector* greedy_parent) {
+static int _match_greedy_parent(struct RuleWithParent* parent, struct RuleSelector* greedy_parent) {
     if (!greedy_parent) return 1;
-    while (parent_query) {
-        if (_match(parent_query, greedy_parent)) return 1;
-        parent_query = parent_query->parent;
+    while (parent) {
+        if (_match(parent->rule->selector, greedy_parent, parent->parent)) return 1;
+        parent = parent->parent;
     }
     return 0;
 }
 
-int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
+static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, struct RuleWithParent* parent) {
     char* element = query->element;
     char* pseudo_klass = query->pseudo_klass;
 
@@ -55,26 +55,29 @@ int _match(struct RuleSelector* query, struct RuleSelector* iter_query) {
         if (!pseudo_klass || strcmp(pseudo_klass, iter_query->pseudo_klass)) return 0;
     }
 
-    if (!_match_parent(query->parent, iter_query->parent)) {
+    if (!_match_parent(parent, iter_query->parent)) {
         return 0;
     }
 
-    if (!_match_greedy_parent(query->parent, iter_query->greedy_parent)) {
+    if (!_match_greedy_parent(parent, iter_query->greedy_parent)) {
         return 0;
     }
 
     return 1;
 }
 
-struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSelector* query) {
-    struct Rule* rule = malloc(sizeof(struct Rule));
+struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* query, struct RuleWithParent* parent) {
+    struct RuleWithParent* rule_with_parent = MEMORY_ALLOCATE(program->memory, struct RuleWithParent);
+    struct Rule* rule = MEMORY_ALLOCATE(program->memory, struct Rule);
     rule->selector = query;
-    rule->props = hash_make();
+    rule->props = hash_make_with_memory(program->memory);
+    rule_with_parent->rule = rule;
+    rule_with_parent->parent = parent;
 
     struct Rule* iter_rule;
     css_iter (iter_rule, program->rules) {
         struct RuleSelector* iter_query = iter_rule->selector;
-        if (!_match(query, iter_query)) continue;
+        if (!_match(query, iter_query, parent)) continue;
         // DEBUG
         // css_debug_rule_selector(stderr, query);
         // fprintf(stderr, " VS ");
@@ -85,5 +88,5 @@ struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSel
         hash_update(rule->props, iter_rule->props);
     }
 
-    return rule;
+    return rule_with_parent;
 }

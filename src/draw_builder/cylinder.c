@@ -30,7 +30,7 @@ static void _cylinder_build_single_wall(struct SelectorHelper* wall_helper, stru
 }
 
 struct DrawObj* builder_build_cylinder(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct CylinderObj* obj = malloc(sizeof(struct CylinderObj));
     struct BasicObj basic = builder_build_basic(rule, helper->parent);

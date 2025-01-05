@@ -149,7 +149,7 @@ static struct DrawObj* _make_child(struct Helper* helper, struct BspTree* tree) 
     };
     builder_init_basic(&basic);
 
-    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "body");
+    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule->rule, "body");
     return builder_build_custom_void(helper, basic, child_selector);
 }
 
@@ -207,7 +207,7 @@ static void _fill_board(struct DrawObj* draw_obj, struct Helper* inner_helper,
 }
 
 struct DrawObj* builder_build_bsp_tree(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
 
     struct BoardObj* obj = malloc(sizeof(struct BoardObj));

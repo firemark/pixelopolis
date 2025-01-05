@@ -18,13 +18,13 @@ static struct rgb* _find_color_in_rule(struct Rule* rule);
 #define SET_GREATER(basic, value, attr) basic.attr = basic.attr >= value ? basic.attr : value
 
 struct TexObj* builder_texture_build_default(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
-    struct OneChanImage* bump_map = _find_bump_map_in_rule(rule);
+    struct RuleWithParent* rule = helper->rule;
+    struct OneChanImage* bump_map = _find_bump_map_in_rule(rule->rule);
     struct BasicTexObj basic = builder_texture_prepare_basic(helper);
 
     struct TexDefaultObj* obj = malloc(sizeof(struct TexDefaultObj));
-    obj->texture = _find_texture_in_rule(rule);
-    obj->color = _find_color_in_rule(rule);
+    obj->texture = _find_texture_in_rule(rule->rule);
+    obj->color = _find_color_in_rule(rule->rule);
     // TODO - points texture
 
     if (obj->texture) {
@@ -41,8 +41,8 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     if (!bump_map) {
         bump_map = one_chan_image_create_with_color(basic.width, basic.height, 0xFF);
     }
-    _bump_noise(rule, bump_map);
-    _bevel(rule, bump_map);
+    _bump_noise(rule->rule, bump_map);
+    _bevel(rule->rule, bump_map);
     obj->normal_map = transform_bump_to_normal_map(bump_map);
 
     struct TexObj* tex_obj = malloc(sizeof(struct TexObj));

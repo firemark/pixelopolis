@@ -42,7 +42,7 @@ void builder_texture_stop(void) {
     }
 }
 
-struct TexObj* builder_texture_make(struct Program* program, struct Rule* parent, struct RuleSelector* query, int width, int height) {
+struct TexObj* builder_texture_make(struct Program* program, struct RuleWithParent* parent, struct RuleSelector* query, int width, int height) {
     struct TexVoidObj* obj = malloc(sizeof(struct TexVoidObj));
     struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
 

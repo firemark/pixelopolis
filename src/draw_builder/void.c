@@ -4,10 +4,10 @@
 #include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_void(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
-    struct RuleSelector* child_selector = css_find_selector_prop(rule, "child");
+    struct RuleSelector* child_selector = css_find_selector_prop(rule->rule, "child");
     return builder_build_custom_void(helper, basic, child_selector);
 }
 

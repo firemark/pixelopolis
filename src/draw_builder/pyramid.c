@@ -4,13 +4,13 @@
 #include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_pyramid(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
-    struct RuleSelector* selector = css_find_selector_prop(rule, "wall");
+    struct RuleSelector* selector = css_find_selector_prop(rule->rule, "wall");
     if (!selector) {
-        selector = css_find_selector_prop(rule, "roof");
+        selector = css_find_selector_prop(rule->rule, "roof");
     }
 
     struct SelectorHelper wall_helper = {

@@ -6,7 +6,7 @@
 struct DrawObj *builder_build_draw_obj(struct SelectorHelper *helper) {
     struct RuleSelector *query = helper->selector;
     if (!query) return NULL;
-    struct Rule *rule = builder_make_rule_from_helper(helper);
+    struct RuleWithParent *rule = builder_make_rule_from_helper(helper);
     if (!rule) return NULL;
 
     struct Helper inner_helper = {
@@ -15,7 +15,7 @@ struct DrawObj *builder_build_draw_obj(struct SelectorHelper *helper) {
         .parent = helper->parent,
     };
 
-    struct RuleSelector *display_selector = css_find_selector_prop(rule, "display");
+    struct RuleSelector *display_selector = css_find_selector_prop(rule->rule, "display");
     char *element = display_selector ? display_selector->element : query->element;
     struct DrawObj *obj;
 #define IF_NAME(str) else if (!strcmp(element, str))
@@ -45,7 +45,5 @@ struct DrawObj *builder_build_draw_obj(struct SelectorHelper *helper) {
     obj = builder_build_filler(&inner_helper, HORIZONTAL_FILL);
     else obj = NULL;
 #undef IF_NAME
-
-    css_free_rule_half(rule);
     return obj;
 }

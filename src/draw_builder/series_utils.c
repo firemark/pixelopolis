@@ -94,7 +94,7 @@ void series_align_objs(struct Helper* helper, struct ShiftDrawPair** pairs,
     if (size == 0) {
         return;
     }
-    char* align = css_find_selector_element_prop(helper->rule, "align");
+    char* align = css_find_selector_element_prop(helper->rule->rule, "align");
     size_t end_index = size - 1;
     struct ShiftDrawPair* last_pair = pairs[end_index];
 

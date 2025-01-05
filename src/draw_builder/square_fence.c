@@ -27,7 +27,7 @@ static void _fill_body(struct BoardObj* obj, struct Helper* helper,
         .d_justify = builder_get_justify(helper->rule, "body-justify", D_JUSTIFY),
     };
     builder_init_basic(&basic);
-    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "body");
+    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule->rule, "body");
 
     obj->children[BODY_INDEX] = builder_build_board_child(
         builder_build_custom_void(helper, basic, child_selector), edge_size, edge_size);
@@ -44,7 +44,7 @@ static struct DrawObj* _make_corner(struct Helper* helper, const int size) {
         .d_justify = builder_get_justify(helper->rule, "corner-justify", D_JUSTIFY),
     };
     builder_init_basic(&basic);
-    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "corner");
+    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule->rule, "corner");
 
     return builder_build_custom_void(helper, basic, child_selector);
 }
@@ -64,7 +64,7 @@ static struct DrawObj* _make_edge(struct Helper* helper, const char is_vertical,
         .d_justify = builder_get_justify(helper->rule, "edge-justify", V_JUSTIFY),
     };
     builder_init_basic(&basic);
-    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule, "edge");
+    struct RuleSelector* child_selector = css_find_selector_prop(helper->rule->rule, "edge");
     return builder_build_custom_void(helper, basic, child_selector);
 }
 
@@ -105,7 +105,7 @@ static void _fill_edges_and_corners(struct BoardObj* obj, struct Helper* helper,
 }
 
 struct DrawObj* builder_build_square_fence(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
 
     struct BoardObj* obj = malloc(sizeof(struct BoardObj));

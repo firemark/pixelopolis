@@ -5,11 +5,9 @@
 #include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/css_func.h"
 
-struct Rule* builder_make_rule_from_helper(struct SelectorHelper* helper) {
+struct RuleWithParent* builder_make_rule_from_helper(struct SelectorHelper* helper) {
     if (!helper->selector) return NULL;
-    struct RuleSelector* selector = css_cpy_selector(helper->selector);
-    selector->parent = helper->parent_rule ? helper->parent_rule->selector : NULL;
-    return css_make_rule_from_selector(helper->program, selector);
+    return css_make_rule_from_selector(helper->program, helper->selector, helper->parent_rule);
 }
 
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic,

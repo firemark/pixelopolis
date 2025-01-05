@@ -37,6 +37,7 @@ function(add_lib)
         ${FLEX_LIBRARIES}
         m
     )
+    target_compile_options(PixelopolisLib PUBLIC -Werror)
     install(
         TARGETS PixelopolisLib
         PUBLIC_HEADER

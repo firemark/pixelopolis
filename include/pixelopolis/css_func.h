@@ -18,7 +18,7 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name);
 struct RuleSelector* css_cpy_selector(struct RuleSelector* old);
 struct RuleSelector* css_find_last_parent_selector(struct RuleSelector* selector);
 
-struct Rule* css_make_rule_from_selector(struct Program* program, struct RuleSelector* selector);
+struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* selector, struct RuleWithParent* parent);
 
 void css_free_obj(struct Obj* obj);
 void css_free_func_obj(struct FuncObj* func);

@@ -5,7 +5,7 @@
 #include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_dome(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct DomeObj* obj = malloc(sizeof(struct ConeObj));
     struct BasicObj basic = builder_build_basic(rule, helper->parent);

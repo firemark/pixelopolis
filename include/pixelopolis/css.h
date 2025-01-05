@@ -61,6 +61,11 @@ struct Rule {
     struct HashMap *props;
 };
 
+struct RuleWithParent {
+  struct Rule* rule;
+  struct RuleWithParent* parent;
+};
+
 struct Program {
     char* name;
     struct Rule** rules;

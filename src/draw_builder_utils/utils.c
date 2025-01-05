@@ -4,17 +4,17 @@
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/draw_builder_common.h"
 
-int builder_get_int(struct Rule* rule, char* key, const int default_value) {
-    int* ptr = css_find_number_prop(rule, key);
+int builder_get_int(struct RuleWithParent* rule, char* key, const int default_value) {
+    int* ptr = css_find_number_prop(rule->rule, key);
     return ptr ? *ptr : default_value;
 }
 
-int builder_get_percent(struct Rule* rule, char* key, const int default_value) {
-    int* ptr = css_find_percent_prop(rule, key);
+int builder_get_percent(struct RuleWithParent* rule, char* key, const int default_value) {
+    int* ptr = css_find_percent_prop(rule->rule, key);
     return ptr ? *ptr : default_value;
 }
 
-int builder_get_padding(struct Rule* rule) { return builder_get_int(rule, "padding", 0); }
+int builder_get_padding(struct RuleWithParent* rule) { return builder_get_int(rule, "padding", 0); }
 
 static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
@@ -51,7 +51,8 @@ static inline enum Justify _builder_get_single_justify(const char* name) {
     return JUSTIFY_START;
 }
 
-enum Justify builder_get_justify(struct Rule* rule, char* key, const enum JustifyIndex index) {
+enum Justify builder_get_justify(struct RuleWithParent* rule_, char* key, const enum JustifyIndex index) {
+    struct Rule* rule = rule_->rule;
     struct Obj** prop_objs = css_find_objs(rule, key);
     if (!prop_objs) {
         return JUSTIFY_START;

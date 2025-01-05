@@ -45,8 +45,8 @@ struct Center {
 static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size_out) {
     int non_repeat_grid_size = 0;
 
-    struct Rule* rule = helper->rule;
-    struct Obj** prop_objs = css_find_objs(rule, "body");
+    struct RuleWithParent* rule = helper->rule;
+    struct Obj** prop_objs = css_find_objs(rule->rule, "body");
     if (!prop_objs) {
         return NULL;
     }

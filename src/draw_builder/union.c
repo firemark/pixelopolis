@@ -49,10 +49,10 @@ static void _fill(struct BoardObj* board_obj, struct Obj** prop_objs, struct Hel
 }
 
 struct DrawObj* builder_build_union(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
 
-    struct Obj** prop_objs = css_find_objs(rule, "body");
+    struct Obj** prop_objs = css_find_objs(rule->rule, "body");
     if (!prop_objs) {
         return NULL;
     }

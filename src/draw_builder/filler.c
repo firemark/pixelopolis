@@ -4,7 +4,7 @@
 #include "pixelopolis/css_func.h"
 
 void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int width) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     enum FillDirection fill_direction = filler->fill_direction;
 
     struct BasicObj basic_temp = builder_build_empty_basic();
@@ -14,7 +14,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     int padding = 0;
     size_t size = 0;
     for (;;) {
-        struct RuleSelector* selector = css_find_selector_prop(rule, "body");
+        struct RuleSelector* selector = css_find_selector_prop(rule->rule, "body");
         struct DrawObj* child = series_make_draw_obj(helper, selector);
         if (!child) continue;
 
@@ -45,7 +45,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
 }
 
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
     obj->fill_direction = fill_direction;
 

@@ -40,8 +40,8 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
     struct ShiftTexPair** pairs =
         malloc(sizeof(struct ShiftTexPair*) * BUILDER_TEXTURE_MAX_ELEMENTS);
 
-    struct Rule* rule = helper->rule;
-    struct Obj** prop_objs = css_find_objs(rule, "body");
+    struct RuleWithParent* rule = helper->rule;
+    struct Obj** prop_objs = css_find_objs(rule->rule, "body");
     if (!prop_objs) {
         return NULL;
     }

@@ -6,7 +6,7 @@
 struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
     struct RuleSelector *query = helper->selector;
     if (!query) return NULL;
-    struct Rule *rule = builder_texture_make_rule_from_helper(helper);
+    struct RuleWithParent *rule = builder_texture_make_rule_from_helper(helper);
     if (!rule) return NULL;
 
     struct Helper inner_helper = {
@@ -15,7 +15,7 @@ struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
         .parent = helper->parent,
     };
 
-    struct RuleSelector *display_selector = css_find_selector_prop(rule, "display");
+    struct RuleSelector *display_selector = css_find_selector_prop(rule->rule, "display");
     char *element = display_selector ? display_selector->element : query->element;
     struct TexObj *obj;
 #define IF_NAME(str) else if (!strcmp(element, str))
@@ -29,6 +29,5 @@ struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
     IF_NAME("h-series-tex") obj = builder_texture_build_texture_series(&inner_helper, TEX_PART_HORIZONTAL);
     else obj = builder_texture_build_default(&inner_helper);
 #undef IF_NAME
-    css_free_rule_half(rule);
     return obj;
 }

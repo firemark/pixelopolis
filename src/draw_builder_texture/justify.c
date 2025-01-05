@@ -41,7 +41,7 @@ static inline void _do_justify(struct ShiftTexPair* pair, const enum Justify jus
 
 void builder_texture_justify(struct Helper* helper, struct ShiftTexPair** pairs,
                              struct BasicTexObj* basic, enum TexPartDirection direction) {
-    char* justify_selector = css_find_selector_element_prop(helper->rule, "justify");
+    char* justify_selector = css_find_selector_element_prop(helper->rule->rule, "justify");
     enum Justify justify = _get_justify(justify_selector);
     if (!pairs) return;
     struct ShiftTexPair* pair = NULL;

@@ -13,9 +13,9 @@ static inline const size_t _get_size(struct Obj** prop_objs) {
 }
 
 struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     enum FillDirection fill_direction = series->fill_direction;
-    struct Obj** prop_objs = css_find_objs(rule, "body");
+    struct Obj** prop_objs = css_find_objs(rule->rule, "body");
     if (!prop_objs) {
         return NULL;
     }
@@ -57,7 +57,7 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
 }
 
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
 
     struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
     obj->fill_direction = fill_direction;

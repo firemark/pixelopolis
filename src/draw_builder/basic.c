@@ -5,22 +5,22 @@
 
 #define DEFAULT_METRIC 0
 
-#define MAKE_GET_METRIC(NAME, ATTR, PARENT_TYPE)                                   \
-    int NAME##_##ATTR(struct Rule* rule, int default_value, PARENT_TYPE* parent) { \
-        struct Obj* obj = css_find_1st_obj(rule, #ATTR);                           \
-        if (!obj) return default_value;                                            \
-        if (obj->type == OBJ_NUMBER) return *(int*)obj->value;                     \
-        if (obj->type != OBJ_PERCENT) return default_value;                        \
-        if (!parent) return default_value;                                         \
-        int percent = *(int*)obj->value;                                           \
-        int parent_value = parent->ATTR;                                           \
-        return (percent * parent_value) / 100;                                     \
+#define MAKE_GET_METRIC(NAME, ATTR, PARENT_TYPE)                                             \
+    int NAME##_##ATTR(struct RuleWithParent* rule, int default_value, PARENT_TYPE* parent) { \
+        struct Obj* obj = css_find_1st_obj(rule->rule, #ATTR);                               \
+        if (!obj) return default_value;                                                      \
+        if (obj->type == OBJ_NUMBER) return *(int*)obj->value;                               \
+        if (obj->type != OBJ_PERCENT) return default_value;                                  \
+        if (!parent) return default_value;                                                   \
+        int percent = *(int*)obj->value;                                                     \
+        int parent_value = parent->ATTR;                                                     \
+        return (percent * parent_value) / 100;                                               \
     }
 MAKE_GET_METRIC(_get_basic_metric, width, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, height, struct BasicObj)
 MAKE_GET_METRIC(_get_basic_metric, depth, struct BasicObj)
 
-struct BasicObj builder_build_basic(struct Rule* rule, struct DrawObj* parent) {
+struct BasicObj builder_build_basic(struct RuleWithParent* rule, struct DrawObj* parent) {
     struct BasicObj* parent_basic = parent ? &parent->basic : NULL;
     const int primal_rotate = builder_get_int(rule, "rotate", 0);
     struct BasicObj basic = {

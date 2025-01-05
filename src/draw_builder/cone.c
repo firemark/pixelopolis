@@ -5,12 +5,12 @@
 #include "pixelopolis/css_func.h"
 
 struct DrawObj* builder_build_cone(struct Helper* helper) {
-    struct Rule* rule = helper->rule;
+    struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct ConeObj* obj = malloc(sizeof(struct ConeObj));
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
-    int* sides = css_find_number_prop(rule, "sides");
+    int* sides = css_find_number_prop(rule->rule, "sides");
     obj->sides = sides ? *sides : 8;
 
     int texture_width =

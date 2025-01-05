@@ -19,7 +19,7 @@
 //     struct SelectorHelper bottom_helper = {
 //         .program = program,
 //         .parent_rule = rule,
-//         .selector = css_find_selector_prop(rule, "bottom"),
+//         .selector = css_find_selector_prop(rule->rule, "bottom"),
 //         .parent = helper->parent,
 //     };
 //     bottom = builder_build_floor(&bottom_helper, wall_width);
@@ -36,7 +36,7 @@
 //     struct SelectorHelper top_helper = {
 //         .program = program,
 //         .parent_rule = rule,
-//         .selector = css_find_selector_prop(rule, "top"),
+//         .selector = css_find_selector_prop(rule->rule, "top"),
 //         .parent = helper->parent,
 //     };
 //     top = builder_build_floor(&top_helper, wall_width);
@@ -53,7 +53,7 @@
 //         struct SelectorHelper middle_helper = {
 //             .program = program,
 //             .parent_rule = rule,
-//             .selector = css_find_selector_prop(rule, "middle"),
+//             .selector = css_find_selector_prop(rule->rule, "middle"),
 //             .parent = helper->parent,
 //         };
 //         struct FloorObj* middle = builder_build_floor(&middle_helper, wall_width);
@@ -72,7 +72,7 @@
 // }
 
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height) {
-    struct Rule* rule = builder_make_rule_from_helper(helper);
+    struct RuleWithParent* rule = builder_make_rule_from_helper(helper);
     if (!rule) return NULL;
     struct WallObj* wall = malloc(sizeof(struct WallObj));
 
@@ -84,7 +84,7 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     struct SelectorHelper tex_helper = {
         .program = helper->program,
         .parent_rule = rule,
-        .selector = css_find_selector_prop(rule, "texture"),
+        .selector = css_find_selector_prop(rule->rule, "texture"),
         .parent = helper->parent,
     };
     wall->tex = builder_make_texture(&tex_helper, wall_width, wall_height);
@@ -92,7 +92,7 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     struct SelectorHelper points_tex_helper = {
         .program = helper->program,
         .parent_rule = rule,
-        .selector = css_find_selector_prop(rule, "points-texture"),
+        .selector = css_find_selector_prop(rule->rule, "points-texture"),
         .parent = helper->parent,
     };
     wall->points_tex = builder_make_texture(&points_tex_helper, 8, 8);
@@ -103,7 +103,5 @@ struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width
     //     .parent = helper->parent,
     // };
     // _append_floors_to_wall(&inner_helper, wall, wall_width, wall_height);
-
-    css_free_rule_half(rule);
     return wall;
 }

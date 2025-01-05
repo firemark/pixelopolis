@@ -8,13 +8,13 @@
 
 struct Helper {
     struct Program* program;
-    struct Rule* rule;
+    struct RuleWithParent* rule;
     struct TexObj* parent;
 };
 
 struct SelectorHelper {
     struct Program* program;
-    struct Rule* parent_rule;
+    struct RuleWithParent* parent_rule;
     struct RuleSelector* selector;
     struct TexObj* parent;
 };
@@ -24,7 +24,7 @@ struct IntPair {
     int end;
 };
 
-struct Rule* builder_texture_make_rule_from_helper(struct SelectorHelper* helper);
+struct RuleWithParent* builder_texture_make_rule_from_helper(struct SelectorHelper* helper);
 
 // Builders.
 struct TexObj* builder_texture_build_tex_obj(struct SelectorHelper* helper);
