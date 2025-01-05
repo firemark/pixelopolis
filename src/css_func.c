@@ -81,34 +81,34 @@ struct rgb* css_find_color_prop(struct Rule* rule, char* name) {
     return (struct rgb*)obj->value;
 }
 
-char* css_cpy_str(char* old) {
+char* css_cpy_str(struct Memory* memory, char* old) {
     if (old == NULL) {
         return NULL;
     }
     size_t size = strlen(old) + 1;
-    char* new = malloc(sizeof(char) * size);
+    char* new = MEMORY_ALLOCATE_ARRAY(memory, char, size);
     memcpy(new, old, size);
     return new;
 }
 
-struct RuleSelector* css_cpy_selector(struct RuleSelector* old) {
+struct RuleSelector* css_cpy_selector(struct Memory* memory, struct RuleSelector* old) {
     struct RuleSelector* selector = malloc(sizeof(struct RuleSelector));
 
-    selector->element = css_cpy_str(old->element);
-    selector->pseudo_klass = css_cpy_str(old->pseudo_klass);
+    selector->element = css_cpy_str(memory, old->element);
+    selector->pseudo_klass = css_cpy_str(memory, old->pseudo_klass);
 
     if (old->klasses) {
         size_t i;
-        selector->klasses = malloc(sizeof(char*) * KLASSES_SIZE);
+        selector->klasses = MEMORY_ALLOCATE_ARRAY(memory, char*, KLASSES_SIZE);
         for (i = 0; i < KLASSES_SIZE; i++) {  // cpy klasses
-            selector->klasses[i] = css_cpy_str(old->klasses[i]);
+            selector->klasses[i] = css_cpy_str(memory, old->klasses[i]);
         }
     } else {
         selector->klasses = NULL;
     }
 
-    selector->parent = old->parent ? css_cpy_selector(old->parent) : NULL;
-    selector->greedy_parent = old->greedy_parent ? css_cpy_selector(old->greedy_parent) : NULL;
+    selector->parent = old->parent ? css_cpy_selector(memory, old->parent) : NULL;
+    selector->greedy_parent = old->greedy_parent ? css_cpy_selector(memory, old->greedy_parent) : NULL;
     return selector;
 }
 

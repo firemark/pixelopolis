@@ -125,7 +125,7 @@ void _cpy_classes_for_parent_op(
 
     size_t i = 0;
     for(i = 0; i < KLASSES_SIZE; i++) {
-        char* klass = css_cpy_str(selector->klasses[i]);
+        char* klass = css_cpy_str(global_memory, selector->klasses[i]);
         if (!klass) break;
         copied_selector->klasses[copied_klass_len++] = klass;
     }
@@ -135,7 +135,7 @@ void _replace_parent_op(
         struct RuleSelector** selector_pointer,
         struct RuleSelector* selector_to_replace) {
     struct RuleSelector* selector = *selector_pointer;
-    struct RuleSelector* copied_selector = css_cpy_selector(selector_to_replace);
+    struct RuleSelector* copied_selector = css_cpy_selector(global_memory, selector_to_replace);
     struct RuleSelector* parent_copied_selector = css_find_last_parent_selector(copied_selector);
 
     _cpy_classes_for_parent_op(selector, copied_selector);
@@ -204,7 +204,7 @@ struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attr
                 selector);
             if (!is_changed) { // add parent rule to the end
                 struct RuleSelector* parent = css_find_last_parent_selector(rule->selector);
-                parent->greedy_parent = css_cpy_selector(selector);
+                parent->greedy_parent = css_cpy_selector(global_memory, selector);
             }
             rules[rule_iter++] = rule;
         }
