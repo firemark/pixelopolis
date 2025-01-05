@@ -3,15 +3,16 @@
 
 #include "css.y.h"
 #include "pixelopolis/basic.h"
+#include "pixelopolis/memory.h"
 
 #define push_string \
-    out = malloc(sizeof(char*) * (yyleng + 1)); \
+    out = MEMORY_ALLOCATE_ARRAY(global_memory, char, yyleng + 1); \
     strncpy(out, yytext, yyleng); \
     out[yyleng] = 0; \
     yylval.string = out
 
 #define crop_and_push_string(l, r) \
-    out = malloc(sizeof(char*) * (yyleng + 1 - r)); \
+    out = MEMORY_ALLOCATE_ARRAY(global_memory, char, yyleng + 1 - r); \
     strncpy(out, yytext + l, yyleng - r); \
     out[yyleng - r] = 0; \
     yylval.string = out
@@ -20,14 +21,14 @@
 #define count_chars old_chars = chars; chars += yyleng
 
 #define push_hex \
-    color = malloc(sizeof(struct rgb)); \
+    color = MEMORY_ALLOCATE(global_memory, struct rgb); \
     color->r = two_chars_to_hex(&yytext[1]); \
     color->g = two_chars_to_hex(&yytext[3]); \
     color->b = two_chars_to_hex(&yytext[5]); \
     yylval.color = color;
 
 #define push_small_hex \
-    color = malloc(sizeof(struct rgb)); \
+    color = MEMORY_ALLOCATE(global_memory, struct rgb); \
     color->r = char_to_hex_double(yytext[1]); \
     color->g = char_to_hex_double(yytext[2]); \
     color->b = char_to_hex_double(yytext[3]); \
@@ -38,6 +39,7 @@ static char* out;
 int lines = 1;
 int old_chars = 1;
 int chars = 1;
+struct Memory* global_memory;
 
 unsigned char char_to_hex(char x) {
     if (x >= 'A' && x <= 'Z') return x - 'A' + 10;

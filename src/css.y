@@ -10,12 +10,12 @@
 #define YYDEBUG 1
 
 static struct Program* global_program;
-static struct Memory* global_memory;
 
 extern FILE *yyin;
 extern int lines;
 extern int chars;
 extern int old_chars;
+extern struct Memory* global_memory;
 int yylex(void);
 
 enum RuleAttrType {
@@ -43,7 +43,7 @@ int yywrap (void) {
 }
 
 #define make_array(type, size, first_obj) \
-    type **arr = memory_allocate_array(global_memory, sizeof(type*), size + 1); \
+    type **arr = MEMORY_ALLOCATE_ARRAY(global_memory, type*, size + 1); \
     size_t i; \
     arr[0] = first_obj; \
     for(i=1; i < size; i++) { \
