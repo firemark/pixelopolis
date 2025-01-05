@@ -20,8 +20,8 @@ static void _fill_null(struct HashStrItem** items, int new_size) {
     }
 }
 
-struct HashMap* hash_make_with_memory(struct Memory *memory) {
-    struct HashMap* map; 
+struct HashMap* hash_make_with_memory(struct Memory* memory) {
+    struct HashMap* map;
     int max_size = 32;
     if (memory) {
         map = MEMORY_ALLOCATE(memory, struct HashMap);
@@ -38,9 +38,7 @@ struct HashMap* hash_make_with_memory(struct Memory *memory) {
     return map;
 }
 
-struct HashMap* hash_make(void) {
-    hash_make_with_memory(NULL);
-}
+struct HashMap* hash_make(void) { hash_make_with_memory(NULL); }
 
 static void* _remove(struct HashMap* map, int index) {
     struct HashStrItem* item = map->items[index];
@@ -70,10 +68,11 @@ static int _insert(struct HashMap* map, char* key, void* value, int index) {
 static unsigned long _probing(unsigned long hash, unsigned long shift) {
     return hash + shift * shift + 3L * shift;
 }
+#include <stdio.h>
 
 static struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     // make new table because index has changed
-    struct HashStrItem** new_items; 
+    struct HashStrItem** new_items;
     if (map->memory) {
         new_items = MEMORY_ALLOCATE_ARRAY(map->memory, struct HashStrItem*, new_size);
     } else {
@@ -83,13 +82,12 @@ static struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map
 
     unsigned long hash;
     unsigned long shift;
-    int index;
     struct HashStrItem* item;
     hash_iter (item, map) {
         hash = djb2(item->key);
         shift = 0;
         for (;;) {
-            index = _probing(hash, shift++) % new_size;
+            int index = _probing(hash, shift++) % new_size;
             if (!new_items[index]) {
                 new_items[index] = item;
                 break;
@@ -116,26 +114,40 @@ static int _resize_if_need(struct HashMap* map) {
     return -1;
 }
 
-static int if_key_eq(struct HashStrItem* item, char* key) { return !strcmp(item->key, key); }
+static inline int if_key_eq(struct HashStrItem* item, char* key) { return strcmp(item->key, key) == 0; }
 
 int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) {
     unsigned long hash = djb2(key);
-    unsigned long shift = 0;
-    struct HashStrItem* item;
+    unsigned long shift;
+start:
+    shift = 0;
 
-    int index;
     for (;;) {
-        index = _probing(hash, shift) % map->max_size;
-        item = map->items[index];
+        int index = _probing(hash, shift) % map->max_size;
+        struct HashStrItem*  item = map->items[index];
         if (!item) {
-            _resize_if_need(map);
+            if (_resize_if_need(map)) {
+                goto start;
+            }
             map->size++;
             if (removed_value) *removed_value = NULL;
-            return _insert(map, key, value, index);
+            char* new_key; 
+            {
+                // Make copy of key.
+                size_t key_count = strlen(key) + 1;
+                if (map->memory) {
+                    new_key = MEMORY_ALLOCATE_ARRAY(map->memory, char, key_count);
+                } else {
+                    new_key = malloc(sizeof(char) * key_count);
+                }
+                strncpy(new_key, key, key_count);
+            }
+            return _insert(map, new_key, value, index);
         }
         if (if_key_eq(item, key)) {
-            if (removed_value) *removed_value = _remove(map, index);
-            return _insert(map, key, value, index);
+            if (removed_value) *removed_value = item->value;
+            item->value = value;
+            return 0;
         }
         shift++;
     }
@@ -166,7 +178,11 @@ void hash_destroy(struct HashMap* map) {
     }
     int i;
     for (i = 0; i < map->max_size; i++) {
-        free(map->items[i]);
+        struct HashStrItem *item = map->items[i];
+        if (item) {
+            free(item->key);
+            free(item);
+        }
     }
     free(map->items);
     free(map);
@@ -174,5 +190,7 @@ void hash_destroy(struct HashMap* map) {
 
 void hash_update(struct HashMap* map, struct HashMap* other) {
     struct HashStrItem* item;
-    hash_iter (item, other) { hash_set(map, item->key, item->value, NULL); }
+    hash_iter (item, other) {
+        hash_set(map, item->key, item->value, NULL);
+    }
 }

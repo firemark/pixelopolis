@@ -1,6 +1,7 @@
 #include "suites.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "pixelopolis/css_eval.h"
 #include "pixelopolis/css_func.h"

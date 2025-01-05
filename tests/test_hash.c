@@ -33,7 +33,7 @@ START_TEST(test_hash_set_with_same_key) {
     struct HashMap* map = hash_make();
     char* old_value;
     hash_set(map, "key", "old_value", NULL);
-    hash_set(map, "key", "new_value", &old_value);
+    hash_set(map, "key", "new_value", (void*)&old_value);
 
     ck_assert_int_eq(map->size, 1);
     int item_index = 14;  // djb2("key") % 32 == 14
