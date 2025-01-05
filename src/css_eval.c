@@ -7,47 +7,32 @@
 
 #include "pixelopolis/css_func.h"
 
-#define STACK_MAX_SIZE 512
+static struct Obj* _eval(struct Obj* obj);
 
-struct Stack {
-    struct Obj* objs[STACK_MAX_SIZE];
-    size_t size;
-};
+static struct Memory *_memory;
 
-struct Stack global_stack = {.size = 0};
-struct Obj* _eval(struct Obj* obj);
-
-void _free_stack() {
-    size_t i;
-    for (i = 0; i < global_stack.size; i++) {
-        css_free_obj(global_stack.objs[i]);
-    }
-    global_stack.size = 0;
-}
-
-struct Obj* _make_obj_in_stack() {
-    struct Obj* obj = malloc(sizeof(struct Obj));
-    size_t index = global_stack.size++;
-    global_stack.objs[index] = obj;
-    return obj;
+static void _free_stack() {
+    memory_free(_memory);
+    _memory = memory_create(1024 * 1024);
 }
 
 void css_eval_start() {
+    _memory = memory_create(1024 * 1024);
     int grain = time(NULL);
     srand(grain);
 }
 
-void css_eval_stop() { _free_stack(); }
+void css_eval_stop() { memory_free(_memory); }
 
-int _is_number(struct Obj* obj) { return obj && obj->type == OBJ_NUMBER; }
+static int _is_number(struct Obj* obj) { return obj && obj->type == OBJ_NUMBER; }
 
-int _is_percent(struct Obj* obj) { return obj && obj->type == OBJ_PERCENT; }
+static int _is_percent(struct Obj* obj) { return obj && obj->type == OBJ_PERCENT; }
 
-int _is_string(struct Obj* obj) { return obj && obj->type == OBJ_STRING; }
+static int _is_string(struct Obj* obj) { return obj && obj->type == OBJ_STRING; }
 
-int _is_rule(struct Obj* obj) { return obj && obj->type == OBJ_RULE; }
+static int _is_rule(struct Obj* obj) { return obj && obj->type == OBJ_RULE; }
 
-struct Obj* _eval_binary_op(struct Obj* obj) {
+static struct Obj* _eval_binary_op(struct Obj* obj) {
     struct PairObj* pair = (struct PairObj*)obj->value;
     struct Obj* evaled_left = _eval(pair->left);
     struct Obj* evaled_right = _eval(pair->right);
@@ -57,7 +42,7 @@ struct Obj* _eval_binary_op(struct Obj* obj) {
 
     int left = *(int*)evaled_left->value;
     int right = *(int*)evaled_right->value;
-    int* result = malloc(sizeof(int));
+    int* result = MEMORY_ALLOCATE(_memory, int);
 
     switch (obj->type) {
         case OBJ_ADD:
@@ -77,14 +62,14 @@ struct Obj* _eval_binary_op(struct Obj* obj) {
             break;
     }
 
-    struct Obj* result_obj = _make_obj_in_stack();
+    struct Obj* result_obj = MEMORY_ALLOCATE(_memory, struct Obj);
     result_obj->type = OBJ_NUMBER;
     result_obj->value = result;
 
     return result_obj;
 }
 
-struct Obj* _do_random(struct FuncObj* func) {
+static struct Obj* _do_random(struct FuncObj* func) {
     if (func->args_size != 2) return NULL;
     struct Obj* evaled_start = _eval(func->args[0]);
     struct Obj* evaled_end = _eval(func->args[1]);
@@ -99,24 +84,24 @@ struct Obj* _do_random(struct FuncObj* func) {
         start = end;
         end = t;
     }
-    int* result = malloc(sizeof(int));
+    int* result = MEMORY_ALLOCATE(_memory, int);
     *result = start == end ? start : start + (rand() % (end - start));
 
-    struct Obj* result_obj = _make_obj_in_stack();
+    struct Obj* result_obj = MEMORY_ALLOCATE(_memory, struct Obj);
     result_obj->type = OBJ_NUMBER;
     result_obj->value = result;
 
     return result_obj;
 }
 
-struct Obj* _do_choice(struct FuncObj* func) {
+static struct Obj* _do_choice(struct FuncObj* func) {
     if (func->args_size == 0) return NULL;
     size_t index = rand() % func->args_size;
     struct Obj* arg = func->args[index];
     return _eval(arg);
 }
 
-struct Obj* _do_rgb(struct FuncObj* func) {
+static struct Obj* _do_rgb(struct FuncObj* func) {
     if (func->args_size != 3) return NULL;
     struct Obj* r_obj = _eval(func->args[0]);
     struct Obj* g_obj = _eval(func->args[1]);
@@ -126,19 +111,19 @@ struct Obj* _do_rgb(struct FuncObj* func) {
     if (!_is_number(g_obj)) return NULL;
     if (!_is_number(b_obj)) return NULL;
 
-    struct rgb* color = malloc(sizeof(struct rgb));
+    struct rgb* color = MEMORY_ALLOCATE(_memory, struct rgb);
     color->r = *(unsigned char*)r_obj->value;
     color->g = *(unsigned char*)g_obj->value;
     color->b = *(unsigned char*)b_obj->value;
 
-    struct Obj* result_obj = malloc(sizeof(struct Obj));  //_make_obj_in_stack();
+    struct Obj* result_obj = MEMORY_ALLOCATE(_memory, struct Obj);
     result_obj->type = OBJ_COLOR;
     result_obj->value = color;
 
     return result_obj;
 }
 
-struct Obj* _do_to_percent(struct FuncObj* func) {
+static struct Obj* _do_to_percent(struct FuncObj* func) {
     if (func->args_size == 0) return NULL;
     struct Obj* arg = func->args[0];
     struct Obj* result_obj = _eval(arg);
@@ -149,7 +134,7 @@ struct Obj* _do_to_percent(struct FuncObj* func) {
     return result_obj;
 }
 
-struct Obj* _eval_func(struct Obj* obj) {
+static struct Obj* _eval_func(struct Obj* obj) {
     struct FuncObj* func = (struct FuncObj*)obj->value;
 #define CMP(value) !strcmp(func->name, value)
     if (CMP("random")) return _do_random(func);
@@ -160,7 +145,7 @@ struct Obj* _eval_func(struct Obj* obj) {
 #undef CMP
 }
 
-struct Obj* _eval(struct Obj* obj) {
+static struct Obj* _eval(struct Obj* obj) {
     if (obj->type & OBJ_BINARY_OP) return _eval_binary_op(obj);
     if (obj->type == OBJ_FUNC) return _eval_func(obj);
     return obj;
