@@ -134,7 +134,7 @@ END_TEST
 
 START_TEST(test_css_eval_percent) {
     css_eval_start();
-    struct Program *program = _make_program("rule { prop: 100% }");
+    struct Program *program = _make_program("rule { prop: 100%; }");
     struct Rule *rule = _find_first_rule(program);
     int *result = css_find_percent_prop(rule, "prop");
 

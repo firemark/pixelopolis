@@ -13,7 +13,7 @@ unsigned long djb2(char* str) {
     return hash;
 }
 
-void _fill_null(struct HashStrItem** items, int new_size) {
+static void _fill_null(struct HashStrItem** items, int new_size) {
     int i;
     for (i = 0; i < new_size; i++) {
         items[i] = NULL;
@@ -42,7 +42,7 @@ struct HashMap* hash_make(void) {
     hash_make_with_memory(NULL);
 }
 
-void* _remove(struct HashMap* map, int index) {
+static void* _remove(struct HashMap* map, int index) {
     struct HashStrItem* item = map->items[index];
     void* value = item->value;
     map->items[index] = NULL;
@@ -52,7 +52,7 @@ void* _remove(struct HashMap* map, int index) {
     return value;
 }
 
-int _insert(struct HashMap* map, char* key, void* value, int index) {
+static int _insert(struct HashMap* map, char* key, void* value, int index) {
     struct HashStrItem* item;
     if (map->memory) {
         item = MEMORY_ALLOCATE(map->memory, struct HashStrItem);
@@ -67,11 +67,11 @@ int _insert(struct HashMap* map, char* key, void* value, int index) {
     return 0;
 }
 
-unsigned long _probing(unsigned long hash, unsigned long shift) {
+static unsigned long _probing(unsigned long hash, unsigned long shift) {
     return hash + shift * shift + 3L * shift;
 }
 
-struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
+static struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     // make new table because index has changed
     struct HashStrItem** new_items; 
     if (map->memory) {
@@ -100,7 +100,7 @@ struct HashStrItem** _hash_cpy_items(size_t new_size, struct HashMap* map) {
     return new_items;
 }
 
-int _resize_if_need(struct HashMap* map) {
+static int _resize_if_need(struct HashMap* map) {
     float load = (float)(map->size) / (float)(map->max_size);
     if (load < 0.8) return 0;
     int old_size = map->max_size;
@@ -116,7 +116,7 @@ int _resize_if_need(struct HashMap* map) {
     return -1;
 }
 
-int if_key_eq(struct HashStrItem* item, char* key) { return !strcmp(item->key, key); }
+static int if_key_eq(struct HashStrItem* item, char* key) { return !strcmp(item->key, key); }
 
 int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) {
     unsigned long hash = djb2(key);
@@ -128,9 +128,7 @@ int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) 
         index = _probing(hash, shift) % map->max_size;
         item = map->items[index];
         if (!item) {
-            if (_resize_if_need(map)) {
-                continue;
-            }
+            _resize_if_need(map);
             map->size++;
             if (removed_value) *removed_value = NULL;
             return _insert(map, key, value, index);
