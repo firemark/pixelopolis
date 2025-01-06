@@ -20,11 +20,4 @@ struct RuleSelector* css_find_last_parent_selector(struct RuleSelector* selector
 
 struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* selector, struct RuleWithParent* parent);
 
-void css_free_obj(struct Obj* obj);
-void css_free_func_obj(struct FuncObj* func);
-void css_free_pair_obj(struct PairObj* pair);
-void css_free_objs(struct Obj** objs);
-void css_free_rule(struct Rule* rule);
-void css_free_rule_half(struct Rule* rule);
-void css_free_rule_selector(struct RuleSelector* selector);
 void css_free_program(struct Program* program);
