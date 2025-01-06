@@ -13,11 +13,11 @@ static inline uint8_t _make_last_x(struct OneChanImage* bump_map, int y_index) {
 }
 
 static inline uint8_t* _make_last_y(struct OneChanImage* bump_map) {
-    uint8_t* last_y = malloc(sizeof(uint8_t) * bump_map->height);
+    uint8_t* last_y = malloc(sizeof(uint8_t) * bump_map->width);
     int x_index;
     int y_index = bump_map->height - 1;
     for (x_index = 0; x_index < bump_map->width; x_index++) {
-        int cor[2] = {x_index, y_index};
+        const int cor[2] = {x_index, y_index};
         last_y[x_index] = one_chan_image_get_pixel(bump_map, cor);
     }
     return last_y;

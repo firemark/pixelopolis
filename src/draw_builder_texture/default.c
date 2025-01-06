@@ -136,11 +136,9 @@ static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map) {
     }
     size_t count = (bump_map->width * bump_map->height * *noise) / 100;
     for (size_t index = 0; index < count; index++) {
-        const int x = rand() % bump_map->width;
-        const int y = rand() % bump_map->height;
+        const int cor[2] = {rand() % bump_map->width, rand() % bump_map->height};
         const uint8_t c = rand() % c_level;
-        // one_chan_image_set_pixel()
-        bump_map->buffer[y * bump_map->width + x] = 0xFF - c;
+        one_chan_image_set_pixel(bump_map, cor, 0xFF - c);
     }
 }
 
