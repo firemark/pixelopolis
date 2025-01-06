@@ -43,8 +43,8 @@ void builder_texture_stop(void) {
 }
 
 struct TexObj* builder_texture_make(struct Program* program, struct RuleWithParent* parent, struct RuleSelector* query, int width, int height) {
-    struct TexVoidObj* obj = malloc(sizeof(struct TexVoidObj));
-    struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
+    struct TexVoidObj* obj = MEMORY_ALLOCATE(program->product_memory, struct TexVoidObj);
+    struct TexObj* tex_obj = MEMORY_ALLOCATE(program->product_memory, struct TexObj);
 
     tex_obj->basic.width = width;
     tex_obj->basic.height = height;

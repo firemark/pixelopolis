@@ -167,7 +167,7 @@ static void _fill_board_from_tree(struct BoardObj* obj, struct Helper* helper, s
     const int y = tree->cord.y + padding;
 
     struct DrawObj* child = _make_child(helper, tree);
-    obj->children[data->counter++] = builder_build_board_child(child, x, y);
+    obj->children[data->counter++] = builder_build_board_child(helper, child, x, y);
 }
 
 void _free_tree(struct BspTree* tree) {
@@ -198,7 +198,7 @@ static void _fill_board(struct DrawObj* draw_obj, struct Helper* inner_helper,
 
     struct BoardObj* obj = draw_obj->obj;
     const int children_len = _len_tree(tree);
-    obj->children = malloc(sizeof(struct BoardChild*) * (children_len + 1));
+    obj->children = HELPER_ALLOCATE_ARRAY(inner_helper, struct BoardChild*, children_len + 1);
     obj->children[children_len] = NULL;
 
     _fill_board_from_tree(obj, inner_helper, tree, data);
@@ -210,7 +210,7 @@ struct DrawObj* builder_build_bsp_tree(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
 
-    struct BoardObj* obj = malloc(sizeof(struct BoardObj));
+    struct BoardObj* obj = HELPER_ALLOCATE(helper, struct BoardObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
     struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_BOARD, obj);
 

@@ -7,7 +7,7 @@
 struct DrawObj* builder_build_dome(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct DomeObj* obj = malloc(sizeof(struct ConeObj));
+    struct DomeObj* obj = HELPER_ALLOCATE(helper, struct DomeObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     obj->vertical_sides = builder_get_int(rule, "vertical-sides", 8);

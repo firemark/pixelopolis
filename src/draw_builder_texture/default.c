@@ -22,7 +22,7 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     struct OneChanImage* bump_map = _find_bump_map_in_rule(rule->rule);
     struct BasicTexObj basic = builder_texture_prepare_basic(helper);
 
-    struct TexDefaultObj* obj = malloc(sizeof(struct TexDefaultObj));
+    struct TexDefaultObj* obj = HELPER_ALLOCATE(helper, struct TexDefaultObj);
     obj->texture = _find_texture_in_rule(rule->rule);
     obj->color = _find_color_in_rule(rule->rule);
     // TODO - points texture
@@ -45,7 +45,7 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     _bevel(rule->rule, bump_map);
     obj->normal_map = transform_bump_to_normal_map(bump_map);
 
-    struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
+    struct TexObj* tex_obj = HELPER_ALLOCATE(helper, struct TexObj);
     tex_obj->type = TEX_OBJ_DEFAULT;
     tex_obj->obj = obj;
     tex_obj->basic = basic;

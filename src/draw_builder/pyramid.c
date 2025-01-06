@@ -6,7 +6,7 @@
 struct DrawObj* builder_build_pyramid(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct PyramidObj* obj = malloc(sizeof(struct PyramidObj));
+    struct PyramidObj* obj = HELPER_ALLOCATE(helper, struct PyramidObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
     struct RuleSelector* selector = css_find_selector_prop(rule->rule, "wall");
     if (!selector) {

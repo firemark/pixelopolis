@@ -6,7 +6,8 @@
 struct DrawObj* builder_build_cube(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct CubeObj* obj = malloc(sizeof(struct CubeObj));
+    struct CubeObj* obj = HELPER_ALLOCATE(helper, struct CubeObj);
+
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     struct SelectorHelper wall_helper = MAKE_SELECTOR_HELPER(helper, "wall");

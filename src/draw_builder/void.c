@@ -13,7 +13,7 @@ struct DrawObj* builder_build_void(struct Helper* helper) {
 
 struct DrawObj* builder_build_custom_void(struct Helper* helper, struct BasicObj basic,
                                           struct RuleSelector* child_selector) {
-    struct VoidObj* obj = malloc(sizeof(struct VoidObj));
+    struct VoidObj* obj = HELPER_ALLOCATE(helper, struct VoidObj);
     struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_VOID, obj);
     struct SelectorHelper child_helper = {
         .program = helper->program,

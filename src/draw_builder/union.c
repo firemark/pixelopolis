@@ -25,12 +25,12 @@ static struct BoardChild* _make_child(struct RuleSelector* child_selector, struc
     builder_init_basic(&basic);
 
     struct DrawObj* child = builder_build_custom_void(helper, basic, child_selector);
-    return builder_build_board_child(child, 0, 0);
+    return builder_build_board_child(helper, child, 0, 0);
 }
 
 static void _fill(struct BoardObj* board_obj, struct Obj** prop_objs, struct Helper* helper) {
     const size_t children_len = _get_size(prop_objs);
-    board_obj->children = malloc(sizeof(struct BoardChild*) * (children_len + 1));
+    board_obj->children = HELPER_ALLOCATE_ARRAY(helper, struct BoardChild*, children_len + 1);
 
     size_t index = 0;
     struct Obj* obj = NULL;
@@ -40,11 +40,6 @@ static void _fill(struct BoardObj* board_obj, struct Obj** prop_objs, struct Hel
         board_obj->children[index++] = _make_child(child_selector, helper);
     }
 
-    if (index < children_len) {
-        // resize array
-        board_obj->children =
-            realloc(board_obj->children, sizeof(struct BoardChild*) * (index + 1));
-    }
     board_obj->children[index] = NULL;
 }
 
@@ -57,7 +52,7 @@ struct DrawObj* builder_build_union(struct Helper* helper) {
         return NULL;
     }
 
-    struct BoardObj* obj = malloc(sizeof(struct BoardObj));
+    struct BoardObj* obj = HELPER_ALLOCATE(helper, struct BoardObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
     struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_BOARD, obj);
 

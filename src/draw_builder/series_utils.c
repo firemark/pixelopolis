@@ -62,8 +62,8 @@ void series_max_basic(struct BasicObj* a, struct BasicObj* b) {
     SET_GREATER(depth);
 }
 
-struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj) {
-    struct ShiftDrawPair* pair = malloc(sizeof(struct ShiftDrawPair));
+struct ShiftDrawPair* series_make_pair(struct Helper* helper, int shift, struct DrawObj* obj) {
+    struct ShiftDrawPair* pair = HELPER_ALLOCATE(helper, struct ShiftDrawPair);
     pair->obj = obj;
     pair->shift = shift;
     return pair;

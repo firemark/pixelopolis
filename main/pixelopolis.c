@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    print_size("program size", program->syntax_memory);
+    print_size("syntax size", program->syntax_memory);
 
     // css_debug_program(stderr, program);
     struct Rule *world_rule = find_world(program);
@@ -91,6 +91,8 @@ int main(int argc, char **argv) {
         return -1;
     }
     struct DrawObj *draw_obj = builder_make(program, world_rule);
+    print_size("product size", program->product_memory);
+
     struct image *img = make_img(world_rule);
     draw(draw_obj, world_rule, img);
 

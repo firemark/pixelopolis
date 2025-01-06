@@ -8,7 +8,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     enum FillDirection fill_direction = filler->fill_direction;
 
     struct BasicObj basic_temp = builder_build_empty_basic();
-    struct ShiftDrawPair** pairs = malloc(sizeof(struct ShiftDrawPair*) * BUILDER_MAX_ELEMENTS);
+    struct ShiftDrawPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftDrawPair*, BUILDER_MAX_ELEMENTS);
 
     int shift = 0;
     int padding = 0;
@@ -25,7 +25,7 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
             break;
         }
 
-        pairs[size++] = series_make_pair(shift, child);
+        pairs[size++] = series_make_pair(helper, shift, child);
 
         padding = builder_get_padding(rule);
         series_add_max_basic_by_fill_direction(&basic_temp, &child->basic, fill_direction);
@@ -39,14 +39,14 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
         series_get_basic_metric_by_fill_direction(&helper->parent->basic, fill_direction);
     series_align_objs(helper, pairs, fill_direction, size, end_width);
 
-    pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (size + 1));
+    // pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (size + 1));
     pairs[size] = NULL;
     filler->pairs = pairs;
 }
 
 struct DrawObj* builder_build_filler(struct Helper* helper, enum FillDirection fill_direction) {
     struct RuleWithParent* rule = helper->rule;
-    struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
+    struct SeriesObj* obj = HELPER_ALLOCATE(helper, struct SeriesObj);
     obj->fill_direction = fill_direction;
 
     struct BasicObj basic = builder_build_basic(rule, helper->parent);

@@ -74,7 +74,7 @@
 struct WallObj* builder_build_wall(struct SelectorHelper* helper, int wall_width, int wall_height) {
     struct RuleWithParent* rule = builder_make_rule_from_helper(helper);
     if (!rule) return NULL;
-    struct WallObj* wall = malloc(sizeof(struct WallObj));
+    struct WallObj* wall = HELPER_ALLOCATE(helper, struct WallObj);
 
     wall->padding = builder_get_padding(rule);
     wall->points_density = builder_get_percent(rule, "points-density", 0);

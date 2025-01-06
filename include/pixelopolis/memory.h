@@ -27,5 +27,5 @@ void* memory_allocate_array(struct Memory* memory, size_t size, size_t count);
 size_t memory_size(struct Memory* memory);
 void memory_free(struct Memory* memory);
 
-#define MEMORY_ALLOCATE(memory, type) memory_allocate(memory, sizeof(type))
-#define MEMORY_ALLOCATE_ARRAY(memory, type, c) memory_allocate_array(memory, sizeof(type), c)
+#define MEMORY_ALLOCATE(memory, type) (type*)memory_allocate(memory, sizeof(type))
+#define MEMORY_ALLOCATE_ARRAY(memory, type, c) (type*)memory_allocate_array(memory, sizeof(type), c)

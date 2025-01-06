@@ -9,7 +9,7 @@ static void _cylinder_build_many_walls(struct SelectorHelper* wall_helper, struc
                                        struct BasicObj* basic) {
     int width = basic->width;
     int depth = basic->depth;
-    obj->walls = malloc(sizeof(struct WallObj*) * obj->sides);
+    obj->walls = HELPER_ALLOCATE_ARRAY(wall_helper, struct WallObj*, obj->sides);
 
     struct AngleIter angle_iter;
     angle_iter_start(&angle_iter, width, depth, obj->sides);
@@ -25,14 +25,15 @@ static void _cylinder_build_single_wall(struct SelectorHelper* wall_helper, stru
     int depth = basic->depth;
     int total_length = ceil(M_PI * (3.0 / 2.0) * (width + depth) - sqrt(width * depth));
 
-    obj->walls = malloc(sizeof(struct WallObj*));
+    obj->walls = HELPER_ALLOCATE_ARRAY(wall_helper, struct WallObj*, 1);
     obj->walls[0] = builder_build_wall(wall_helper, total_length, basic->height);
 }
 
 struct DrawObj* builder_build_cylinder(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct CylinderObj* obj = malloc(sizeof(struct CylinderObj));
+    struct CylinderObj* obj = HELPER_ALLOCATE(helper, struct CylinderObj);
+    
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     obj->has_many_walls = builder_get_int(rule, "has-many-walls", 0);

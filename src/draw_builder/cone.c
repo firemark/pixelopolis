@@ -7,7 +7,7 @@
 struct DrawObj* builder_build_cone(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct ConeObj* obj = malloc(sizeof(struct ConeObj));
+    struct ConeObj* obj = HELPER_ALLOCATE(helper, struct ConeObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     int* sides = css_find_number_prop(rule->rule, "sides");

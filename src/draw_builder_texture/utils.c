@@ -44,7 +44,7 @@ struct BasicTexObj builder_texture_prepare_basic(struct Helper* helper)
 
 struct TexObj* builder_texture_make_tex_obj(struct Helper* helper, struct BasicTexObj basic,
                                             enum TexObjType type, void* obj) {
-    struct TexObj* tex_obj = malloc(sizeof(struct TexObj));
+    struct TexObj* tex_obj = HELPER_ALLOCATE(helper, struct TexObj);
     tex_obj->basic = basic;
     tex_obj->type = type;
     tex_obj->obj = obj;

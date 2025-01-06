@@ -21,6 +21,9 @@ struct SelectorHelper {
     struct DrawObj* parent;
 };
 
+#define HELPER_ALLOCATE(helper, type) MEMORY_ALLOCATE(helper->program->product_memory, type)
+#define HELPER_ALLOCATE_ARRAY(helper, type, c) MEMORY_ALLOCATE_ARRAY(helper->program->product_memory, type, c)
+
 struct RuleWithParent* builder_make_rule_from_helper(struct SelectorHelper* helper);
 
 //builders
@@ -33,7 +36,7 @@ struct DrawObj* builder_build_custom_void(
         struct Helper* helper,
         struct BasicObj basic,
         struct RuleSelector* child_selector);
-struct BoardChild* builder_build_board_child(struct DrawObj* obj, int x, int y);
+struct BoardChild* builder_build_board_child(struct Helper* helper, struct DrawObj* obj, int x, int y);
 struct DrawObj* builder_build_pyramid(struct Helper* helper);
 struct DrawObj* builder_build_triangle(struct Helper* helper);
 struct DrawObj* builder_build_cube(struct Helper* helper);
@@ -58,7 +61,7 @@ struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj bas
 struct TexObj* builder_make_texture(struct SelectorHelper* helper, int width, int height);
 
 //series utils
-struct ShiftDrawPair* series_make_pair(int shift, struct DrawObj* obj);
+struct ShiftDrawPair* series_make_pair(struct Helper* helper, int shift, struct DrawObj* obj);
 struct DrawObj* series_make_draw_obj(struct Helper* helper, struct RuleSelector* selector);
 int series_get_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction);
 void series_add_basic_metric_by_fill_direction(struct BasicObj *basic, enum FillDirection fill_direction, int x);

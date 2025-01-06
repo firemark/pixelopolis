@@ -22,7 +22,8 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
 
     const size_t size = _get_size(prop_objs);
     struct BasicObj basic_temp = builder_build_empty_basic();
-    struct ShiftDrawPair** pairs = malloc(sizeof(struct ShiftDrawPair*) * (size + 1));
+    struct ShiftDrawPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftDrawPair*, (size + 1));
+    
     int shift = 0;
 
     size_t index = 0;
@@ -32,7 +33,7 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
         struct DrawObj* child = series_make_draw_obj(helper, selector);
         if (!child) continue;
 
-        pairs[index++] = series_make_pair(shift, child);
+        pairs[index++] = series_make_pair(helper, shift, child);
 
         int child_width = series_get_basic_metric_by_fill_direction(&child->basic, fill_direction);
         int padding = builder_get_padding(rule);
@@ -44,7 +45,7 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
     }
 
     // resize array
-    pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (index + 1));
+    // pairs = realloc(pairs, sizeof(struct ShiftDrawPair*) * (index + 1));
     pairs[index] = NULL;
 
     series_max_basic(&helper->parent->basic, &basic_temp);  // resize parent
@@ -59,7 +60,7 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
 struct DrawObj* builder_build_series(struct Helper* helper, enum FillDirection fill_direction) {
     struct RuleWithParent* rule = helper->rule;
 
-    struct SeriesObj* obj = malloc(sizeof(struct SeriesObj));
+    struct SeriesObj* obj = HELPER_ALLOCATE(helper, struct SeriesObj);
     obj->fill_direction = fill_direction;
 
     struct BasicObj basic = builder_build_basic(rule, helper->parent);

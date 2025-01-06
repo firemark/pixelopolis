@@ -12,7 +12,7 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
 
 struct TexObj* builder_texture_build_texture_part(struct Helper* helper,
                                                   enum TexPartDirection direction) {
-    struct TexPartObj* obj = malloc(sizeof(struct TexPartObj));
+    struct TexPartObj* obj = HELPER_ALLOCATE(helper, struct TexPartObj);
     struct BasicTexObj basic = builder_texture_prepare_basic(helper);
 
     {
@@ -40,8 +40,7 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
         .index = {.start = 0, .end = -1},
     };
 
-    struct ShiftTexPair** pairs =
-        malloc(sizeof(struct ShiftTexPair*) * BUILDER_TEXTURE_MAX_ELEMENTS);
+    struct ShiftTexPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, BUILDER_TEXTURE_MAX_ELEMENTS);
 
     struct SelectorHelper start_obj_helper = MAKE_SELECTOR_HELPER(helper, "start");
     struct TexObj* start_obj = builder_texture_build_tex_obj(&start_obj_helper);
@@ -54,7 +53,7 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
         if (obj_length >= center.length.end) {
             goto final;
         }
-        struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
+        struct ShiftTexPair* pair = HELPER_ALLOCATE(helper, struct ShiftTexPair);
         builder_texture_resize_axis_by_direction(basic, obj_length, direction);
         builder_texture_resize_coaxis(basic, &start_obj->basic, direction);
         builder_texture_fill_shift(pair, 0, direction);
@@ -86,7 +85,7 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
             break;
         }
         if (center_obj) {
-            struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
+            struct ShiftTexPair* pair = HELPER_ALLOCATE(helper, struct ShiftTexPair);
             builder_texture_resize_axis_by_direction(basic, end_shift, direction);
             builder_texture_resize_coaxis(basic, &center_obj->basic, direction);
             builder_texture_fill_shift(pair, shift, direction);
@@ -100,7 +99,7 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
     if (end_obj) {
         int obj_length = builder_texture_get_metric_by_direction(&end_obj->basic, direction);
         int end_shift = shift + obj_length;
-        struct ShiftTexPair* pair = malloc(sizeof(struct ShiftTexPair));
+        struct ShiftTexPair* pair = HELPER_ALLOCATE(helper, struct ShiftTexPair);
         builder_texture_resize_axis_by_direction(basic, end_shift, direction);
         builder_texture_resize_coaxis(basic, &end_obj->basic, direction);
         builder_texture_fill_shift(pair, shift, direction);

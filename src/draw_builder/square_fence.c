@@ -30,7 +30,7 @@ static void _fill_body(struct BoardObj* obj, struct Helper* helper,
     struct RuleSelector* child_selector = css_find_selector_prop(helper->rule->rule, "body");
 
     obj->children[BODY_INDEX] = builder_build_board_child(
-        builder_build_custom_void(helper, basic, child_selector), edge_size, edge_size);
+        helper, builder_build_custom_void(helper, basic, child_selector), edge_size, edge_size);
 }
 
 static struct DrawObj* _make_corner(struct Helper* helper, const int size) {
@@ -85,13 +85,13 @@ static void _fill_edges_and_corners(struct BoardObj* obj, struct Helper* helper,
         const char is_vertical = (i % 2) == 0;
 
         struct DrawObj* corner = _make_corner(helper, data->edge_size);
-        children[CORNER_INDEX + i] = builder_build_board_child(corner, corner_x, corner_y);
+        children[CORNER_INDEX + i] = builder_build_board_child(helper, corner, corner_x, corner_y);
 
         edge_x += edge_size * cos_th;
         edge_y += edge_size * sin_th;
 
         struct DrawObj* edge = _make_edge(helper, is_vertical, rotate, data);
-        children[EDGE_INDEX + i] = builder_build_board_child(edge, edge_x, edge_y);
+        children[EDGE_INDEX + i] = builder_build_board_child(helper, edge, edge_x, edge_y);
 
         const int len = edge->basic.width + edge_size;
         const int dx = len * cos_th;
@@ -108,9 +108,9 @@ struct DrawObj* builder_build_square_fence(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
 
-    struct BoardObj* obj = malloc(sizeof(struct BoardObj));
+    struct BoardObj* obj = HELPER_ALLOCATE(helper, struct BoardObj);
     const int children_len = 1 + EDGES_COUNT * 2 + 1;  // body + X corners + X edges + NULL
-    obj->children = malloc(sizeof(struct BoardChild*) * children_len);
+    obj->children = HELPER_ALLOCATE_ARRAY(helper,struct BoardChild*, children_len);
     obj->children[children_len - 1] = NULL;
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
     struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_BOARD, obj);

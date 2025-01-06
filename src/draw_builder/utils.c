@@ -12,7 +12,7 @@ struct RuleWithParent* builder_make_rule_from_helper(struct SelectorHelper* help
 
 struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj basic,
                                       enum DrawObjType type, void* obj) {
-    struct DrawObj* draw_obj = malloc(sizeof(struct DrawObj));
+    struct DrawObj* draw_obj = HELPER_ALLOCATE(helper, struct DrawObj);
     draw_obj->basic = basic;
     draw_obj->type = type;
     draw_obj->obj = obj;

@@ -24,6 +24,9 @@ struct IntPair {
     int end;
 };
 
+#define HELPER_ALLOCATE(helper, type) MEMORY_ALLOCATE(helper->program->product_memory, type)
+#define HELPER_ALLOCATE_ARRAY(helper, type, c) MEMORY_ALLOCATE_ARRAY(helper->program->product_memory, type, c)
+
 struct RuleWithParent* builder_texture_make_rule_from_helper(struct SelectorHelper* helper);
 
 // Builders.

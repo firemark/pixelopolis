@@ -347,7 +347,7 @@ struct Obj* make_obj_as_func(char* name, struct Obj** args) {
 }
 
 struct Obj* make_obj_as_noargs_func(char* name) {
-    struct Obj** args = MEMORY_ALLOCATE(global_memory, struct Obj**);
+    struct Obj** args = MEMORY_ALLOCATE(global_memory, struct Obj*);
     args[0] = NULL;
     return make_obj_as_func(name, args);
 }

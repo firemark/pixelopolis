@@ -6,7 +6,7 @@
 struct DrawObj* builder_build_triangle(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
-    struct TriangleObj* obj = malloc(sizeof(struct TriangleObj));
+    struct TriangleObj* obj = HELPER_ALLOCATE(helper, struct TriangleObj);
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     struct SelectorHelper wall_helper = {
