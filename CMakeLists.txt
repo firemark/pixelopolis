@@ -38,6 +38,7 @@ function(add_lib)
         m
     )
     target_compile_options(PixelopolisLib PUBLIC -Werror)
+    # target_compile_options(PixelopolisLib PUBLIC -Werror -fno-omit-frame-pointer)
     install(
         TARGETS PixelopolisLib
         PUBLIC_HEADER
@@ -52,6 +53,7 @@ function(add_exec TARGET NAME)
     target_include_directories(${TARGET} PUBLIC include)
     target_link_libraries(${TARGET} PUBLIC PixelopolisLib)
     set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${NAME})
+    # target_link_options(${TARGET} PUBLIC -fsanitize=address)
     install(TARGETS ${TARGET} DESTINATION bin)
 endfunction()
 
