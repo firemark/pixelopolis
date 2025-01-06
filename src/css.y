@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #include "pixelopolis/css.h"
 #include "pixelopolis/css_func.h"
@@ -200,6 +201,7 @@ struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attr
         struct Rule **nested_rules = attr->obj;
         struct Rule *rule;
         css_iter(rule, nested_rules) {
+            assert(rule_iter <= RULE_SELECTORS_SIZE);
             char is_changed = find_and_replace_parent_op_with_parent_rule(
                 &rule->selector,
                 selector);
@@ -210,6 +212,7 @@ struct Rule** unpack_rules(struct RuleSelector* selector, struct RuleAttr **attr
             rules[rule_iter++] = rule;
         }
     }
+    rules[rule_iter] = NULL;
     return rules;
 }
 
@@ -222,6 +225,7 @@ struct Rule** make_rules(struct RuleSelector** selectors, struct RuleAttr **attr
         struct Rule** nested_rules = unpack_rules(selector, attrs);
         struct Rule* nested_rule;
         css_iter(nested_rule, nested_rules) { // concat rules
+            assert(rule_iter <= RULE_SELECTORS_SIZE);
             rules[rule_iter++] = nested_rule;
         }
         // free(nested_rules);
