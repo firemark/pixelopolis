@@ -9,6 +9,7 @@
 #include "pixelopolis/img/destroy.h"
 #include "pixelopolis/img/ops.h"
 #include "pixelopolis/img/read.h"
+#include "pixelopolis/draw.h"
 #include "pixelopolis/normal_map.h"
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
@@ -136,8 +137,9 @@ static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map) {
     size_t count = (bump_map->width * bump_map->height * *noise) / 100;
     for (size_t index = 0; index < count; index++) {
         const int x = rand() % bump_map->width;
-        const int y = rand() % bump_map->width;
+        const int y = rand() % bump_map->height;
         const uint8_t c = rand() % c_level;
+        // one_chan_image_set_pixel()
         bump_map->buffer[y * bump_map->width + x] = 0xFF - c;
     }
 }

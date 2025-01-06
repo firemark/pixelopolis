@@ -17,28 +17,30 @@
         if (cor[1] >= img->height) return; \
     }
 
+#define _GET_PIXEL(img, cor) \
+    int index = _GET_INDEX(img, cor); \
+    _GUARD_INDEX(index, img); \
+    return img->buffer[index]
+
+#define _SET_PIXEL(img, cor, color) \
+    _GUARD_COR(cor, img); \
+    const int index = _GET_INDEX(img, cor); \
+    img->buffer[index] = color
+
 struct RoyalPixel get_pixel(const struct image* img, const int cor[2]) {
-    int index = _GET_INDEX(img, cor);
-    _GUARD_INDEX(index, img);
-    return img->buffer[index];
+    _GET_PIXEL(img, cor);
 }
 
 struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]) {
-    int index = _GET_INDEX(img, cor);
-    _GUARD_INDEX(index, img);
-    return img->buffer[index];
+    _GET_PIXEL(img, cor);
 }
 
 unsigned char one_chan_image_get_pixel(const struct OneChanImage* img, const int cor[2]) {
-    int index = _GET_INDEX(img, cor);
-    _GUARD_INDEX(index, img);
-    return img->buffer[index];
+    _GET_PIXEL(img, cor);
 }
 
 struct xyz float_image_get_pixel(const struct FloatImage* img, const int cor[2]) {
-    int index = _GET_INDEX(img, cor);
-    _GUARD_INDEX(index, img);
-    return img->buffer[index];
+    _GET_PIXEL(img, cor);
 }
 
 struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor[2]) {
@@ -98,15 +100,15 @@ void set_pixel(struct image* img, const int cor[2], const struct RoyalPixel colo
 }
 
 void flat_image_set_pixel(const struct FlatImage* img, const int cor[2], const struct rgb color) {
-    _GUARD_COR(cor, img);
-    const int index = _GET_INDEX(img, cor);
-    img->buffer[index] = color;
+    _SET_PIXEL(img, cor, color);
 }
 
 void float_image_set_pixel(const struct FloatImage* img, const int cor[2], const struct xyz color) {
-    _GUARD_COR(cor, img);
-    const int index = _GET_INDEX(img, cor);
-    img->buffer[index] = color;
+    _SET_PIXEL(img, cor, color);
+}
+
+void one_chan_image_set_pixel(const struct OneChanImage* img, const int cor[2], const unsigned char color) {
+    _SET_PIXEL(img, cor, color);
 }
 
 static inline struct RoyalPixel _mix_color(const struct RoyalPixel a, const struct RoyalPixel b,
