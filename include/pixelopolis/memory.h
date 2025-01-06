@@ -1,17 +1,10 @@
 #pragma once
 #include <unistd.h>
 
-struct Storage {
-    void* ptr;
-    struct Storage* next;
-    size_t size;
-};
-
 struct MemoryChunk {
     void* chunk;
+    void* ptr;
     struct MemoryChunk* next;
-    struct Storage* begin;
-    struct Storage* end;
     size_t allocated_size;
 };
 

@@ -11,8 +11,7 @@ static struct MemoryChunk* _memory_chunk_create(size_t chunk_size) {
     size_t aligned_size = ALIGN(chunk_size);
     memory->chunk = malloc(aligned_size);
     memory->allocated_size = 0;
-    memory->begin = NULL;
-    memory->end = NULL;
+    memory->ptr = memory->chunk;
     memory->next = NULL;
     return memory;
 }
@@ -32,37 +31,20 @@ void* memory_allocate(struct Memory* memory, size_t size) {
     struct MemoryChunk* chunk = memory->end;
     size_t size_aligned = ALIGN(size);
 
-    if (!chunk->begin) {
-        assert(size < memory->chunk_size);
-
-        storage = malloc(sizeof(struct Storage));
-        storage->next = NULL;
-        storage->size = size_aligned;
-        storage->ptr = chunk->chunk;
-
-        chunk->begin = storage;
-        chunk->end = storage;
-        chunk->allocated_size = size_aligned;
-    } else {
-        size_t new_allocated_size = chunk->allocated_size + size_aligned;
-        if (new_allocated_size > memory->chunk_size) {
-            // Create new memory chunk.
-            struct MemoryChunk* new_chunk = _memory_chunk_create(memory->chunk_size);
-            memory->end->next = new_chunk;
-            memory->end = new_chunk;
-            return memory_allocate(memory, size);
-        }
-
-        storage = malloc(sizeof(struct Storage));
-        storage->next = NULL;
-        storage->size = size_aligned;
-        storage->ptr = chunk->end->ptr + chunk->end->size;
-
-        chunk->end->next = storage;
-        chunk->end = storage;
-        chunk->allocated_size = new_allocated_size;
+    assert(size < memory->chunk_size);
+    size_t new_allocated_size = chunk->allocated_size + size_aligned;
+    if (new_allocated_size > memory->chunk_size) {
+        // Create new memory chunk.
+        struct MemoryChunk* new_chunk = _memory_chunk_create(memory->chunk_size);
+        memory->end->next = new_chunk;
+        memory->end = new_chunk;
+        return memory_allocate(memory, size);
     }
-    return storage->ptr;
+
+    void* ptr = chunk->ptr;
+    chunk->allocated_size = new_allocated_size;
+    chunk->ptr += size_aligned;
+    return ptr;
 }
 
 void* memory_allocate_array(struct Memory* memory, size_t size, size_t count) {
@@ -81,12 +63,6 @@ size_t memory_size(struct Memory* memory) {
 void memory_free(struct Memory* memory) {
     struct MemoryChunk* chunk = memory->begin;
     while (chunk) {
-        struct Storage* storage = chunk->begin;
-        while (storage) {
-            struct Storage* temp = storage;
-            storage = storage->next;
-            free(temp);
-        }
         struct MemoryChunk* temp = chunk;
         free(temp->chunk);
         chunk = chunk->next;
