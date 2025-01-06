@@ -158,37 +158,40 @@ tower {
 wall.gold { texture: tex.gold; }
 wall.clay { texture: tex.clay; }
 wall.road { texture: tex.road; }
-wall.deco { texture: v-tex.deco; }
+wall.deco { texture: h-tex.deco; }
 wall.with-windows { texture: v-tex.with-windows; }
 
-v-tex.deco {
+h-tex.deco {
     background: tex.clay;
-    end: h-tex.deco;
-    start: h-tex.door-and-windows;
+    end: v-tex.deco;
+    start: v-tex.door-and-windows;
     padding: 12;
-    align: middle;
+    align: end;
 }
 
 v-tex.with-windows {
-    center: floor.windows;
+    background: tex.clay;
+    center: v-tex.windows;
     padding: 4;
     align: middle;
 }
 
-h-tex.deco {
+v-tex.deco {
     background: tex.deco;
-    height: 32;
+    center: tex.deco;
+    width: 100%;
 }
 
-h-tex.windows {
+v-tex.windows {
     center: tex.window;
     height: 12;
     padding: 12;
 }
 
-h-tex.door-and-windows {
+v-tex.door-and-windows {
     center: choice(null, null, tex.door, tex.window);
-    align: start;
+    justify: end;
+    align: justify;
     padding: 12;
 }
 
