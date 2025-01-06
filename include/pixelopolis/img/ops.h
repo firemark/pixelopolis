@@ -7,6 +7,8 @@ void flat_image_fill_transparent(struct FlatImage* img, const struct FlatImage* 
 void flat_image_copy(struct FlatImage* img, const struct FlatImage* filler, int img_x, int img_y);
 void flat_image_copy_transparent(struct FlatImage* img, const struct FlatImage* filler,
                                  const struct FlatImage* mask, int img_x, int img_y);
+void flat_image_clone(struct FlatImage* src, const struct FlatImage* dst);
+
 void float_image_fill(struct FloatImage* img, const struct FloatImage* filler);
 void float_image_fill_transparent(struct FloatImage* img, const struct FloatImage* filler,
                                   const struct FlatImage* mask);
@@ -14,3 +16,4 @@ void float_image_copy(struct FloatImage* img, const struct FloatImage* filler, i
                       int img_y);
 void float_image_copy_transparent(struct FloatImage* img, const struct FloatImage* filler,
                                   const struct FlatImage* mask, int img_x, int img_y);
+void float_image_clone(struct FloatImage* dst, const struct FloatImage* src);

@@ -20,6 +20,11 @@ void css_texture_draw_fill(struct TexObj *tex_obj, struct DrawTexInfo *info);
         .normal_map = float_image_create_with_color(TEX_OBJ_BASIC_TUPLE(tex_obj), &FORWARD), \
     }
 
+static inline void _output_clear(struct DrawTextureOutput *output) {
+    flat_image_destroy(output->texture);
+    float_image_destroy(output->normal_map);
+}
+
 static inline void _output_copy(struct DrawTextureOutput *dst, struct DrawTextureOutput *src, int *pos) {
     flat_image_copy_transparent(dst->texture, src->texture, src->texture, pos[0], pos[1]);
     float_image_copy_transparent(dst->normal_map, src->normal_map, src->texture, pos[0], pos[1]);

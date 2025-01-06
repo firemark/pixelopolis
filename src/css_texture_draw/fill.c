@@ -7,4 +7,5 @@ void css_texture_draw_fill(struct TexObj *tex_obj, struct DrawTexInfo *info) {
     struct DrawTexInfo child_info = {.output = &child_output};
     css_texture_draw_component(obj->child, &child_info);
     _output_fill(info->output, &child_output);
+    _output_clear(&child_output);
 }

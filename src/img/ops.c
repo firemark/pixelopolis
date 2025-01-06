@@ -1,6 +1,8 @@
 #include "pixelopolis/img/ops.h"
 
+#include <assert.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 #define _GET_INDEX(img, x, y) ((img->height - 1 - y) * img->width + x)
@@ -63,6 +65,13 @@
         }                                                                                       \
     })
 
+#define _CLONE(dst, src, image_type)                       \
+    assert(dst->width == src->width);                      \
+    assert(dst->height == src->height);                    \
+    size_t cells = dst->width * dst->height;               \
+    size_t size = cells * sizeof(PIXEL_TYPE_##image_type); \
+    memcpy(dst->buffer, src->buffer, size)
+
 void flat_image_fill(struct FlatImage* img, const struct FlatImage* filler) { _FILL(img, filler); }
 
 void flat_image_fill_transparent(struct FlatImage* img, const struct FlatImage* filler,
@@ -72,6 +81,10 @@ void flat_image_fill_transparent(struct FlatImage* img, const struct FlatImage* 
 
 void flat_image_copy(struct FlatImage* img, const struct FlatImage* filler, int img_x, int img_y) {
     _COPY(img, filler, img_x, img_y);
+}
+
+void flat_image_clone(struct FlatImage* dst, const struct FlatImage* src) {
+    _CLONE(dst, src, FLAT_IMAGE);
 }
 
 void flat_image_copy_transparent(struct FlatImage* img, const struct FlatImage* filler,
@@ -96,4 +109,8 @@ void float_image_copy(struct FloatImage* img, const struct FloatImage* filler, i
 void float_image_copy_transparent(struct FloatImage* img, const struct FloatImage* filler,
                                   const struct FlatImage* mask, int img_x, int img_y) {
     _COPY_TRANSPARENT(img, filler, mask, img_x, img_y);
+}
+
+void float_image_clone(struct FloatImage* dst, const struct FloatImage* src) {
+    _CLONE(dst, src, FLOAT_IMAGE);
 }

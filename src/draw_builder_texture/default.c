@@ -6,6 +6,8 @@
 #include "pixelopolis/css_func.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img/create.h"
+#include "pixelopolis/img/destroy.h"
+#include "pixelopolis/img/ops.h"
 #include "pixelopolis/img/read.h"
 #include "pixelopolis/normal_map.h"
 
@@ -13,37 +15,51 @@ static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
 static struct OneChanImage* _find_bump_map_in_rule(struct Rule* rule);
 static void _bevel(struct Rule* rule, struct OneChanImage* bump_map);
 static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map);
-static struct rgb* _find_color_in_rule(struct Rule* rule);
+static struct rgb* _find_color_in_rule(struct Helper* helper, struct Rule* rule);
 
 #define SET_GREATER(basic, value, attr) basic.attr = basic.attr >= value ? basic.attr : value
 
 struct TexObj* builder_texture_build_default(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
-    struct OneChanImage* bump_map = _find_bump_map_in_rule(rule->rule);
+    struct OneChanImage* cached_bump_map = _find_bump_map_in_rule(rule->rule);
     struct BasicTexObj basic = builder_texture_prepare_basic(helper);
 
     struct TexDefaultObj* obj = HELPER_ALLOCATE(helper, struct TexDefaultObj);
     obj->texture = _find_texture_in_rule(rule->rule);
-    obj->color = _find_color_in_rule(rule->rule);
+    obj->color = _find_color_in_rule(helper, rule->rule);
     // TODO - points texture
 
     if (obj->texture) {
         SET_GREATER(basic, obj->texture->width, width);
         SET_GREATER(basic, obj->texture->height, height);
-    } else if (bump_map) {
-        SET_GREATER(basic, bump_map->width, width);
-        SET_GREATER(basic, bump_map->height, height);
+    } else if (cached_bump_map) {
+        SET_GREATER(basic, cached_bump_map->width, width);
+        SET_GREATER(basic, cached_bump_map->height, height);
     } else {
         SET_GREATER(basic, 1, width);
         SET_GREATER(basic, 1, height);
     }
 
-    if (!bump_map) {
+    struct OneChanImage* bump_map;
+    if (cached_bump_map) {
+        bump_map = cached_bump_map;
+    } else {
         bump_map = one_chan_image_create_with_color(basic.width, basic.height, 0xFF);
+        _bump_noise(rule->rule, bump_map);
+        _bevel(rule->rule, bump_map);
     }
-    _bump_noise(rule->rule, bump_map);
-    _bevel(rule->rule, bump_map);
-    obj->normal_map = transform_bump_to_normal_map(bump_map);
+
+    struct FloatImage* normal_map = transform_bump_to_normal_map(bump_map);
+    // TODO cache if not dynamic (noise or bevel)
+    // TODO don't make normal map if is not neccesary.
+    obj->normal_map =
+        float_image_create_memory(helper->program->product_memory, basic.width, basic.height);
+    float_image_clone(obj->normal_map, normal_map);
+    float_image_destroy(normal_map);
+
+    if (!cached_bump_map) {
+        one_chan_image_destroy(bump_map);
+    }
 
     struct TexObj* tex_obj = HELPER_ALLOCATE(helper, struct TexObj);
     tex_obj->type = TEX_OBJ_DEFAULT;
@@ -53,16 +69,16 @@ struct TexObj* builder_texture_build_default(struct Helper* helper) {
     return tex_obj;
 }
 
-#define _READ_TEXTURE(texture, filename, cache, type, func_read)               \
-    IMG_TYPE_##type* texture;                                                  \
-    {                                                                          \
-        texture = hash_get(cache, filename);                                   \
-        if (!texture) {                                                        \
-            texture = func_read(filename);                                     \
-            if (texture) {                                                     \
-                hash_set(css_builder_cache_textures, filename, texture, NULL); \
-            }                                                                  \
-        }                                                                      \
+#define _READ_TEXTURE(texture, filename, cache, type, func_read) \
+    IMG_TYPE_##type* texture;                                    \
+    {                                                            \
+        texture = hash_get(cache, filename);                     \
+        if (!texture) {                                          \
+            texture = func_read(filename);                       \
+            if (texture) {                                       \
+                hash_set(cache, filename, texture, NULL);        \
+            }                                                    \
+        }                                                        \
     }
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule) {
@@ -126,6 +142,12 @@ static void _bump_noise(struct Rule* rule, struct OneChanImage* bump_map) {
     }
 }
 
-static struct rgb* _find_color_in_rule(struct Rule* rule) {
-    return css_find_color_prop(rule, "color");
+static struct rgb* _find_color_in_rule(struct Helper* helper, struct Rule* rule) {
+    struct rgb* color = css_find_color_prop(rule, "color");
+    if (!color) {
+        return NULL;
+    }
+    struct rgb* cloned_color = HELPER_ALLOCATE(helper, struct rgb);
+    *cloned_color = *color;
+    return cloned_color;
 }
