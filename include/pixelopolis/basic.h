@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #define COPY_VOX(vox) {vox[0], vox[1], vox[2]}
 #define ZERO_VOX {0, 0, 0}
@@ -10,14 +11,14 @@
 #define PIXEL_TYPE_FLAT_IMAGE struct rgb
 
 #define IMG_TYPE_ONE_CHAN_IMAGE struct OneChanImage
-#define PIXEL_TYPE_ONE_CHAN_IMAGE unsigned char
+#define PIXEL_TYPE_ONE_CHAN_IMAGE uint8_t
 
 #define IMG_TYPE_FLOAT_IMAGE struct FloatImage
 #define PIXEL_TYPE_FLOAT_IMAGE struct xyz
 
-struct rgb {unsigned char r, g, b;};
-struct RoyalPixel {unsigned char r, g, b; int zindex;};
-struct hsv {unsigned char h, s, v;};
+struct rgb {uint8_t r, g, b;};
+struct RoyalPixel {uint8_t r, g, b; float x, y, z; int zindex;};
+struct hsv {uint8_t h, s, v;};
 struct xyz {float x, y, z;};
 enum direction {DIRECTION_UP, DIRECTION_EAST, DIRECTION_SOUTH};
 

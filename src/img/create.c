@@ -30,6 +30,9 @@ struct image* create_black_image(const int width, const int height) {
                 .r = 0,
                 .g = 0,
                 .b = 0,
+                .x = 0.5f,
+                .y = 0.5f,
+                .z = 1.0f,
                 .zindex = INT_MAX,
             };
             img->buffer[y * img->width + x] = pixel;

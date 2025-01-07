@@ -184,23 +184,13 @@ static inline void _putpixel(struct PolyInfo *info, const int img_cor[2], const 
         normal[2] = tbn[6 + 2];
     }
 
-    // primitive shading
-    double shadow =
-        fmax(0.5, fmin(1.0, 1.0 - normal[0] * 0.35 - normal[1] * 0.10 - normal[2] * 0.10));
-    color.r *= shadow;
-    color.g *= shadow;
-    color.b *= shadow;
-
-    /*
-    // DEBUG NORMAL
-    color.r = 255.0 * (normal[0] * 0.5 + 0.5);
-    color.g = 255.0 * (normal[1] * 0.5 + 0.5);
-    color.b = 255.0 * (normal[2] * 0.5 + 0.5);
-    */
     struct RoyalPixel royal_color = {
         .r = color.r,
         .g = color.g,
         .b = color.b,
+        .x = normal[0],
+        .y = normal[1],
+        .z = normal[2],
         .zindex = zindex,
     };
 

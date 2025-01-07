@@ -1,5 +1,5 @@
 #pragma once
-#include "../basic.h"
+#include "pixelopolis/basic.h"
 
 void destroy_image(struct image* img);
 void flat_image_destroy(struct FlatImage* img);

@@ -1,5 +1,5 @@
 #pragma once
-#include "../basic.h"
+#include "pixelopolis/basic.h"
 
 void flat_image_fill(struct FlatImage* img, const struct FlatImage* filler);
 void flat_image_fill_transparent(struct FlatImage* img, const struct FlatImage* filler,

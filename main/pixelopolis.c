@@ -11,6 +11,7 @@
 #include "pixelopolis/draw_builder.h"
 #include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/img.h"
+#include "pixelopolis/img/royal_to_flat.h"
 
 struct Rule *find_world(struct Program *program) {
     struct RuleSelector query = default_selector;
@@ -101,13 +102,17 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Problem with creating file %s\n", out_filename);
         return -1;
     }
-    write_png_file_from_image(fp, img);
+
+    struct FlatImage* final_img = convert_royal_to_flat(img);
+    write_png_file_from_flat_image(fp, final_img);
+
     fclose(fp);
     builder_stop();
     builder_texture_stop();
     css_eval_stop();
     css_free_program(program);
     destroy_image(img);
+    flat_image_destroy(final_img);
 
     return 0;
 }
