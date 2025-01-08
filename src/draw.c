@@ -22,6 +22,11 @@
     _GUARD_INDEX(index, img); \
     return img->buffer[index]
 
+#define _GET_PIXEL_PTR(img, cor) \
+    int index = _GET_INDEX(img, cor); \
+    _GUARD_INDEX(index, img); \
+    return &img->buffer[index]
+
 #define _SET_PIXEL(img, cor, color) \
     _GUARD_COR(cor, img); \
     const int index = _GET_INDEX(img, cor); \
@@ -31,8 +36,16 @@ struct RoyalPixel get_pixel(const struct image* img, const int cor[2]) {
     _GET_PIXEL(img, cor);
 }
 
+struct RoyalPixel* get_pixel_ptr(const struct image* img, const int cor[2]) {
+    _GET_PIXEL_PTR(img, cor);
+}
+
 struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]) {
     _GET_PIXEL(img, cor);
+}
+
+struct rgb* flat_image_get_pixel_ptr(const struct FlatImage* img, const int cor[2]) {
+    _GET_PIXEL_PTR(img, cor);
 }
 
 unsigned char one_chan_image_get_pixel(const struct OneChanImage* img, const int cor[2]) {

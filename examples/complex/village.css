@@ -14,7 +14,7 @@ village-and-road {
 
 village {
     display: bsp-tree;
-    body: choice(district, district, market, forest);
+    body: choice(district, district, market);
     justify: center;
     padding: 50;
     width: 100%;

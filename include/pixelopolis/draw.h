@@ -2,7 +2,9 @@
 #include "basic.h"
 
 struct RoyalPixel get_pixel(const struct image* img, const int cor[2]);
+struct RoyalPixel* get_pixel_ptr(const struct image* img, const int cor[2]);
 struct rgb flat_image_get_pixel(const struct FlatImage* img, const int cor[2]);
+struct rgb* flat_image_get_pixel_ptr(const struct FlatImage* img, const int cor[2]);
 unsigned char one_chan_image_get_pixel(const struct OneChanImage* img, const int cor[2]);
 struct xyz float_image_get_pixel(const struct FloatImage* img, const int cor[2]);
 struct rgb flat_image_get_aa_pixel(const struct FlatImage* img, const double cor[2]);

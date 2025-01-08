@@ -195,9 +195,9 @@ v-tex.door-and-windows {
     padding: 12;
 }
 
-tex.clay { color: #f1c48a; width: 128; height: 128; bump-noise: 50%; bump-noise-level: 128; }
+tex.clay { color: #f1c48a; width: 128; height: 128; bump-noise: 50%; bump-noise-level: 32; }
 tex.deco { texture: "textures/wall-objs/deco.png"; }
-tex.road { color: #f2c293; width: 128; height: 128; bump-noise: 50%; bump-noise-level: 128; }
+tex.road { color: #f2c293; width: 128; height: 128; bump-noise: 50%; bump-noise-level: 32; }
 tex.gold { texture: "textures/wall/gold.png"; }
 tex.door { texture: "textures/wall-objs/door.png"; }
 tex.window { texture: "textures/wall-objs/window.png"; }
