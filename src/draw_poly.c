@@ -66,9 +66,9 @@ static inline void _compute_normal(double normal[3], const int voxes[9]) {
 }
 
 static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[6]) {
-    double tangen[3];
-    double bitangen[3];
-    double normal[3];
+    double* tangen = &tbn[0];
+    double* bitangen = &tbn[3];
+    double* normal = &tbn[6];
 
     int vox_a[3] = {voxes[3 + 0] - voxes[0 + 0], voxes[3 + 1] - voxes[0 + 1],
                     voxes[3 + 2] - voxes[0 + 2]};
@@ -79,9 +79,9 @@ static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[
 
 #define PARTIAL_CROSS(a, b, ax1, ax2) (a[ax1] * b[ax2] - a[ax2] * b[ax1])
 #define PARTIAL_TANGEN(ax1, ax2) (vox_a[ax1] * uv_b[ax2] - vox_b[ax1] * uv_a[ax2])
-    normal[0] = PARTIAL_CROSS(vox_a, vox_b, 1, 2);
-    normal[1] = PARTIAL_CROSS(vox_a, vox_b, 0, 2);
-    normal[2] = PARTIAL_CROSS(vox_a, vox_b, 0, 1);
+    normal[0] = fabs(PARTIAL_CROSS(vox_a, vox_b, 1, 2));
+    normal[1] = fabs(PARTIAL_CROSS(vox_a, vox_b, 0, 2));
+    normal[2] = fabs(PARTIAL_CROSS(vox_a, vox_b, 0, 1));
 
     double f = 1.0 / PARTIAL_CROSS(uv_a, uv_b, 0, 1);
     tangen[0] = f * PARTIAL_TANGEN(0, 1);
@@ -104,15 +104,15 @@ static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[
         }
     }
 
-    tbn[0 + 0] = tangen[0];
-    tbn[0 + 1] = tangen[1];
-    tbn[0 + 2] = tangen[2];
-    tbn[3 + 0] = bitangen[0];
-    tbn[3 + 1] = bitangen[1];
-    tbn[3 + 2] = bitangen[2];
-    tbn[6 + 0] = normal[0];
-    tbn[6 + 1] = normal[1];
-    tbn[6 + 2] = normal[2];
+    // tbn[0 + 0] = tangen[0];
+    // tbn[0 + 1] = tangen[1];
+    // tbn[0 + 2] = tangen[2];
+    // tbn[3 + 0] = bitangen[0];
+    // tbn[3 + 1] = bitangen[1];
+    // tbn[3 + 2] = bitangen[2];
+    // tbn[6 + 0] = normal[0];
+    // tbn[6 + 1] = normal[1];
+    // tbn[6 + 2] = normal[2];
 }
 
 static inline void _cpy_h_poly(struct h_poly *a, const struct h_poly *b) {

@@ -53,7 +53,6 @@ struct FlatImage* convert_royal_to_flat(const struct image* royal) {
         // color->g = pixel->zindex;
         // color->b = pixel->zindex;
     }
-    // return img;
 
     for (size_t y = 1; y < royal->height - 1; y++) {
         for (size_t x = 1; x < royal->width - 1; x++) {
@@ -94,10 +93,10 @@ struct FlatImage* convert_royal_to_flat(const struct image* royal) {
 
             struct rgb* color = flat_image_get_pixel_ptr(img, cor);
             if (diff > 15) {
-                color_sub(color, 48);
+                color_sub(color, 64);
             }
             if (normal_diff_y > 1.0f) {
-                color_sub(color, 24);
+                color_sub(color, 32);
             }
             if (normal_diff_x > 1.0f) {
                 color_sub(color, 32);
