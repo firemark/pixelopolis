@@ -319,7 +319,7 @@ void draw_poly(struct PolyInfo *info, const int voxes[9], const int uv[6]) {
         _cpy_h_poly(helper.left, b);
         _fill_space(&helper, &diff_cb, &diff_ca, c->y);
     }
-};
+}
 
 void draw_sprite(struct image *img, struct FlatImage *img_to_draw, const int vox[3],
                  const double normal[3]) {

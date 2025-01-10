@@ -5,7 +5,7 @@
 #include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/create.h"
 
-static inline int abs(int x) { return x > 0 ? x : -x; }
+static inline int _abs(int x) { return x > 0 ? x : -x; }
 
 static inline float normal_dist(float a, float b, float c) { return a * a + b * b + c * c; }
 
@@ -67,10 +67,10 @@ struct FlatImage* convert_royal_to_flat(const struct image* royal) {
             struct RoyalPixel* next_x_pixel = get_pixel_ptr(royal, next_x_cor);
             struct RoyalPixel* pixel = get_pixel_ptr(royal, cor);
             int diff = 0;
-            diff += abs(pixel->zindex - prev_x_pixel->zindex);
-            diff += abs(pixel->zindex - next_x_pixel->zindex);
-            diff += abs(pixel->zindex - prev_y_pixel->zindex);
-            diff += abs(pixel->zindex - next_y_pixel->zindex);
+            diff += _abs(pixel->zindex - prev_x_pixel->zindex);
+            diff += _abs(pixel->zindex - next_x_pixel->zindex);
+            diff += _abs(pixel->zindex - prev_y_pixel->zindex);
+            diff += _abs(pixel->zindex - next_y_pixel->zindex);
 
             float normal_diff_x = 0.0f;
             float normal_diff_y = 0.0f;

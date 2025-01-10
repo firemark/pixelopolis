@@ -110,7 +110,7 @@ static inline void _justify_v(
     const int sub_x = _x_rotate(sub, 0, parent_basic);
     const int sub_y = _y_rotate(sub, 0, parent_basic);
     _do_justify(vox, parent_basic->v_justify, sub_x, sub_y);
-};
+}
 
 static inline void _justify_d(
         int vox[3],
@@ -121,7 +121,7 @@ static inline void _justify_d(
     const int sub_x = _x_rotate(0, sub, parent_basic);
     const int sub_y = _y_rotate(0, sub, parent_basic);
     _do_justify(vox, parent_basic->d_justify, sub_x, sub_y);
-};
+}
 
 static inline void _justify_vd(
         int vox[3],
@@ -129,5 +129,5 @@ static inline void _justify_vd(
         const struct BasicObj* parent_basic) {
     _justify_v(vox, basic, parent_basic);
     _justify_d(vox, basic, parent_basic);
-};
+}
 

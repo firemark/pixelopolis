@@ -1,9 +1,10 @@
 #pragma once
+#include <stdint.h>
 #include <unistd.h>
 
 struct MemoryChunk {
-    void* chunk;
-    void* ptr;
+    uint8_t* chunk;
+    uint8_t* ptr;
     struct MemoryChunk* next;
     size_t allocated_size;
 };

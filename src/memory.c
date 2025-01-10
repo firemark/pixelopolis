@@ -40,7 +40,7 @@ void* memory_allocate(struct Memory* memory, size_t size) {
         return memory_allocate(memory, size);
     }
 
-    void* ptr = chunk->ptr;
+    uint8_t* ptr = chunk->ptr;
     chunk->allocated_size = new_allocated_size;
     chunk->ptr += size_aligned;
     return ptr;

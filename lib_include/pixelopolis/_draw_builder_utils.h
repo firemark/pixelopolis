@@ -1,5 +1,6 @@
 #pragma once
 #include "pixelopolis/css.h"
+#include "pixelopolis/draw_builder_common.h"
 
 enum JustifyIndex { V_JUSTIFY = 0, D_JUSTIFY = 1 };
 

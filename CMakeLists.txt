@@ -37,7 +37,7 @@ function(add_lib)
         ${FLEX_LIBRARIES}
         m
     )
-    target_compile_options(PixelopolisLib PUBLIC -Werror -Wall -Wextra)
+    target_compile_options(PixelopolisLib PUBLIC -Werror -Wall -Wextra -Wshadow -pedantic)
     # target_compile_options(PixelopolisLib PUBLIC -Werror -fno-omit-frame-pointer)
     install(
         TARGETS PixelopolisLib
