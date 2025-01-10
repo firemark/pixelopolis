@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 #include "pixelopolis/img.h"
-#include "pixelopolis/draw_builder.h"
-#include "pixelopolis/css_draw.h"
-#include "pixelopolis/css_texture_draw.h"
-#include "pixelopolis/draw_poly.h"
+#include "pixelopolis/draw_builder_world.h"
+#include "pixelopolis/world_draw.h"
+#include "pixelopolis/texture_draw.h"
+#include "pixelopolis/img/draw_poly.h"
 
 struct DrawInnerInfo {
     struct image *img;

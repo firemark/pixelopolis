@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pixelopolis/css_eval.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/eval.h"
+#include "pixelopolis/css/func.h"
 
 static struct Program *program;
 

@@ -5,7 +5,7 @@
 #include <assert.h>
 
 #include "pixelopolis/css.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 #include "pixelopolis/basic.h"
 #include "pixelopolis/memory.h"
 #define YYDEBUG 1

@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 
 struct TexObj *builder_texture_build_tex_obj(struct SelectorHelper *helper) {
     struct RuleSelector *query = helper->selector;

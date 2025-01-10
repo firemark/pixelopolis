@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-#include "pixelopolis/draw.h"
+#include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/create.h"
 
 static inline int abs(int x) { return x > 0 ? x : -x; }

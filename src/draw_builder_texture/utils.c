@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "pixelopolis/_draw_builder_texture.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 #include "pixelopolis/draw_builder_common.h"
 
 struct RuleWithParent* builder_texture_make_rule_from_helper(struct SelectorHelper* helper) {

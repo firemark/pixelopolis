@@ -3,14 +3,14 @@
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/basic.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img/create.h"
 #include "pixelopolis/img/destroy.h"
 #include "pixelopolis/img/ops.h"
 #include "pixelopolis/img/read.h"
-#include "pixelopolis/draw.h"
-#include "pixelopolis/normal_map.h"
+#include "pixelopolis/img/draw.h"
+#include "pixelopolis/img/normal_map.h"
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
 static struct OneChanImage* _find_bump_map_in_rule(struct Rule* rule);

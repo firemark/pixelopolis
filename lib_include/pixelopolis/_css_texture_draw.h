@@ -1,7 +1,7 @@
 #pragma once
-#include "pixelopolis/css_texture_draw.h"
+#include "pixelopolis/texture_draw.h"
 #include "pixelopolis/draw_builder_texture.h"
-#include "pixelopolis/draw_poly.h"
+#include "pixelopolis/img/draw_poly.h"
 #include "pixelopolis/img.h"
 
 // Basic

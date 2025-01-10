@@ -3,7 +3,7 @@
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/_draw_builder_texture_part.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 
 #define COSHIFT(pair, direction) \
     pair->shift[builder_texture_get_pair_coaxis_by_direction(direction)]

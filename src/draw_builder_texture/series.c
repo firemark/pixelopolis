@@ -3,8 +3,8 @@
 
 #include "pixelopolis/_draw_builder_texture.h"
 #include "pixelopolis/_draw_builder_texture_part.h"
-#include "pixelopolis/css_eval.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/eval.h"
+#include "pixelopolis/css/func.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/draw_builder_texture.h"
 

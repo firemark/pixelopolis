@@ -3,12 +3,12 @@
 #include <string.h>
 
 #include "pixelopolis/basic.h"
-#include "pixelopolis/css_debug.h"
-#include "pixelopolis/css_draw.h"
-#include "pixelopolis/css_eval.h"
-#include "pixelopolis/css_func.h"
-#include "pixelopolis/draw.h"
-#include "pixelopolis/draw_builder.h"
+#include "pixelopolis/css/debug.h"
+#include "pixelopolis/world_draw.h"
+#include "pixelopolis/css/eval.h"
+#include "pixelopolis/css/func.h"
+#include "pixelopolis/img/draw.h"
+#include "pixelopolis/draw_builder_world.h"
 #include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/img.h"
 #include "pixelopolis/img/royal_to_flat.h"

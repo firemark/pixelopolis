@@ -1,7 +1,7 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_utils.h"
-#include "pixelopolis/css_func.h"
+#include "pixelopolis/css/func.h"
 #include "pixelopolis/draw_builder_common.h"
 
 int builder_get_int(struct RuleWithParent* rule, char* key, const int default_value) {
