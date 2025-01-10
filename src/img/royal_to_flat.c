@@ -95,10 +95,7 @@ struct FlatImage* convert_royal_to_flat(const struct image* royal) {
             if (diff > 15) {
                 color_sub(color, 64);
             }
-            if (normal_diff_y > 1.0f) {
-                color_sub(color, 32);
-            }
-            if (normal_diff_x > 1.0f) {
+            if (normal_diff_y + normal_diff_x > 1.0f) {
                 color_sub(color, 32);
             }
         }
