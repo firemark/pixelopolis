@@ -27,7 +27,6 @@ struct Memory* memory_create(size_t chunk_size) {
 }
 
 void* memory_allocate(struct Memory* memory, size_t size) {
-    struct Storage* storage;
     struct MemoryChunk* chunk = memory->end;
     size_t size_aligned = ALIGN(size);
 

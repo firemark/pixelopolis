@@ -1,4 +1,5 @@
 %{
+#pragma GCC diagnostic ignored "-Wunused-function"
 #include <string.h>
 
 #include "css.y.h"

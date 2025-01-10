@@ -23,7 +23,7 @@ struct TexObj* builder_texture_build_tile(struct Helper* helper) {
         struct SelectorHelper background_helper = MAKE_SELECTOR_HELPER(helper, "background");
         obj->background = builder_texture_build_tex_obj(&background_helper);
     }
-    int grid_size;
+    int grid_size = 0;
     struct ShiftTexPair** tiles = _make_tiles(helper, &grid_size);
     struct ShiftTexPair** additional_tiles = _arange_tiles(helper, tiles, &basic, grid_size);
 
@@ -100,16 +100,16 @@ static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTe
     int x_shift = builder_get_int(helper->rule, "shift", 0);
     // TODO: support y_shift
 
-    size_t size = grid_size * grid_size;
+    int size = grid_size * grid_size;
 
     // Add array with additional tiles
     struct ShiftTexPair** additional_tiles = malloc(sizeof(struct ShiftTexPair*) * size);
-    for (size_t index = 0; index < size; index++) {
+    for (int index = 0; index < size; index++) {
         additional_tiles[index] = NULL;
     }
 
     // First, find max width and height.
-    for (size_t index = 0; index < grid_size; index++) {
+    for (int index = 0; index < grid_size; index++) {
         struct ShiftTexPair* tile = tiles[index];
         if (!tile) continue;
         width = width >= tile->obj->basic.width ? width : tile->obj->basic.width;
@@ -125,9 +125,8 @@ static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTe
     basic->height = height * grid_size;
 
     // Shift tiles
-    int shift[2] = {0, 0};
-    for (size_t y_index = 0; y_index < grid_size; y_index++) {
-        for (size_t x_index = 0; x_index < grid_size; x_index++) {
+    for (int y_index = 0; y_index < grid_size; y_index++) {
+        for (int x_index = 0; x_index < grid_size; x_index++) {
             size_t index = y_index * grid_size + x_index;
             struct ShiftTexPair* tile = tiles[index];
             if (!tile) continue;
@@ -152,7 +151,7 @@ static struct ShiftTexPair** _drop_nulls(struct ShiftTexPair** tiles, int grid_s
     int size = grid_size * grid_size;
     struct ShiftTexPair** new_tiles = malloc(sizeof(struct ShiftTexPair*) * (size + 1));
 
-    for (size_t index = 0; index < size; index++) {
+    for (int index = 0; index < size; index++) {
         struct ShiftTexPair* tile = tiles[index];
         if (!tile) continue;
         new_tiles[new_index++] = tile;

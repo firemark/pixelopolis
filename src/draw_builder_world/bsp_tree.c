@@ -177,7 +177,7 @@ void _free_tree(struct BspTree* tree) {
     free(tree);
 }
 
-static inline const int _len_tree(struct BspTree* tree) {
+static inline int _len_tree(struct BspTree* tree) {
     if (!tree) return 0;
     if (!tree->a && !tree->b) return 1;
     return _len_tree(tree->a) + _len_tree(tree->b);

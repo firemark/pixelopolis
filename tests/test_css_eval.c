@@ -30,6 +30,7 @@ static void _make_program(char *buffer) {
 static struct Rule *_find_first_rule() {
     struct Rule *rule;
     css_iter (rule, program->rules) { return rule; }
+    return NULL;
 }
 
 START_TEST(test_css_eval_number) {

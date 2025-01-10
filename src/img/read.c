@@ -104,12 +104,13 @@ static int _read_png_init(const char* file_name, FILE** fp, png_structp* png_ptr
         fprintf(stderr, "Problem with loading %s\n", file_name);
         return 1;
     }
+
+    return 0;
 }
 
 static void _read_png_end(FILE* fp, png_structp png_ptr, png_infop info_ptr) {
     png_read_end(png_ptr, info_ptr);
 
-finalize:
     if (fp) fclose(fp);
     if (png_ptr) {
         if (info_ptr)

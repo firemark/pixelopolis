@@ -50,13 +50,13 @@ void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info)
 void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info);
 
 // utils
-static inline const int _x_rotate(
+static inline int _x_rotate(
         const int x, const int y,
         const struct BasicObj* basic) {
     return x * basic->cos_th - y * basic->sin_th;
 }
 
-static inline const int _y_rotate(
+static inline int _y_rotate(
         const int x, const int y,
         const struct BasicObj* basic) {
     return x * basic->sin_th + y * basic->cos_th;

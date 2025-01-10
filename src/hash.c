@@ -38,17 +38,17 @@ struct HashMap* hash_make_with_memory(struct Memory* memory) {
     return map;
 }
 
-struct HashMap* hash_make(void) { hash_make_with_memory(NULL); }
+struct HashMap* hash_make(void) { return hash_make_with_memory(NULL); }
 
-static void* _remove(struct HashMap* map, int index) {
-    struct HashStrItem* item = map->items[index];
-    void* value = item->value;
-    map->items[index] = NULL;
-    if (!map->memory) {
-        free(item);
-    }
-    return value;
-}
+// static void* _remove(struct HashMap* map, int index) {
+//     struct HashStrItem* item = map->items[index];
+//     void* value = item->value;
+//     map->items[index] = NULL;
+//     if (!map->memory) {
+//         free(item);
+//     }
+//     return value;
+// }
 
 static int _insert(struct HashMap* map, char* key, void* value, int index) {
     struct HashStrItem* item;

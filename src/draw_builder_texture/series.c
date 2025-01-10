@@ -70,7 +70,6 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
         index += 1;
     }
 
-final:
     pairs[size] = NULL;
     builder_texture_align(helper, pairs, basic, (struct IntPair){0, length},
                           (struct IntPair){0, index}, direction);

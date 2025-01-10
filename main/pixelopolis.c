@@ -43,7 +43,7 @@ struct image *make_img(struct Rule *world) {
 //     return filter;
 // }
 
-void draw(struct DrawObj *draw_obj, struct Rule *world, struct image *img) {
+static void draw(struct DrawObj *draw_obj, struct image *img) {
     int vox[3] = {0, 0, 0};
     struct DrawInfo draw_info = {
         .img = img,
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
     print_size("product size", program->product_memory);
 
     struct image *img = make_img(world_rule);
-    draw(draw_obj, world_rule, img);
+    draw(draw_obj, img);
 
     FILE *fp = strcmp(out_filename, "-") ? fopen(out_filename, "wb") : stdout;
     if (!fp) {

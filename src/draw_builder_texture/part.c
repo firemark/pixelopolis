@@ -113,30 +113,3 @@ final:
     builder_texture_justify(helper, pairs, basic, direction);
     return pairs;
 }
-
-#define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr
-static void _resize_coaxis(struct BasicTexObj* a, struct BasicTexObj* b,
-                           enum TexPartDirection direction) {
-    switch (direction) {
-        case TEX_PART_VERTICAL:
-            SET_GREATER(height);
-            break;
-        case TEX_PART_HORIZONTAL:
-            SET_GREATER(width);
-            break;
-    }
-}
-#undef SET_GREATER
-
-static void _fill_shift(struct ShiftTexPair* pair, int shift, enum TexPartDirection direction) {
-    switch (direction) {
-        case TEX_PART_VERTICAL:
-            pair->shift[0] = shift;
-            pair->shift[1] = 0;
-            break;
-        case TEX_PART_HORIZONTAL:
-            pair->shift[0] = 0;
-            pair->shift[1] = shift;
-            break;
-    }
-}

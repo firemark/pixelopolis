@@ -4,7 +4,7 @@
 #include "pixelopolis/css/eval.h"
 #include "pixelopolis/css/func.h"
 
-static inline const size_t _get_size(struct Obj** prop_objs) {
+static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
     css_iter (obj, prop_objs)

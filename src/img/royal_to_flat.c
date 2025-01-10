@@ -54,8 +54,8 @@ struct FlatImage* convert_royal_to_flat(const struct image* royal) {
         // color->b = pixel->zindex;
     }
 
-    for (size_t y = 1; y < royal->height - 1; y++) {
-        for (size_t x = 1; x < royal->width - 1; x++) {
+    for (int y = 1; y < royal->height - 1; y++) {
+        for (int x = 1; x < royal->width - 1; x++) {
             int prev_y_cor[2] = {x, y - 1};
             int prev_x_cor[2] = {x - 1, y};
             int next_y_cor[2] = {x, y + 1};

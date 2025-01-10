@@ -77,7 +77,7 @@ static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[
     int uv_a[2] = {uv[2 + 0] - uv[0 + 0], uv[2 + 1] - uv[0 + 1]};
     int uv_b[2] = {uv[4 + 0] - uv[0 + 0], uv[4 + 1] - uv[0 + 1]};
 
-#define PARTIAL_CROSS(a, b, ax1, ax2) (a[ax1] * b[ax2] - a[ax2] * b[ax1])
+#define PARTIAL_CROSS(a, b, ax1, ax2) (float)(a[ax1] * b[ax2] - a[ax2] * b[ax1])
 #define PARTIAL_TANGEN(ax1, ax2) (vox_a[ax1] * uv_b[ax2] - vox_b[ax1] * uv_a[ax2])
     normal[0] = fabs(PARTIAL_CROSS(vox_a, vox_b, 1, 2));
     normal[1] = fabs(PARTIAL_CROSS(vox_a, vox_b, 0, 2));

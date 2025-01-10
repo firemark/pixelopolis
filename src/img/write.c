@@ -65,7 +65,8 @@ static int _png_write_init(FILE* fp, png_structp* png_ptr_ptr, png_infop* info_p
 }
 
 static int _png_write_end(png_structp png_ptr, png_infop info_ptr) {
-    int code = 0;
+    static int code;
+    code = 0;
     if (setjmp(png_jmpbuf(png_ptr))) {
         fprintf(stderr, "Problem with end writing\n");
         code = 1;

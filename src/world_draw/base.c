@@ -5,6 +5,8 @@
 #include "pixelopolis/img/draw_poly.h"
 
 void css_base_draw_poly_random(struct image* img, const int voxes[9], const struct WallObj* wall) {
+    (void)(img);
+    (void)(voxes);
     const int density = wall->points_density;
     struct TexObj* tex = wall->points_tex;
     if (!tex || density <= 0) return;
