@@ -33,7 +33,7 @@ struct DrawObj {
     struct BasicObj basic;
     enum DrawObjType type;
     void* obj;
-    struct DrawObj *parent;
+    struct DrawObj* parent;
 };
 
 struct BasicTexObj {
@@ -44,5 +44,5 @@ struct TexObj {
     struct BasicTexObj basic;
     enum TexObjType type;
     void* obj;
-    struct TexObj *parent;
+    struct TexObj* parent;
 };

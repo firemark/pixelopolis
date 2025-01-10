@@ -38,7 +38,9 @@ struct HashMap* hash_make_with_memory(struct Memory* memory) {
     return map;
 }
 
-struct HashMap* hash_make(void) { return hash_make_with_memory(NULL); }
+struct HashMap* hash_make(void) {
+    return hash_make_with_memory(NULL);
+}
 
 // static void* _remove(struct HashMap* map, int index) {
 //     struct HashStrItem* item = map->items[index];
@@ -114,7 +116,9 @@ static int _resize_if_need(struct HashMap* map) {
     return -1;
 }
 
-static inline int if_key_eq(struct HashStrItem* item, char* key) { return strcmp(item->key, key) == 0; }
+static inline int if_key_eq(struct HashStrItem* item, char* key) {
+    return strcmp(item->key, key) == 0;
+}
 
 int hash_set(struct HashMap* map, char* key, void* value, void** removed_value) {
     unsigned long hash = djb2(key);
@@ -124,14 +128,14 @@ start:
 
     for (;;) {
         int index = _probing(hash, shift) % map->max_size;
-        struct HashStrItem*  item = map->items[index];
+        struct HashStrItem* item = map->items[index];
         if (!item) {
             if (_resize_if_need(map)) {
                 goto start;
             }
             map->size++;
             if (removed_value) *removed_value = NULL;
-            char* new_key; 
+            char* new_key;
             {
                 // Make copy of key.
                 size_t key_count = strlen(key) + 1;
@@ -178,7 +182,7 @@ void hash_destroy(struct HashMap* map) {
     }
     int i;
     for (i = 0; i < map->max_size; i++) {
-        struct HashStrItem *item = map->items[i];
+        struct HashStrItem* item = map->items[i];
         if (item) {
             free(item->key);
             free(item);

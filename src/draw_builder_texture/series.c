@@ -37,7 +37,8 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
     int length = builder_texture_get_metric_by_direction(&helper->parent->basic, direction);
     int index = -1;
 
-    struct ShiftTexPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, BUILDER_TEXTURE_MAX_ELEMENTS);
+    struct ShiftTexPair** pairs =
+        HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, BUILDER_TEXTURE_MAX_ELEMENTS);
 
     struct RuleWithParent* rule = helper->rule;
     struct Obj** prop_objs = css_find_objs(rule->rule, "body");

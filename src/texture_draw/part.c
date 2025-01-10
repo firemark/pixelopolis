@@ -18,5 +18,4 @@ void css_texture_draw_part(struct TexObj *tex_obj, struct DrawTexInfo *info) {
         _output_copy(info->output, &pair_output, pair->shift);
         _output_clear(&pair_output);
     }
-
 }

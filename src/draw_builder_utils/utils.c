@@ -51,7 +51,8 @@ static inline enum Justify _builder_get_single_justify(const char* name) {
     return JUSTIFY_START;
 }
 
-enum Justify builder_get_justify(struct RuleWithParent* rule_, char* key, const enum JustifyIndex index) {
+enum Justify builder_get_justify(struct RuleWithParent* rule_, char* key,
+                                 const enum JustifyIndex index) {
     struct Rule* rule = rule_->rule;
     struct Obj** prop_objs = css_find_objs(rule, key);
     if (!prop_objs) {

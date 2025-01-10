@@ -33,7 +33,7 @@ struct DrawObj* builder_build_cylinder(struct Helper* helper) {
     struct RuleWithParent* rule = helper->rule;
     if (!rule) return NULL;
     struct CylinderObj* obj = HELPER_ALLOCATE(helper, struct CylinderObj);
-    
+
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
 
     obj->has_many_walls = builder_get_int(rule, "has-many-walls", 0);

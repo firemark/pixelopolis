@@ -1,8 +1,8 @@
 #pragma once
-#include "pixelopolis/texture_draw.h"
 #include "pixelopolis/draw_builder_texture.h"
-#include "pixelopolis/img/draw_poly.h"
 #include "pixelopolis/img.h"
+#include "pixelopolis/img/draw_poly.h"
+#include "pixelopolis/texture_draw.h"
 
 // Basic
 void css_texture_draw_default(struct TexObj *tex_obj, struct DrawTexInfo *info);
@@ -25,7 +25,8 @@ static inline void _output_clear(struct DrawTextureOutput *output) {
     float_image_destroy(output->normal_map);
 }
 
-static inline void _output_copy(struct DrawTextureOutput *dst, struct DrawTextureOutput *src, int *pos) {
+static inline void _output_copy(struct DrawTextureOutput *dst, struct DrawTextureOutput *src,
+                                int *pos) {
     flat_image_copy_transparent(dst->texture, src->texture, src->texture, pos[0], pos[1]);
     float_image_copy_transparent(dst->normal_map, src->normal_map, src->texture, pos[0], pos[1]);
 }

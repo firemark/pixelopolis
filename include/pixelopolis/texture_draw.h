@@ -11,4 +11,4 @@ struct DrawTexInfo {
     struct DrawTextureOutput* output;
 };
 
-void css_texture_draw_component(struct TexObj *tex_obj, struct DrawTexInfo* info);
+void css_texture_draw_component(struct TexObj* tex_obj, struct DrawTexInfo* info);

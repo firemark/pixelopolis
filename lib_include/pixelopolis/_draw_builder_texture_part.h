@@ -60,7 +60,7 @@ static inline void builder_texture_resize_axis_by_direction(struct BasicTexObj* 
 }
 
 static inline void builder_texture_resize_axis(struct BasicTexObj* a, struct BasicTexObj* b,
-                           enum TexPartDirection direction) {
+                                               enum TexPartDirection direction) {
 #define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr
     switch (direction) {
         case TEX_PART_VERTICAL:
@@ -74,7 +74,7 @@ static inline void builder_texture_resize_axis(struct BasicTexObj* a, struct Bas
 }
 
 static inline void builder_texture_resize_coaxis(struct BasicTexObj* a, struct BasicTexObj* b,
-                           enum TexPartDirection direction) {
+                                                 enum TexPartDirection direction) {
 #define SET_GREATER(attr) a->attr = a->attr >= b->attr ? a->attr : b->attr
     switch (direction) {
         case TEX_PART_VERTICAL:
@@ -87,7 +87,8 @@ static inline void builder_texture_resize_coaxis(struct BasicTexObj* a, struct B
 #undef SET_GREATER
 }
 
-static inline void builder_texture_fill_shift(struct ShiftTexPair* pair, int shift, enum TexPartDirection direction) {
+static inline void builder_texture_fill_shift(struct ShiftTexPair* pair, int shift,
+                                              enum TexPartDirection direction) {
     switch (direction) {
         case TEX_PART_VERTICAL:
             pair->shift[0] = shift;

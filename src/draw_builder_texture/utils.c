@@ -33,8 +33,7 @@ static inline int _get_basic_height(struct Helper* helper) {
     return 0;
 }
 
-struct BasicTexObj builder_texture_prepare_basic(struct Helper* helper)
-{
+struct BasicTexObj builder_texture_prepare_basic(struct Helper* helper) {
     struct BasicTexObj basic = {
         .width = _get_basic_width(helper),
         .height = _get_basic_height(helper),

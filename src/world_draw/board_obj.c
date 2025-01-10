@@ -20,8 +20,7 @@ void css_draw_board(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info) 
         vox[1] += _y_rotate(child->x, child->y, basic);
 
         struct DrawInfo draw_info = {
-            .img = inner_info->img,
-            .vox = vox,
+            .img = inner_info->img, .vox = vox,
             // .filter = inner_info->filter,
         };
 

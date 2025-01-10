@@ -7,8 +7,7 @@
 static inline size_t _get_size(struct Obj** prop_objs) {
     size_t size = 0;
     struct Obj* obj = NULL;
-    css_iter (obj, prop_objs)
-        size++;  // counter
+    css_iter (obj, prop_objs) size++;  // counter
     return size;
 }
 
@@ -23,7 +22,7 @@ struct ShiftDrawPair** _build_many_objs(struct SeriesObj* series, struct Helper*
     const size_t size = _get_size(prop_objs);
     struct BasicObj basic_temp = builder_build_empty_basic();
     struct ShiftDrawPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftDrawPair*, (size + 1));
-    
+
     int shift = 0;
 
     size_t index = 0;

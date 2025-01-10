@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/destroy.h"
+#include "pixelopolis/img/draw.h"
 
 #define SIN_PROJECTION 0.7071067811865476
 #define COS_PROJECTION 0.7071067811865476
@@ -66,9 +66,9 @@ static inline void _compute_normal(double normal[3], const int voxes[9]) {
 }
 
 static inline void _compute_tbn(double tbn[9], const int voxes[9], const int uv[6]) {
-    double* tangen = &tbn[0];
-    double* bitangen = &tbn[3];
-    double* normal = &tbn[6];
+    double *tangen = &tbn[0];
+    double *bitangen = &tbn[3];
+    double *normal = &tbn[6];
 
     int vox_a[3] = {voxes[3 + 0] - voxes[0 + 0], voxes[3 + 1] - voxes[0 + 1],
                     voxes[3 + 2] - voxes[0 + 2]};

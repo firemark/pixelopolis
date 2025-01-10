@@ -1,10 +1,8 @@
 #pragma once
-#include "pixelopolis/css.h"
 #include "pixelopolis/basic.h"
+#include "pixelopolis/css.h"
 
-struct Rule* css_find_rule_by_query(
-        struct Program* program,
-        struct RuleSelector* query);
+struct Rule* css_find_rule_by_query(struct Program* program, struct RuleSelector* query);
 
 struct Obj** css_find_objs(struct Rule* rule, char* name);
 struct Obj* css_find_1st_obj(struct Rule* rule, char* name);
@@ -18,6 +16,8 @@ struct RuleSelector* css_find_selector_prop(struct Rule* rule, char* name);
 struct RuleSelector* css_cpy_selector(struct Memory* memory, struct RuleSelector* old);
 struct RuleSelector* css_find_last_parent_selector(struct RuleSelector* selector);
 
-struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* selector, struct RuleWithParent* parent);
+struct RuleWithParent* css_make_rule_from_selector(struct Program* program,
+                                                   struct RuleSelector* selector,
+                                                   struct RuleWithParent* parent);
 
 void css_free_program(struct Program* program);

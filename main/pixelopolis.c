@@ -4,14 +4,14 @@
 
 #include "pixelopolis/basic.h"
 #include "pixelopolis/css/debug.h"
-#include "pixelopolis/world_draw.h"
 #include "pixelopolis/css/eval.h"
 #include "pixelopolis/css/func.h"
-#include "pixelopolis/img/draw.h"
-#include "pixelopolis/draw_builder_world.h"
 #include "pixelopolis/draw_builder_texture.h"
+#include "pixelopolis/draw_builder_world.h"
 #include "pixelopolis/img.h"
+#include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/royal_to_flat.h"
+#include "pixelopolis/world_draw.h"
 
 struct Rule *find_world(struct Program *program) {
     struct RuleSelector query = default_selector;
@@ -46,14 +46,13 @@ struct image *make_img(struct Rule *world) {
 static void draw(struct DrawObj *draw_obj, struct image *img) {
     int vox[3] = {0, 0, 0};
     struct DrawInfo draw_info = {
-        .img = img,
-        .vox = vox,
+        .img = img, .vox = vox,
         // .filter = get_filter_algorithm(world),
     };
     draw_component(draw_obj, &draw_info, NULL);
 }
 
-static void print_size(char* prefix, struct Memory* memory) {
+static void print_size(char *prefix, struct Memory *memory) {
     size_t size = memory_size(memory);
     if (size < 2 * 1024) {
         fprintf(stderr, "%s: %ldB\n", prefix, size);
@@ -103,7 +102,7 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    struct FlatImage* final_img = convert_royal_to_flat(img);
+    struct FlatImage *final_img = convert_royal_to_flat(img);
     write_png_file_from_flat_image(fp, final_img);
 
     fclose(fp);

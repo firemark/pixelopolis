@@ -1,8 +1,8 @@
 #include "pixelopolis/_css_draw.h"
 #include "pixelopolis/basic.h"
-#include "pixelopolis/texture_draw.h"
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img/draw_poly.h"
+#include "pixelopolis/texture_draw.h"
 
 void css_base_draw_poly_random(struct image* img, const int voxes[9], const struct WallObj* wall) {
     (void)(img);

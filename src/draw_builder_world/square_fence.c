@@ -110,7 +110,7 @@ struct DrawObj* builder_build_square_fence(struct Helper* helper) {
 
     struct BoardObj* obj = HELPER_ALLOCATE(helper, struct BoardObj);
     const int children_len = 1 + EDGES_COUNT * 2 + 1;  // body + X corners + X edges + NULL
-    obj->children = HELPER_ALLOCATE_ARRAY(helper,struct BoardChild*, children_len);
+    obj->children = HELPER_ALLOCATE_ARRAY(helper, struct BoardChild*, children_len);
     obj->children[children_len - 1] = NULL;
     struct BasicObj basic = builder_build_basic(rule, helper->parent);
     struct DrawObj* draw_obj = builder_make_draw_obj(helper, basic, DRAW_OBJ_BOARD, obj);

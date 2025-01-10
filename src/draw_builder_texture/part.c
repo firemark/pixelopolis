@@ -40,7 +40,8 @@ static struct ShiftTexPair** _append_children(struct Helper* helper, struct Basi
         .index = {.start = 0, .end = -1},
     };
 
-    struct ShiftTexPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, BUILDER_TEXTURE_MAX_ELEMENTS);
+    struct ShiftTexPair** pairs =
+        HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, BUILDER_TEXTURE_MAX_ELEMENTS);
 
     struct SelectorHelper start_obj_helper = MAKE_SELECTOR_HELPER(helper, "start");
     struct TexObj* start_obj = builder_texture_build_tex_obj(&start_obj_helper);

@@ -11,9 +11,10 @@
 
 static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size);
 static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
-                          struct BasicTexObj* basic, int grid_size);
+                                           struct BasicTexObj* basic, int grid_size);
 static struct ShiftTexPair** _drop_nulls(struct ShiftTexPair** tiles, int grid_size);
-static struct ShiftTexPair** _concat(struct Helper* helper, struct ShiftTexPair** a, struct ShiftTexPair** b);
+static struct ShiftTexPair** _concat(struct Helper* helper, struct ShiftTexPair** a,
+                                     struct ShiftTexPair** b);
 
 struct TexObj* builder_texture_build_tile(struct Helper* helper) {
     struct TexPartObj* obj = HELPER_ALLOCATE(helper, struct TexPartObj);
@@ -76,7 +77,8 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size_o
             for (int x_index = 0; x_index < grid_size; x_index++) {
                 child_helper.selector = css_eval_rule(css_obj);
                 struct TexObj* child = builder_texture_build_tex_obj(&child_helper);
-                size_t index = ((y_index + x_index) % grid_size) * grid_size + (x_index % grid_size);
+                size_t index =
+                    ((y_index + x_index) % grid_size) * grid_size + (x_index % grid_size);
                 if (child) {
                     struct ShiftTexPair* pair = HELPER_ALLOCATE(helper, struct ShiftTexPair);
                     pair->obj = child;
@@ -93,7 +95,7 @@ static struct ShiftTexPair** _make_tiles(struct Helper* helper, int* grid_size_o
 }
 
 static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTexPair** tiles,
-                          struct BasicTexObj* basic, int grid_size) {
+                                           struct BasicTexObj* basic, int grid_size) {
     int width = 0;
     int height = 0;
     int padding = builder_get_padding(helper->rule);
@@ -133,7 +135,7 @@ static struct ShiftTexPair** _arange_tiles(struct Helper* helper, struct ShiftTe
             tile->shift[0] = x_index * width + y_index * x_shift;
             tile->shift[1] = y_index * height;
             if (tile->shift[0] + tile->obj->basic.width > basic->width) {
-                // Warping 
+                // Warping
                 struct ShiftTexPair* additional_tile = HELPER_ALLOCATE(helper, struct ShiftTexPair);
                 additional_tile->obj = tile->obj;
                 additional_tile->shift[0] = tile->shift[0] - basic->width;
@@ -161,19 +163,21 @@ static struct ShiftTexPair** _drop_nulls(struct ShiftTexPair** tiles, int grid_s
     return new_tiles;
 }
 
-static struct ShiftTexPair** _concat(struct Helper* helper, struct ShiftTexPair** a, struct ShiftTexPair** b) {
+static struct ShiftTexPair** _concat(struct Helper* helper, struct ShiftTexPair** a,
+                                     struct ShiftTexPair** b) {
     size_t size_a = 0;
     size_t size_b = 0;
     struct ShiftTexPair** it;
 
-    for(it = a; *it != NULL; it++) size_a++;
-    for(it = b; *it != NULL; it++) size_b++;
+    for (it = a; *it != NULL; it++) size_a++;
+    for (it = b; *it != NULL; it++) size_b++;
 
-    struct ShiftTexPair** new_tiles = HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, size_a + size_b + 1);
+    struct ShiftTexPair** new_tiles =
+        HELPER_ALLOCATE_ARRAY(helper, struct ShiftTexPair*, size_a + size_b + 1);
 
     size_t index = 0;
-    for(it = a; *it != NULL; it++) new_tiles[index++] = *it;
-    for(it = b; *it != NULL; it++) new_tiles[index++] = *it;
+    for (it = a; *it != NULL; it++) new_tiles[index++] = *it;
+    for (it = b; *it != NULL; it++) new_tiles[index++] = *it;
 
     new_tiles[index] = NULL;
     free(a);

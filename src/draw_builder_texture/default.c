@@ -7,10 +7,10 @@
 #include "pixelopolis/draw_builder_common.h"
 #include "pixelopolis/img/create.h"
 #include "pixelopolis/img/destroy.h"
-#include "pixelopolis/img/ops.h"
-#include "pixelopolis/img/read.h"
 #include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/normal_map.h"
+#include "pixelopolis/img/ops.h"
+#include "pixelopolis/img/read.h"
 
 static struct FlatImage* _find_texture_in_rule(struct Rule* rule);
 static struct OneChanImage* _find_bump_map_in_rule(struct Rule* rule);

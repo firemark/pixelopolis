@@ -2,8 +2,8 @@
 #include <string.h>
 
 #include "pixelopolis/_draw_builder_world.h"
-#include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/css/func.h"
+#include "pixelopolis/draw_builder_texture.h"
 
 struct RuleWithParent* builder_make_rule_from_helper(struct SelectorHelper* helper) {
     if (!helper->selector) return NULL;
@@ -21,7 +21,7 @@ struct DrawObj* builder_make_draw_obj(struct Helper* helper, struct BasicObj bas
     return draw_obj;
 }
 
-
 struct TexObj* builder_make_texture(struct SelectorHelper* helper, int width, int height) {
-    return builder_texture_make(helper->program, helper->parent_rule, helper->selector, width, height);
+    return builder_texture_make(helper->program, helper->parent_rule, helper->selector, width,
+                                height);
 }

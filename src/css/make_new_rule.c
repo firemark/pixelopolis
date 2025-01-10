@@ -6,7 +6,8 @@
 #include "pixelopolis/css/func.h"
 #include "pixelopolis/hash.h"
 
-static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, struct RuleWithParent* parent);
+static int _match(struct RuleSelector* query, struct RuleSelector* iter_query,
+                  struct RuleWithParent* parent);
 
 static int _match_klass(struct RuleSelector* query, struct RuleSelector* iter_query) {
     if (!iter_query->klasses) return 1;
@@ -39,7 +40,8 @@ static int _match_greedy_parent(struct RuleWithParent* parent, struct RuleSelect
     return 0;
 }
 
-static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, struct RuleWithParent* parent) {
+static int _match(struct RuleSelector* query, struct RuleSelector* iter_query,
+                  struct RuleWithParent* parent) {
     char* element = query->element;
     char* pseudo_klass = query->pseudo_klass;
 
@@ -66,8 +68,11 @@ static int _match(struct RuleSelector* query, struct RuleSelector* iter_query, s
     return 1;
 }
 
-struct RuleWithParent* css_make_rule_from_selector(struct Program* program, struct RuleSelector* query, struct RuleWithParent* parent) {
-    struct RuleWithParent* rule_with_parent = MEMORY_ALLOCATE(program->product_memory, struct RuleWithParent);
+struct RuleWithParent* css_make_rule_from_selector(struct Program* program,
+                                                   struct RuleSelector* query,
+                                                   struct RuleWithParent* parent) {
+    struct RuleWithParent* rule_with_parent =
+        MEMORY_ALLOCATE(program->product_memory, struct RuleWithParent);
     struct Rule* rule = MEMORY_ALLOCATE(program->product_memory, struct Rule);
     rule->selector = query;
     rule->props = hash_make_with_memory(program->product_memory);

@@ -108,7 +108,8 @@ struct RuleSelector* css_cpy_selector(struct Memory* memory, struct RuleSelector
     }
 
     selector->parent = old->parent ? css_cpy_selector(memory, old->parent) : NULL;
-    selector->greedy_parent = old->greedy_parent ? css_cpy_selector(memory, old->greedy_parent) : NULL;
+    selector->greedy_parent =
+        old->greedy_parent ? css_cpy_selector(memory, old->greedy_parent) : NULL;
     return selector;
 }
 

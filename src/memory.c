@@ -53,7 +53,7 @@ void* memory_allocate_array(struct Memory* memory, size_t size, size_t count) {
 size_t memory_size(struct Memory* memory) {
     size_t size = 0;
     struct MemoryChunk* chunk;
-    for(chunk = memory->begin; chunk != NULL; chunk = chunk->next) {
+    for (chunk = memory->begin; chunk != NULL; chunk = chunk->next) {
         size += chunk->allocated_size;
     }
     return size;

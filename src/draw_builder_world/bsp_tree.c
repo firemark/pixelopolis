@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "pixelopolis/_draw_builder_world.h"
 #include "pixelopolis/_draw_builder_utils.h"
+#include "pixelopolis/_draw_builder_world.h"
 #include "pixelopolis/css/eval.h"
 #include "pixelopolis/css/func.h"
 

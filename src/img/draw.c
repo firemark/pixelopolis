@@ -17,18 +17,18 @@
         if (cor[1] >= img->height) return; \
     }
 
-#define _GET_PIXEL(img, cor) \
+#define _GET_PIXEL(img, cor)          \
     int index = _GET_INDEX(img, cor); \
-    _GUARD_INDEX(index, img); \
+    _GUARD_INDEX(index, img);         \
     return img->buffer[index]
 
-#define _GET_PIXEL_PTR(img, cor) \
+#define _GET_PIXEL_PTR(img, cor)      \
     int index = _GET_INDEX(img, cor); \
-    _GUARD_INDEX(index, img); \
+    _GUARD_INDEX(index, img);         \
     return &img->buffer[index]
 
-#define _SET_PIXEL(img, cor, color) \
-    _GUARD_COR(cor, img); \
+#define _SET_PIXEL(img, cor, color)         \
+    _GUARD_COR(cor, img);                   \
     const int index = _GET_INDEX(img, cor); \
     img->buffer[index] = color
 
@@ -120,7 +120,8 @@ void float_image_set_pixel(const struct FloatImage* img, const int cor[2], const
     _SET_PIXEL(img, cor, color);
 }
 
-void one_chan_image_set_pixel(const struct OneChanImage* img, const int cor[2], const unsigned char color) {
+void one_chan_image_set_pixel(const struct OneChanImage* img, const int cor[2],
+                              const unsigned char color) {
     _SET_PIXEL(img, cor, color);
 }
 

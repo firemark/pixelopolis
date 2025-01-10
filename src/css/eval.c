@@ -9,7 +9,7 @@
 
 static struct Obj* _eval(struct Obj* obj);
 
-static struct Memory *_memory;
+static struct Memory* _memory;
 
 static void _free_stack() {
     memory_free(_memory);

@@ -37,8 +37,7 @@ void css_draw_series(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info)
         int vox[3] = COPY_VOX(inner_info->vox);
         _update_shift(vox, draw_obj, pair);
         struct DrawInfo draw_info = {
-            .img = inner_info->img,
-            .vox = vox,
+            .img = inner_info->img, .vox = vox,
             // .filter = inner_info->filter,
         };
         draw_component(pair->obj, &draw_info, NULL);

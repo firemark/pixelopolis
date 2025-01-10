@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+
 #include "hash.h"
 #include "memory.h"
 
@@ -10,10 +11,10 @@
 #define RULE_SELECTORS_SIZE 64
 
 #define CSS_CONCAT(a, b) _CSS_CONCAT(a, b)
-#define _CSS_CONCAT(a, b) a ## b
-#define css_iter(obj, container) \
-    int CSS_CONCAT( css_iter_i, __LINE__ ) = 0; \
-    while((obj = container[CSS_CONCAT(css_iter_i, __LINE__)++]))
+#define _CSS_CONCAT(a, b) a##b
+#define css_iter(obj, container)              \
+    int CSS_CONCAT(css_iter_i, __LINE__) = 0; \
+    while ((obj = container[CSS_CONCAT(css_iter_i, __LINE__)++]))
 #define OBJ_DYNAMIC (1 << 5)
 #define OBJ_BINARY_OP (1 << 4)
 
@@ -33,7 +34,7 @@ enum ObjType {
 
 struct Obj {
     enum ObjType type;
-    void *value;
+    void* value;
 };
 
 struct PairObj {
@@ -58,12 +59,12 @@ extern struct RuleSelector default_selector;
 
 struct Rule {
     struct RuleSelector* selector;
-    struct HashMap *props;
+    struct HashMap* props;
 };
 
 struct RuleWithParent {
-  struct Rule* rule;
-  struct RuleWithParent* parent;
+    struct Rule* rule;
+    struct RuleWithParent* parent;
 };
 
 struct Program {
@@ -73,5 +74,5 @@ struct Program {
     struct Memory* product_memory;
 };
 
-struct Program* css_parse_file(char *filename);
-struct Program* css_parse_file_as_stream(FILE *stream);
+struct Program* css_parse_file(char* filename);
+struct Program* css_parse_file_as_stream(FILE* stream);

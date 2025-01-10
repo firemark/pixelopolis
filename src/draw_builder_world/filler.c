@@ -8,7 +8,8 @@ void _append_objs_to_filler(struct Helper* helper, struct SeriesObj* filler, int
     enum FillDirection fill_direction = filler->fill_direction;
 
     struct BasicObj basic_temp = builder_build_empty_basic();
-    struct ShiftDrawPair** pairs = HELPER_ALLOCATE_ARRAY(helper, struct ShiftDrawPair*, BUILDER_MAX_ELEMENTS);
+    struct ShiftDrawPair** pairs =
+        HELPER_ALLOCATE_ARRAY(helper, struct ShiftDrawPair*, BUILDER_MAX_ELEMENTS);
 
     int shift = 0;
     int padding = 0;

@@ -5,7 +5,7 @@
 
 struct ShiftDrawPair {
     int shift;
-    struct DrawObj* obj;
+    struct DrawObj *obj;
 };
 
 struct WallObj {
@@ -67,4 +67,4 @@ struct BoardObj {
 
 void builder_init(void);
 void builder_stop(void);
-struct DrawObj* builder_make(struct Program* program, struct Rule* world);
+struct DrawObj *builder_make(struct Program *program, struct Rule *world);

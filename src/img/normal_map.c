@@ -2,8 +2,8 @@
 #include <stdlib.h>
 
 #include "pixelopolis/_cos_sin_atan.h"
-#include "pixelopolis/img/draw.h"
 #include "pixelopolis/img/create.h"
+#include "pixelopolis/img/draw.h"
 
 static inline uint8_t _normalize(float value) { return 255.0f * (value * 0.5f + 0.5f); }
 

@@ -1,3 +1,5 @@
+#include "pixelopolis/draw_builder_texture.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -5,7 +7,6 @@
 #include "pixelopolis/css.h"
 #include "pixelopolis/css/func.h"
 #include "pixelopolis/draw_builder_common.h"
-#include "pixelopolis/draw_builder_texture.h"
 #include "pixelopolis/img.h"
 
 struct HashMap* css_builder_cache_textures;
@@ -42,7 +43,8 @@ void builder_texture_stop(void) {
     }
 }
 
-struct TexObj* builder_texture_make(struct Program* program, struct RuleWithParent* parent, struct RuleSelector* query, int width, int height) {
+struct TexObj* builder_texture_make(struct Program* program, struct RuleWithParent* parent,
+                                    struct RuleSelector* query, int width, int height) {
     struct TexVoidObj* obj = MEMORY_ALLOCATE(program->product_memory, struct TexVoidObj);
     struct TexObj* tex_obj = MEMORY_ALLOCATE(program->product_memory, struct TexObj);
 

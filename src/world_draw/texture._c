@@ -66,8 +66,8 @@ void css_draw_make_texture_from_wall(struct DrawTextureOutput* output, struct Wa
     //         float_image_fill(output->normal_map, tex_obj->normal_map);
     //     }
     //     if (tex_obj->color) {
-    //         struct FlatImage* texture = flat_image_create_with_color(width, height, tex_obj->color);
-    //         flat_image_fill(output->texture, texture);
+    //         struct FlatImage* texture = flat_image_create_with_color(width, height,
+    //         tex_obj->color); flat_image_fill(output->texture, texture);
     //         flat_image_destroy(texture);
     //     }
     // }

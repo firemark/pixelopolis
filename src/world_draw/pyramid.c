@@ -17,8 +17,10 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
 
     struct WallObj *south_wall_obj = obj->south_wall;
     if (south_wall_obj && width > 0 && height > 0) {
-        struct PolyInfo poly_info_first = poly_info_create(south_wall_obj, south_wall_obj->width, south_wall_obj->height, inner_info);
-        struct PolyInfo poly_info_second = poly_info_create(south_wall_obj, south_wall_obj->width, south_wall_obj->height, inner_info);
+        struct PolyInfo poly_info_first = poly_info_create(south_wall_obj, south_wall_obj->width,
+                                                           south_wall_obj->height, inner_info);
+        struct PolyInfo poly_info_second = poly_info_create(south_wall_obj, south_wall_obj->width,
+                                                            south_wall_obj->height, inner_info);
 
         int voxes_first[9] = {
             0,  0,  0,  //
@@ -43,8 +45,10 @@ void css_draw_pyramid(struct DrawObj *draw_obj, struct DrawInnerInfo *inner_info
 
     struct WallObj *east_wall_obj = obj->east_wall;
     if (east_wall_obj && width > 0 && height > 0) {
-        struct PolyInfo poly_info_first = poly_info_create(east_wall_obj, south_wall_obj->width, south_wall_obj->height, inner_info);
-        struct PolyInfo poly_info_second = poly_info_create(east_wall_obj, south_wall_obj->width, south_wall_obj->height, inner_info);
+        struct PolyInfo poly_info_first = poly_info_create(east_wall_obj, south_wall_obj->width,
+                                                           south_wall_obj->height, inner_info);
+        struct PolyInfo poly_info_second = poly_info_create(east_wall_obj, south_wall_obj->width,
+                                                            south_wall_obj->height, inner_info);
 
         int voxes_first[9] = {
             0,  0,  0,  //
