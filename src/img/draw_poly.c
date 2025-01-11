@@ -323,7 +323,7 @@ void draw_poly(struct PolyInfo *info, const int voxes[9], const int uv[6]) {
 
 void draw_sprite(struct image *img, struct FlatImage *img_to_draw, const int vox[3],
                  const double normal[3]) {
-    int uv_cor[2];
+    int uv_cor[2] = {0, 0};
     struct h_poly vec;
     _projection_poly(vox, uv_cor,
                      &vec);  // TODO - how to avoid uv? new structure, new function?
@@ -403,7 +403,7 @@ static inline double _get_area_of_poly(const int voxes[9]) {
 }
 
 void draw_sprites_in_random_position_in_poly(struct image *img, struct FlatImage *img_to_draw,
-                                             const int voxes[3], const int density) {
+                                             const int voxes[9], const int density) {
     if (density == 0) return;
 
     int vox[3];

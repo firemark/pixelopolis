@@ -13,6 +13,6 @@ void draw_sprite(struct image *img, struct FlatImage *img_to_draw, const int vox
                  const double normal[3]);
 
 void draw_sprites_in_random_position_in_poly(struct image *img, struct FlatImage *img_to_draw,
-                                             const int voxes[3], const int density);
+                                             const int voxes[9], const int density);
 
 void poly_info_clear(struct PolyInfo *info);
