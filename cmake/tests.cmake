@@ -1,0 +1,8 @@
+function(add_tests TEST_FILES)
+    message(${TEST_FILES})
+    add_executable(Tests tests/main.c ${TEST_FILES})
+    target_include_directories(Tests PRIVATE include)
+    target_link_libraries(Tests PRIVATE PixelopolisLib check subunit)
+    target_link_options(Tests PRIVATE -fsanitize=address)
+    set_target_properties(Tests PROPERTIES OUTPUT_NAME test)
+endfunction()

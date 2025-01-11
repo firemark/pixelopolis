@@ -1,0 +1,8 @@
+function(add_exec TARGET NAME)
+    add_executable(${TARGET} main/${NAME}.c)
+    target_include_directories(${TARGET} PUBLIC include)
+    target_link_libraries(${TARGET} PUBLIC PixelopolisLib)
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME ${NAME})
+    # target_link_options(${TARGET} PUBLIC -fsanitize=address)
+    install(TARGETS ${TARGET} DESTINATION bin)
+endfunction()
