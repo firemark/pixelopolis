@@ -13,13 +13,13 @@
 #include "pixelopolis/img/royal_to_flat.h"
 #include "pixelopolis/world_draw.h"
 
-struct Rule *find_world(struct Program *program) {
+static struct Rule *find_world(struct Program *program) {
     struct RuleSelector query = default_selector;
     query.element = "world";
     return css_find_rule_by_query(program, &query);
 }
 
-struct image *make_img(struct Rule *world) {
+static struct image *make_img(struct Rule *world) {
     int *width_ptr = css_find_number_prop(world, "width");
     int *height_ptr = css_find_number_prop(world, "height");
     int width = width_ptr ? *width_ptr : 400;
