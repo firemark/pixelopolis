@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(Pixelopolis VERSION 0.1.5 LANGUAGES C)
+project(Pixelopolis VERSION 0.2.0 LANGUAGES C)
 
 find_package(PNG REQUIRED)
 find_package(BISON REQUIRED)
