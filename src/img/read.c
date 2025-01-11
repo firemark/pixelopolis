@@ -1,10 +1,13 @@
 #include "pixelopolis/img/read.h"
 
+#include <unistd.h>
+
+#if HAS_PNG
 #include <limits.h>
-#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+
+#include <png.h>
 
 struct PngReadMeta {
     int width;
@@ -147,3 +150,8 @@ struct FlatImage* flat_image_read_png_file(const char* filename) {
 struct OneChanImage* one_chan_image_read_png_file(const char* filename) {
     _READ_PNG(filename, ONE_CHAN_IMAGE, png_pixel[0]);
 }
+
+#else
+struct FlatImage* flat_image_read_png_file(const char* filename) { return NULL;}
+struct OneChanImage* one_chan_image_read_png_file(const char* filename) { return NULL;}
+#endif

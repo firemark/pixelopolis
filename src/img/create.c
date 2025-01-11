@@ -1,7 +1,6 @@
 #include "pixelopolis/img/create.h"
 
 #include <limits.h>
-#include <png.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

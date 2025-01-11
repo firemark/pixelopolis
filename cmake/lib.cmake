@@ -6,7 +6,7 @@ function(add_lib)
         OUTPUT_NAME pixelopolis
         VERSION ${PROJECT_VERSION}
     )
-    target_compile_definitions(PixelopolisLib PUBLIC pixelopolis)
+    target_compile_definitions(PixelopolisLib PUBLIC HAS_PNG)
     target_include_directories(PixelopolisLib
         PUBLIC include
         PRIVATE lib_include
