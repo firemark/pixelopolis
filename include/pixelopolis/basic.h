@@ -21,6 +21,7 @@
 struct rgb {
     uint8_t r, g, b;
 };
+
 struct RoyalPixel {
     uint8_t r, g, b;
     float x, y, z;

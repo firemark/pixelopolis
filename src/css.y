@@ -19,6 +19,7 @@ extern int chars;
 extern int old_chars;
 extern struct Memory* global_memory;
 int yylex(void);
+int yy_scan_string(char *);
 
 enum RuleAttrType {
     RULE_ATTR_PROP, // struct Prop*
@@ -501,12 +502,22 @@ struct Program* css_parse_file(char* filename) {
     return program;
 }
 
-struct Program* css_parse_file_as_stream(FILE* stream) {
+static inline struct Program* _parse() {
     lines = 1;
     old_chars = 1;
     chars = 1;
     global_memory = memory_create(1024 * 1024);
-    yyin = stream;
     yyparse();
+    // yy_delete_buffer(YY_CURRENT_BUFFER);
     return global_program;
+}
+
+struct Program* css_parse_file_as_stream(FILE* stream) {
+    yyin = stream;
+    return _parse();
+}
+
+struct Program* css_parse_file_as_string(char* code) {
+    yy_scan_string(code);
+    return _parse();
 }

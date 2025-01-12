@@ -4,65 +4,121 @@
 <head>
   <script src="pixelopolis.js"></script>
   <script>
-    Module.buildAndDraw = _ => {
-      const code = document.getElementById('code').innerText;
-      Module.func__build(code);
-      Module.func__draw(0, 0, 0);
-      setTimeout(Module.buildAndDraw, 3000);
-    };
-
     Module.onRuntimeInitialized = _ => {
       Module['canvas'] = document.getElementById('canvas');
       Module.func__init = Module.cwrap('init', 'number', []);
       Module.func__stop = Module.cwrap('stop', 'number', []);
-      Module.func__build = Module.cwrap('build', 'number', ['string']);
-      Module.func__draw = Module.cwrap('draw', 'number', ['number', 'number', 'number']);
-
+      Module.func__build = Module.cwrap('build', 'number', ['string'], { async: true });
+      Module.func__draw = Module.cwrap('draw', 'number', ['number', 'number', 'number'], { async: true });
       Module.func__init();
-      Module.buildAndDraw();
-      // stop();
     };
+
+    async function fetchCode(codeUrl) {
+      const response = await fetch(codeUrl);
+      if (!response.ok) {
+        return;
+      }
+      document.getElementById('code').innerText = await response.text();
+
+      if (buildAndDrawTimer) {
+        clearTimeout(buildAndDrawTimer);
+      }
+      Module.func__stop();
+      Module.func__init();
+      buildAndDrawTimer = setTimeout(buildAndDraw, 0);
+    }
+
+    let buildAndDrawTimer = null;
+    async function buildAndDraw() {
+      const code = document.getElementById('code').innerText;
+      await Module.func__build(code);
+      await Module.func__draw(0, 0, 0);
+      buildAndDrawTimer = setTimeout(buildAndDraw, 3000);
+    };
+
+
+    function start() {
+      const selectEl = document.querySelector("#select");
+      selectEl.addEventListener('change', e => {
+        const first = selectEl.value;
+        setTimeout(async _ => await fetchCode(first), 0);
+      });
+      const first = selectEl.value;
+      setTimeout(async _ => await fetchCode(first), 0);
+    }
   </script>
 </head>
 
-<body>
-  <code id="code" style="display: none;">
+<style>
+  body {
+    color: white;
+    background-color: black;
+  }
+
+  select {
+    border: 1px white solid;
+    background-color: black;
+    color: white;
+  }
+
+  main {
+    display: flex;
+    width: calc(100vw - 30px);
+    height: 90vh;
+    margin: 15px;
+  }
+
+  #code {
+    width: 30%;
+    height: 100%;
+    overflow-y: scroll;
+    white-space: pre;
+  }
+
+  #result {
+    width: 70%;
+    height: 100%;
+    overflow: scroll;
+  }
+</style>
+
+<body onload="start()">
+  <label>Select code plz:</label>
+  <select id="select">
+    <optgroup label="Complex">
+      <option>examples/complex/village.css</option>
+      <option>examples/complex/mosque.scss</option>
+    </optgroup>
+    <optgroup label="Basic">
+      <option>examples/basic/cone.css</option>
+      <option>examples/basic/cube.css</option>
+      <option>examples/basic/cylinder.css</option>
+      <option>examples/basic/dome.css</option>
+      <option>examples/basic/pyramid.css</option>
+      <option>examples/basic/triangle.css</option>
+    </optgroup>
+    <optgroup label="Textures">
+      <option>examples/textures/align.css</option>
+      <option>examples/textures/bricks.css</option>
+      <option>examples/textures/filler.css</option>
+      <option>examples/textures/points.css</option>
+      <option>examples/textures/series.css</option>
+      <option>examples/textures/textures.css</option>
+      <option>examples/textures/tiles.css</option>
+    </optgroup>
+  </select>
+  <main>
+    <code id="code">
 world {
-    width: 800;
-    height: 800;
-    body: cube.example;
+    width: 2000;
+    height: 2000;
 }
 
-cube.example {
-	wall: wall.grey-brick;
-  roof: wall.top;
-  width: random(350, 600);
-  depth: random(350, 400);
-  height: 150;
-}
-
-wall.grey-brick { texture: h-tex.grey-brick; }
-wall.top { texture: tex.wood; }
-
-h-tex.grey-brick {
-    background: tex.grey-brick;
-    center: v-tex.windows;
-    width: 100%;
-    justify: center;
-}
-
-v-tex.windows {
-    center: tex.window;
-    justify: end;
-    padding: 20;
-    height: 40;
-}
-
-tex.wood        { color: #F00; }
-tex.grey-brick  { color: #AAA; }
-tex.window      { color: #000; width: 32; height: 32; }
 </code>
-<canvas id="canvas"></canvas>
+    <div id="result">
+      <canvas id="canvas"></canvas>
+    </div>
+  </main>
 </body>
 
 </html>

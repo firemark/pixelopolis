@@ -12,7 +12,6 @@ include(cmake/wasm.cmake)
 option(WASM_ENABLED "Build wasm only" 0)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_VERBOSE_MAKEFILE ON)
 
 file(GLOB_RECURSE SRC_FILES src/*.c)
 file(GLOB_RECURSE TEST_FILES tests/test_*.c)
@@ -22,7 +21,7 @@ compile_parser(PARSER_FILES)
 
 if (WASM_ENABLED)
     set(CMAKE_C_COMPILER emcc)
-    add_wasm(SRC_FILES ${SRC_FILES} ${PARSER_FILES} HEADER_FILES ${HEADER_FILES})
+    add_wasm(SRC_FILES ${SRC_FILES} ${PARSER_FILES} main/wasm.c HEADER_FILES ${HEADER_FILES})
 else()
     add_lib(SRC_FILES ${SRC_FILES} ${PARSER_FILES} HEADER_FILES ${HEADER_FILES})
     add_exec(Pixelopolis pixelopolis)

@@ -1,5 +1,4 @@
 #include "pixelopolis/img/write.h"
-#if HAS_PNG
 #include <limits.h>
 #include <png.h>
 #include <stdio.h>
@@ -96,7 +95,3 @@ int write_png_file_from_image(FILE* fp, const struct image* img) {
 int write_png_file_from_flat_image(FILE* fp, const struct FlatImage* img) {
     _WRITE_PNG_FILE(fp, img, FLAT_IMAGE);
 }
-#else
-int write_png_file_from_image(FILE* fp, const struct image* img) { return -1;}
-int write_png_file_from_flat_image(FILE* fp, const struct FlatImage* img) { return -1;}
-#endif

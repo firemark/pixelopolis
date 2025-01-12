@@ -1,13 +1,10 @@
 #include "pixelopolis/img/read.h"
 
-#include <unistd.h>
-
-#if HAS_PNG
 #include <limits.h>
+#include <png.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-#include <png.h>
+#include <unistd.h>
 
 struct PngReadMeta {
     int width;
@@ -123,23 +120,56 @@ static void _read_png_end(FILE* fp, png_structp png_ptr, png_infop info_ptr) {
     }
 }
 
-#define _READ_PNG(filename, type, ...)                                        \
-    {                                                                         \
-        png_structp png_ptr;                                                  \
-        png_infop info_ptr;                                                   \
-        struct PngReadMeta meta;                                              \
-        FILE* fp = NULL;                                                      \
-        IMG_TYPE_##type* img = NULL;                                          \
-        int code = _read_png_init(filename, &fp, &png_ptr, &info_ptr, &meta); \
-        if (code == 0) {                                                      \
-            _FROM_PNG(png_ptr, img, meta, type, __VA_ARGS__);                 \
-        }                                                                     \
-        _read_png_end(fp, png_ptr, info_ptr);                                 \
-        return img;                                                           \
+#if WASM
+#include <emscripten.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+EM_ASYNC_JS(int, do_fetch, (const char* url), {
+    const response = await fetch(UTF8ToString(url));
+    if (!response.ok) {
+        return -1;
+    }
+    const blob = await response.blob();
+    const data = new Uint8Array(await blob.arrayBuffer());
+    const stream = FS.open("__TEMP__", 'w+');
+    FS.write(stream, data, 0, data.length, 0);
+    FS.close(stream);
+    return 0;
+});
+
+#define _FILE_START                \
+    url = "__TEMP__";              \
+    if (do_fetch(filename) != 0) { \
+        return NULL;               \
+    }
+#define _FILE_END unlink(url);
+#else
+#define _FILE_START url = (char*)filename;
+#define _FILE_END
+#endif
+
+#define _READ_PNG(filename, type, ...)                                   \
+    {                                                                    \
+        char* url;                                                       \
+        _FILE_START;                                                     \
+        png_structp png_ptr;                                             \
+        png_infop info_ptr;                                              \
+        struct PngReadMeta meta;                                         \
+        FILE* fp = NULL;                                                 \
+        IMG_TYPE_##type* img = NULL;                                     \
+        int code = _read_png_init(url, &fp, &png_ptr, &info_ptr, &meta); \
+        if (code == 0) {                                                 \
+            _FROM_PNG(png_ptr, img, meta, type, __VA_ARGS__);            \
+        }                                                                \
+        _read_png_end(fp, png_ptr, info_ptr);                            \
+        _FILE_END;                                                       \
+        return img;                                                      \
     }
 
 struct FlatImage* flat_image_read_png_file(const char* filename) {
-    _READ_PNG(filename, FLAT_IMAGE,
+    _READ_PNG(url, FLAT_IMAGE,
               {
                   .r = png_pixel[0],
                   .g = png_pixel[1],
@@ -148,10 +178,5 @@ struct FlatImage* flat_image_read_png_file(const char* filename) {
 }
 
 struct OneChanImage* one_chan_image_read_png_file(const char* filename) {
-    _READ_PNG(filename, ONE_CHAN_IMAGE, png_pixel[0]);
+    _READ_PNG(url, ONE_CHAN_IMAGE, png_pixel[0]);
 }
-
-#else
-struct FlatImage* flat_image_read_png_file(const char* filename) { return NULL;}
-struct OneChanImage* one_chan_image_read_png_file(const char* filename) { return NULL;}
-#endif

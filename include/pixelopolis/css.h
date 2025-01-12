@@ -75,4 +75,5 @@ struct Program {
 };
 
 struct Program* css_parse_file(char* filename);
+struct Program* css_parse_file_as_string(char* code);
 struct Program* css_parse_file_as_stream(FILE* stream);
