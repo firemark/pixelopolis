@@ -9,3 +9,4 @@ tests_out/
 build/
 build_*/
 .vscode/
+node_modules

@@ -1,0 +1,1 @@
+Module.onRuntimeInitialized=u=>{Module.canvas=document.getElementById("canvas"),Module.func__init=Module.cwrap("init","number",[]),Module.func__stop=Module.cwrap("stop","number",[]),Module.func__build=Module.cwrap("build","number",["string"],{async:!0}),Module.func__draw=Module.cwrap("draw","number",["number","number","number"],{async:!0}),Module.func__init()};

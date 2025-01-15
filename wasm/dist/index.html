@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+  <script src="pixelopolis.js"></script>
+  <script src="main.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <label>Select code plz:</label>
+  <select id="select">
+    <optgroup label="Complex">
+      <option>examples/complex/village.css</option>
+      <option>examples/complex/mosque.scss</option>
+    </optgroup>
+    <optgroup label="Basic">
+      <option>examples/basic/cone.css</option>
+      <option>examples/basic/cube.css</option>
+      <option>examples/basic/cylinder.css</option>
+      <option>examples/basic/dome.css</option>
+      <option>examples/basic/pyramid.css</option>
+      <option>examples/basic/triangle.css</option>
+    </optgroup>
+    <optgroup label="Textures">
+      <option>examples/textures/align.css</option>
+      <option>examples/textures/bricks.css</option>
+      <option>examples/textures/filler.css</option>
+      <option>examples/textures/points.css</option>
+      <option>examples/textures/series.css</option>
+      <option>examples/textures/textures.css</option>
+      <option>examples/textures/tiles.css</option>
+    </optgroup>
+  </select>
+  <main>
+    <code id="code">
+      world {
+          width: 2000;
+          height: 2000;
+      }
+    </code>
+    <div id="result">
+      <canvas id="canvas"></canvas>
+    </div>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+body {
+    color: white;
+    background-color: black;
+}
+
+select {
+    border: 1px white solid;
+    background-color: black;
+    color: white;
+}
+
+main {
+    display: flex;
+    width: calc(100vw - 30px);
+    height: 90vh;
+    margin: 15px;
+}
+
+#code {
+    width: 30%;
+    height: 100%;
+    overflow-y: scroll;
+    white-space: pre;
+}
+
+#result {
+    width: 70%;
+    height: 100%;
+    overflow: scroll;
+}

@@ -1,1 +1,0 @@
-../build_wasm/pixelopolis.js
