@@ -2,8 +2,6 @@
 <html lang="en-us">
 
 <head>
-  <script src="pixelopolis.js"></script>
-  <script src="main.js"></script>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -32,17 +30,15 @@
       <option>examples/textures/tiles.css</option>
     </optgroup>
   </select>
+  <button id="btn-run">run</button>
   <main>
-    <code id="code">
-      world {
-          width: 2000;
-          height: 2000;
-      }
-    </code>
+    <code id="code"></code>
     <div id="result">
       <canvas id="canvas"></canvas>
     </div>
   </main>
+  <script src="pixelopolis.js"></script>
+  <script src="main.js"></script>
 </body>
 
 </html>

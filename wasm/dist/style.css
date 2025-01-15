@@ -1,6 +1,4 @@
 body {
-    color: white;
-    background-color: black;
 }
 
 select {
@@ -19,8 +17,6 @@ main {
 #code {
     width: 30%;
     height: 100%;
-    overflow-y: scroll;
-    white-space: pre;
 }
 
 #result {
