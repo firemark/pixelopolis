@@ -1,4 +1,5 @@
 body {
+    background-color: #1e1e1e;
 }
 
 select {
@@ -17,6 +18,14 @@ main {
 #code {
     width: 30%;
     height: 100%;
+    display: flex;
+    flex-direction: row;
+
+}
+
+#code > .cm-editor {
+    width: 0;
+    flex-grow: 1;
 }
 
 #result {

@@ -16,5 +16,11 @@
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
+  },
+  "dependencies": {
+    "@codemirror/lang-css": "^6.3.1",
+    "@codemirror/view": "^6.36.2",
+    "@fsegurai/codemirror-theme-vscode-dark": "^6.1.2",
+    "codemirror": "^6.0.1"
   }
 }
