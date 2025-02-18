@@ -67,13 +67,16 @@ struct RuleWithParent {
     struct RuleWithParent* parent;
 };
 
+typedef void (*ProgramLogFunc)(char severity, char* msg, char* filename, int line, int row);
+
 struct Program {
     char* name;
     struct Rule** rules;
     struct Memory* syntax_memory;
     struct Memory* product_memory;
+    ProgramLogFunc log;
 };
 
-struct Program* css_parse_file(char* filename);
-struct Program* css_parse_file_as_string(char* code);
-struct Program* css_parse_file_as_stream(FILE* stream);
+struct Program* css_parse_file(char* filename, ProgramLogFunc log);
+struct Program* css_parse_file_as_string(char* code, ProgramLogFunc log);
+struct Program* css_parse_file_as_stream(FILE* stream, ProgramLogFunc log);

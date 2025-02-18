@@ -21,9 +21,17 @@ void teardown(void) {
     }
 }
 
+static void log_msg(char severity, char* msg, char* filename, int line, int row) {
+    if (filename) {
+        fprintf(stderr, "%c %s:%d:%d %s\n", severity, filename, line, row, msg);
+    } else {
+        fprintf(stderr, "%c %s\n", severity, msg);
+    }
+}
+
 static void _make_program(char *buffer) {
     FILE *stream = fmemopen(buffer, strlen(buffer), "r");
-    program = css_parse_file_as_stream(stream);
+    program = css_parse_file_as_stream(stream, log_msg);
     fclose(stream);
 }
 

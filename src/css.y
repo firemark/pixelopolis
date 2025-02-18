@@ -12,6 +12,8 @@
 #define YYDEBUG 1
 
 static struct Program* global_program;
+static ProgramLogFunc global_log;
+static char* global_filename;
 
 extern FILE *yyin;
 extern int lines;
@@ -37,7 +39,7 @@ struct Prop {
 };
 
 int yyerror (char* err) {
-    fprintf(stderr, "%d:%d %s\n", lines, old_chars, err);
+    global_log('E', err, global_filename, lines, old_chars);
     return 1;
 }
 
@@ -63,13 +65,14 @@ int yywrap (void) {
 
 struct Program* make_program(struct Rule **rules) {
     struct Program *program = malloc(sizeof(struct Program));
-    static char top[] = "top";
-    char* name = malloc(sizeof(top));
-    strcpy(name, top);
-    program->name = name;
+    int filename_size = strlen(global_filename);
+    char* filename = malloc(filename_size + 1);
+    strcpy(filename, global_filename);
+    program->name = filename;
     program->rules = rules;
     program->syntax_memory = global_memory;
     program->product_memory = memory_create(32 * 1024 * 1024);
+    program->log = global_log;
 
     return program;
 }
@@ -495,29 +498,40 @@ args:
 sp: SPACE | sp SPACE | /* empty */;
 %%
 
-struct Program* css_parse_file(char* filename) {
+static inline struct Program* _parse(ProgramLogFunc log) {
+    lines = 1;
+    old_chars = 1;
+    chars = 1;
+    global_program = NULL;
+    global_memory = memory_create(1024 * 1024);
+    global_log = log;
+    yyparse();
+    if (!global_program) {
+        // What da fail.
+        memory_free(global_memory);
+    }
+    return global_program;
+}
+
+struct Program* css_parse_file(char* filename, ProgramLogFunc log) {
+    global_filename = filename;
     FILE *stream = fopen(filename, "r");
-    struct Program* program = css_parse_file_as_stream(stream);
+    yyin = stream;
+    struct Program* program = _parse(log);
     fclose(stream);
     return program;
 }
 
-static inline struct Program* _parse() {
-    lines = 1;
-    old_chars = 1;
-    chars = 1;
-    global_memory = memory_create(1024 * 1024);
-    yyparse();
-    // yy_delete_buffer(YY_CURRENT_BUFFER);
-    return global_program;
-}
-
-struct Program* css_parse_file_as_stream(FILE* stream) {
+struct Program* css_parse_file_as_stream(FILE* stream, ProgramLogFunc log) {
+    global_filename = "__main__";
     yyin = stream;
-    return _parse();
+    return _parse(log);
 }
 
-struct Program* css_parse_file_as_string(char* code) {
+struct Program* css_parse_file_as_string(char* code, ProgramLogFunc log) {
+    global_filename = "__main__";
     yy_scan_string(code);
-    return _parse();
+    struct Program* program = _parse(log);
+    // yy_delete_buffer(YY_CURRENT_BUFFER);
+    return program;
 }

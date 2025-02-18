@@ -16,17 +16,9 @@ function(add_wasm)
     target_link_options(PixelopolisWasm PUBLIC
         -sASYNCIFY=1
         -sUSE_LIBPNG=1
-        -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
+        -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,addFunction,UTF8ToString
         -sASSERTIONS=1
         -sALLOW_MEMORY_GROWTH=1
+        -sALLOW_TABLE_GROWTH=1
     )
-    # target_link_libraries(PixelopolisWasm ${PNG_LIBRARY} m)
-    # target_compile_options(PixelopolisWasm PUBLIC -Werror -Wall -Wextra -Wshadow -pedantic)
-    # target_compile_options(PixelopolisWasm PUBLIC -Werror -fno-omit-frame-pointer)
-    # install(
-    #     TARGETS PixelopolisWasm
-    #     PUBLIC_HEADER
-    #     LIBRARY DESTINATION lib
-    #     INCLUDES DESTINATION include
-    # )
 endfunction()

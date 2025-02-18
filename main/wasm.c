@@ -88,16 +88,21 @@ static void copy_to_canvas(struct FlatImage *img) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-int build(char *code) {
+int build(char *code, ProgramLogFunc log) {
     if (_program) {
         css_free_program(_program);
     }
-    _program = css_parse_file_as_string(code);
-    free(code);
+    _program = css_parse_file_as_string(code, log);
+    // free(code);
+
+    if (!_program) {
+        log('E', "the program is not generated.", NULL, 0, 0);
+        return -1;
+    }
 
     struct Rule *world_rule = find_world(_program);
     if (!world_rule) {
-        fprintf(stderr, "world rule not found! :(\n");
+        log('E', "world rule not found.", NULL, 0, 0);
         return -1;
     }
 

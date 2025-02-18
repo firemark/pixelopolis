@@ -63,6 +63,14 @@ static void print_size(char *prefix, struct Memory *memory) {
     }
 }
 
+static void log_msg(char severity, char* msg, char* filename, int line, int row) {
+    if (filename) {
+        fprintf(stderr, "%c %s:%d:%d %s\n", severity, filename, line, row, msg);
+    } else {
+        fprintf(stderr, "%c %s\n", severity, msg);
+    }
+}
+
 int main(int argc, char **argv) {
     char *in_filename = argc > 1 ? argv[1] : "-";
     char *out_filename = argc > 2 ? argv[2] : "out.png";
@@ -72,13 +80,13 @@ int main(int argc, char **argv) {
     css_eval_start();
     struct Program *program;
     if (!strcmp(in_filename, "-")) {
-        program = css_parse_file_as_stream(stdin);
+        program = css_parse_file_as_stream(stdin, log_msg);
     } else {
-        program = css_parse_file(in_filename);
+        program = css_parse_file(in_filename, log_msg);
     }
 
     if (!program) {
-        fprintf(stderr, "parsing file failed :(\n");
+        log_msg('E', "parsing file failed.", NULL, 0, 0);
         return -1;
     }
 
@@ -87,7 +95,7 @@ int main(int argc, char **argv) {
     // css_debug_program(stderr, program);
     struct Rule *world_rule = find_world(program);
     if (!world_rule) {
-        fprintf(stderr, "world rule not found! :(\n");
+        log_msg('E', "world rule not found.", NULL, 0, 0);
         return -1;
     }
     struct DrawObj *draw_obj = builder_make(program, world_rule);
@@ -98,7 +106,7 @@ int main(int argc, char **argv) {
 
     FILE *fp = strcmp(out_filename, "-") ? fopen(out_filename, "wb") : stdout;
     if (!fp) {
-        fprintf(stderr, "Problem with creating file %s\n", out_filename);
+        log_msg('E', "Problem with creating file.", out_filename, 0, 0);
         return -1;
     }
 

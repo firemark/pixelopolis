@@ -6,37 +6,43 @@
 </head>
 
 <body>
-  <label>Select code plz:</label>
-  <select id="select">
-    <optgroup label="Complex">
-      <option>examples/complex/village.css</option>
-      <option>examples/complex/mosque.scss</option>
-    </optgroup>
-    <optgroup label="Basic">
-      <option>examples/basic/cone.css</option>
-      <option>examples/basic/cube.css</option>
-      <option>examples/basic/cylinder.css</option>
-      <option>examples/basic/dome.css</option>
-      <option>examples/basic/pyramid.css</option>
-      <option>examples/basic/triangle.css</option>
-    </optgroup>
-    <optgroup label="Textures">
-      <option>examples/textures/align.css</option>
-      <option>examples/textures/bricks.css</option>
-      <option>examples/textures/filler.css</option>
-      <option>examples/textures/points.css</option>
-      <option>examples/textures/series.css</option>
-      <option>examples/textures/textures.css</option>
-      <option>examples/textures/tiles.css</option>
-    </optgroup>
-  </select>
-  <button id="btn-run">run</button>
   <main>
-    <code id="code"></code>
-    <div id="result">
-      <canvas id="canvas"></canvas>
+    <nav>
+      <label>Select code plz:</label>
+      <select id="select">
+        <optgroup label="Complex">
+          <option>examples/complex/village.css</option>
+          <option>examples/complex/mosque.scss</option>
+        </optgroup>
+        <optgroup label="Basic">
+          <option>examples/basic/cone.css</option>
+          <option>examples/basic/cube.css</option>
+          <option>examples/basic/cylinder.css</option>
+          <option>examples/basic/dome.css</option>
+          <option>examples/basic/pyramid.css</option>
+          <option>examples/basic/triangle.css</option>
+        </optgroup>
+        <optgroup label="Textures">
+          <option>examples/textures/align.css</option>
+          <option>examples/textures/bricks.css</option>
+          <option>examples/textures/filler.css</option>
+          <option>examples/textures/points.css</option>
+          <option>examples/textures/series.css</option>
+          <option>examples/textures/textures.css</option>
+          <option>examples/textures/tiles.css</option>
+        </optgroup>
+      </select>
+      <button id="btn-run">run</button>
+    </nav>
+    <div id="main">
+      <code id="code"></code>
+      <div id="result">
+        <canvas id="canvas"></canvas>
+      </div>
     </div>
+    <table id="output"></table>
   </main>
+
   <script src="pixelopolis.js"></script>
   <script src="main.js"></script>
 </body>
